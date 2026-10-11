@@ -1,0 +1,38 @@
+<section id="round9" class="section">
+<div class="kicker">续 / 第九轮 REA · 2026-10-11</div>
+<h2>条件技能、方向状态与战斗数字：三条链分开验证</h2>
+<p>本轮使用本项目 REA MCP → IDA 离线数据库，继续检查同一 Game.dll。新增的是<strong>当前客户端代码证据</strong>，尚未验证当前官方后台。619 次分析请求中581成功、38失败均保留；80个识别入口取得指令不等于80个完整语义审计。</p>
+<div class="visual"><svg viewBox="0 0 940 530" role="img" aria-label="三条独立证据链：条件技能字段至UI；方向分类至本地状态；收到的伤害数值至战斗文字">
+<defs><marker id="r9arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#527fa0"/></marker></defs>
+<g font-family="sans-serif" font-size="22" fill="#24384a">
+<text x="24" y="35">① 条件字段的并列消费者 · 分类登记与 UI 构建</text>
+<g fill="#e8f4ee"><rect x="20" y="55" width="270" height="110" rx="12"/><rect x="335" y="55" width="270" height="110" rx="12"/><rect x="650" y="55" width="270" height="110" rx="12"/></g>
+<g text-anchor="middle"><text x="155" y="93">counter_skill 解析</text><text x="155" y="128">技能记录 +768</text><text x="470" y="93">39D860 / 39F2F0</text><text x="470" y="128">按类型登记技能</text><text x="785" y="93">39D5D0 → 27FDE0</text><text x="785" y="128">条件技能 UI 模板</text></g>
+<text x="24" y="212">② 方向相关分类 · 716 / 1382 不能直接命名为反击窗口</text>
+<g fill="#e8edf9"><rect x="20" y="232" width="270" height="110" rx="12"/><rect x="335" y="232" width="270" height="110" rx="12"/><rect x="650" y="232" width="270" height="110" rx="12"/></g>
+<g text-anchor="middle"><text x="155" y="270">057930 写 0 / 1 / 2 / 4</text><text x="155" y="305">向量、方向参数、状态</text><text x="470" y="270">01B610 → 068810</text><text x="470" y="305">当前与历史状态合并</text><text x="785" y="270">480890 与结果相交</text><text x="785" y="305">UI / 后续用途待追</text></g>
+<text x="24" y="389">③ 收到的战斗数字 · 此显示分支没有重新推导 PVP 伤害</text>
+<g fill="#e8f4ee"><rect x="20" y="409" width="270" height="100" rx="12"/><rect x="335" y="409" width="270" height="100" rx="12"/><rect x="650" y="409" width="270" height="100" rx="12"/></g>
+<g text-anchor="middle"><text x="155" y="447">S_ATTACK → 430D20</text><text x="155" y="482">收到的每项32位数值</text><text x="470" y="447">0B5630 读取整数</text><text x="470" y="482">选择关系与文字</text><text x="785" y="447">54F6F0 / 06C750</text><text x="785" y="482">文字与数字格式化</text></g>
+</g><g fill="none" stroke="#527fa0" stroke-width="3" marker-end="url(#r9arrow)"><path d="M295 110H325"/><path d="M295 145H315V180H625V110H640"/><path d="M295 287H325"/><path d="M610 287H640"/><path d="M295 459H325"/><path d="M610 459H640"/></g></svg>
+<p class="caption">函数均为 Game.dll RVA；对象字段不属于模块 RVA。①是同一字段的并列消费证据，不证明登记容器直接驱动UI；没有完整连接之前，不将①与②合并成盾反公式。</p></div>
+<div class="grid"><div class="card"><span class="badge observed">当前客户端 · 具名字段</span><h3>反击条件有解析和分类登记</h3>
+<div class="tablewrap"><table><thead><tr><th>字段原名</th><th>技能记录位置</th></tr></thead><tbody><tr><td>counter_skill</td><td>+768，qword写入</td></tr><tr><td>chain_time</td><td>+7A0，dword</td></tr><tr><td>chain_skill_prob1</td><td>+7A4，dword</td></tr><tr><td>chain_skill_prob2</td><td>+7A8，dword</td></tr></tbody></table></div>
+<p>原始表映射：<code>block=32、parry=64、dodge=128、resist=256</code>。REA确认循环查表、字段写入与按掩码登记；表值由原始PE辅助读取。资源中的大写 <code>Block</code> 怎样匹配小写表，仍需核对比较入口或规范化。</p>
+<p><code>39D5D0</code> 判断+768/+100/+108是否非零；<code>27FDE0</code> 据此进入条件技能UI模板。这是类型分类和UI构建，实际点亮、冷却与施放校验尚未闭合。</p>
+<div class="note unknown">“数字被解析”不等于“概率被使用”。仍不能把 <code>chain_skill_prob2=10</code> 作为盾牌反击机会的10%乘数。</div></div>
+<div class="card"><span class="badge observed">当前客户端 · 误认排除</span><h3>方向状态不是已证实的盾反窗口</h3>
+<p><code>057930</code> 接收状态字节、方向参数与向量，形成局部d。有效分支中：d≤15写1；15&lt;d&lt;45写4；d≥45写2。其他状态可写0或保持旧值。d的完整来源尚未解析，不能直接给这些分类填“前后左右”。</p>
+<div class="formula">历史状态：u32(n−历史时间) &lt; 1382 时保留
+当前状态：u32(n−当前时间) &gt; 716 时加入
+最终按位 OR 合并</div>
+<p>716不加入当前状态，717加入；1381保留历史状态，1382不保留。相同分类不会在这个更新函数里反复重置计时。保护计时的单位未知。</p>
+<div class="note unknown">这里首先证明方向相关的本地状态。收到的攻击标记还会与它相交，但后续用途未闭合；它不构成盾牌反击技能的官方持续时间或概率。</div></div></div>
+<div class="card"><span class="badge observed">当前客户端 · 伤害提示消费者</span><h3>看见伤害数字，不代表客户端决定伤害</h3>
+<p><code>430D20</code> 展开消息中的每条结果；<code>431173</code> 将每条52字节记录交给 <code>0B5630(type=3)</code>。对应正数分支读取记录开头的32位整数，再直接交给本地化/十进制格式化函数。这一显示链没有先用装备攻防或PVP倍率重新算出这个数。</p>
+<p>因此，改提示文字或显示数值不能证明实际扣血改变。这一结论只覆盖已追通的S_ATTACK显示分支；其他技能、治疗、持续伤害消息仍要分别审计。</p></div>
+<div class="note model"><strong>PVP的准确边界：</strong>对REA解析指令中235处具名LEA，辅助解析原始PE文字后未见pvp名称。它不覆盖动态拼名或其他解析器，也不证明参数没有被使用。旧服务端模型仍保持“参考实现”的证据等级。</div>
+<details><summary>本轮证据、复现与下一入口</summary><p>39条关键指令、12个有限边界例子通过核对，581份Evidence均绑定同一样本。38份失败原文保留，包括两项IDA适配器不支持的read_bytes。空字符串搜索不证明UTF16名称不存在。</p>
+<p><a href="evidence/REA_AION_ROUND9_20261011.md">第九轮详细分析</a> · <a href="evidence/rea-round9-verification.json">核对清单与未知</a> · <a href="evidence/rea-counter-parser.json">REA 字段解析指令</a> · <a href="evidence/rea-direction-classifier.json">REA 方向分类指令</a> · <a href="evidence/rea-received-damage-text.json">REA 战斗数字消费者</a></p>
+<p>下一入口：字符串比较与Block规范化；条件技能控件更新/输入回调；快照+3BC与本地结果状态的消费者；PVP执行字段；RandomMoveLoc方向与保护计时来源。</p></details>
+</section>

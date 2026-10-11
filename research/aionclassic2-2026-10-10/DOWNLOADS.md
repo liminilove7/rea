@@ -1,5 +1,13 @@
 # 按功能下载
 
+## 第九轮最新报告与证据（2026-10-11）
+
+- [evidence__rea-round9.zip](https://github.com/liminilove7/rea/releases/download/aion-research-20261011/evidence__rea-round9.zip)：9416732字节，1826文件，SHA256 `5e912a84d75c5bf5103ae2240b9b8331c65b05d41c2bf1acf758e169e44b63e8`。
+- [reports__complete-mechanics-report__round9.zip](https://github.com/liminilove7/rea/releases/download/aion-research-20261011/reports__complete-mechanics-report__round9.zip)：2098531字节，48文件，SHA256 `7e09304cc721bd0091040d1998fb87f1f614498801c076c8b367d4945c2312f0`。
+
+最新完整报告请下载带 __round9 后缀的包；不带此后缀的报告包保留为第八轮历史版本。新包内evidence/resources.json与原已上传独立资源附件SHA256一致。
+
+
 [所有附件与SHA256核对完成的Release](https://github.com/liminilove7/rea/releases/tag/aion-research-20261011)
 
 范围是bin64程序与本次分析资源；不包含完整21.3GB游戏目录。

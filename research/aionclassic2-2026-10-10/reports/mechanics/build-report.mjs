@@ -45,6 +45,14 @@ const files = [
   [local + '/rea-aion-round8/session-cleanup.json', 'prior-session-cleanup.json'],
   [source, 'EnchantService.java']
 ];
+files.push(
+  [local + '/rea-aion-round9/REA_AION_ROUND9_20261011.md', 'REA_AION_ROUND9_20261011.md'],
+  [local + '/rea-aion-round9/verification.json', 'rea-round9-verification.json'],
+  [local + '/rea-aion-round9/skill-parser-insns.evidence.json', 'rea-counter-parser.json'],
+  [local + '/rea-aion-round9/mask-180057930-insns.evidence.json', 'rea-direction-classifier.json'],
+  [local + '/rea-aion-round9/last-0b5630-insns.evidence.json', 'rea-received-damage-text.json'],
+  [local + '/rea-aion-round9/ready-check-0.evidence.json', 'rea-condition-skill-ui.json']
+);
 const copied = [];
 for (const [from, to] of files) { const raw = fs.readFileSync(from); fs.writeFileSync(root + '/evidence/' + to, raw); copied.push({ file: to, sourcePath: from, sha256: hash(raw) }); }
 const data = { date: '2026-10-11', sampleSha256: read(binary + '/enchant-formula-evidence.json').sha256, commit: model.emulator_commit, attributes, items, gods, weaponGroups: resources.weapon_groups.map(x => ({ type: x.weapon_type, records: x.records, testCount: x.test_name_marker_count, intervals: x.attack_delay_raw_distribution, ranges: x.attack_range_raw_distribution })), pvpSkills: resources.pvp_skills.filter(x => x.raw.pvp_damage_ratio !== undefined), counts: resources.counts, enchantStats, sourceAudit: { method: 'Auxiliary pinned-source reading; not new REA binary analysis.', path: sourceRelative, gitBlobSha1: blob, sha256: hash(bytes), verified: true }, evidence: copied };
@@ -57,6 +65,8 @@ template = template.replace('@@REPORT_DATA@@', JSON.stringify(data).replace(/</g
 template = template.replace('<a href="#scope"><b>01</b>', '<a href="#cases"><b>00</b>你的具体案例</a><a href="#scope"><b>01</b>');
 template = template.replace('加入强化属性收益的固定源码核对，以及可直接操作的离线实验台。','加入塔爷强化、剑星对持盾角色和具体技能案例，以及可直接操作的离线实验台。');
 template = template.replace('<section id="scope"', fs.readFileSync(root + '/case.fragment.html', 'utf8') + '\n<section id="scope"');
+template = template.replace('<a href="#scope"><b>01</b>', '<a href="#round9"><b>续</b>REA 新证据</a><a href="#scope"><b>01</b>');
+template = template.replace('<section id="scope"', fs.readFileSync(root + '/round9.fragment.html', 'utf8') + '\n<section id="scope"');
 template = template.replace('</body>', '<script>' + fs.readFileSync(root + '/case-script.js', 'utf8') + '</script></body>');
 fs.writeFileSync(root + '/AION机制分析报告.html', template);
 console.log(JSON.stringify({ htmlBytes: Buffer.byteLength(template), equipmentEntries: items.length, godstones: gods.length, attributes: attributes.length, newSourceAudit: data.sourceAudit }));

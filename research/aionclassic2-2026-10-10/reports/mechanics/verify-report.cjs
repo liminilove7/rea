@@ -15,7 +15,9 @@ const check = (name, condition) => { assert.ok(condition, name); checks.push({ n
     page.on('request', request => { if (/^https?:/.test(request.url())) network.push(request.url()); });
     await page.goto(pathToFileURL(root + '/AION机制分析报告.html').href);
     await page.waitForFunction(() => window.reportAPI && document.getElementById('enc-client').textContent.includes('55%'));
-    check('13 report sections including concrete cases', await page.locator('section').count() === 13);
+    check('14 report sections including REA followup', await page.locator('section').count() === 14);
+    check('Followup distinguishes direction state from unproven counter window', (await page.locator('#round9').textContent()).includes('方向状态不是已证实的盾反窗口'));
+    check('Received numeric consumer chain is visible', (await page.locator('#round9').textContent()).includes('0B5630(type=3)'));
     check('All 26 explicit PVP resources are included', await page.locator('#pvp-skill-table tr').count() === 26);
     const sourceItems = JSON.parse(fs.readFileSync('D:/RVE/.codex/local/aion-report-backup/binary/combat-resource-evidence.json')).speed_bonus_items;
     const reportItems = JSON.parse(fs.readFileSync(root + '/evidence/report-data.json')).items;
@@ -23,6 +25,8 @@ const check = (name, condition) => { assert.ok(condition, name); checks.push({ n
     check('No external network requests', network.length === 0);
     check('No JavaScript errors', errors.length === 0);
     check('Desktop document has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.locator('#round9').evaluate(el => window.scrollTo(0, el.offsetTop - 85));
+    await page.screenshot({ path: root + '/preview-round9.png' });
     const calculations = await page.evaluate(() => {
       const api = window.reportAPI;
       return {
@@ -119,6 +123,9 @@ const check = (name, condition) => { assert.ok(condition, name); checks.push({ n
     await page.locator('#case-plan').evaluate(el => el.scrollIntoView({ block: 'start' }));
     check('Mobile case calculator stays inside viewport', await page.locator('#case-plan').evaluate(el => el.getBoundingClientRect().right <= innerWidth));
     await page.screenshot({ path: root + '/preview-case-mobile.png' });
+    await page.locator('#round9').evaluate(el => window.scrollTo(0, el.offsetTop - 85));
+    check('Mobile followup remains within viewport', await page.locator('#round9').evaluate(el => el.getBoundingClientRect().right <= innerWidth));
+    await page.screenshot({ path: root + '/preview-round9-mobile.png' });
     await page.evaluate(() => scrollTo(0, 0));
     check('Mobile document has no horizontal overflow', await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await page.screenshot({ path: root + '/preview-mobile.png' });
@@ -126,6 +133,6 @@ const check = (name, condition) => { assert.ok(condition, name); checks.push({ n
     check('Print layout hides navigation and controls', await page.locator('nav').evaluate(el => getComputedStyle(el).display === 'none'));
     check('No JavaScript errors after interactions', errors.length === 0);
     fs.writeFileSync(root + '/verification.json', JSON.stringify({ checks, calculations, caseChecks, errors, externalNetworkRequests: network, scope: 'Report browser and model verification; not game execution or live-server validation.', passed: true }, null, 2));
-    console.log(JSON.stringify({ passed: true, checks: checks.length, errors, screenshots: ['preview-desktop.png', 'preview-enchant.png', 'preview-mobile.png', 'preview-cases.png', 'preview-case-mobile.png'] }));
+    console.log(JSON.stringify({ passed: true, checks: checks.length, errors, screenshots: ['preview-desktop.png', 'preview-enchant.png', 'preview-mobile.png', 'preview-cases.png', 'preview-case-mobile.png', 'preview-round9.png', 'preview-round9-mobile.png'] }));
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
