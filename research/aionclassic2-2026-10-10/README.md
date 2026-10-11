@@ -1,5 +1,9 @@
 # AION客户端 / 服务端机制研究档案
 
+## 下载入口
+
+[按功能下载全部归档](DOWNLOADS.md) · [GitHub Release](https://github.com/liminilove7/rea/releases/tag/aion-research-20261011)
+
 ## 阅读入口
 
 - [图文机制报告与具体案例](reports/mechanics/AION机制分析报告.html)：塔哈巴塔强化、剑星巨剑/战戟对持盾角色、致命/命中/盾反前提、技能、神石与离线模型实验台。
