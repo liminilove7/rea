@@ -1,0 +1,61 @@
+<section id="cases" class="section"><div class="kicker">00 / 你的具体案例 · 2026-10-11 补充</div><h2>50级塔爷武器，剑星怎样配才能打持盾角色？</h2><p>以下按你选定的<strong>巨剑 / 战戟，对持盾角色，并减少对方盾牌反击机会</strong>展开。每个答案同时写出适用条件和反例；数值来自本机资源、已有二进制证据与固定源码推导，没有新增线上战斗样本。</p>
+<div class="grid three"><div class="card"><span class="badge observed">客户端显示上限</span><div class="big">94 / 107级</div><p>塔哈巴塔 英雄品质武器：+1～+10 / +11～+15<br>最低封顶石等级，辅助剂加在封顶之后</p></div><div class="card"><span class="badge reference">净致命收益拐点</span><div class="big">440 / 600</div><p>目标抵抗160时，对应面板600 / 760<br>普通暴击倍率参数=1、非双持</p></div><div class="card"><span class="badge reference">压低普通盾防</span><div class="big">B − 19</div><p>对方盾防B=2500，命中2481即到模型最低档<br>仍残留1/101条件概率，不是完全禁用反击</p></div></div>
+<h3>案例一：强化塔哈巴塔武器到 +15，应选几级石头？</h3>
+<p>先纠正最容易选错的输入：“塔爷”在这份资源中是 <strong>50级、英雄品质（q=5）</strong>，不是 唯一品质（q=4）。本版本商店筛选把此品质称为“英雄”，旧物品字符串表也有“史诗”的译法；报告统一使用“英雄品质”。两把标准武器如下；没有混入“传说的塔哈巴塔”测试/活动变体。</p>
+<div class="tablewrap"><table><thead><tr><th>标准物品 / ID</th><th>伤害 / 间隔 / 射程</th><th>命中组成</th><th>致命组成</th></tr></thead><tbody id="case-weapons"></tbody></table></div>
+<p class="minor">表中“基础 + 绿色附加”是物品字段，不是完整角色面板。合成武器、其他装备、魔石、食物与技能效果都还要重算。两个模板均有攻速19%、物攻36、HP317的附加字段。</p>
+<div class="grid"><div class="card"><h3>阶段 +1～+10</h3><div class="formula">基础UI值 = clamp(15 × (石等级 − 40), 0, 800)
+15 × (94 − 40) = 810 → 封顶800
+最低封顶石等级：94
+无辅助剂：80%；A=150辅助剂：95%</div></div><div class="card"><h3>阶段 +11～+15</h3><div class="formula">基础UI值 = clamp(trunc(15 × (石等级 − 40) / 2), 0, 500)
+trunc(15 × (107 − 40) / 2) = 502 → 封顶500
+最低封顶石等级：107
+无辅助剂：50%；A=150辅助剂：65%</div></div></div>
+<p>这里的阶段是<strong>即将强化到的等级</strong>，例如 +10→+11 使用第二段。上级强化辅助剂(英雄用)，ID <code>166100008</code>，资源 Probability=150：按显示消费者折算增加15个百分点；它不改变基础段何时封顶。94、107级石条目均实际存在于本资源，但当前渠道能否获得与市价未核实。</p>
+<div class="tablewrap"><table><thead><tr><th>石等级</th><th>+1～+10 无辅助剂 / A150</th><th>+11～+15 无辅助剂 / A150</th><th>选择含义</th></tr></thead><tbody id="case-stones"></tbody></table></div>
+<div id="case-enchant-chart" class="visual chart"></div><p class="caption">同品质、同装备等级的显示曲线。横坐标为石等级；110级石在这条UI路径上比107级石没有更高的基础上限。</p>
+<div class="note unknown"><strong>能给你的结论：</strong>若问题是“怎样达到已恢复的客户端显示上限”，低段选 ≥94、高段选 ≥107；若问题是“当前官方服实际成功率最高且最省钱”，还没有同版本后台或统计证据，不能承诺95%/65%的真实成功率，也不能仅凭UI指导大量购买。最高显示率不等于最低总花费；强化至+15也不保证只需15次。</div>
+<details><summary>为什么参考源码会给出另一套石等级？</summary><p>固定源码 英雄品质的质量惩罚Q=15；S=min(50+5×max(石等级−50−15,0)+辅助剂,95)。无辅助剂从74级开始到S=95；源码A=15时从71级到95。该实现没有这里的+11分段，且U是0..100严格U&lt;S，所以S=95对应95/101≈94.0594%。<strong>这是版本差异证据，不能拿旧模拟器的74/71覆盖本机UI的94/107。</strong></p><p>正常强化与独立保证强化也不能混用：<a href="https://www.aiononline.com/en-us/news/classic-ignite-update-patch-notes-feb-2025">NA Classic Ignite（2025-02）</a>和<a href="https://forum.aion.gameforge.com/forum/thread/13347-update-3-7-rankings-enchantments/">Gameforge Classic 3.7（2025-04）</a>加入单独保证强化至+10的路径，起始阶段受限制；这不能证明你的地区、客户端已采用，也不回答+11～+15的普通强化概率。</p></details>
+<h3>案例二：剑星致命一击到底堆440、600，还是更多？</h3>
+<p><span class="badge reference">固定源码模型</span>先算 <code>C=R(角色致命×技能criticalProb−对方物理致命抵抗)</code>，再套440/600分段。你用巨剑/战戟单主手，普通倍率=1时，面板拐点就是 <strong>440+目标抵抗、600+目标抵抗</strong>。这是收益转折，超过仍有收益，不能称“440硬上限”。</p>
+<div class="tablewrap"><table><thead><tr><th>目标致命抵抗</th><th>第一个拐点面板</th><th>第二个拐点面板</th><th>面板600的实际抽签通过率</th></tr></thead><tbody id="case-crit-targets"></tbody></table></div>
+<div id="case-crit-chart" class="visual chart"></div>
+<p><strong>具体例子：</strong>目标抵抗160，面板600→C440，抽签44/101=43.5644%；面板700→C540，49/101=48.5149%；面板760→C600，52/101=51.4851%。因此“剑星固定堆到440就够”对这个目标并不成立。多100致命带来的这段收益，能否胜过命中/攻击，要看盾防事件、技能倍率和你损失的其他属性。</p>
+<p class="minor">分段后的float32阈值与0..100整数抽签形成台阶：C440→441时44→45个通过值，而441→450保持45个。面板点数、理论斜率、每次镶嵌的实际收益要分开。双持采用两手整数均值，不能照抄此单手面板目标。必暴状态与技能criticalProb≠1也另算。</p>
+<h3>案例三：提高命中，怎样减少对手盾牌反击机会？</h3>
+<div class="visual"><svg viewBox="0 0 900 180" role="img" aria-label="命中改变条件盾防阈值与事件分布，反击次数还取决于其他条件"><g fill="#e2eee9"><rect x="10" y="45" width="150" height="85" rx="12"/><rect x="200" y="45" width="185" height="85" rx="12"/><rect x="425" y="45" width="190" height="85" rx="12"/><rect x="655" y="45" width="235" height="85" rx="12"/></g><g text-anchor="middle"><text x="85" y="78">命中提高</text><text x="85" y="104">A↑，B−A↓</text><text x="292" y="78">条件盾防阈值降低</text><text x="292" y="104">有源码判定依据</text><text x="520" y="78">格挡事件重新分布</text><text x="520" y="104">资源 counter_skill=Block</text><text x="772" y="78">实际反击 / 后续连续技</text><text x="772" y="104">冷却、窗口、操作仍待核</text></g><g stroke="#7eaaa1" marker-end="url(#arr)"><path d="M165 87H189"/><path d="M390 87H414"/><path d="M620 87H644"/></g></svg><p class="caption">实线是解释路径，不表示当前客户端反击消费者已全部闭合。最后一步不能由格挡概率直接推定。</p></div>
+<p>已找到中文<strong>盾牌反击 I～V</strong>（154/155/156/157/181）、惩戒一击、盾牌猛击、盾牌回旋等资源，均明确 <code>counter_skill=Block</code>，说明要求盾牌防御成功。盾牌突击444/449属于后续连续技，与“任何时候都能盾反”不同。反射护盾则是另一类效果。</p>
+<div class="formula">普通格挡阈值 b = clamp(trunc((对方盾防B − 我方有效命中A)/10), 1, 50)
+条件格挡概率 = b/101
+A ≥ B−19 → 达到最低档1/101
+A &lt; B−500 → 仍在50/101上限区；少量加命中可能暂时无收益</div>
+<p><strong>对方B=2500的具体案例：</strong>假设对方闪避1600、招架2200、正常持盾持武器、无必防Buff。下表“格挡事件/100次”包含前序判定；它是期望事件数，不是一次战斗的保证值，也不是反击技能使用次数。</p>
+<div class="tablewrap"><table><thead><tr><th>我的有效命中</th><th>条件盾防 b/101</th><th>普攻格挡事件/100次</th><th>物理技能格挡事件/100次</th><th>实用解释</th></tr></thead><tbody id="case-accuracy"></tbody></table></div>
+<p>如果你只有1800命中，对这个盾防2500目标，先加100到1900仍在普通盾防封顶区；但会改变招架，从而改变总体格挡事件分布。不能只说“命中提高→每个盾反机会都单调减少”：<strong>在盾防仍封顶而招架减少时，进入盾防分支的攻击反而更多。</strong>跨出封顶区后再比较整体结果，2481可把普通盾防条件概率压到最低档。</p>
+<div class="note model"><strong>例外必须单列：</strong>源码必防状态先返回100，优先于B−A；这时单靠加命中不能压低该分支。对方已有反击窗口时，再加命中也不能撤销此前事件。<code>chain_skill_prob2=10</code> 是资源连续技字段，不能乘到格挡概率上就称“实际盾反率”；窗口开启/刷新、冷却及服务器校验尚未闭合。</div>
+<details><summary>相关反击资源原文</summary><div class="tablewrap"><table><thead><tr><th>ID / 技能</th><th>前提 / 连续技字段</th><th>中文说明</th></tr></thead><tbody id="case-counter-resources"></tbody></table></div></details>
+<h3>案例四：多少盾防投资效果最好？</h3>
+<p><span class="badge reference">固定源码模型</span><strong>先有盾牌，才有普通盾防分支。</strong>剑星拿巨剑/战戟时没有装备盾牌，堆盾防不让该分支生效；只有换持盾装备才讨论盾防配装。面对命中2000的攻击者：盾防2000→条件1/101，2200→20/101，2400→40/101，2500→50/101，2600仍50/101。</p>
+<div id="case-block-chart" class="visual chart"></div>
+<p><strong>可用于配装的目标：</strong>普通分支的盾防封顶从 <code>B=对方有效命中+500</code> 起，超过这个值再加盾防在该目标上没有额外格挡概率收益。敌人换命中装，目标随之移动；“2500盾防最优”只成立于这里的2000命中例子。是否值得堆到封顶还需比较HP、致命抵抗、物防以及面对的物理/魔法攻击比例。</p>
+<p>假设已进入格挡检查，盾牌减伤50%：条件盾防由20/101→30/101，格挡率多9.901个百分点，平均每次进入该检查的攻击少受4.9505%原伤害。整场收益还要乘进入该分支的比例。普通物防2000→2100则在这条物理初段只多减10伤害，不是“减伤比例多10%”。</p>
+<h3>把你和对手的实际属性填进来</h3>
+<div class="card"><p class="minor">以下均是假设正常持武器/持盾的固定源码计算。输入有效单主手值；物理技能不抽闪避。可切到“无盾”检验巨剑/战戟玩家自身盾防为什么不生效。</p><div class="fields">
+<label>我的命中A<input id="case-a" type="number" min="0" max="10000" value="2200"></label><label>我的致命面板<input id="case-c" type="number" min="0" max="5000" value="600"></label><label>对方致命抵抗<input id="case-r" type="number" min="0" max="5000" value="160"></label>
+<label>对方闪避<input id="case-e" type="number" min="0" max="10000" value="1600"></label><label>对方招架<input id="case-p" type="number" min="0" max="10000" value="2200"></label><label>对方盾防B<input id="case-b" type="number" min="0" max="10000" value="2500"></label>
+<label>我的盾防<input id="case-own-b" type="number" min="0" max="10000" value="2500"></label><label>对方命中<input id="case-enemy-a" type="number" min="0" max="10000" value="2000"></label><label>我的盾牌减伤%<input id="case-reduce" type="number" min="0" max="100" value="50"></label>
+<label>对方是否持盾<select id="case-has-shield"><option value="1">持盾（普通分支）</option><option value="0">没有盾牌</option></select></label><label>我是否持盾<select id="case-own-shield"><option value="0">无盾：巨剑 / 战戟</option><option value="1">已换盾牌</option></select></label></div>
+<div class="result"><output id="case-plan" aria-live="polite"></output></div><div class="tablewrap"><table><thead><tr><th>尝试的配装增量</th><th>致命抽签</th><th>普攻格挡事件 /100</th><th>技能格挡事件 /100</th></tr></thead><tbody id="case-marginal"></tbody></table></div>
+<p class="minor">“+100命中”或“+100致命”不是等成本魔石方案；用于先判断有无收益。没有你的整套装备/可替换孔位/对手数据，不能输出一套唯一最优魔石数量。</p></div>
+<h3>案例五：具体技能与PVP伤害，不只看面板攻击</h3>
+<p>50级案例选<strong>破坏一击 I / II、破灭之猛击 I</strong>。固定技能树给出所需等级45 / 48 / 50，均涉及烙印。幻影弹 I在该树要求55，破坏一击 IV要求54，不能拿它们充当此50级角色可用技能。</p>
+<div class="tablewrap"><table><thead><tr><th>技能 / 参考学习等级</th><th>资源特性</th><th>源码V=value+delta×L</th><th>PVP技能项</th></tr></thead><tbody id="case-skills"></tbody></table></div>
+<p><strong>关键细节：</strong>破坏一击 II的模板 <code>lvl=2</code> 表示堆叠等级；技能树存储 <code>skillLevel=1</code>，Skill→Effect传的是角色学得的skillLevel，所以此路径L=1：V=1424+39=1463，PVP技能项R(1463×1.3f)=1902。不能因为名字II就擅自乘2。</p>
+<div class="grid"><div class="card"><h3>同技能换巨剑/战戟</h3><p>以下以两把<strong>未强化、未合成</strong>标准武器的端点作为受控输入：POWER100，物攻bonus36，目标物防2000，PVP攻200/防100；非暴击、未格挡/招架、无碎片、Buff与护盾。它们是模型初段输出，不是实测连招DPS。</p><div class="tablewrap"><table><thead><tr><th>技能</th><th>巨剑初段</th><th>战戟初段</th></tr></thead><tbody id="case-skill-damage"></tbody></table></div></div><div class="card"><h3>顺序决定结果</h3><div class="formula">V' = R(V × 技能PVP倍率 /100f)
+D = max(1, R(W×POWER×0.01f) + bonus + V' − R(物防×0.1f))
+先处理格挡 / 招架 / 暴击 / 伤害乘数
+再 R(D×0.60f)
+再 R(上一步×(1+PVP攻×0.001f−PVP防×0.001f))</div><p>130%只先乘技能项，不把整段武器/bonus都乘1.3。巨剑伤害范围窄，战戟范围宽；均值、攻速和暴击/防御分布未合并前，不判定哪把整场更强。</p></div></div>
+<p>破灭之猛击 I资源是7m范围、最多6目标、2000ms施法字段，附加Stumble候选。固定服务器模板也配置7/6与子效果8218；资源reserved18=20不能直接当最终倒地成功率，还需看子效果抵抗与消费者。技能文字“百分之百命中”也不代表绕过盾防/招架：该固定实现的技能状态分支仍检查两者。</p>
+<div class="note"><strong>针对你的实战问题：</strong>以对方盾防2500/招架2200为假设，先用计算器比较当前命中与2481的格挡事件差异；用目标致命抵抗决定440/600净值对应的面板，再比较致命与命中的边际收益。若对方必防Buff生效，常规命中配装计算暂不适用。这样得到的是条件明确、可用正常战斗记录检验的案例。</div>
+<p class="minor">本节方法：新增资源逐条提取与固定源码辅助阅读；未新增REA二进制请求、未启动/附加游戏。<a href="evidence/case-evidence.json">案例完整字段、源文件哈希、技能树与模板</a> · <a href="evidence/StatFunctions.java">属性判定源码</a> · <a href="evidence/AttackUtil.java">攻击分支源码</a> · <a href="evidence/DamageEffect.java">技能项消费源码</a> · <a href="evidence/Skill.java">Skill</a> / <a href="evidence/Effect.java">Effect等级传递</a>。以下原有12节保留以便系统学习。</p></section>

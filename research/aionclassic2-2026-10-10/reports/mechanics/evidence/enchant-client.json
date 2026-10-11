@@ -1,0 +1,5822 @@
+{
+  "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786",
+  "scope": "Observed CLIENT UI calculation and resource metadata. No server RNG, online probability, availability, or exploitation claim. n is literally instance byte +0xA9 plus one; interpretation as next enchant stage is supported by enchant UI context, not live validation.",
+  "quality_mapping": [
+    {
+      "name": "common",
+      "value": 1,
+      "table_rva": "0x82fa40"
+    },
+    {
+      "name": "rare",
+      "value": 2,
+      "table_rva": "0x82fa50"
+    },
+    {
+      "name": "unique",
+      "value": 4,
+      "table_rva": "0x82fa60"
+    },
+    {
+      "name": "junk",
+      "value": 0,
+      "table_rva": "0x82fa70"
+    },
+    {
+      "name": "legend",
+      "value": 3,
+      "table_rva": "0x82fa80"
+    },
+    {
+      "name": "epic",
+      "value": 5,
+      "table_rva": "0x82fa90"
+    },
+    {
+      "name": "mythic",
+      "value": 6,
+      "table_rva": "0x82faa0"
+    }
+  ],
+  "descriptors": [
+    {
+      "rva": "0x6ec468",
+      "field_name": "quality",
+      "record_offset": "0x1e1",
+      "width": 1,
+      "converter_rva": "0x392dd0"
+    },
+    {
+      "rva": "0x6eca68",
+      "field_name": "level",
+      "record_offset": "0x1ed",
+      "width": 1,
+      "converter_rva": null
+    },
+    {
+      "rva": "0x6ecfe8",
+      "field_name": "sub_enchant_material_effect_type",
+      "record_offset": "0x1da",
+      "width": 1,
+      "converter_rva": "0x392fe0"
+    },
+    {
+      "rva": "0x6ed008",
+      "field_name": "sub_enchant_material_effect",
+      "record_offset": "0x1dc",
+      "width": 2,
+      "converter_rva": null
+    }
+  ],
+  "coefficient_by_quality": {
+    "1": 60,
+    "2": 40,
+    "3": 30,
+    "4": 20,
+    "5": 15,
+    "6": 10
+  },
+  "branch_target_tables": [
+    [
+      "0x31671d",
+      "0x316727",
+      "0x316734",
+      "0x31673e",
+      "0x31674b",
+      "0x316755"
+    ],
+    [
+      "0x316784",
+      "0x3167a6",
+      "0x3167b3",
+      "0x3167bd",
+      "0x3167ca",
+      "0x3167d4"
+    ]
+  ],
+  "display_scale": {
+    "rva": "0x874b9c",
+    "float32": 0.10000000149011612
+  },
+  "formula_for_n_1_to_20": "raw = clamp(clamp(trunc0(k[q]*(stoneLevel-equipmentLevel+10)/(1 if n<=10 else 2)), 0, 800 if n<=10 else 500) + supplementRaw, 0, 1000); displayPercent = raw * float32(0.1)",
+  "static_instruction_checks": [
+    {
+      "rva": "0x3967e6",
+      "instruction": "movzx eax, byte ptr [rax + 0x1e1]",
+      "passed": true
+    },
+    {
+      "rva": "0x396d46",
+      "instruction": "movzx eax, byte ptr [rax + 0x1ed]",
+      "passed": true
+    },
+    {
+      "rva": "0x397c16",
+      "instruction": "movzx eax, word ptr [rax + 0x1dc]",
+      "passed": true
+    },
+    {
+      "rva": "0x3166e5",
+      "instruction": "movzx r8d, byte ptr [rbp + 0xa9]",
+      "passed": true
+    },
+    {
+      "rva": "0x3166ed",
+      "instruction": "inc r8d",
+      "passed": true
+    },
+    {
+      "rva": "0x316722",
+      "instruction": "imul eax, edx, 0x3c",
+      "passed": true
+    },
+    {
+      "rva": "0x316739",
+      "instruction": "imul eax, edx, 0x1e",
+      "passed": true
+    },
+    {
+      "rva": "0x316750",
+      "instruction": "imul eax, edx, 0xf",
+      "passed": true
+    },
+    {
+      "rva": "0x31679f",
+      "instruction": "mov eax, 0x320",
+      "passed": true
+    },
+    {
+      "rva": "0x3167ea",
+      "instruction": "mov eax, 0x1f4",
+      "passed": true
+    },
+    {
+      "rva": "0x3167ff",
+      "instruction": "add ebx, eax",
+      "passed": true
+    },
+    {
+      "rva": "0x316801",
+      "instruction": "mov eax, 0x3e8",
+      "passed": true
+    },
+    {
+      "rva": "0x172030",
+      "instruction": "call 0x180316610",
+      "passed": true
+    }
+  ],
+  "examples": [
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 50,
+      "next_stage": 1,
+      "supplement_raw": 0,
+      "predicted_client_raw": 200,
+      "predicted_client_display_percent": 20.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 70,
+      "next_stage": 10,
+      "supplement_raw": 0,
+      "predicted_client_raw": 600,
+      "predicted_client_display_percent": 60.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 80,
+      "next_stage": 10,
+      "supplement_raw": 0,
+      "predicted_client_raw": 800,
+      "predicted_client_display_percent": 80.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 80,
+      "next_stage": 10,
+      "supplement_raw": 150,
+      "predicted_client_raw": 950,
+      "predicted_client_display_percent": 95.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 80,
+      "next_stage": 11,
+      "supplement_raw": 0,
+      "predicted_client_raw": 400,
+      "predicted_client_display_percent": 40.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 80,
+      "next_stage": 11,
+      "supplement_raw": 150,
+      "predicted_client_raw": 550,
+      "predicted_client_display_percent": 55.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 4,
+      "equipment_level": 50,
+      "stone_level": 100,
+      "next_stage": 11,
+      "supplement_raw": 150,
+      "predicted_client_raw": 650,
+      "predicted_client_display_percent": 65.0,
+      "status": "offline model, not a game observation"
+    },
+    {
+      "quality_code": 5,
+      "equipment_level": 50,
+      "stone_level": 100,
+      "next_stage": 10,
+      "supplement_raw": 150,
+      "predicted_client_raw": 950,
+      "predicted_client_display_percent": 95.0,
+      "status": "offline model, not a game observation"
+    }
+  ],
+  "godstone_probability_text_checks": [
+    {
+      "id": "168000002",
+      "raw": "100",
+      "text": "有10%的概率使对象在2秒时间内晕厥。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000003",
+      "raw": "100",
+      "text": "有10%的概率使对象在2秒时间内麻痹。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000004",
+      "raw": "100",
+      "text": "有10%的概率使对象在10秒时间内被束缚，无法移动。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000005",
+      "raw": "100",
+      "text": "有10%的概率使对象在10秒时间内沉默。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000006",
+      "raw": "100",
+      "text": "有10%的概率使对象在10秒时间内失明。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000007",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内使对象的移动速度降低10%。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000008",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内使对象的攻击速度降低10%。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000009",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内造成30点的周期性毒素伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000010",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内造成30点的周期性周期性生命减少状态伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000011",
+      "raw": "100",
+      "text": "有10%的概率造成100点火属性魔法伤害的效果。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000012",
+      "raw": "100",
+      "text": "有10%的概率造成100点水属性魔法伤害的效果。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000013",
+      "raw": "100",
+      "text": "有10%的概率造成100点风属性魔法伤害的效果。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000014",
+      "raw": "100",
+      "text": "有10%的概率造成100点笛属性魔法伤害的效果。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000015",
+      "raw": "500",
+      "text": "有50%的概率使对象在6秒时间内晕厥。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000016",
+      "raw": "500",
+      "text": "有50%的概率使对象在6秒时间内麻痹。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000017",
+      "raw": "500",
+      "text": "有50%的概率使对象在30秒时间内被束缚，无法移动。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000018",
+      "raw": "500",
+      "text": "有50%的概率使对象在30秒时间内沉默。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000019",
+      "raw": "500",
+      "text": "有50%的概率使对象在30秒时间内失明。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000020",
+      "raw": "500",
+      "text": "有50%的概率在60秒时间内使对象的移动速度降低50%。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000021",
+      "raw": "500",
+      "text": "有50%的概率在60秒时间内使对象的攻击速度降低50%。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000022",
+      "raw": "500",
+      "text": "有50%的概率在60秒时间内造成150点的周期性毒素伤害。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000023",
+      "raw": "500",
+      "text": "有50%的概率在60秒时间内造成150点的周期性周期性生命减少状态伤害。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000024",
+      "raw": "500",
+      "text": "有50%的概率造成500点火属性魔法伤害的效果。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000025",
+      "raw": "500",
+      "text": "有50%的概率造成500点水属性魔法伤害的效果。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000026",
+      "raw": "500",
+      "text": "有50%的概率造成500点风属性魔法伤害的效果。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000027",
+      "raw": "500",
+      "text": "有50%的概率造成500点地属性魔法伤害的效果。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000028",
+      "raw": "40",
+      "text": "有4%的概率造成185点火属性魔法伤害。",
+      "percent_text": "4",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000029",
+      "raw": "20",
+      "text": "有2%的概率造成370点火属性魔法伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000030",
+      "raw": "60",
+      "text": "有6%的概率造成124点火属性魔法伤害。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000031",
+      "raw": "30",
+      "text": "有3%的概率造成247点地属性魔法伤害。",
+      "percent_text": "3",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000032",
+      "raw": "50",
+      "text": "有5%的概率在20秒时间内每3秒造成40点的周期性生命减少状态伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000033",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内每3秒造成65点的周期性生命减少状态伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000034",
+      "raw": "60",
+      "text": "有6%的概率使对象在1秒时间内晕厥。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000035",
+      "raw": "20",
+      "text": "有2%的概率使对象在5秒时间内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000036",
+      "raw": "20",
+      "text": "有2%的概率使对象在10秒时间内无法移动。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000037",
+      "raw": "100",
+      "text": "有10%的概率使对象在10秒时间内沉默。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000038",
+      "raw": "100",
+      "text": "有10%的概率使对象在10秒时间内失明。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000039",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的移动速度减少50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000040",
+      "raw": "100",
+      "text": "有10%的概率在10秒时间内使对象的攻击速度减少50%。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000041",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内每2秒造成38点的中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000042",
+      "raw": "80",
+      "text": "有8%的概率在10秒时间内每2秒造成71点的周期性生命减少状态伤害。",
+      "percent_text": "8",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000043",
+      "raw": "100",
+      "text": "有10%的概率造成188点的火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000044",
+      "raw": "200",
+      "text": "有20%的概率造成94点的水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000045",
+      "raw": "100",
+      "text": "有10%的概率造成188点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000046",
+      "raw": "200",
+      "text": "有20%的概率造成94点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000047",
+      "raw": "10",
+      "text": "有1%的概率造成1880点的火属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000048",
+      "raw": "20",
+      "text": "有2%的概率造成940点的水属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000049",
+      "raw": "10",
+      "text": "有1%的概率造成1880点的地属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000050",
+      "raw": "20",
+      "text": "有2%的概率造成940点的风属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000051",
+      "raw": "10",
+      "text": "有1%的概率造成3760点的火属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000052",
+      "raw": "20",
+      "text": "有2%的概率造成1880点的水属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000053",
+      "raw": "100",
+      "text": "有10%的概率造成376点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000054",
+      "raw": "200",
+      "text": "有20%的概率造成188点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000055",
+      "raw": "10",
+      "text": "有1%的概率造成3760点的火属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000056",
+      "raw": "20",
+      "text": "有2%的概率造成1880点的水属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000057",
+      "raw": "100",
+      "text": "有10%的概率造成376点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000058",
+      "raw": "200",
+      "text": "有20%的概率造成188点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000059",
+      "raw": "60",
+      "text": "有6%的概率使对象在1秒时间内晕厥。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000060",
+      "raw": "20",
+      "text": "有2%的概率使对象在5秒时间内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000061",
+      "raw": "20",
+      "text": "有2%的概率使对象在10秒时间内无法移动。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000062",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000063",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000064",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的移动速度降低50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000065",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的攻击速度降低50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000066",
+      "raw": "60",
+      "text": "有6%的概率使对象在1秒时间内晕厥。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000067",
+      "raw": "20",
+      "text": "有2%的概率使对象在5秒时间内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000068",
+      "raw": "20",
+      "text": "有2%的概率使对象在10秒时间内无法移动。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000069",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000070",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000071",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的移动速度减少50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000072",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的攻击速度降低50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000073",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000074",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000075",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的攻击速度降低50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000076",
+      "raw": "500",
+      "text": "有右手50%，左手0%的概率造成火属性伤害。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000077",
+      "raw": "0",
+      "text": "有右手0%，左手50%的概率造成水属性伤害。",
+      "percent_text": "0",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000078",
+      "raw": "500",
+      "text": "有右手50%，左手20%的概率造成地属性伤害。",
+      "percent_text": "50",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000079",
+      "raw": "200",
+      "text": "有右手20%，左手50%的概率造成风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000080",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内，每2秒造成10点的中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000081",
+      "raw": "100",
+      "text": "有10%的概率在10秒时间内，每2秒造成14点的周期性生命减少状态伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000082",
+      "raw": "200",
+      "text": "有20%的概率造成24点的火属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000083",
+      "raw": "200",
+      "text": "有20%的概率造成24点的水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000084",
+      "raw": "200",
+      "text": "有20%的概率造成24点的地属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000085",
+      "raw": "200",
+      "text": "有20%的概率造成24点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000086",
+      "raw": "50",
+      "text": "有5%的概率在20秒时间内，每2秒造成20点的中毒伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000087",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内，每2秒造成28点的周期性生命减少状态伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000088",
+      "raw": "100",
+      "text": "有10%的概率造成48点的火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000089",
+      "raw": "100",
+      "text": "有10%的概率造成48点的水属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000090",
+      "raw": "100",
+      "text": "有10%的概率造成48点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000091",
+      "raw": "100",
+      "text": "有10%的概率造成48点的风属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000092",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内，每2秒造成10点的中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000093",
+      "raw": "100",
+      "text": "有10%的概率在10秒时间内，每2秒造成14点的周期性生命减少状态伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000094",
+      "raw": "200",
+      "text": "有20%的概率造成24点的火属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000095",
+      "raw": "200",
+      "text": "有20%的概率造成24点的水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000096",
+      "raw": "200",
+      "text": "有20%的概率造成24点的地属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000097",
+      "raw": "200",
+      "text": "有20%的概率造成24点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000098",
+      "raw": "50",
+      "text": "有5%的概率在20秒时间内，每2秒造成20点的中毒伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000099",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内，每2秒造成28点的周期性生命减少状态伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000100",
+      "raw": "100",
+      "text": "有10%的概率造成48点的火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000101",
+      "raw": "100",
+      "text": "有10%的概率造成48点的水属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000102",
+      "raw": "100",
+      "text": "有10%的概率造成48点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000103",
+      "raw": "100",
+      "text": "有10%的概率造成48点的风属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000117",
+      "raw": "60",
+      "text": "有6%的概率使对象在1秒时间内晕厥。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000118",
+      "raw": "20",
+      "text": "有2%的概率使对象在5秒时间内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000119",
+      "raw": "20",
+      "text": "有2%的概率使对象在10秒时间内无法移动。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000120",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000121",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000122",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的攻击速度降低50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000123",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内使对象的移动速度减少50%。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000124",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内每2秒造成38点的中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000125",
+      "raw": "80",
+      "text": "有8%的概率在10秒时间内每2秒造成71点的周期性生命减少状态伤害。",
+      "percent_text": "8",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000126",
+      "raw": "100",
+      "text": "有10%的概率在376点火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000127",
+      "raw": "200",
+      "text": "有20%的概率在188点水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000128",
+      "raw": "100",
+      "text": "有10%的概率造成376点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000129",
+      "raw": "200",
+      "text": "有20%的概率造成188点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000130",
+      "raw": "10",
+      "text": "有1%的概率造成3760点的火属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000131",
+      "raw": "20",
+      "text": "有2%的概率造成1880点的水属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000132",
+      "raw": "10",
+      "text": "有1%的概率在3760点地属性伤害。",
+      "percent_text": "1",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000133",
+      "raw": "20",
+      "text": "有2%的概率在1880点风属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000134",
+      "raw": "20",
+      "text": "有2%的概率使对象在3秒内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000135",
+      "raw": "50",
+      "text": "有5%的概率使对象在5秒内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000136",
+      "raw": "50",
+      "text": "有5%的概率使对象在5秒内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000137",
+      "raw": "20",
+      "text": "有2%的概率造成750点火属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000138",
+      "raw": "20",
+      "text": "有2%的概率造成750点地属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000139",
+      "raw": "100",
+      "text": "有10%的概率在16秒内每2秒造成38点中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168000140",
+      "raw": "80",
+      "text": "有8%的概率在8秒内每2秒造成71点周期性生命减少状态伤害。",
+      "percent_text": "8",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050000",
+      "raw": "50",
+      "text": "有5%的概率造成188点的火属性伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050001",
+      "raw": "100",
+      "text": "有10%的概率造成94点的水属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050002",
+      "raw": "50",
+      "text": "有5%的概率造成188点的地属性伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050003",
+      "raw": "100",
+      "text": "有10%的概率造成94点的风属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050004",
+      "raw": "100",
+      "text": "有10%的概率在20秒时间内，每2秒造成10点的中毒伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050005",
+      "raw": "100",
+      "text": "有10%的概率在10秒时间内，每2秒造成14点的周期性生命减少状态伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050006",
+      "raw": "200",
+      "text": "有20%的概率造成24点的火属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050007",
+      "raw": "200",
+      "text": "有20%的概率造成24点的水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050008",
+      "raw": "200",
+      "text": "有20%的概率造成24点的地属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050009",
+      "raw": "200",
+      "text": "有20%的概率造成24点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050010",
+      "raw": "50",
+      "text": "有5%的概率在20秒时间内，每2秒造成20点的中毒伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050011",
+      "raw": "50",
+      "text": "有5%的概率在10秒时间内，每2秒造成28点的周期性生命减少状态伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050012",
+      "raw": "100",
+      "text": "有10%的概率造成48点的火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050013",
+      "raw": "100",
+      "text": "有10%的概率造成48点的水属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050014",
+      "raw": "100",
+      "text": "有10%的概率造成48点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050015",
+      "raw": "100",
+      "text": "有10%的概率造成48点的风属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050016",
+      "raw": "50",
+      "text": "有5%的概率造成188点的火属性伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050017",
+      "raw": "100",
+      "text": "有10%的概率造成94点的水属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050018",
+      "raw": "50",
+      "text": "有5%的概率造成188点的地属性伤害。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050019",
+      "raw": "100",
+      "text": "有10%的概率造成94点的风属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050020",
+      "raw": "20",
+      "text": "有2%的概率使对象在5秒时间内麻痹。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050021",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内沉默。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050022",
+      "raw": "50",
+      "text": "有5%的概率使对象在8秒时间内失明。",
+      "percent_text": "5",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050023",
+      "raw": "60",
+      "text": "有6%的概率使对象在1秒时间内晕厥。",
+      "percent_text": "6",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050024",
+      "raw": "20",
+      "text": "有2%的概率造成940点的风属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050025",
+      "raw": "20",
+      "text": "有2%的概率造成940点的水属性伤害。",
+      "percent_text": "2",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050026",
+      "raw": "100",
+      "text": "有10%的概率造成188点的火属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050027",
+      "raw": "100",
+      "text": "有10%的概率造成188点的地属性伤害。",
+      "percent_text": "10",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050028",
+      "raw": "200",
+      "text": "有20%的概率造成94点的风属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    },
+    {
+      "id": "168050029",
+      "raw": "200",
+      "text": "有20%的概率造成94点的水属性伤害。",
+      "percent_text": "20",
+      "raw_div_10_agrees": true
+    }
+  ],
+  "godstone_no_numeric_desc_proc": [
+    "168000001",
+    "168000104",
+    "168000105",
+    "168000106",
+    "168000107",
+    "168000108",
+    "168000109",
+    "168000110",
+    "168000111",
+    "168000112",
+    "168000113",
+    "168000114",
+    "168000115",
+    "168000116"
+  ],
+  "native_functions": [
+    {
+      "start_rva": "0x316610",
+      "end_rva": "0x31682b",
+      "instructions": [
+        {
+          "rva": "0x316610",
+          "preferred_va": "0x180316610",
+          "file_offset": "0x316610",
+          "section": "   \u0000    ",
+          "bytes": "48 89 5c 24 08",
+          "instruction": "mov qword ptr [rsp + 8], rbx"
+        },
+        {
+          "rva": "0x316615",
+          "preferred_va": "0x180316615",
+          "file_offset": "0x316615",
+          "section": "   \u0000    ",
+          "bytes": "48 89 6c 24 10",
+          "instruction": "mov qword ptr [rsp + 0x10], rbp"
+        },
+        {
+          "rva": "0x31661a",
+          "preferred_va": "0x18031661a",
+          "file_offset": "0x31661a",
+          "section": "   \u0000    ",
+          "bytes": "48 89 74 24 18",
+          "instruction": "mov qword ptr [rsp + 0x18], rsi"
+        },
+        {
+          "rva": "0x31661f",
+          "preferred_va": "0x18031661f",
+          "file_offset": "0x31661f",
+          "section": "   \u0000    ",
+          "bytes": "57",
+          "instruction": "push rdi"
+        },
+        {
+          "rva": "0x316620",
+          "preferred_va": "0x180316620",
+          "file_offset": "0x316620",
+          "section": "   \u0000    ",
+          "bytes": "41 56",
+          "instruction": "push r14"
+        },
+        {
+          "rva": "0x316622",
+          "preferred_va": "0x180316622",
+          "file_offset": "0x316622",
+          "section": "   \u0000    ",
+          "bytes": "41 57",
+          "instruction": "push r15"
+        },
+        {
+          "rva": "0x316624",
+          "preferred_va": "0x180316624",
+          "file_offset": "0x316624",
+          "section": "   \u0000    ",
+          "bytes": "48 83 ec 20",
+          "instruction": "sub rsp, 0x20"
+        },
+        {
+          "rva": "0x316628",
+          "preferred_va": "0x180316628",
+          "file_offset": "0x316628",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 35 e1 49 a3 00",
+          "instruction": "mov rsi, qword ptr [rip + 0xa349e1]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xd4b010",
+              "preferred_va": "0x180d4b010",
+              "file_offset": "0xd4b010",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31662f",
+          "preferred_va": "0x18031662f",
+          "file_offset": "0x31662f",
+          "section": "   \u0000    ",
+          "bytes": "45 8b f0",
+          "instruction": "mov r14d, r8d"
+        },
+        {
+          "rva": "0x316632",
+          "preferred_va": "0x180316632",
+          "file_offset": "0x316632",
+          "section": "   \u0000    ",
+          "bytes": "8b da",
+          "instruction": "mov ebx, edx"
+        },
+        {
+          "rva": "0x316634",
+          "preferred_va": "0x180316634",
+          "file_offset": "0x316634",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b 9e 80 07 00 00",
+          "instruction": "mov r11, qword ptr [rsi + 0x780]"
+        },
+        {
+          "rva": "0x31663b",
+          "preferred_va": "0x18031663b",
+          "file_offset": "0x31663b",
+          "section": "   \u0000    ",
+          "bytes": "4d 8b d3",
+          "instruction": "mov r10, r11"
+        },
+        {
+          "rva": "0x31663e",
+          "preferred_va": "0x18031663e",
+          "file_offset": "0x31663e",
+          "section": "   \u0000    ",
+          "bytes": "49 8b 43 08",
+          "instruction": "mov rax, qword ptr [r11 + 8]"
+        },
+        {
+          "rva": "0x316642",
+          "preferred_va": "0x180316642",
+          "file_offset": "0x316642",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b c8",
+          "instruction": "mov r9, rax"
+        },
+        {
+          "rva": "0x316645",
+          "preferred_va": "0x180316645",
+          "file_offset": "0x316645",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 78 19",
+          "instruction": "movzx edi, byte ptr [rax + 0x19]"
+        },
+        {
+          "rva": "0x316649",
+          "preferred_va": "0x180316649",
+          "file_offset": "0x316649",
+          "section": "   \u0000    ",
+          "bytes": "40 84 ff",
+          "instruction": "test dil, dil"
+        },
+        {
+          "rva": "0x31664c",
+          "preferred_va": "0x18031664c",
+          "file_offset": "0x31664c",
+          "section": "   \u0000    ",
+          "bytes": "75 1b",
+          "instruction": "jne 0x180316669",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316669",
+              "preferred_va": "0x180316669",
+              "file_offset": "0x316669",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31664e",
+          "preferred_va": "0x18031664e",
+          "file_offset": "0x31664e",
+          "section": "   \u0000    ",
+          "bytes": "66 90",
+          "instruction": "nop "
+        },
+        {
+          "rva": "0x316650",
+          "preferred_va": "0x180316650",
+          "file_offset": "0x316650",
+          "section": "   \u0000    ",
+          "bytes": "41 39 49 20",
+          "instruction": "cmp dword ptr [r9 + 0x20], ecx"
+        },
+        {
+          "rva": "0x316654",
+          "preferred_va": "0x180316654",
+          "file_offset": "0x316654",
+          "section": "   \u0000    ",
+          "bytes": "73 06",
+          "instruction": "jae 0x18031665c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31665c",
+              "preferred_va": "0x18031665c",
+              "file_offset": "0x31665c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316656",
+          "preferred_va": "0x180316656",
+          "file_offset": "0x316656",
+          "section": "   \u0000    ",
+          "bytes": "4d 8b 49 10",
+          "instruction": "mov r9, qword ptr [r9 + 0x10]"
+        },
+        {
+          "rva": "0x31665a",
+          "preferred_va": "0x18031665a",
+          "file_offset": "0x31665a",
+          "section": "   \u0000    ",
+          "bytes": "eb 06",
+          "instruction": "jmp 0x180316662",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316662",
+              "preferred_va": "0x180316662",
+              "file_offset": "0x316662",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31665c",
+          "preferred_va": "0x18031665c",
+          "file_offset": "0x31665c",
+          "section": "   \u0000    ",
+          "bytes": "4d 8b d1",
+          "instruction": "mov r10, r9"
+        },
+        {
+          "rva": "0x31665f",
+          "preferred_va": "0x18031665f",
+          "file_offset": "0x31665f",
+          "section": "   \u0000    ",
+          "bytes": "4d 8b 09",
+          "instruction": "mov r9, qword ptr [r9]"
+        },
+        {
+          "rva": "0x316662",
+          "preferred_va": "0x180316662",
+          "file_offset": "0x316662",
+          "section": "   \u0000    ",
+          "bytes": "41 80 79 19 00",
+          "instruction": "cmp byte ptr [r9 + 0x19], 0"
+        },
+        {
+          "rva": "0x316667",
+          "preferred_va": "0x180316667",
+          "file_offset": "0x316667",
+          "section": "   \u0000    ",
+          "bytes": "74 e7",
+          "instruction": "je 0x180316650",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316650",
+              "preferred_va": "0x180316650",
+              "file_offset": "0x316650",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316669",
+          "preferred_va": "0x180316669",
+          "file_offset": "0x316669",
+          "section": "   \u0000    ",
+          "bytes": "4d 3b d3",
+          "instruction": "cmp r10, r11"
+        },
+        {
+          "rva": "0x31666c",
+          "preferred_va": "0x18031666c",
+          "file_offset": "0x31666c",
+          "section": "   \u0000    ",
+          "bytes": "74 06",
+          "instruction": "je 0x180316674",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316674",
+              "preferred_va": "0x180316674",
+              "file_offset": "0x316674",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31666e",
+          "preferred_va": "0x18031666e",
+          "file_offset": "0x31666e",
+          "section": "   \u0000    ",
+          "bytes": "41 3b 4a 20",
+          "instruction": "cmp ecx, dword ptr [r10 + 0x20]"
+        },
+        {
+          "rva": "0x316672",
+          "preferred_va": "0x180316672",
+          "file_offset": "0x316672",
+          "section": "   \u0000    ",
+          "bytes": "73 03",
+          "instruction": "jae 0x180316677",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316677",
+              "preferred_va": "0x180316677",
+              "file_offset": "0x316677",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316674",
+          "preferred_va": "0x180316674",
+          "file_offset": "0x316674",
+          "section": "   \u0000    ",
+          "bytes": "4d 8b d3",
+          "instruction": "mov r10, r11"
+        },
+        {
+          "rva": "0x316677",
+          "preferred_va": "0x180316677",
+          "file_offset": "0x316677",
+          "section": "   \u0000    ",
+          "bytes": "45 33 ff",
+          "instruction": "xor r15d, r15d"
+        },
+        {
+          "rva": "0x31667a",
+          "preferred_va": "0x18031667a",
+          "file_offset": "0x31667a",
+          "section": "   \u0000    ",
+          "bytes": "4d 3b d3",
+          "instruction": "cmp r10, r11"
+        },
+        {
+          "rva": "0x31667d",
+          "preferred_va": "0x18031667d",
+          "file_offset": "0x31667d",
+          "section": "   \u0000    ",
+          "bytes": "74 06",
+          "instruction": "je 0x180316685",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316685",
+              "preferred_va": "0x180316685",
+              "file_offset": "0x316685",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31667f",
+          "preferred_va": "0x18031667f",
+          "file_offset": "0x31667f",
+          "section": "   \u0000    ",
+          "bytes": "49 8b 6a 28",
+          "instruction": "mov rbp, qword ptr [r10 + 0x28]"
+        },
+        {
+          "rva": "0x316683",
+          "preferred_va": "0x180316683",
+          "file_offset": "0x316683",
+          "section": "   \u0000    ",
+          "bytes": "eb 03",
+          "instruction": "jmp 0x180316688",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316688",
+              "preferred_va": "0x180316688",
+              "file_offset": "0x316688",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316685",
+          "preferred_va": "0x180316685",
+          "file_offset": "0x316685",
+          "section": "   \u0000    ",
+          "bytes": "49 8b ef",
+          "instruction": "mov rbp, r15"
+        },
+        {
+          "rva": "0x316688",
+          "preferred_va": "0x180316688",
+          "file_offset": "0x316688",
+          "section": "   \u0000    ",
+          "bytes": "49 8b cb",
+          "instruction": "mov rcx, r11"
+        },
+        {
+          "rva": "0x31668b",
+          "preferred_va": "0x18031668b",
+          "file_offset": "0x31668b",
+          "section": "   \u0000    ",
+          "bytes": "49 8b d3",
+          "instruction": "mov rdx, r11"
+        },
+        {
+          "rva": "0x31668e",
+          "preferred_va": "0x18031668e",
+          "file_offset": "0x31668e",
+          "section": "   \u0000    ",
+          "bytes": "40 84 ff",
+          "instruction": "test dil, dil"
+        },
+        {
+          "rva": "0x316691",
+          "preferred_va": "0x180316691",
+          "file_offset": "0x316691",
+          "section": "   \u0000    ",
+          "bytes": "75 17",
+          "instruction": "jne 0x1803166aa",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166aa",
+              "preferred_va": "0x1803166aa",
+              "file_offset": "0x3166aa",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316693",
+          "preferred_va": "0x180316693",
+          "file_offset": "0x316693",
+          "section": "   \u0000    ",
+          "bytes": "39 58 20",
+          "instruction": "cmp dword ptr [rax + 0x20], ebx"
+        },
+        {
+          "rva": "0x316696",
+          "preferred_va": "0x180316696",
+          "file_offset": "0x316696",
+          "section": "   \u0000    ",
+          "bytes": "73 06",
+          "instruction": "jae 0x18031669e",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31669e",
+              "preferred_va": "0x18031669e",
+              "file_offset": "0x31669e",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316698",
+          "preferred_va": "0x180316698",
+          "file_offset": "0x316698",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 40 10",
+          "instruction": "mov rax, qword ptr [rax + 0x10]"
+        },
+        {
+          "rva": "0x31669c",
+          "preferred_va": "0x18031669c",
+          "file_offset": "0x31669c",
+          "section": "   \u0000    ",
+          "bytes": "eb 06",
+          "instruction": "jmp 0x1803166a4",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166a4",
+              "preferred_va": "0x1803166a4",
+              "file_offset": "0x3166a4",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31669e",
+          "preferred_va": "0x18031669e",
+          "file_offset": "0x31669e",
+          "section": "   \u0000    ",
+          "bytes": "48 8b c8",
+          "instruction": "mov rcx, rax"
+        },
+        {
+          "rva": "0x3166a1",
+          "preferred_va": "0x1803166a1",
+          "file_offset": "0x3166a1",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 00",
+          "instruction": "mov rax, qword ptr [rax]"
+        },
+        {
+          "rva": "0x3166a4",
+          "preferred_va": "0x1803166a4",
+          "file_offset": "0x3166a4",
+          "section": "   \u0000    ",
+          "bytes": "44 38 78 19",
+          "instruction": "cmp byte ptr [rax + 0x19], r15b"
+        },
+        {
+          "rva": "0x3166a8",
+          "preferred_va": "0x1803166a8",
+          "file_offset": "0x3166a8",
+          "section": "   \u0000    ",
+          "bytes": "74 e9",
+          "instruction": "je 0x180316693",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316693",
+              "preferred_va": "0x180316693",
+              "file_offset": "0x316693",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166aa",
+          "preferred_va": "0x1803166aa",
+          "file_offset": "0x3166aa",
+          "section": "   \u0000    ",
+          "bytes": "48 3b ca",
+          "instruction": "cmp rcx, rdx"
+        },
+        {
+          "rva": "0x3166ad",
+          "preferred_va": "0x1803166ad",
+          "file_offset": "0x3166ad",
+          "section": "   \u0000    ",
+          "bytes": "74 05",
+          "instruction": "je 0x1803166b4",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166b4",
+              "preferred_va": "0x1803166b4",
+              "file_offset": "0x3166b4",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166af",
+          "preferred_va": "0x1803166af",
+          "file_offset": "0x3166af",
+          "section": "   \u0000    ",
+          "bytes": "3b 59 20",
+          "instruction": "cmp ebx, dword ptr [rcx + 0x20]"
+        },
+        {
+          "rva": "0x3166b2",
+          "preferred_va": "0x1803166b2",
+          "file_offset": "0x3166b2",
+          "section": "   \u0000    ",
+          "bytes": "73 06",
+          "instruction": "jae 0x1803166ba",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166ba",
+              "preferred_va": "0x1803166ba",
+              "file_offset": "0x3166ba",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166b4",
+          "preferred_va": "0x1803166b4",
+          "file_offset": "0x3166b4",
+          "section": "   \u0000    ",
+          "bytes": "49 8b cb",
+          "instruction": "mov rcx, r11"
+        },
+        {
+          "rva": "0x3166b7",
+          "preferred_va": "0x1803166b7",
+          "file_offset": "0x3166b7",
+          "section": "   \u0000    ",
+          "bytes": "49 8b d3",
+          "instruction": "mov rdx, r11"
+        },
+        {
+          "rva": "0x3166ba",
+          "preferred_va": "0x1803166ba",
+          "file_offset": "0x3166ba",
+          "section": "   \u0000    ",
+          "bytes": "48 3b ca",
+          "instruction": "cmp rcx, rdx"
+        },
+        {
+          "rva": "0x3166bd",
+          "preferred_va": "0x1803166bd",
+          "file_offset": "0x3166bd",
+          "section": "   \u0000    ",
+          "bytes": "74 06",
+          "instruction": "je 0x1803166c5",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166c5",
+              "preferred_va": "0x1803166c5",
+              "file_offset": "0x3166c5",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166bf",
+          "preferred_va": "0x1803166bf",
+          "file_offset": "0x3166bf",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 79 28",
+          "instruction": "mov rdi, qword ptr [rcx + 0x28]"
+        },
+        {
+          "rva": "0x3166c3",
+          "preferred_va": "0x1803166c3",
+          "file_offset": "0x3166c3",
+          "section": "   \u0000    ",
+          "bytes": "eb 03",
+          "instruction": "jmp 0x1803166c8",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3166c8",
+              "preferred_va": "0x1803166c8",
+              "file_offset": "0x3166c8",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166c5",
+          "preferred_va": "0x1803166c5",
+          "file_offset": "0x3166c5",
+          "section": "   \u0000    ",
+          "bytes": "49 8b ff",
+          "instruction": "mov rdi, r15"
+        },
+        {
+          "rva": "0x3166c8",
+          "preferred_va": "0x1803166c8",
+          "file_offset": "0x3166c8",
+          "section": "   \u0000    ",
+          "bytes": "8b 55 0c",
+          "instruction": "mov edx, dword ptr [rbp + 0xc]"
+        },
+        {
+          "rva": "0x3166cb",
+          "preferred_va": "0x1803166cb",
+          "file_offset": "0x3166cb",
+          "section": "   \u0000    ",
+          "bytes": "e8 d0 00 08 00",
+          "instruction": "call 0x1803967a0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3967a0",
+              "preferred_va": "0x1803967a0",
+              "file_offset": "0x3967a0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166d0",
+          "preferred_va": "0x1803166d0",
+          "file_offset": "0x3166d0",
+          "section": "   \u0000    ",
+          "bytes": "8b 55 0c",
+          "instruction": "mov edx, dword ptr [rbp + 0xc]"
+        },
+        {
+          "rva": "0x3166d3",
+          "preferred_va": "0x1803166d3",
+          "file_offset": "0x3166d3",
+          "section": "   \u0000    ",
+          "bytes": "8b f0",
+          "instruction": "mov esi, eax"
+        },
+        {
+          "rva": "0x3166d5",
+          "preferred_va": "0x1803166d5",
+          "file_offset": "0x3166d5",
+          "section": "   \u0000    ",
+          "bytes": "e8 26 06 08 00",
+          "instruction": "call 0x180396d00",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x396d00",
+              "preferred_va": "0x180396d00",
+              "file_offset": "0x396d00",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166da",
+          "preferred_va": "0x1803166da",
+          "file_offset": "0x3166da",
+          "section": "   \u0000    ",
+          "bytes": "8b 57 0c",
+          "instruction": "mov edx, dword ptr [rdi + 0xc]"
+        },
+        {
+          "rva": "0x3166dd",
+          "preferred_va": "0x1803166dd",
+          "file_offset": "0x3166dd",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 d8",
+          "instruction": "movzx ebx, al"
+        },
+        {
+          "rva": "0x3166e0",
+          "preferred_va": "0x1803166e0",
+          "file_offset": "0x3166e0",
+          "section": "   \u0000    ",
+          "bytes": "e8 1b 06 08 00",
+          "instruction": "call 0x180396d00",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x396d00",
+              "preferred_va": "0x180396d00",
+              "file_offset": "0x396d00",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166e5",
+          "preferred_va": "0x1803166e5",
+          "file_offset": "0x3166e5",
+          "section": "   \u0000    ",
+          "bytes": "44 0f b6 85 a9 00 00 00",
+          "instruction": "movzx r8d, byte ptr [rbp + 0xa9]"
+        },
+        {
+          "rva": "0x3166ed",
+          "preferred_va": "0x1803166ed",
+          "file_offset": "0x3166ed",
+          "section": "   \u0000    ",
+          "bytes": "41 ff c0",
+          "instruction": "inc r8d"
+        },
+        {
+          "rva": "0x3166f0",
+          "preferred_va": "0x1803166f0",
+          "file_offset": "0x3166f0",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 d0",
+          "instruction": "movzx edx, al"
+        },
+        {
+          "rva": "0x3166f3",
+          "preferred_va": "0x1803166f3",
+          "file_offset": "0x3166f3",
+          "section": "   \u0000    ",
+          "bytes": "41 8b c7",
+          "instruction": "mov eax, r15d"
+        },
+        {
+          "rva": "0x3166f6",
+          "preferred_va": "0x1803166f6",
+          "file_offset": "0x3166f6",
+          "section": "   \u0000    ",
+          "bytes": "41 83 f8 0a",
+          "instruction": "cmp r8d, 0xa"
+        },
+        {
+          "rva": "0x3166fa",
+          "preferred_va": "0x1803166fa",
+          "file_offset": "0x3166fa",
+          "section": "   \u0000    ",
+          "bytes": "77 65",
+          "instruction": "ja 0x180316761",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316761",
+              "preferred_va": "0x180316761",
+              "file_offset": "0x316761",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3166fc",
+          "preferred_va": "0x1803166fc",
+          "file_offset": "0x3166fc",
+          "section": "   \u0000    ",
+          "bytes": "8d 46 ff",
+          "instruction": "lea eax, [rsi - 1]"
+        },
+        {
+          "rva": "0x3166ff",
+          "preferred_va": "0x1803166ff",
+          "file_offset": "0x3166ff",
+          "section": "   \u0000    ",
+          "bytes": "83 f8 05",
+          "instruction": "cmp eax, 5"
+        },
+        {
+          "rva": "0x316702",
+          "preferred_va": "0x180316702",
+          "file_offset": "0x316702",
+          "section": "   \u0000    ",
+          "bytes": "0f 87 d8 00 00 00",
+          "instruction": "ja 0x1803167e0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3167e0",
+              "preferred_va": "0x1803167e0",
+              "file_offset": "0x3167e0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316708",
+          "preferred_va": "0x180316708",
+          "file_offset": "0x316708",
+          "section": "   \u0000    ",
+          "bytes": "48 98",
+          "instruction": "cdqe "
+        },
+        {
+          "rva": "0x31670a",
+          "preferred_va": "0x18031670a",
+          "file_offset": "0x31670a",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d ef 98 ce ff",
+          "instruction": "lea rcx, [rip - 0x316711]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x0",
+              "preferred_va": "0x180000000",
+              "file_offset": null,
+              "section": null
+            }
+          ]
+        },
+        {
+          "rva": "0x316711",
+          "preferred_va": "0x180316711",
+          "file_offset": "0x316711",
+          "section": "   \u0000    ",
+          "bytes": "8b 84 81 2c 68 31 00",
+          "instruction": "mov eax, dword ptr [rcx + rax*4 + 0x31682c]"
+        },
+        {
+          "rva": "0x316718",
+          "preferred_va": "0x180316718",
+          "file_offset": "0x316718",
+          "section": "   \u0000    ",
+          "bytes": "48 03 c1",
+          "instruction": "add rax, rcx"
+        },
+        {
+          "rva": "0x31671b",
+          "preferred_va": "0x18031671b",
+          "file_offset": "0x31671b",
+          "section": "   \u0000    ",
+          "bytes": "ff e0",
+          "instruction": "jmp rax"
+        },
+        {
+          "rva": "0x31671d",
+          "preferred_va": "0x18031671d",
+          "file_offset": "0x31671d",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x31671f",
+          "preferred_va": "0x18031671f",
+          "file_offset": "0x31671f",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x316722",
+          "preferred_va": "0x180316722",
+          "file_offset": "0x316722",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 3c",
+          "instruction": "imul eax, edx, 0x3c"
+        },
+        {
+          "rva": "0x316725",
+          "preferred_va": "0x180316725",
+          "file_offset": "0x316725",
+          "section": "   \u0000    ",
+          "bytes": "eb 6a",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316727",
+          "preferred_va": "0x180316727",
+          "file_offset": "0x316727",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x316729",
+          "preferred_va": "0x180316729",
+          "file_offset": "0x316729",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x31672c",
+          "preferred_va": "0x18031672c",
+          "file_offset": "0x31672c",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x31672f",
+          "preferred_va": "0x18031672f",
+          "file_offset": "0x31672f",
+          "section": "   \u0000    ",
+          "bytes": "c1 e0 03",
+          "instruction": "shl eax, 3"
+        },
+        {
+          "rva": "0x316732",
+          "preferred_va": "0x180316732",
+          "file_offset": "0x316732",
+          "section": "   \u0000    ",
+          "bytes": "eb 5d",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316734",
+          "preferred_va": "0x180316734",
+          "file_offset": "0x316734",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x316736",
+          "preferred_va": "0x180316736",
+          "file_offset": "0x316736",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x316739",
+          "preferred_va": "0x180316739",
+          "file_offset": "0x316739",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 1e",
+          "instruction": "imul eax, edx, 0x1e"
+        },
+        {
+          "rva": "0x31673c",
+          "preferred_va": "0x18031673c",
+          "file_offset": "0x31673c",
+          "section": "   \u0000    ",
+          "bytes": "eb 53",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31673e",
+          "preferred_va": "0x18031673e",
+          "file_offset": "0x31673e",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x316740",
+          "preferred_va": "0x180316740",
+          "file_offset": "0x316740",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x316743",
+          "preferred_va": "0x180316743",
+          "file_offset": "0x316743",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x316746",
+          "preferred_va": "0x180316746",
+          "file_offset": "0x316746",
+          "section": "   \u0000    ",
+          "bytes": "c1 e0 02",
+          "instruction": "shl eax, 2"
+        },
+        {
+          "rva": "0x316749",
+          "preferred_va": "0x180316749",
+          "file_offset": "0x316749",
+          "section": "   \u0000    ",
+          "bytes": "eb 46",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31674b",
+          "preferred_va": "0x18031674b",
+          "file_offset": "0x31674b",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x31674d",
+          "preferred_va": "0x18031674d",
+          "file_offset": "0x31674d",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x316750",
+          "preferred_va": "0x180316750",
+          "file_offset": "0x316750",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 0f",
+          "instruction": "imul eax, edx, 0xf"
+        },
+        {
+          "rva": "0x316753",
+          "preferred_va": "0x180316753",
+          "file_offset": "0x316753",
+          "section": "   \u0000    ",
+          "bytes": "eb 3c",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316755",
+          "preferred_va": "0x180316755",
+          "file_offset": "0x316755",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x316757",
+          "preferred_va": "0x180316757",
+          "file_offset": "0x316757",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x31675a",
+          "preferred_va": "0x18031675a",
+          "file_offset": "0x31675a",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x31675d",
+          "preferred_va": "0x18031675d",
+          "file_offset": "0x31675d",
+          "section": "   \u0000    ",
+          "bytes": "03 c0",
+          "instruction": "add eax, eax"
+        },
+        {
+          "rva": "0x31675f",
+          "preferred_va": "0x18031675f",
+          "file_offset": "0x31675f",
+          "section": "   \u0000    ",
+          "bytes": "eb 30",
+          "instruction": "jmp 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316761",
+          "preferred_va": "0x180316761",
+          "file_offset": "0x316761",
+          "section": "   \u0000    ",
+          "bytes": "41 83 f8 14",
+          "instruction": "cmp r8d, 0x14"
+        },
+        {
+          "rva": "0x316765",
+          "preferred_va": "0x180316765",
+          "file_offset": "0x316765",
+          "section": "   \u0000    ",
+          "bytes": "77 2a",
+          "instruction": "ja 0x180316791",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316791",
+              "preferred_va": "0x180316791",
+              "file_offset": "0x316791",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x316767",
+          "preferred_va": "0x180316767",
+          "file_offset": "0x316767",
+          "section": "   \u0000    ",
+          "bytes": "8d 46 ff",
+          "instruction": "lea eax, [rsi - 1]"
+        },
+        {
+          "rva": "0x31676a",
+          "preferred_va": "0x18031676a",
+          "file_offset": "0x31676a",
+          "section": "   \u0000    ",
+          "bytes": "83 f8 05",
+          "instruction": "cmp eax, 5"
+        },
+        {
+          "rva": "0x31676d",
+          "preferred_va": "0x18031676d",
+          "file_offset": "0x31676d",
+          "section": "   \u0000    ",
+          "bytes": "77 71",
+          "instruction": "ja 0x1803167e0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3167e0",
+              "preferred_va": "0x1803167e0",
+              "file_offset": "0x3167e0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31676f",
+          "preferred_va": "0x18031676f",
+          "file_offset": "0x31676f",
+          "section": "   \u0000    ",
+          "bytes": "48 98",
+          "instruction": "cdqe "
+        },
+        {
+          "rva": "0x316771",
+          "preferred_va": "0x180316771",
+          "file_offset": "0x316771",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d 88 98 ce ff",
+          "instruction": "lea rcx, [rip - 0x316778]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x0",
+              "preferred_va": "0x180000000",
+              "file_offset": null,
+              "section": null
+            }
+          ]
+        },
+        {
+          "rva": "0x316778",
+          "preferred_va": "0x180316778",
+          "file_offset": "0x316778",
+          "section": "   \u0000    ",
+          "bytes": "8b 84 81 44 68 31 00",
+          "instruction": "mov eax, dword ptr [rcx + rax*4 + 0x316844]"
+        },
+        {
+          "rva": "0x31677f",
+          "preferred_va": "0x18031677f",
+          "file_offset": "0x31677f",
+          "section": "   \u0000    ",
+          "bytes": "48 03 c1",
+          "instruction": "add rax, rcx"
+        },
+        {
+          "rva": "0x316782",
+          "preferred_va": "0x180316782",
+          "file_offset": "0x316782",
+          "section": "   \u0000    ",
+          "bytes": "ff e0",
+          "instruction": "jmp rax"
+        },
+        {
+          "rva": "0x316784",
+          "preferred_va": "0x180316784",
+          "file_offset": "0x316784",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x316786",
+          "preferred_va": "0x180316786",
+          "file_offset": "0x316786",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x316789",
+          "preferred_va": "0x180316789",
+          "file_offset": "0x316789",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 3c",
+          "instruction": "imul eax, edx, 0x3c"
+        },
+        {
+          "rva": "0x31678c",
+          "preferred_va": "0x18031678c",
+          "file_offset": "0x31678c",
+          "section": "   \u0000    ",
+          "bytes": "99",
+          "instruction": "cdq "
+        },
+        {
+          "rva": "0x31678d",
+          "preferred_va": "0x18031678d",
+          "file_offset": "0x31678d",
+          "section": "   \u0000    ",
+          "bytes": "2b c2",
+          "instruction": "sub eax, edx"
+        },
+        {
+          "rva": "0x31678f",
+          "preferred_va": "0x18031678f",
+          "file_offset": "0x31678f",
+          "section": "   \u0000    ",
+          "bytes": "d1 f8",
+          "instruction": "sar eax, 1"
+        },
+        {
+          "rva": "0x316791",
+          "preferred_va": "0x180316791",
+          "file_offset": "0x316791",
+          "section": "   \u0000    ",
+          "bytes": "85 c0",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x316793",
+          "preferred_va": "0x180316793",
+          "file_offset": "0x316793",
+          "section": "   \u0000    ",
+          "bytes": "41 8b df",
+          "instruction": "mov ebx, r15d"
+        },
+        {
+          "rva": "0x316796",
+          "preferred_va": "0x180316796",
+          "file_offset": "0x316796",
+          "section": "   \u0000    ",
+          "bytes": "0f 4f d8",
+          "instruction": "cmovg ebx, eax"
+        },
+        {
+          "rva": "0x316799",
+          "preferred_va": "0x180316799",
+          "file_offset": "0x316799",
+          "section": "   \u0000    ",
+          "bytes": "41 83 f8 0a",
+          "instruction": "cmp r8d, 0xa"
+        },
+        {
+          "rva": "0x31679d",
+          "preferred_va": "0x18031679d",
+          "file_offset": "0x31679d",
+          "section": "   \u0000    ",
+          "bytes": "77 45",
+          "instruction": "ja 0x1803167e4",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3167e4",
+              "preferred_va": "0x1803167e4",
+              "file_offset": "0x3167e4",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31679f",
+          "preferred_va": "0x18031679f",
+          "file_offset": "0x31679f",
+          "section": "   \u0000    ",
+          "bytes": "b8 20 03 00 00",
+          "instruction": "mov eax, 0x320"
+        },
+        {
+          "rva": "0x3167a4",
+          "preferred_va": "0x1803167a4",
+          "file_offset": "0x3167a4",
+          "section": "   \u0000    ",
+          "bytes": "eb 49",
+          "instruction": "jmp 0x1803167ef",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3167ef",
+              "preferred_va": "0x1803167ef",
+              "file_offset": "0x3167ef",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167a6",
+          "preferred_va": "0x1803167a6",
+          "file_offset": "0x3167a6",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x3167a8",
+          "preferred_va": "0x1803167a8",
+          "file_offset": "0x3167a8",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x3167ab",
+          "preferred_va": "0x1803167ab",
+          "file_offset": "0x3167ab",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x3167ae",
+          "preferred_va": "0x1803167ae",
+          "file_offset": "0x3167ae",
+          "section": "   \u0000    ",
+          "bytes": "c1 e0 03",
+          "instruction": "shl eax, 3"
+        },
+        {
+          "rva": "0x3167b1",
+          "preferred_va": "0x1803167b1",
+          "file_offset": "0x3167b1",
+          "section": "   \u0000    ",
+          "bytes": "eb d9",
+          "instruction": "jmp 0x18031678c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31678c",
+              "preferred_va": "0x18031678c",
+              "file_offset": "0x31678c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167b3",
+          "preferred_va": "0x1803167b3",
+          "file_offset": "0x3167b3",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x3167b5",
+          "preferred_va": "0x1803167b5",
+          "file_offset": "0x3167b5",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x3167b8",
+          "preferred_va": "0x1803167b8",
+          "file_offset": "0x3167b8",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 1e",
+          "instruction": "imul eax, edx, 0x1e"
+        },
+        {
+          "rva": "0x3167bb",
+          "preferred_va": "0x1803167bb",
+          "file_offset": "0x3167bb",
+          "section": "   \u0000    ",
+          "bytes": "eb cf",
+          "instruction": "jmp 0x18031678c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31678c",
+              "preferred_va": "0x18031678c",
+              "file_offset": "0x31678c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167bd",
+          "preferred_va": "0x1803167bd",
+          "file_offset": "0x3167bd",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x3167bf",
+          "preferred_va": "0x1803167bf",
+          "file_offset": "0x3167bf",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x3167c2",
+          "preferred_va": "0x1803167c2",
+          "file_offset": "0x3167c2",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x3167c5",
+          "preferred_va": "0x1803167c5",
+          "file_offset": "0x3167c5",
+          "section": "   \u0000    ",
+          "bytes": "c1 e0 02",
+          "instruction": "shl eax, 2"
+        },
+        {
+          "rva": "0x3167c8",
+          "preferred_va": "0x1803167c8",
+          "file_offset": "0x3167c8",
+          "section": "   \u0000    ",
+          "bytes": "eb c2",
+          "instruction": "jmp 0x18031678c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31678c",
+              "preferred_va": "0x18031678c",
+              "file_offset": "0x31678c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167ca",
+          "preferred_va": "0x1803167ca",
+          "file_offset": "0x3167ca",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x3167cc",
+          "preferred_va": "0x1803167cc",
+          "file_offset": "0x3167cc",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x3167cf",
+          "preferred_va": "0x1803167cf",
+          "file_offset": "0x3167cf",
+          "section": "   \u0000    ",
+          "bytes": "6b c2 0f",
+          "instruction": "imul eax, edx, 0xf"
+        },
+        {
+          "rva": "0x3167d2",
+          "preferred_va": "0x1803167d2",
+          "file_offset": "0x3167d2",
+          "section": "   \u0000    ",
+          "bytes": "eb b8",
+          "instruction": "jmp 0x18031678c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31678c",
+              "preferred_va": "0x18031678c",
+              "file_offset": "0x31678c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167d4",
+          "preferred_va": "0x1803167d4",
+          "file_offset": "0x3167d4",
+          "section": "   \u0000    ",
+          "bytes": "2b d3",
+          "instruction": "sub edx, ebx"
+        },
+        {
+          "rva": "0x3167d6",
+          "preferred_va": "0x1803167d6",
+          "file_offset": "0x3167d6",
+          "section": "   \u0000    ",
+          "bytes": "83 c2 0a",
+          "instruction": "add edx, 0xa"
+        },
+        {
+          "rva": "0x3167d9",
+          "preferred_va": "0x1803167d9",
+          "file_offset": "0x3167d9",
+          "section": "   \u0000    ",
+          "bytes": "8d 04 92",
+          "instruction": "lea eax, [rdx + rdx*4]"
+        },
+        {
+          "rva": "0x3167dc",
+          "preferred_va": "0x1803167dc",
+          "file_offset": "0x3167dc",
+          "section": "   \u0000    ",
+          "bytes": "03 c0",
+          "instruction": "add eax, eax"
+        },
+        {
+          "rva": "0x3167de",
+          "preferred_va": "0x1803167de",
+          "file_offset": "0x3167de",
+          "section": "   \u0000    ",
+          "bytes": "eb ac",
+          "instruction": "jmp 0x18031678c",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x31678c",
+              "preferred_va": "0x18031678c",
+              "file_offset": "0x31678c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167e0",
+          "preferred_va": "0x1803167e0",
+          "file_offset": "0x3167e0",
+          "section": "   \u0000    ",
+          "bytes": "33 c0",
+          "instruction": "xor eax, eax"
+        },
+        {
+          "rva": "0x3167e2",
+          "preferred_va": "0x1803167e2",
+          "file_offset": "0x3167e2",
+          "section": "   \u0000    ",
+          "bytes": "eb 2e",
+          "instruction": "jmp 0x180316812",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316812",
+              "preferred_va": "0x180316812",
+              "file_offset": "0x316812",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167e4",
+          "preferred_va": "0x1803167e4",
+          "file_offset": "0x3167e4",
+          "section": "   \u0000    ",
+          "bytes": "41 83 f8 14",
+          "instruction": "cmp r8d, 0x14"
+        },
+        {
+          "rva": "0x3167e8",
+          "preferred_va": "0x1803167e8",
+          "file_offset": "0x3167e8",
+          "section": "   \u0000    ",
+          "bytes": "77 0a",
+          "instruction": "ja 0x1803167f4",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3167f4",
+              "preferred_va": "0x1803167f4",
+              "file_offset": "0x3167f4",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167ea",
+          "preferred_va": "0x1803167ea",
+          "file_offset": "0x3167ea",
+          "section": "   \u0000    ",
+          "bytes": "b8 f4 01 00 00",
+          "instruction": "mov eax, 0x1f4"
+        },
+        {
+          "rva": "0x3167ef",
+          "preferred_va": "0x1803167ef",
+          "file_offset": "0x3167ef",
+          "section": "   \u0000    ",
+          "bytes": "3b d8",
+          "instruction": "cmp ebx, eax"
+        },
+        {
+          "rva": "0x3167f1",
+          "preferred_va": "0x1803167f1",
+          "file_offset": "0x3167f1",
+          "section": "   \u0000    ",
+          "bytes": "0f 4f d8",
+          "instruction": "cmovg ebx, eax"
+        },
+        {
+          "rva": "0x3167f4",
+          "preferred_va": "0x1803167f4",
+          "file_offset": "0x3167f4",
+          "section": "   \u0000    ",
+          "bytes": "41 8b d6",
+          "instruction": "mov edx, r14d"
+        },
+        {
+          "rva": "0x3167f7",
+          "preferred_va": "0x1803167f7",
+          "file_offset": "0x3167f7",
+          "section": "   \u0000    ",
+          "bytes": "e8 d4 13 08 00",
+          "instruction": "call 0x180397bd0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x397bd0",
+              "preferred_va": "0x180397bd0",
+              "file_offset": "0x397bd0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3167fc",
+          "preferred_va": "0x1803167fc",
+          "file_offset": "0x3167fc",
+          "section": "   \u0000    ",
+          "bytes": "0f b7 c0",
+          "instruction": "movzx eax, ax"
+        },
+        {
+          "rva": "0x3167ff",
+          "preferred_va": "0x1803167ff",
+          "file_offset": "0x3167ff",
+          "section": "   \u0000    ",
+          "bytes": "03 d8",
+          "instruction": "add ebx, eax"
+        },
+        {
+          "rva": "0x316801",
+          "preferred_va": "0x180316801",
+          "file_offset": "0x316801",
+          "section": "   \u0000    ",
+          "bytes": "b8 e8 03 00 00",
+          "instruction": "mov eax, 0x3e8"
+        },
+        {
+          "rva": "0x316806",
+          "preferred_va": "0x180316806",
+          "file_offset": "0x316806",
+          "section": "   \u0000    ",
+          "bytes": "3b d8",
+          "instruction": "cmp ebx, eax"
+        },
+        {
+          "rva": "0x316808",
+          "preferred_va": "0x180316808",
+          "file_offset": "0x316808",
+          "section": "   \u0000    ",
+          "bytes": "7f 08",
+          "instruction": "jg 0x180316812",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316812",
+              "preferred_va": "0x180316812",
+              "file_offset": "0x316812",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x31680a",
+          "preferred_va": "0x18031680a",
+          "file_offset": "0x31680a",
+          "section": "   \u0000    ",
+          "bytes": "85 db",
+          "instruction": "test ebx, ebx"
+        },
+        {
+          "rva": "0x31680c",
+          "preferred_va": "0x18031680c",
+          "file_offset": "0x31680c",
+          "section": "   \u0000    ",
+          "bytes": "8b c3",
+          "instruction": "mov eax, ebx"
+        },
+        {
+          "rva": "0x31680e",
+          "preferred_va": "0x18031680e",
+          "file_offset": "0x31680e",
+          "section": "   \u0000    ",
+          "bytes": "41 0f 48 c7",
+          "instruction": "cmovs eax, r15d"
+        },
+        {
+          "rva": "0x316812",
+          "preferred_va": "0x180316812",
+          "file_offset": "0x316812",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 5c 24 40",
+          "instruction": "mov rbx, qword ptr [rsp + 0x40]"
+        },
+        {
+          "rva": "0x316817",
+          "preferred_va": "0x180316817",
+          "file_offset": "0x316817",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 6c 24 48",
+          "instruction": "mov rbp, qword ptr [rsp + 0x48]"
+        },
+        {
+          "rva": "0x31681c",
+          "preferred_va": "0x18031681c",
+          "file_offset": "0x31681c",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 74 24 50",
+          "instruction": "mov rsi, qword ptr [rsp + 0x50]"
+        },
+        {
+          "rva": "0x316821",
+          "preferred_va": "0x180316821",
+          "file_offset": "0x316821",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x316825",
+          "preferred_va": "0x180316825",
+          "file_offset": "0x316825",
+          "section": "   \u0000    ",
+          "bytes": "41 5f",
+          "instruction": "pop r15"
+        },
+        {
+          "rva": "0x316827",
+          "preferred_va": "0x180316827",
+          "file_offset": "0x316827",
+          "section": "   \u0000    ",
+          "bytes": "41 5e",
+          "instruction": "pop r14"
+        },
+        {
+          "rva": "0x316829",
+          "preferred_va": "0x180316829",
+          "file_offset": "0x316829",
+          "section": "   \u0000    ",
+          "bytes": "5f",
+          "instruction": "pop rdi"
+        },
+        {
+          "rva": "0x31682a",
+          "preferred_va": "0x18031682a",
+          "file_offset": "0x31682a",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x3967a0",
+      "end_rva": "0x3967fe",
+      "instructions": [
+        {
+          "rva": "0x3967a0",
+          "preferred_va": "0x1803967a0",
+          "file_offset": "0x3967a0",
+          "section": "   \u0000    ",
+          "bytes": "40 53",
+          "instruction": "push rbx"
+        },
+        {
+          "rva": "0x3967a2",
+          "preferred_va": "0x1803967a2",
+          "file_offset": "0x3967a2",
+          "section": "   \u0000    ",
+          "bytes": "48 83 ec 20",
+          "instruction": "sub rsp, 0x20"
+        },
+        {
+          "rva": "0x3967a6",
+          "preferred_va": "0x1803967a6",
+          "file_offset": "0x3967a6",
+          "section": "   \u0000    ",
+          "bytes": "48 63 da",
+          "instruction": "movsxd rbx, edx"
+        },
+        {
+          "rva": "0x3967a9",
+          "preferred_va": "0x1803967a9",
+          "file_offset": "0x3967a9",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x3967af",
+          "preferred_va": "0x1803967af",
+          "file_offset": "0x3967af",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x3967b1",
+          "preferred_va": "0x1803967b1",
+          "file_offset": "0x3967b1",
+          "section": "   \u0000    ",
+          "bytes": "45 33 c0",
+          "instruction": "xor r8d, r8d"
+        },
+        {
+          "rva": "0x3967b4",
+          "preferred_va": "0x1803967b4",
+          "file_offset": "0x3967b4",
+          "section": "   \u0000    ",
+          "bytes": "e8 07 17 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967b9",
+          "preferred_va": "0x1803967b9",
+          "file_offset": "0x3967b9",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x3967bc",
+          "preferred_va": "0x1803967bc",
+          "file_offset": "0x3967bc",
+          "section": "   \u0000    ",
+          "bytes": "75 28",
+          "instruction": "jne 0x1803967e6",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3967e6",
+              "preferred_va": "0x1803967e6",
+              "file_offset": "0x3967e6",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967be",
+          "preferred_va": "0x1803967be",
+          "file_offset": "0x3967be",
+          "section": "   \u0000    ",
+          "bytes": "48 8b d3",
+          "instruction": "mov rdx, rbx"
+        },
+        {
+          "rva": "0x3967c1",
+          "preferred_va": "0x1803967c1",
+          "file_offset": "0x3967c1",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d 50 ec 9d 00",
+          "instruction": "lea rcx, [rip + 0x9dec50]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xd75418",
+              "preferred_va": "0x180d75418",
+              "file_offset": "0xd75418",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967c8",
+          "preferred_va": "0x1803967c8",
+          "file_offset": "0x3967c8",
+          "section": "   \u0000    ",
+          "bytes": "e8 63 15 d5 ff",
+          "instruction": "call 0x1800e7d30",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7d30",
+              "preferred_va": "0x1800e7d30",
+              "file_offset": "0xe7d30",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967cd",
+          "preferred_va": "0x1803967cd",
+          "file_offset": "0x3967cd",
+          "section": "   \u0000    ",
+          "bytes": "85 c0",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x3967cf",
+          "preferred_va": "0x1803967cf",
+          "file_offset": "0x3967cf",
+          "section": "   \u0000    ",
+          "bytes": "74 22",
+          "instruction": "je 0x1803967f3",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3967f3",
+              "preferred_va": "0x1803967f3",
+              "file_offset": "0x3967f3",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967d1",
+          "preferred_va": "0x1803967d1",
+          "file_offset": "0x3967d1",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x3967d7",
+          "preferred_va": "0x1803967d7",
+          "file_offset": "0x3967d7",
+          "section": "   \u0000    ",
+          "bytes": "44 8b c0",
+          "instruction": "mov r8d, eax"
+        },
+        {
+          "rva": "0x3967da",
+          "preferred_va": "0x1803967da",
+          "file_offset": "0x3967da",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x3967dc",
+          "preferred_va": "0x1803967dc",
+          "file_offset": "0x3967dc",
+          "section": "   \u0000    ",
+          "bytes": "e8 df 16 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967e1",
+          "preferred_va": "0x1803967e1",
+          "file_offset": "0x3967e1",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x3967e4",
+          "preferred_va": "0x1803967e4",
+          "file_offset": "0x3967e4",
+          "section": "   \u0000    ",
+          "bytes": "74 0d",
+          "instruction": "je 0x1803967f3",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x3967f3",
+              "preferred_va": "0x1803967f3",
+              "file_offset": "0x3967f3",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x3967e6",
+          "preferred_va": "0x1803967e6",
+          "file_offset": "0x3967e6",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 80 e1 01 00 00",
+          "instruction": "movzx eax, byte ptr [rax + 0x1e1]"
+        },
+        {
+          "rva": "0x3967ed",
+          "preferred_va": "0x1803967ed",
+          "file_offset": "0x3967ed",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x3967f1",
+          "preferred_va": "0x1803967f1",
+          "file_offset": "0x3967f1",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x3967f2",
+          "preferred_va": "0x1803967f2",
+          "file_offset": "0x3967f2",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x3967f3",
+          "preferred_va": "0x1803967f3",
+          "file_offset": "0x3967f3",
+          "section": "   \u0000    ",
+          "bytes": "b8 01 00 00 00",
+          "instruction": "mov eax, 1"
+        },
+        {
+          "rva": "0x3967f8",
+          "preferred_va": "0x1803967f8",
+          "file_offset": "0x3967f8",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x3967fc",
+          "preferred_va": "0x1803967fc",
+          "file_offset": "0x3967fc",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x3967fd",
+          "preferred_va": "0x1803967fd",
+          "file_offset": "0x3967fd",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x396d00",
+      "end_rva": "0x396d5b",
+      "instructions": [
+        {
+          "rva": "0x396d00",
+          "preferred_va": "0x180396d00",
+          "file_offset": "0x396d00",
+          "section": "   \u0000    ",
+          "bytes": "40 53",
+          "instruction": "push rbx"
+        },
+        {
+          "rva": "0x396d02",
+          "preferred_va": "0x180396d02",
+          "file_offset": "0x396d02",
+          "section": "   \u0000    ",
+          "bytes": "48 83 ec 20",
+          "instruction": "sub rsp, 0x20"
+        },
+        {
+          "rva": "0x396d06",
+          "preferred_va": "0x180396d06",
+          "file_offset": "0x396d06",
+          "section": "   \u0000    ",
+          "bytes": "48 63 da",
+          "instruction": "movsxd rbx, edx"
+        },
+        {
+          "rva": "0x396d09",
+          "preferred_va": "0x180396d09",
+          "file_offset": "0x396d09",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x396d0f",
+          "preferred_va": "0x180396d0f",
+          "file_offset": "0x396d0f",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x396d11",
+          "preferred_va": "0x180396d11",
+          "file_offset": "0x396d11",
+          "section": "   \u0000    ",
+          "bytes": "45 33 c0",
+          "instruction": "xor r8d, r8d"
+        },
+        {
+          "rva": "0x396d14",
+          "preferred_va": "0x180396d14",
+          "file_offset": "0x396d14",
+          "section": "   \u0000    ",
+          "bytes": "e8 a7 11 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d19",
+          "preferred_va": "0x180396d19",
+          "file_offset": "0x396d19",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x396d1c",
+          "preferred_va": "0x180396d1c",
+          "file_offset": "0x396d1c",
+          "section": "   \u0000    ",
+          "bytes": "75 28",
+          "instruction": "jne 0x180396d46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x396d46",
+              "preferred_va": "0x180396d46",
+              "file_offset": "0x396d46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d1e",
+          "preferred_va": "0x180396d1e",
+          "file_offset": "0x396d1e",
+          "section": "   \u0000    ",
+          "bytes": "48 8b d3",
+          "instruction": "mov rdx, rbx"
+        },
+        {
+          "rva": "0x396d21",
+          "preferred_va": "0x180396d21",
+          "file_offset": "0x396d21",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d f0 e6 9d 00",
+          "instruction": "lea rcx, [rip + 0x9de6f0]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xd75418",
+              "preferred_va": "0x180d75418",
+              "file_offset": "0xd75418",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d28",
+          "preferred_va": "0x180396d28",
+          "file_offset": "0x396d28",
+          "section": "   \u0000    ",
+          "bytes": "e8 03 10 d5 ff",
+          "instruction": "call 0x1800e7d30",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7d30",
+              "preferred_va": "0x1800e7d30",
+              "file_offset": "0xe7d30",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d2d",
+          "preferred_va": "0x180396d2d",
+          "file_offset": "0x396d2d",
+          "section": "   \u0000    ",
+          "bytes": "85 c0",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x396d2f",
+          "preferred_va": "0x180396d2f",
+          "file_offset": "0x396d2f",
+          "section": "   \u0000    ",
+          "bytes": "74 22",
+          "instruction": "je 0x180396d53",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x396d53",
+              "preferred_va": "0x180396d53",
+              "file_offset": "0x396d53",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d31",
+          "preferred_va": "0x180396d31",
+          "file_offset": "0x396d31",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x396d37",
+          "preferred_va": "0x180396d37",
+          "file_offset": "0x396d37",
+          "section": "   \u0000    ",
+          "bytes": "44 8b c0",
+          "instruction": "mov r8d, eax"
+        },
+        {
+          "rva": "0x396d3a",
+          "preferred_va": "0x180396d3a",
+          "file_offset": "0x396d3a",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x396d3c",
+          "preferred_va": "0x180396d3c",
+          "file_offset": "0x396d3c",
+          "section": "   \u0000    ",
+          "bytes": "e8 7f 11 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d41",
+          "preferred_va": "0x180396d41",
+          "file_offset": "0x396d41",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x396d44",
+          "preferred_va": "0x180396d44",
+          "file_offset": "0x396d44",
+          "section": "   \u0000    ",
+          "bytes": "74 0d",
+          "instruction": "je 0x180396d53",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x396d53",
+              "preferred_va": "0x180396d53",
+              "file_offset": "0x396d53",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x396d46",
+          "preferred_va": "0x180396d46",
+          "file_offset": "0x396d46",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 80 ed 01 00 00",
+          "instruction": "movzx eax, byte ptr [rax + 0x1ed]"
+        },
+        {
+          "rva": "0x396d4d",
+          "preferred_va": "0x180396d4d",
+          "file_offset": "0x396d4d",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x396d51",
+          "preferred_va": "0x180396d51",
+          "file_offset": "0x396d51",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x396d52",
+          "preferred_va": "0x180396d52",
+          "file_offset": "0x396d52",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x396d53",
+          "preferred_va": "0x180396d53",
+          "file_offset": "0x396d53",
+          "section": "   \u0000    ",
+          "bytes": "b0 01",
+          "instruction": "mov al, 1"
+        },
+        {
+          "rva": "0x396d55",
+          "preferred_va": "0x180396d55",
+          "file_offset": "0x396d55",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x396d59",
+          "preferred_va": "0x180396d59",
+          "file_offset": "0x396d59",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x396d5a",
+          "preferred_va": "0x180396d5a",
+          "file_offset": "0x396d5a",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x397bd0",
+      "end_rva": "0x397c2b",
+      "instructions": [
+        {
+          "rva": "0x397bd0",
+          "preferred_va": "0x180397bd0",
+          "file_offset": "0x397bd0",
+          "section": "   \u0000    ",
+          "bytes": "40 53",
+          "instruction": "push rbx"
+        },
+        {
+          "rva": "0x397bd2",
+          "preferred_va": "0x180397bd2",
+          "file_offset": "0x397bd2",
+          "section": "   \u0000    ",
+          "bytes": "48 83 ec 20",
+          "instruction": "sub rsp, 0x20"
+        },
+        {
+          "rva": "0x397bd6",
+          "preferred_va": "0x180397bd6",
+          "file_offset": "0x397bd6",
+          "section": "   \u0000    ",
+          "bytes": "48 63 da",
+          "instruction": "movsxd rbx, edx"
+        },
+        {
+          "rva": "0x397bd9",
+          "preferred_va": "0x180397bd9",
+          "file_offset": "0x397bd9",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x397bdf",
+          "preferred_va": "0x180397bdf",
+          "file_offset": "0x397bdf",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x397be1",
+          "preferred_va": "0x180397be1",
+          "file_offset": "0x397be1",
+          "section": "   \u0000    ",
+          "bytes": "45 33 c0",
+          "instruction": "xor r8d, r8d"
+        },
+        {
+          "rva": "0x397be4",
+          "preferred_va": "0x180397be4",
+          "file_offset": "0x397be4",
+          "section": "   \u0000    ",
+          "bytes": "e8 d7 02 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397be9",
+          "preferred_va": "0x180397be9",
+          "file_offset": "0x397be9",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x397bec",
+          "preferred_va": "0x180397bec",
+          "file_offset": "0x397bec",
+          "section": "   \u0000    ",
+          "bytes": "75 28",
+          "instruction": "jne 0x180397c16",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x397c16",
+              "preferred_va": "0x180397c16",
+              "file_offset": "0x397c16",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397bee",
+          "preferred_va": "0x180397bee",
+          "file_offset": "0x397bee",
+          "section": "   \u0000    ",
+          "bytes": "48 8b d3",
+          "instruction": "mov rdx, rbx"
+        },
+        {
+          "rva": "0x397bf1",
+          "preferred_va": "0x180397bf1",
+          "file_offset": "0x397bf1",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d 20 d8 9d 00",
+          "instruction": "lea rcx, [rip + 0x9dd820]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xd75418",
+              "preferred_va": "0x180d75418",
+              "file_offset": "0xd75418",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397bf8",
+          "preferred_va": "0x180397bf8",
+          "file_offset": "0x397bf8",
+          "section": "   \u0000    ",
+          "bytes": "e8 33 01 d5 ff",
+          "instruction": "call 0x1800e7d30",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7d30",
+              "preferred_va": "0x1800e7d30",
+              "file_offset": "0xe7d30",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397bfd",
+          "preferred_va": "0x180397bfd",
+          "file_offset": "0x397bfd",
+          "section": "   \u0000    ",
+          "bytes": "85 c0",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x397bff",
+          "preferred_va": "0x180397bff",
+          "file_offset": "0x397bff",
+          "section": "   \u0000    ",
+          "bytes": "74 22",
+          "instruction": "je 0x180397c23",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x397c23",
+              "preferred_va": "0x180397c23",
+              "file_offset": "0x397c23",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397c01",
+          "preferred_va": "0x180397c01",
+          "file_offset": "0x397c01",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 10 02 00 00",
+          "instruction": "mov r9d, 0x210"
+        },
+        {
+          "rva": "0x397c07",
+          "preferred_va": "0x180397c07",
+          "file_offset": "0x397c07",
+          "section": "   \u0000    ",
+          "bytes": "44 8b c0",
+          "instruction": "mov r8d, eax"
+        },
+        {
+          "rva": "0x397c0a",
+          "preferred_va": "0x180397c0a",
+          "file_offset": "0x397c0a",
+          "section": "   \u0000    ",
+          "bytes": "8b d3",
+          "instruction": "mov edx, ebx"
+        },
+        {
+          "rva": "0x397c0c",
+          "preferred_va": "0x180397c0c",
+          "file_offset": "0x397c0c",
+          "section": "   \u0000    ",
+          "bytes": "e8 af 02 d5 ff",
+          "instruction": "call 0x1800e7ec0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0xe7ec0",
+              "preferred_va": "0x1800e7ec0",
+              "file_offset": "0xe7ec0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397c11",
+          "preferred_va": "0x180397c11",
+          "file_offset": "0x397c11",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x397c14",
+          "preferred_va": "0x180397c14",
+          "file_offset": "0x397c14",
+          "section": "   \u0000    ",
+          "bytes": "74 0d",
+          "instruction": "je 0x180397c23",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x397c23",
+              "preferred_va": "0x180397c23",
+              "file_offset": "0x397c23",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x397c16",
+          "preferred_va": "0x180397c16",
+          "file_offset": "0x397c16",
+          "section": "   \u0000    ",
+          "bytes": "0f b7 80 dc 01 00 00",
+          "instruction": "movzx eax, word ptr [rax + 0x1dc]"
+        },
+        {
+          "rva": "0x397c1d",
+          "preferred_va": "0x180397c1d",
+          "file_offset": "0x397c1d",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x397c21",
+          "preferred_va": "0x180397c21",
+          "file_offset": "0x397c21",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x397c22",
+          "preferred_va": "0x180397c22",
+          "file_offset": "0x397c22",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x397c23",
+          "preferred_va": "0x180397c23",
+          "file_offset": "0x397c23",
+          "section": "   \u0000    ",
+          "bytes": "33 c0",
+          "instruction": "xor eax, eax"
+        },
+        {
+          "rva": "0x397c25",
+          "preferred_va": "0x180397c25",
+          "file_offset": "0x397c25",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x397c29",
+          "preferred_va": "0x180397c29",
+          "file_offset": "0x397c29",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x397c2a",
+          "preferred_va": "0x180397c2a",
+          "file_offset": "0x397c2a",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x392dd0",
+      "end_rva": "0x392e34",
+      "instructions": [
+        {
+          "rva": "0x392dd0",
+          "preferred_va": "0x180392dd0",
+          "file_offset": "0x392dd0",
+          "section": "   \u0000    ",
+          "bytes": "48 89 5c 24 08",
+          "instruction": "mov qword ptr [rsp + 8], rbx"
+        },
+        {
+          "rva": "0x392dd5",
+          "preferred_va": "0x180392dd5",
+          "file_offset": "0x392dd5",
+          "section": "   \u0000    ",
+          "bytes": "48 89 6c 24 10",
+          "instruction": "mov qword ptr [rsp + 0x10], rbp"
+        },
+        {
+          "rva": "0x392dda",
+          "preferred_va": "0x180392dda",
+          "file_offset": "0x392dda",
+          "section": "   \u0000    ",
+          "bytes": "48 89 74 24 18",
+          "instruction": "mov qword ptr [rsp + 0x18], rsi"
+        },
+        {
+          "rva": "0x392ddf",
+          "preferred_va": "0x180392ddf",
+          "file_offset": "0x392ddf",
+          "section": "   \u0000    ",
+          "bytes": "57",
+          "instruction": "push rdi"
+        },
+        {
+          "rva": "0x392de0",
+          "preferred_va": "0x180392de0",
+          "file_offset": "0x392de0",
+          "section": "   \u0000    ",
+          "bytes": "48 83 ec 20",
+          "instruction": "sub rsp, 0x20"
+        },
+        {
+          "rva": "0x392de4",
+          "preferred_va": "0x180392de4",
+          "file_offset": "0x392de4",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 2d 55 cc 49 00",
+          "instruction": "lea rbp, [rip + 0x49cc55]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x82fa40",
+              "preferred_va": "0x18082fa40",
+              "file_offset": "0x82fa40",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x392deb",
+          "preferred_va": "0x180392deb",
+          "file_offset": "0x392deb",
+          "section": "   \u0000    ",
+          "bytes": "48 8b f1",
+          "instruction": "mov rsi, rcx"
+        },
+        {
+          "rva": "0x392dee",
+          "preferred_va": "0x180392dee",
+          "file_offset": "0x392dee",
+          "section": "   \u0000    ",
+          "bytes": "48 8b fd",
+          "instruction": "mov rdi, rbp"
+        },
+        {
+          "rva": "0x392df1",
+          "preferred_va": "0x180392df1",
+          "file_offset": "0x392df1",
+          "section": "   \u0000    ",
+          "bytes": "33 db",
+          "instruction": "xor ebx, ebx"
+        },
+        {
+          "rva": "0x392df3",
+          "preferred_va": "0x180392df3",
+          "file_offset": "0x392df3",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 0f",
+          "instruction": "mov rcx, qword ptr [rdi]"
+        },
+        {
+          "rva": "0x392df6",
+          "preferred_va": "0x180392df6",
+          "file_offset": "0x392df6",
+          "section": "   \u0000    ",
+          "bytes": "48 8b d6",
+          "instruction": "mov rdx, rsi"
+        },
+        {
+          "rva": "0x392df9",
+          "preferred_va": "0x180392df9",
+          "file_offset": "0x392df9",
+          "section": "   \u0000    ",
+          "bytes": "ff 15 49 99 32 00",
+          "instruction": "call qword ptr [rip + 0x329949]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x6bc748",
+              "preferred_va": "0x1806bc748",
+              "file_offset": "0x6bc748",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x392dff",
+          "preferred_va": "0x180392dff",
+          "file_offset": "0x392dff",
+          "section": "   \u0000    ",
+          "bytes": "85 c0",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x392e01",
+          "preferred_va": "0x180392e01",
+          "file_offset": "0x392e01",
+          "section": "   \u0000    ",
+          "bytes": "74 12",
+          "instruction": "je 0x180392e15",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x392e15",
+              "preferred_va": "0x180392e15",
+              "file_offset": "0x392e15",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x392e03",
+          "preferred_va": "0x180392e03",
+          "file_offset": "0x392e03",
+          "section": "   \u0000    ",
+          "bytes": "ff c3",
+          "instruction": "inc ebx"
+        },
+        {
+          "rva": "0x392e05",
+          "preferred_va": "0x180392e05",
+          "file_offset": "0x392e05",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c7 10",
+          "instruction": "add rdi, 0x10"
+        },
+        {
+          "rva": "0x392e09",
+          "preferred_va": "0x180392e09",
+          "file_offset": "0x392e09",
+          "section": "   \u0000    ",
+          "bytes": "83 fb 07",
+          "instruction": "cmp ebx, 7"
+        },
+        {
+          "rva": "0x392e0c",
+          "preferred_va": "0x180392e0c",
+          "file_offset": "0x392e0c",
+          "section": "   \u0000    ",
+          "bytes": "72 e5",
+          "instruction": "jb 0x180392df3",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x392df3",
+              "preferred_va": "0x180392df3",
+              "file_offset": "0x392df3",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x392e0e",
+          "preferred_va": "0x180392e0e",
+          "file_offset": "0x392e0e",
+          "section": "   \u0000    ",
+          "bytes": "b8 01 00 00 00",
+          "instruction": "mov eax, 1"
+        },
+        {
+          "rva": "0x392e13",
+          "preferred_va": "0x180392e13",
+          "file_offset": "0x392e13",
+          "section": "   \u0000    ",
+          "bytes": "eb 0a",
+          "instruction": "jmp 0x180392e1f",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x392e1f",
+              "preferred_va": "0x180392e1f",
+              "file_offset": "0x392e1f",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x392e15",
+          "preferred_va": "0x180392e15",
+          "file_offset": "0x392e15",
+          "section": "   \u0000    ",
+          "bytes": "48 63 c3",
+          "instruction": "movsxd rax, ebx"
+        },
+        {
+          "rva": "0x392e18",
+          "preferred_va": "0x180392e18",
+          "file_offset": "0x392e18",
+          "section": "   \u0000    ",
+          "bytes": "48 03 c0",
+          "instruction": "add rax, rax"
+        },
+        {
+          "rva": "0x392e1b",
+          "preferred_va": "0x180392e1b",
+          "file_offset": "0x392e1b",
+          "section": "   \u0000    ",
+          "bytes": "8b 44 c5 08",
+          "instruction": "mov eax, dword ptr [rbp + rax*8 + 8]"
+        },
+        {
+          "rva": "0x392e1f",
+          "preferred_va": "0x180392e1f",
+          "file_offset": "0x392e1f",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 5c 24 30",
+          "instruction": "mov rbx, qword ptr [rsp + 0x30]"
+        },
+        {
+          "rva": "0x392e24",
+          "preferred_va": "0x180392e24",
+          "file_offset": "0x392e24",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 6c 24 38",
+          "instruction": "mov rbp, qword ptr [rsp + 0x38]"
+        },
+        {
+          "rva": "0x392e29",
+          "preferred_va": "0x180392e29",
+          "file_offset": "0x392e29",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 74 24 40",
+          "instruction": "mov rsi, qword ptr [rsp + 0x40]"
+        },
+        {
+          "rva": "0x392e2e",
+          "preferred_va": "0x180392e2e",
+          "file_offset": "0x392e2e",
+          "section": "   \u0000    ",
+          "bytes": "48 83 c4 20",
+          "instruction": "add rsp, 0x20"
+        },
+        {
+          "rva": "0x392e32",
+          "preferred_va": "0x180392e32",
+          "file_offset": "0x392e32",
+          "section": "   \u0000    ",
+          "bytes": "5f",
+          "instruction": "pop rdi"
+        },
+        {
+          "rva": "0x392e33",
+          "preferred_va": "0x180392e33",
+          "file_offset": "0x392e33",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x16f200",
+      "end_rva": "0x16f237",
+      "instructions": [
+        {
+          "rva": "0x16f200",
+          "preferred_va": "0x18016f200",
+          "file_offset": "0x16f200",
+          "section": "   \u0000    ",
+          "bytes": "8d 81 80 0a 1b f6",
+          "instruction": "lea eax, [rcx - 0x9e4f580]"
+        },
+        {
+          "rva": "0x16f206",
+          "preferred_va": "0x18016f206",
+          "file_offset": "0x16f206",
+          "section": "   \u0000    ",
+          "bytes": "3d 9f 86 01 00",
+          "instruction": "cmp eax, 0x1869f"
+        },
+        {
+          "rva": "0x16f20b",
+          "preferred_va": "0x18016f20b",
+          "file_offset": "0x16f20b",
+          "section": "   \u0000    ",
+          "bytes": "77 03",
+          "instruction": "ja 0x18016f210",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x16f210",
+              "preferred_va": "0x18016f210",
+              "file_offset": "0x16f210",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x16f20d",
+          "preferred_va": "0x18016f20d",
+          "file_offset": "0x16f20d",
+          "section": "   \u0000    ",
+          "bytes": "b0 01",
+          "instruction": "mov al, 1"
+        },
+        {
+          "rva": "0x16f20f",
+          "preferred_va": "0x18016f20f",
+          "file_offset": "0x16f20f",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x16f210",
+          "preferred_va": "0x18016f210",
+          "file_offset": "0x16f210",
+          "section": "   \u0000    ",
+          "bytes": "8d 81 40 c8 0b f6",
+          "instruction": "lea eax, [rcx - 0x9f437c0]"
+        },
+        {
+          "rva": "0x16f216",
+          "preferred_va": "0x18016f216",
+          "file_offset": "0x16f216",
+          "section": "   \u0000    ",
+          "bytes": "3d 9f 86 01 00",
+          "instruction": "cmp eax, 0x1869f"
+        },
+        {
+          "rva": "0x16f21b",
+          "preferred_va": "0x18016f21b",
+          "file_offset": "0x16f21b",
+          "section": "   \u0000    ",
+          "bytes": "77 03",
+          "instruction": "ja 0x18016f220",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x16f220",
+              "preferred_va": "0x18016f220",
+              "file_offset": "0x16f220",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x16f21d",
+          "preferred_va": "0x18016f21d",
+          "file_offset": "0x16f21d",
+          "section": "   \u0000    ",
+          "bytes": "b0 02",
+          "instruction": "mov al, 2"
+        },
+        {
+          "rva": "0x16f21f",
+          "preferred_va": "0x18016f21f",
+          "file_offset": "0x16f21f",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x16f220",
+          "preferred_va": "0x18016f220",
+          "file_offset": "0x16f220",
+          "section": "   \u0000    ",
+          "bytes": "33 c0",
+          "instruction": "xor eax, eax"
+        },
+        {
+          "rva": "0x16f222",
+          "preferred_va": "0x18016f222",
+          "file_offset": "0x16f222",
+          "section": "   \u0000    ",
+          "bytes": "81 c1 00 86 fc f5",
+          "instruction": "add ecx, 0xf5fc8600"
+        },
+        {
+          "rva": "0x16f228",
+          "preferred_va": "0x18016f228",
+          "file_offset": "0x16f228",
+          "section": "   \u0000    ",
+          "bytes": "81 f9 9f 86 01 00",
+          "instruction": "cmp ecx, 0x1869f"
+        },
+        {
+          "rva": "0x16f22e",
+          "preferred_va": "0x18016f22e",
+          "file_offset": "0x16f22e",
+          "section": "   \u0000    ",
+          "bytes": "ba 04 00 00 00",
+          "instruction": "mov edx, 4"
+        },
+        {
+          "rva": "0x16f233",
+          "preferred_va": "0x18016f233",
+          "file_offset": "0x16f233",
+          "section": "   \u0000    ",
+          "bytes": "0f 46 c2",
+          "instruction": "cmovbe eax, edx"
+        },
+        {
+          "rva": "0x16f236",
+          "preferred_va": "0x18016f236",
+          "file_offset": "0x16f236",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x1719f0",
+      "end_rva": "0x171a49",
+      "instructions": [
+        {
+          "rva": "0x1719f0",
+          "preferred_va": "0x1801719f0",
+          "file_offset": "0x1719f0",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 91 18 05 00 00",
+          "instruction": "mov rdx, qword ptr [rcx + 0x518]"
+        },
+        {
+          "rva": "0x1719f7",
+          "preferred_va": "0x1801719f7",
+          "file_offset": "0x1719f7",
+          "section": "   \u0000    ",
+          "bytes": "48 85 d2",
+          "instruction": "test rdx, rdx"
+        },
+        {
+          "rva": "0x1719fa",
+          "preferred_va": "0x1801719fa",
+          "file_offset": "0x1719fa",
+          "section": "   \u0000    ",
+          "bytes": "74 4a",
+          "instruction": "je 0x180171a46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a46",
+              "preferred_va": "0x180171a46",
+              "file_offset": "0x171a46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1719fc",
+          "preferred_va": "0x1801719fc",
+          "file_offset": "0x1719fc",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 8a b8 03 00 00",
+          "instruction": "mov rcx, qword ptr [rdx + 0x3b8]"
+        },
+        {
+          "rva": "0x171a03",
+          "preferred_va": "0x180171a03",
+          "file_offset": "0x171a03",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 82 c0 03 00 00",
+          "instruction": "mov rax, qword ptr [rdx + 0x3c0]"
+        },
+        {
+          "rva": "0x171a0a",
+          "preferred_va": "0x180171a0a",
+          "file_offset": "0x171a0a",
+          "section": "   \u0000    ",
+          "bytes": "48 2b c1",
+          "instruction": "sub rax, rcx"
+        },
+        {
+          "rva": "0x171a0d",
+          "preferred_va": "0x180171a0d",
+          "file_offset": "0x171a0d",
+          "section": "   \u0000    ",
+          "bytes": "48 d1 f8",
+          "instruction": "sar rax, 1"
+        },
+        {
+          "rva": "0x171a10",
+          "preferred_va": "0x180171a10",
+          "file_offset": "0x171a10",
+          "section": "   \u0000    ",
+          "bytes": "83 f8 01",
+          "instruction": "cmp eax, 1"
+        },
+        {
+          "rva": "0x171a13",
+          "preferred_va": "0x180171a13",
+          "file_offset": "0x171a13",
+          "section": "   \u0000    ",
+          "bytes": "75 31",
+          "instruction": "jne 0x180171a46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a46",
+              "preferred_va": "0x180171a46",
+              "file_offset": "0x171a46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171a15",
+          "preferred_va": "0x180171a15",
+          "file_offset": "0x171a15",
+          "section": "   \u0000    ",
+          "bytes": "48 0f bf 09",
+          "instruction": "movsx rcx, word ptr [rcx]"
+        },
+        {
+          "rva": "0x171a19",
+          "preferred_va": "0x180171a19",
+          "file_offset": "0x171a19",
+          "section": "   \u0000    ",
+          "bytes": "85 c9",
+          "instruction": "test ecx, ecx"
+        },
+        {
+          "rva": "0x171a1b",
+          "preferred_va": "0x180171a1b",
+          "file_offset": "0x171a1b",
+          "section": "   \u0000    ",
+          "bytes": "78 29",
+          "instruction": "js 0x180171a46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a46",
+              "preferred_va": "0x180171a46",
+              "file_offset": "0x171a46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171a1d",
+          "preferred_va": "0x180171a1d",
+          "file_offset": "0x171a1d",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b 82 68 03 00 00",
+          "instruction": "mov r8, qword ptr [rdx + 0x368]"
+        },
+        {
+          "rva": "0x171a24",
+          "preferred_va": "0x180171a24",
+          "file_offset": "0x171a24",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 82 70 03 00 00",
+          "instruction": "mov rax, qword ptr [rdx + 0x370]"
+        },
+        {
+          "rva": "0x171a2b",
+          "preferred_va": "0x180171a2b",
+          "file_offset": "0x171a2b",
+          "section": "   \u0000    ",
+          "bytes": "49 2b c0",
+          "instruction": "sub rax, r8"
+        },
+        {
+          "rva": "0x171a2e",
+          "preferred_va": "0x180171a2e",
+          "file_offset": "0x171a2e",
+          "section": "   \u0000    ",
+          "bytes": "48 c1 f8 03",
+          "instruction": "sar rax, 3"
+        },
+        {
+          "rva": "0x171a32",
+          "preferred_va": "0x180171a32",
+          "file_offset": "0x171a32",
+          "section": "   \u0000    ",
+          "bytes": "3b c8",
+          "instruction": "cmp ecx, eax"
+        },
+        {
+          "rva": "0x171a34",
+          "preferred_va": "0x180171a34",
+          "file_offset": "0x171a34",
+          "section": "   \u0000    ",
+          "bytes": "7d 10",
+          "instruction": "jge 0x180171a46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a46",
+              "preferred_va": "0x180171a46",
+              "file_offset": "0x171a46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171a36",
+          "preferred_va": "0x180171a36",
+          "file_offset": "0x171a36",
+          "section": "   \u0000    ",
+          "bytes": "49 8b 0c c8",
+          "instruction": "mov rcx, qword ptr [r8 + rcx*8]"
+        },
+        {
+          "rva": "0x171a3a",
+          "preferred_va": "0x180171a3a",
+          "file_offset": "0x171a3a",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c9",
+          "instruction": "test rcx, rcx"
+        },
+        {
+          "rva": "0x171a3d",
+          "preferred_va": "0x180171a3d",
+          "file_offset": "0x171a3d",
+          "section": "   \u0000    ",
+          "bytes": "74 07",
+          "instruction": "je 0x180171a46",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a46",
+              "preferred_va": "0x180171a46",
+              "file_offset": "0x171a46",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171a3f",
+          "preferred_va": "0x180171a3f",
+          "file_offset": "0x171a3f",
+          "section": "   \u0000    ",
+          "bytes": "8b 81 a8 00 00 00",
+          "instruction": "mov eax, dword ptr [rcx + 0xa8]"
+        },
+        {
+          "rva": "0x171a45",
+          "preferred_va": "0x180171a45",
+          "file_offset": "0x171a45",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        },
+        {
+          "rva": "0x171a46",
+          "preferred_va": "0x180171a46",
+          "file_offset": "0x171a46",
+          "section": "   \u0000    ",
+          "bytes": "33 c0",
+          "instruction": "xor eax, eax"
+        },
+        {
+          "rva": "0x171a48",
+          "preferred_va": "0x180171a48",
+          "file_offset": "0x171a48",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "start_rva": "0x171f70",
+      "end_rva": "0x172138",
+      "instructions": [
+        {
+          "rva": "0x171f70",
+          "preferred_va": "0x180171f70",
+          "file_offset": "0x171f70",
+          "section": "   \u0000    ",
+          "bytes": "40 53",
+          "instruction": "push rbx"
+        },
+        {
+          "rva": "0x171f72",
+          "preferred_va": "0x180171f72",
+          "file_offset": "0x171f72",
+          "section": "   \u0000    ",
+          "bytes": "48 81 ec 50 04 00 00",
+          "instruction": "sub rsp, 0x450"
+        },
+        {
+          "rva": "0x171f79",
+          "preferred_va": "0x180171f79",
+          "file_offset": "0x171f79",
+          "section": "   \u0000    ",
+          "bytes": "48 83 b9 40 05 00 00 00",
+          "instruction": "cmp qword ptr [rcx + 0x540], 0"
+        },
+        {
+          "rva": "0x171f81",
+          "preferred_va": "0x180171f81",
+          "file_offset": "0x171f81",
+          "section": "   \u0000    ",
+          "bytes": "48 8b d9",
+          "instruction": "mov rbx, rcx"
+        },
+        {
+          "rva": "0x171f84",
+          "preferred_va": "0x180171f84",
+          "file_offset": "0x171f84",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 a5 01 00 00",
+          "instruction": "je 0x18017212f",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x17212f",
+              "preferred_va": "0x18017212f",
+              "file_offset": "0x17212f",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171f8a",
+          "preferred_va": "0x180171f8a",
+          "file_offset": "0x171f8a",
+          "section": "   \u0000    ",
+          "bytes": "ba 55 00 00 00",
+          "instruction": "mov edx, 0x55"
+        },
+        {
+          "rva": "0x171f8f",
+          "preferred_va": "0x180171f8f",
+          "file_offset": "0x171f8f",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d 2a 28 bf 00",
+          "instruction": "lea rcx, [rip + 0xbf282a]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xd647c0",
+              "preferred_va": "0x180d647c0",
+              "file_offset": "0xd647c0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171f96",
+          "preferred_va": "0x180171f96",
+          "file_offset": "0x171f96",
+          "section": "   \u0000    ",
+          "bytes": "e8 a5 7e 1d 00",
+          "instruction": "call 0x180349e40",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x349e40",
+              "preferred_va": "0x180349e40",
+              "file_offset": "0x349e40",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171f9b",
+          "preferred_va": "0x180171f9b",
+          "file_offset": "0x171f9b",
+          "section": "   \u0000    ",
+          "bytes": "84 c0",
+          "instruction": "test al, al"
+        },
+        {
+          "rva": "0x171f9d",
+          "preferred_va": "0x180171f9d",
+          "file_offset": "0x171f9d",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 8c 01 00 00",
+          "instruction": "je 0x18017212f",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x17212f",
+              "preferred_va": "0x18017212f",
+              "file_offset": "0x17212f",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fa3",
+          "preferred_va": "0x180171fa3",
+          "file_offset": "0x171fa3",
+          "section": "   \u0000    ",
+          "bytes": "48 8b cb",
+          "instruction": "mov rcx, rbx"
+        },
+        {
+          "rva": "0x171fa6",
+          "preferred_va": "0x180171fa6",
+          "file_offset": "0x171fa6",
+          "section": "   \u0000    ",
+          "bytes": "48 89 bc 24 60 04 00 00",
+          "instruction": "mov qword ptr [rsp + 0x460], rdi"
+        },
+        {
+          "rva": "0x171fae",
+          "preferred_va": "0x180171fae",
+          "file_offset": "0x171fae",
+          "section": "   \u0000    ",
+          "bytes": "e8 9d fa ff ff",
+          "instruction": "call 0x180171a50",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171a50",
+              "preferred_va": "0x180171a50",
+              "file_offset": "0x171a50",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fb3",
+          "preferred_va": "0x180171fb3",
+          "file_offset": "0x171fb3",
+          "section": "   \u0000    ",
+          "bytes": "48 8b cb",
+          "instruction": "mov rcx, rbx"
+        },
+        {
+          "rva": "0x171fb6",
+          "preferred_va": "0x180171fb6",
+          "file_offset": "0x171fb6",
+          "section": "   \u0000    ",
+          "bytes": "48 8b f8",
+          "instruction": "mov rdi, rax"
+        },
+        {
+          "rva": "0x171fb9",
+          "preferred_va": "0x180171fb9",
+          "file_offset": "0x171fb9",
+          "section": "   \u0000    ",
+          "bytes": "e8 12 fb ff ff",
+          "instruction": "call 0x180171ad0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x171ad0",
+              "preferred_va": "0x180171ad0",
+              "file_offset": "0x171ad0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fbe",
+          "preferred_va": "0x180171fbe",
+          "file_offset": "0x171fbe",
+          "section": "   \u0000    ",
+          "bytes": "48 8b cb",
+          "instruction": "mov rcx, rbx"
+        },
+        {
+          "rva": "0x171fc1",
+          "preferred_va": "0x180171fc1",
+          "file_offset": "0x171fc1",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b c8",
+          "instruction": "mov r9, rax"
+        },
+        {
+          "rva": "0x171fc4",
+          "preferred_va": "0x180171fc4",
+          "file_offset": "0x171fc4",
+          "section": "   \u0000    ",
+          "bytes": "e8 27 fa ff ff",
+          "instruction": "call 0x1801719f0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x1719f0",
+              "preferred_va": "0x1801719f0",
+              "file_offset": "0x1719f0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fc9",
+          "preferred_va": "0x180171fc9",
+          "file_offset": "0x171fc9",
+          "section": "   \u0000    ",
+          "bytes": "44 8b c0",
+          "instruction": "mov r8d, eax"
+        },
+        {
+          "rva": "0x171fcc",
+          "preferred_va": "0x180171fcc",
+          "file_offset": "0x171fcc",
+          "section": "   \u0000    ",
+          "bytes": "48 85 ff",
+          "instruction": "test rdi, rdi"
+        },
+        {
+          "rva": "0x171fcf",
+          "preferred_va": "0x180171fcf",
+          "file_offset": "0x171fcf",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 52 01 00 00",
+          "instruction": "je 0x180172127",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172127",
+              "preferred_va": "0x180172127",
+              "file_offset": "0x172127",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fd5",
+          "preferred_va": "0x180171fd5",
+          "file_offset": "0x171fd5",
+          "section": "   \u0000    ",
+          "bytes": "4d 85 c9",
+          "instruction": "test r9, r9"
+        },
+        {
+          "rva": "0x171fd8",
+          "preferred_va": "0x180171fd8",
+          "file_offset": "0x171fd8",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 49 01 00 00",
+          "instruction": "je 0x180172127",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172127",
+              "preferred_va": "0x180172127",
+              "file_offset": "0x172127",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fde",
+          "preferred_va": "0x180171fde",
+          "file_offset": "0x171fde",
+          "section": "   \u0000    ",
+          "bytes": "41 8b 49 0c",
+          "instruction": "mov ecx, dword ptr [r9 + 0xc]"
+        },
+        {
+          "rva": "0x171fe2",
+          "preferred_va": "0x180171fe2",
+          "file_offset": "0x171fe2",
+          "section": "   \u0000    ",
+          "bytes": "e8 19 d2 ff ff",
+          "instruction": "call 0x18016f200",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x16f200",
+              "preferred_va": "0x18016f200",
+              "file_offset": "0x16f200",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fe7",
+          "preferred_va": "0x180171fe7",
+          "file_offset": "0x171fe7",
+          "section": "   \u0000    ",
+          "bytes": "84 c0",
+          "instruction": "test al, al"
+        },
+        {
+          "rva": "0x171fe9",
+          "preferred_va": "0x180171fe9",
+          "file_offset": "0x171fe9",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 38 01 00 00",
+          "instruction": "je 0x180172127",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172127",
+              "preferred_va": "0x180172127",
+              "file_offset": "0x172127",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171fef",
+          "preferred_va": "0x180171fef",
+          "file_offset": "0x171fef",
+          "section": "   \u0000    ",
+          "bytes": "0f b6 d0",
+          "instruction": "movzx edx, al"
+        },
+        {
+          "rva": "0x171ff2",
+          "preferred_va": "0x180171ff2",
+          "file_offset": "0x171ff2",
+          "section": "   \u0000    ",
+          "bytes": "83 ea 01",
+          "instruction": "sub edx, 1"
+        },
+        {
+          "rva": "0x171ff5",
+          "preferred_va": "0x180171ff5",
+          "file_offset": "0x171ff5",
+          "section": "   \u0000    ",
+          "bytes": "74 24",
+          "instruction": "je 0x18017201b",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x17201b",
+              "preferred_va": "0x18017201b",
+              "file_offset": "0x17201b",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x171ff7",
+          "preferred_va": "0x180171ff7",
+          "file_offset": "0x171ff7",
+          "section": "   \u0000    ",
+          "bytes": "83 fa 01",
+          "instruction": "cmp edx, 1"
+        },
+        {
+          "rva": "0x171ffa",
+          "preferred_va": "0x180171ffa",
+          "file_offset": "0x171ffa",
+          "section": "   \u0000    ",
+          "bytes": "0f 85 27 01 00 00",
+          "instruction": "jne 0x180172127",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172127",
+              "preferred_va": "0x180172127",
+              "file_offset": "0x172127",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172000",
+          "preferred_va": "0x180172000",
+          "file_offset": "0x172000",
+          "section": "   \u0000    ",
+          "bytes": "8b 57 08",
+          "instruction": "mov edx, dword ptr [rdi + 8]"
+        },
+        {
+          "rva": "0x172003",
+          "preferred_va": "0x180172003",
+          "file_offset": "0x172003",
+          "section": "   \u0000    ",
+          "bytes": "48 8b cb",
+          "instruction": "mov rcx, rbx"
+        },
+        {
+          "rva": "0x172006",
+          "preferred_va": "0x180172006",
+          "file_offset": "0x172006",
+          "section": "   \u0000    ",
+          "bytes": "48 8b bc 24 60 04 00 00",
+          "instruction": "mov rdi, qword ptr [rsp + 0x460]"
+        },
+        {
+          "rva": "0x17200e",
+          "preferred_va": "0x18017200e",
+          "file_offset": "0x17200e",
+          "section": "   \u0000    ",
+          "bytes": "48 81 c4 50 04 00 00",
+          "instruction": "add rsp, 0x450"
+        },
+        {
+          "rva": "0x172015",
+          "preferred_va": "0x180172015",
+          "file_offset": "0x172015",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x172016",
+          "preferred_va": "0x180172016",
+          "file_offset": "0x172016",
+          "section": "   \u0000    ",
+          "bytes": "e9 25 01 00 00",
+          "instruction": "jmp 0x180172140",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172140",
+              "preferred_va": "0x180172140",
+              "file_offset": "0x172140",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x17201b",
+          "preferred_va": "0x18017201b",
+          "file_offset": "0x17201b",
+          "section": "   \u0000    ",
+          "bytes": "48 83 bb 40 05 00 00 00",
+          "instruction": "cmp qword ptr [rbx + 0x540], 0"
+        },
+        {
+          "rva": "0x172023",
+          "preferred_va": "0x180172023",
+          "file_offset": "0x172023",
+          "section": "   \u0000    ",
+          "bytes": "0f 84 fe 00 00 00",
+          "instruction": "je 0x180172127",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x172127",
+              "preferred_va": "0x180172127",
+              "file_offset": "0x172127",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172029",
+          "preferred_va": "0x180172029",
+          "file_offset": "0x172029",
+          "section": "   \u0000    ",
+          "bytes": "41 8b 51 08",
+          "instruction": "mov edx, dword ptr [r9 + 8]"
+        },
+        {
+          "rva": "0x17202d",
+          "preferred_va": "0x18017202d",
+          "file_offset": "0x17202d",
+          "section": "   \u0000    ",
+          "bytes": "8b 4f 08",
+          "instruction": "mov ecx, dword ptr [rdi + 8]"
+        },
+        {
+          "rva": "0x172030",
+          "preferred_va": "0x180172030",
+          "file_offset": "0x172030",
+          "section": "   \u0000    ",
+          "bytes": "e8 db 45 1a 00",
+          "instruction": "call 0x180316610",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x316610",
+              "preferred_va": "0x180316610",
+              "file_offset": "0x316610",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172035",
+          "preferred_va": "0x180172035",
+          "file_offset": "0x172035",
+          "section": "   \u0000    ",
+          "bytes": "4c 8d 05 b4 73 64 00",
+          "instruction": "lea r8, [rip + 0x6473b4]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x7b93f0",
+              "preferred_va": "0x1807b93f0",
+              "file_offset": "0x7b93f0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x17203c",
+          "preferred_va": "0x18017203c",
+          "file_offset": "0x17203c",
+          "section": "   \u0000    ",
+          "bytes": "ba 00 01 00 00",
+          "instruction": "mov edx, 0x100"
+        },
+        {
+          "rva": "0x172041",
+          "preferred_va": "0x180172041",
+          "file_offset": "0x172041",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 8c 24 50 02 00 00",
+          "instruction": "lea rcx, [rsp + 0x250]"
+        },
+        {
+          "rva": "0x172049",
+          "preferred_va": "0x180172049",
+          "file_offset": "0x172049",
+          "section": "   \u0000    ",
+          "bytes": "66 0f 6e c0",
+          "instruction": "movd xmm0, eax"
+        },
+        {
+          "rva": "0x17204d",
+          "preferred_va": "0x18017204d",
+          "file_offset": "0x17204d",
+          "section": "   \u0000    ",
+          "bytes": "0f 5b c0",
+          "instruction": "cvtdq2ps xmm0, xmm0"
+        },
+        {
+          "rva": "0x172050",
+          "preferred_va": "0x180172050",
+          "file_offset": "0x172050",
+          "section": "   \u0000    ",
+          "bytes": "f3 0f 59 05 44 2b 70 00",
+          "instruction": "mulss xmm0, dword ptr [rip + 0x702b44]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x874b9c",
+              "preferred_va": "0x180874b9c",
+              "file_offset": "0x874b9c",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172058",
+          "preferred_va": "0x180172058",
+          "file_offset": "0x172058",
+          "section": "   \u0000    ",
+          "bytes": "0f 5a d8",
+          "instruction": "cvtps2pd xmm3, xmm0"
+        },
+        {
+          "rva": "0x17205b",
+          "preferred_va": "0x18017205b",
+          "file_offset": "0x17205b",
+          "section": "   \u0000    ",
+          "bytes": "66 49 0f 7e d9",
+          "instruction": "movq r9, xmm3"
+        },
+        {
+          "rva": "0x172060",
+          "preferred_va": "0x180172060",
+          "file_offset": "0x172060",
+          "section": "   \u0000    ",
+          "bytes": "e8 5b ba f2 ff",
+          "instruction": "call 0x18009dac0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x9dac0",
+              "preferred_va": "0x18009dac0",
+              "file_offset": "0x9dac0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172065",
+          "preferred_va": "0x180172065",
+          "file_offset": "0x172065",
+          "section": "   \u0000    ",
+          "bytes": "33 d2",
+          "instruction": "xor edx, edx"
+        },
+        {
+          "rva": "0x172067",
+          "preferred_va": "0x180172067",
+          "file_offset": "0x172067",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 4c 24 50",
+          "instruction": "lea rcx, [rsp + 0x50]"
+        },
+        {
+          "rva": "0x17206c",
+          "preferred_va": "0x18017206c",
+          "file_offset": "0x17206c",
+          "section": "   \u0000    ",
+          "bytes": "41 b8 00 02 00 00",
+          "instruction": "mov r8d, 0x200"
+        },
+        {
+          "rva": "0x172072",
+          "preferred_va": "0x180172072",
+          "file_offset": "0x172072",
+          "section": "   \u0000    ",
+          "bytes": "e8 b9 65 53 00",
+          "instruction": "call 0x1806a8630",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x6a8630",
+              "preferred_va": "0x1806a8630",
+              "file_offset": "0x6a8630",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172077",
+          "preferred_va": "0x180172077",
+          "file_offset": "0x172077",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b 15 c2 a4 c3 00",
+          "instruction": "mov r10, qword ptr [rip + 0xc3a4c2]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xdac540",
+              "preferred_va": "0x180dac540",
+              "file_offset": "0xdac540",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x17207e",
+          "preferred_va": "0x18017207e",
+          "file_offset": "0x17207e",
+          "section": "   \u0000    ",
+          "bytes": "48 b8 67 66 66 66 66 66 66 66",
+          "instruction": "movabs rax, 0x6666666666666667"
+        },
+        {
+          "rva": "0x172088",
+          "preferred_va": "0x180172088",
+          "file_offset": "0x172088",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 0d b9 a4 c3 00",
+          "instruction": "mov rcx, qword ptr [rip + 0xc3a4b9]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xdac548",
+              "preferred_va": "0x180dac548",
+              "file_offset": "0xdac548",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x17208f",
+          "preferred_va": "0x18017208f",
+          "file_offset": "0x17208f",
+          "section": "   \u0000    ",
+          "bytes": "49 2b ca",
+          "instruction": "sub rcx, r10"
+        },
+        {
+          "rva": "0x172092",
+          "preferred_va": "0x180172092",
+          "file_offset": "0x172092",
+          "section": "   \u0000    ",
+          "bytes": "48 f7 e9",
+          "instruction": "imul rcx"
+        },
+        {
+          "rva": "0x172095",
+          "preferred_va": "0x180172095",
+          "file_offset": "0x172095",
+          "section": "   \u0000    ",
+          "bytes": "48 c1 fa 03",
+          "instruction": "sar rdx, 3"
+        },
+        {
+          "rva": "0x172099",
+          "preferred_va": "0x180172099",
+          "file_offset": "0x172099",
+          "section": "   \u0000    ",
+          "bytes": "48 8b c2",
+          "instruction": "mov rax, rdx"
+        },
+        {
+          "rva": "0x17209c",
+          "preferred_va": "0x18017209c",
+          "file_offset": "0x17209c",
+          "section": "   \u0000    ",
+          "bytes": "48 c1 e8 3f",
+          "instruction": "shr rax, 0x3f"
+        },
+        {
+          "rva": "0x1720a0",
+          "preferred_va": "0x1801720a0",
+          "file_offset": "0x1720a0",
+          "section": "   \u0000    ",
+          "bytes": "48 03 d0",
+          "instruction": "add rdx, rax"
+        },
+        {
+          "rva": "0x1720a3",
+          "preferred_va": "0x1801720a3",
+          "file_offset": "0x1720a3",
+          "section": "   \u0000    ",
+          "bytes": "74 36",
+          "instruction": "je 0x1801720db",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x1720db",
+              "preferred_va": "0x1801720db",
+              "file_offset": "0x1720db",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1720a5",
+          "preferred_va": "0x1801720a5",
+          "file_offset": "0x1720a5",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 05 a4 5b f7 ff",
+          "instruction": "lea rax, [rip - 0x8a45c]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xe7c50",
+              "preferred_va": "0x1800e7c50",
+              "file_offset": "0xe7c50",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1720ac",
+          "preferred_va": "0x1801720ac",
+          "file_offset": "0x1720ac",
+          "section": "   \u0000    ",
+          "bytes": "c7 44 24 30 0c d1 0d 00",
+          "instruction": "mov dword ptr [rsp + 0x30], 0xdd10c"
+        },
+        {
+          "rva": "0x1720b4",
+          "preferred_va": "0x1801720b4",
+          "file_offset": "0x1720b4",
+          "section": "   \u0000    ",
+          "bytes": "4c 8b c2",
+          "instruction": "mov r8, rdx"
+        },
+        {
+          "rva": "0x1720b7",
+          "preferred_va": "0x1801720b7",
+          "file_offset": "0x1720b7",
+          "section": "   \u0000    ",
+          "bytes": "48 89 44 24 20",
+          "instruction": "mov qword ptr [rsp + 0x20], rax"
+        },
+        {
+          "rva": "0x1720bc",
+          "preferred_va": "0x1801720bc",
+          "file_offset": "0x1720bc",
+          "section": "   \u0000    ",
+          "bytes": "49 8b d2",
+          "instruction": "mov rdx, r10"
+        },
+        {
+          "rva": "0x1720bf",
+          "preferred_va": "0x1801720bf",
+          "file_offset": "0x1720bf",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 4c 24 30",
+          "instruction": "lea rcx, [rsp + 0x30]"
+        },
+        {
+          "rva": "0x1720c4",
+          "preferred_va": "0x1801720c4",
+          "file_offset": "0x1720c4",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 14 00 00 00",
+          "instruction": "mov r9d, 0x14"
+        },
+        {
+          "rva": "0x1720ca",
+          "preferred_va": "0x1801720ca",
+          "file_offset": "0x1720ca",
+          "section": "   \u0000    ",
+          "bytes": "e8 98 57 0d 01",
+          "instruction": "call 0x181247867",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x1247867",
+              "preferred_va": "0x181247867",
+              "file_offset": "0x1245c67",
+              "section": "urvpcjew"
+            }
+          ]
+        },
+        {
+          "rva": "0x1720cf",
+          "preferred_va": "0x1801720cf",
+          "file_offset": "0x1720cf",
+          "section": "   \u0000    ",
+          "bytes": "90",
+          "instruction": "nop "
+        },
+        {
+          "rva": "0x1720d0",
+          "preferred_va": "0x1801720d0",
+          "file_offset": "0x1720d0",
+          "section": "   \u0000    ",
+          "bytes": "48 85 c0",
+          "instruction": "test rax, rax"
+        },
+        {
+          "rva": "0x1720d3",
+          "preferred_va": "0x1801720d3",
+          "file_offset": "0x1720d3",
+          "section": "   \u0000    ",
+          "bytes": "74 06",
+          "instruction": "je 0x1801720db",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x1720db",
+              "preferred_va": "0x1801720db",
+              "file_offset": "0x1720db",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1720d5",
+          "preferred_va": "0x1801720d5",
+          "file_offset": "0x1720d5",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 40 0c",
+          "instruction": "mov rax, qword ptr [rax + 0xc]"
+        },
+        {
+          "rva": "0x1720d9",
+          "preferred_va": "0x1801720d9",
+          "file_offset": "0x1720d9",
+          "section": "   \u0000    ",
+          "bytes": "eb 07",
+          "instruction": "jmp 0x1801720e2",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x1720e2",
+              "preferred_va": "0x1801720e2",
+              "file_offset": "0x1720e2",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1720db",
+          "preferred_va": "0x1801720db",
+          "file_offset": "0x1720db",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 05 2e 3c 62 00",
+          "instruction": "lea rax, [rip + 0x623c2e]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x795d10",
+              "preferred_va": "0x180795d10",
+              "file_offset": "0x795d10",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x1720e2",
+          "preferred_va": "0x1801720e2",
+          "file_offset": "0x1720e2",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 8c 24 50 02 00 00",
+          "instruction": "lea rcx, [rsp + 0x250]"
+        },
+        {
+          "rva": "0x1720ea",
+          "preferred_va": "0x1801720ea",
+          "file_offset": "0x1720ea",
+          "section": "   \u0000    ",
+          "bytes": "41 b9 00 01 00 00",
+          "instruction": "mov r9d, 0x100"
+        },
+        {
+          "rva": "0x1720f0",
+          "preferred_va": "0x1801720f0",
+          "file_offset": "0x1720f0",
+          "section": "   \u0000    ",
+          "bytes": "48 89 4c 24 28",
+          "instruction": "mov qword ptr [rsp + 0x28], rcx"
+        },
+        {
+          "rva": "0x1720f5",
+          "preferred_va": "0x1801720f5",
+          "file_offset": "0x1720f5",
+          "section": "   \u0000    ",
+          "bytes": "4c 8d 44 24 50",
+          "instruction": "lea r8, [rsp + 0x50]"
+        },
+        {
+          "rva": "0x1720fa",
+          "preferred_va": "0x1801720fa",
+          "file_offset": "0x1720fa",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 0d 3f a4 c3 00",
+          "instruction": "lea rcx, [rip + 0xc3a43f]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0xdac540",
+              "preferred_va": "0x180dac540",
+              "file_offset": "0xdac540",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172101",
+          "preferred_va": "0x180172101",
+          "file_offset": "0x172101",
+          "section": "   \u0000    ",
+          "bytes": "48 89 44 24 20",
+          "instruction": "mov qword ptr [rsp + 0x20], rax"
+        },
+        {
+          "rva": "0x172106",
+          "preferred_va": "0x180172106",
+          "file_offset": "0x172106",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 15 a7 52 62 00",
+          "instruction": "lea rdx, [rip + 0x6252a7]",
+          "references": [
+            {
+              "kind": "rip_relative",
+              "rva": "0x7973b4",
+              "preferred_va": "0x1807973b4",
+              "file_offset": "0x7973b4",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x17210d",
+          "preferred_va": "0x18017210d",
+          "file_offset": "0x17210d",
+          "section": "   \u0000    ",
+          "bytes": "e8 de d5 3d 00",
+          "instruction": "call 0x18054f6f0",
+          "references": [
+            {
+              "kind": "direct_branch",
+              "rva": "0x54f6f0",
+              "preferred_va": "0x18054f6f0",
+              "file_offset": "0x54f6f0",
+              "section": "   \u0000    "
+            }
+          ]
+        },
+        {
+          "rva": "0x172112",
+          "preferred_va": "0x180172112",
+          "file_offset": "0x172112",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 8b 40 05 00 00",
+          "instruction": "mov rcx, qword ptr [rbx + 0x540]"
+        },
+        {
+          "rva": "0x172119",
+          "preferred_va": "0x180172119",
+          "file_offset": "0x172119",
+          "section": "   \u0000    ",
+          "bytes": "48 8d 54 24 50",
+          "instruction": "lea rdx, [rsp + 0x50]"
+        },
+        {
+          "rva": "0x17211e",
+          "preferred_va": "0x18017211e",
+          "file_offset": "0x17211e",
+          "section": "   \u0000    ",
+          "bytes": "48 8b 01",
+          "instruction": "mov rax, qword ptr [rcx]"
+        },
+        {
+          "rva": "0x172121",
+          "preferred_va": "0x180172121",
+          "file_offset": "0x172121",
+          "section": "   \u0000    ",
+          "bytes": "ff 90 70 02 00 00",
+          "instruction": "call qword ptr [rax + 0x270]"
+        },
+        {
+          "rva": "0x172127",
+          "preferred_va": "0x180172127",
+          "file_offset": "0x172127",
+          "section": "   \u0000    ",
+          "bytes": "48 8b bc 24 60 04 00 00",
+          "instruction": "mov rdi, qword ptr [rsp + 0x460]"
+        },
+        {
+          "rva": "0x17212f",
+          "preferred_va": "0x18017212f",
+          "file_offset": "0x17212f",
+          "section": "   \u0000    ",
+          "bytes": "48 81 c4 50 04 00 00",
+          "instruction": "add rsp, 0x450"
+        },
+        {
+          "rva": "0x172136",
+          "preferred_va": "0x180172136",
+          "file_offset": "0x172136",
+          "section": "   \u0000    ",
+          "bytes": "5b",
+          "instruction": "pop rbx"
+        },
+        {
+          "rva": "0x172137",
+          "preferred_va": "0x180172137",
+          "file_offset": "0x172137",
+          "section": "   \u0000    ",
+          "bytes": "c3",
+          "instruction": "ret "
+        }
+      ]
+    }
+  ]
+}

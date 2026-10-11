@@ -1,69 +1,33 @@
-# AION Classic 本机版本：离线逆向学习记录
+# AION客户端 / 服务端机制研究档案
 
-针对 2026-10-10 提供的 `aionclassic2/bin64` 样本。按用户要求上传四个主模块、分析结果与可复现的离线 Python 环境。样本是第三方程序，本目录不将其重新声明为 REA 的开源代码。
+## 阅读入口
 
-## 从攻击速度开始读
+- [图文机制报告与具体案例](reports/mechanics/AION机制分析报告.html)：塔哈巴塔强化、剑星巨剑/战戟对持盾角色、致命/命中/盾反前提、技能、神石与离线模型实验台。
+- [REA与Codex教学](reports/REA与Codex逆向教学.html)
+- [完整分析记录](reports/AION_ANALYSIS.md)
+- [服务端对照](reports/AION_SERVER_COMPARISON_20261011.md)
 
-打开 [ANALYSIS.md](ANALYSIS.md)，阅读最后的“攻击速度实战第一课”。
+GitHub网页只显示HTML源码；下载整个reports/mechanics目录后用浏览器打开HTML，即可离线查看图表和计算器，并打开相对证据链接。
 
-- `attackDelay` 在已验证的名称转换上下文中对应编号 `0x1D`。
-- `Game.dll + 0x396E80` 查询数据记录后读取 `uint16(record + 0x1BE)`。
-- 一处显示函数把该值除以 `1000.0`。
-- 这条链对应基础攻击间隔的读取与显示；最终角色攻速的计算、保护表示及运行时修改效果尚未确认。
-- 用户报告以前发现过隐藏计算过程；当前保留为假设，不伪装为已经复现的结论。
+## 按功能分类
 
-精简机器可读证据：[reports/attack-speed-lesson.json](reports/attack-speed-lesson.json)。
+| 目录 | 内容 |
+| --- | --- |
+| client | 客户端辅助分析/资源解析代码、文件索引、已解资源、第一层局部导出 |
+| server | 固定开源服务端完整参考源码、分析脚本、提交/哈希溯源 |
+| reports | 中文HTML、Markdown、可编辑报告代码与核对记录 |
+| evidence | REA第七/八轮请求与结果、历史辅助静态证据归档 |
+| tools | 静态识别工具包、IDA MCP接入源码、按功能工具入口、结束清理脚本 |
+| samples | 较早已上传的四个客户端主模块，不重复更改 |
 
-## 包含内容
+REA主项目仍在仓库根目录。当前记录未完成整个客户端或当前官方服务器语义审计。客户端显示概率与固定开源服务端判定分开，本文不把旧模型当当前线上机制。
 
-| 路径 | 内容 |
-|---|---|
-| `samples/` | Aion.bin、Game.dll、CrySystem.dll、ScriptDLL64.dll 原样副本 |
-| `scripts/` | 五个静态分析/解码脚本，不启动被分析程序 |
-| `reports/` | 关键 JSON、手工伪代码、完整二进制证据 ZIP |
-| `exports/protection-stage1/` | 三个模块第一层各 4096 字节的独立解码结果 |
-| `manifest.json` | 文件大小与 SHA-256 |
-| `requirements.txt` | 精确固定的 Python 依赖版本 |
+所有归档经过CRC读取校验，文件SHA256见publication-manifest.json。文档使用“唯一品质”“英雄品质”；原始JSON英文标记保留便于对照。
 
-`binary-evidence.zip` 内含 RTTI、虚表、入口链、调用关系、汇编窗口和验证记录。原报告中的绝对路径属于历史证据，不代表换机后的文件位置。
+## Release归档
 
-完整客户端资源、F 盘其他目录、工具安装包、账号配置、Python 解释器及 IDA/调试器本体不包含在本目录中。资源表只提供本课相关的小规模示例与原分析说明；重新提取全部资源需要另备完整客户端。
+大文件另存GitHub Release，文件名以前缀client/server/evidence/tools/reports分类。完整HTML目录请下载reports__complete-mechanics-report.zip，解压后打开HTML，可保留所有证据链接。
 
-## 复现环境
+## Release归档
 
-实测：Windows x64，Python 3.12；pefile 2024.8.26、Capstone 5.0.6。运行不需要 IDA。现有 IDA 8.3 的批处理尝试未成功，详情保留在报告中。
-
-在此目录打开 PowerShell，使用已安装的 Python：
-
-```powershell
-python -m pip install --target .\scripts\python-libs -r .\requirements.txt
-python .\scripts\verify_package.py
-python .\scripts\analyze_attack_speed.py
-```
-
-包验证应全部通过；攻速脚本还会核验 Game.dll 的精确哈希和六项指令/常数证据。换版本不会静默套用旧偏移。
-
-更完整的分析按以下顺序运行：
-
-```powershell
-python .\scripts\analyze_aion_native.py
-python .\scripts\trace_aion_native.py
-python .\scripts\decode_aion_stage1.py
-python .\scripts\export_aion_findings.py
-python .\scripts\analyze_attack_speed.py
-```
-
-默认从本目录的 `samples` 读取样本，向 `reports/binary` 与 `local-backup/binary` 写结果。要与另外的原始 bin64 目录核对，可设置进程环境变量：
-
-```powershell
-$env:AION_BIN64_DIR = 'F:\SOFTWARE\永恒之塔\aionclassic2\bin64'
-python .\scripts\analyze_aion_native.py
-```
-
-`AION_CASE_DIR` 可覆盖整个案例目录，目录内须有 `samples`。默认只比较包内样本；设置 `AION_BIN64_DIR` 后才是与外部原件比较。分析输出中的 `matches_source` 必须结合此设置理解。
-
-这些命令不添加开机启动、计划任务、驱动或后台服务。没有运行时内存写入、游戏自动化或反作弊修改功能。
-
-## 结果边界
-
-第一层解码不是完整脱壳；没有可运行的重建 EXE/DLL。RVA 不是运行时绝对地址，属性快照不是 Player 对象，基础间隔不是已验证的最终攻速。PE 展开信息范围可能只是函数片段；线性汇编窗口也可能包含数据。详细限制与证据来源见分析报告。
+大文件另存GitHub Release，文件名以前缀client/server/evidence/tools/reports分类。完整HTML目录请下载reports__complete-mechanics-report.zip，解压后打开HTML，可保留所有证据链接。
