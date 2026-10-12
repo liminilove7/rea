@@ -1,0 +1,346 @@
+{
+  "evidence_id": "ev_14607b85fb9eb3a52620f7f466d729a77c96b1a2f591d7062921f758e89f7775",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll",
+    "digest": {
+      "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "read_function_instructions",
+  "parameters": {
+    "procedure": "0x18046aa40",
+    "document": null
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 558.141,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 558.346,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": [
+            "0x18046aa40"
+          ],
+          "database": "rea-2f172f6b-2a13-441a-a302-1042de4cc235"
+        },
+        "result": [
+          {
+            "query": "0x18046aa40",
+            "fn": {
+              "addr": "0x18046aa40",
+              "name": "sub_18046AA40",
+              "size": "0x68"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x18046aa40",
+          "offset": 0,
+          "max_instructions": 100,
+          "database": "rea-2f172f6b-2a13-441a-a302-1042de4cc235"
+        },
+        "result": {
+          "addr": "0x18046aa40",
+          "asm": {
+            "name": "sub_18046AA40",
+            "start_ea": "0x18046aa40",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "18046aa40",
+                "instruction": "push rbx",
+                "label": "sub_18046AA40"
+              },
+              {
+                "addr": "18046aa42",
+                "instruction": "sub rsp, 30h"
+              },
+              {
+                "addr": "18046aa46",
+                "instruction": "lea eax, [rdx-0Dh]"
+              },
+              {
+                "addr": "18046aa49",
+                "instruction": "mov rbx, rcx"
+              },
+              {
+                "addr": "18046aa4c",
+                "instruction": "cmp eax, 1"
+              },
+              {
+                "addr": "18046aa4f",
+                "instruction": "ja short loc_18046AAA0",
+                "refs": [
+                  {
+                    "addr": "0x18046aaa0",
+                    "name": "loc_18046AAA0"
+                  }
+                ]
+              },
+              {
+                "addr": "18046aa51",
+                "instruction": "test dword ptr [rcx+2ECh], 1800h"
+              },
+              {
+                "addr": "18046aa5b",
+                "instruction": "jnz short loc_18046AAA0",
+                "refs": [
+                  {
+                    "addr": "0x18046aaa0",
+                    "name": "loc_18046AAA0"
+                  }
+                ]
+              },
+              {
+                "addr": "18046aa5d",
+                "instruction": "xor r8d, r8d"
+              },
+              {
+                "addr": "18046aa60",
+                "instruction": "cmp edx, 0Dh"
+              },
+              {
+                "addr": "18046aa63",
+                "instruction": "setnz dl"
+              },
+              {
+                "addr": "18046aa66",
+                "instruction": "inc dl"
+              },
+              {
+                "addr": "18046aa68",
+                "instruction": "call sub_18035A500",
+                "refs": [
+                  {
+                    "addr": "0x18035a500",
+                    "name": "sub_18035A500"
+                  }
+                ]
+              },
+              {
+                "addr": "18046aa6d",
+                "instruction": "movss xmm1, cs:dword_180874C1C",
+                "refs": [
+                  {
+                    "addr": "0x180874c1c",
+                    "name": "dword_180874C1C"
+                  }
+                ]
+              },
+              {
+                "addr": "18046aa75",
+                "instruction": "xor r9d, r9d"
+              },
+              {
+                "addr": "18046aa78",
+                "instruction": "or dword ptr [rbx+2ECh], 1800h"
+              },
+              {
+                "addr": "18046aa82",
+                "instruction": "mov r8d, 1800h"
+              },
+              {
+                "addr": "18046aa88",
+                "instruction": "mov rcx, rbx"
+              },
+              {
+                "addr": "18046aa8b",
+                "instruction": "mov [rsp+38h+var_18], 0"
+              },
+              {
+                "addr": "18046aa93",
+                "instruction": "call sub_180488830",
+                "refs": [
+                  {
+                    "addr": "0x180488830",
+                    "name": "sub_180488830"
+                  }
+                ]
+              },
+              {
+                "addr": "18046aa98",
+                "instruction": "mov al, 1"
+              },
+              {
+                "addr": "18046aa9a",
+                "instruction": "add rsp, 30h"
+              },
+              {
+                "addr": "18046aa9e",
+                "instruction": "pop rbx"
+              },
+              {
+                "addr": "18046aa9f",
+                "instruction": "retn"
+              },
+              {
+                "addr": "18046aaa0",
+                "instruction": "xor al, al",
+                "label": "loc_18046AAA0"
+              },
+              {
+                "addr": "18046aaa2",
+                "instruction": "add rsp, 30h"
+              },
+              {
+                "addr": "18046aaa6",
+                "instruction": "pop rbx"
+              },
+              {
+                "addr": "18046aaa7",
+                "instruction": "retn"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_18",
+                "offset": "0x20",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x38",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              }
+            ]
+          },
+          "instruction_count": 28,
+          "total_instructions": null,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "procedure": {
+      "address": "0x18046aa40",
+      "name": "sub_18046AA40",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    },
+    "instructions": [
+      "0x18046aa40: push rbx",
+      "0x18046aa42: sub rsp, 30h",
+      "0x18046aa46: lea eax, [rdx-0Dh]",
+      "0x18046aa49: mov rbx, rcx",
+      "0x18046aa4c: cmp eax, 1",
+      "0x18046aa4f: ja short loc_18046AAA0",
+      "0x18046aa51: test dword ptr [rcx+2ECh], 1800h",
+      "0x18046aa5b: jnz short loc_18046AAA0",
+      "0x18046aa5d: xor r8d, r8d",
+      "0x18046aa60: cmp edx, 0Dh",
+      "0x18046aa63: setnz dl",
+      "0x18046aa66: inc dl",
+      "0x18046aa68: call sub_18035A500",
+      "0x18046aa6d: movss xmm1, cs:dword_180874C1C",
+      "0x18046aa75: xor r9d, r9d",
+      "0x18046aa78: or dword ptr [rbx+2ECh], 1800h",
+      "0x18046aa82: mov r8d, 1800h",
+      "0x18046aa88: mov rcx, rbx",
+      "0x18046aa8b: mov [rsp+38h+var_18], 0",
+      "0x18046aa93: call sub_180488830",
+      "0x18046aa98: mov al, 1",
+      "0x18046aa9a: add rsp, 30h",
+      "0x18046aa9e: pop rbx",
+      "0x18046aa9f: retn",
+      "0x18046aaa0: xor al, al",
+      "0x18046aaa2: add rsp, 30h",
+      "0x18046aaa6: pop rbx",
+      "0x18046aaa7: retn"
+    ],
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x18046aa40"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}

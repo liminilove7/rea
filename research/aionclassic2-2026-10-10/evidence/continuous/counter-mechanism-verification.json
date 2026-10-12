@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "targetSha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786",
+  "targetExecuted": false,
+  "analysisComplete": false,
+  "checks": [
+    "Skill counter mask is translated and intersected with the local object state, then written to an output argument",
+    "Counter source uses the same state conversion and passes its float constant in XMM1 to the setter",
+    "Setter stores the converted remaining counter and ORs the flag without incrementing a charge counter at these locations",
+    "Block state counter is decremented and its bit cleared when the recorded remainder is exhausted",
+    "Unmatched condition output reaches the rejecting branch of the main client check",
+    "Boolean wrapper treats the nonzero main-check result as unavailable",
+    "XML record parsing initializes the 2008-byte record through the observed zeroing constructor",
+    "Original float bytes establish the observed 3.0 and 1000.0 constants independently",
+    "Current named skill message registrations retain their internal IDs and source spelling"
+  ],
+  "anchors": [
+    {
+      "file": "skill-check-instructions",
+      "evidenceId": "ev_4f801b7a4c223dd2b69050a6ba028733a523dd196f01524fafa3ffb7e4200f52",
+      "instructions": [
+        "0x18061ef19: call sub_1806A8642",
+        "0x18061ef98: shr rcx, 2",
+        "0x18061ef9c: and ecx, 20h",
+        "0x18061efa1: or edx, 40h",
+        "0x18061efaf: bts ecx, 7",
+        "0x18061efc1: bts eax, 0Dh",
+        "0x18061efcb: and eax, [rbp+2ECh]",
+        "0x18061efd1: mov [rsi], eax"
+      ]
+    },
+    {
+      "file": "counter-state-source-instructions",
+      "evidenceId": "ev_aa4a9991cf361e2b66a499a0e6875a44aaab12b06ff3d691e045a1ca49e55a4d",
+      "instructions": [
+        "0x18047717f: movss xmm1, cs:dword_180874FA8",
+        "0x1804771a3: bts ecx, 7",
+        "0x1804771b6: bts r8d, 0Dh",
+        "0x1804771c5: call sub_1804BC8D0"
+      ]
+    },
+    {
+      "file": "state-owner-body-1804bc8d0",
+      "evidenceId": "ev_3f86eb7bbc15e4a8cd4524aec8b620cd608db03ba3da44ccd4695524afe23886",
+      "instructions": [
+        "0x1804bc944: mulss xmm2, cs:dword_1808754A0",
+        "0x1804bc94c: or eax, r8d",
+        "0x1804bc94f: mov [rcx+2ECh], eax",
+        "0x1804bc97c: mov [rcx+2F8h], eax"
+      ]
+    },
+    {
+      "file": "state-owner-body-1804bca40",
+      "evidenceId": "ev_33fb5d3cfcc39affde196c402793e016cee45c1479fbd8989b4de00a65fb34b8",
+      "instructions": [
+        "0x1804bca97: mulss xmm0, cs:dword_1808754A0",
+        "0x1804bcb14: sub edx, eax",
+        "0x1804bcb16: mov [rbx+2F8h], edx",
+        "0x1804bcb1e: btr ecx, 7",
+        "0x1804bcb28: mov [rbx+2F8h], edi"
+      ]
+    },
+    {
+      "file": "skill-eligibility-main-instructions",
+      "evidenceId": "ev_8ce97d46d6ea02a766b3f1a60b4f414e75c45b708017b5f91ee30201a0233b25",
+      "instructions": [
+        "0x18061fa37: call sub_18061EE50",
+        "0x18061fa40: cmp dword ptr [rbp+700h+arg_0], ebx",
+        "0x18061fa46: jz loc_18061FB29"
+      ]
+    },
+    {
+      "file": "skill-state-boolean-instructions",
+      "evidenceId": "ev_c1ec6c2e7f7c25f25a9393135da878d3b27cc6c76fb618e28041b7d5af989a5f",
+      "instructions": [
+        "0x180620abc: call sub_18061F860",
+        "0x180620ac3: jnz short loc_180620B00",
+        "0x180620b00: xor eax, eax"
+      ]
+    },
+    {
+      "file": "skill-record-default-instructions",
+      "evidenceId": "ev_870abfd89dca449595b3361e199f1082753325fe3e9d8ccf032afab895d66272",
+      "instructions": [
+        "0x18012014d: xor edx, edx",
+        "0x18012014f: mov r8d, 7D8h",
+        "0x180120158: call sub_1806A8630"
+      ]
+    },
+    {
+      "file": "skill-record-parser-instructions",
+      "evidenceId": "ev_c09f5f31922711568010a87fdc73a1321969e1f63f9191b992e7dd7ac217c5f0",
+      "instructions": [
+        "0x18053c737: lea rcx, [rbp+1D50h+var_1D60]",
+        "0x18053c73f: call sub_1801200C0"
+      ]
+    }
+  ],
+  "limitations": [
+    "Static branch and byte checks do not establish live server acceptance.",
+    "Elapsed-time interface units and skill-use consumption require their downstream evidence."
+  ]
+}

@@ -2,6 +2,8 @@
 
 日期：2026-10-10。来源：`F:\SOFTWARE\永恒之塔\aionclassic2`，重点为 `bin64`。工作区：`F:\RVE-Workspace\cases\aionclassic2-2026-10-10`。
 
+最新本机推进：2026-10-12 已使用 `D:\REA` 中的同哈希样本和 IDA 9.5 headless 接口完成第十轮实际分析，见文末续节及 [第十轮核对结果](../evidence/round10/verification.json)。上面的 F: 路径保留为最初来源记录。
+
 本轮完成了目录盘点、PE 结构检查、核心文件副本及哈希校验、数据资源解包、二进制 XML/对话转换和配置解码。未启动游戏客户端、附加游戏进程或修改客户端原件。**EXE/DLL 的保护尚未移除，未生成脱壳后的可执行文件。**
 
 ## 版本与模块
@@ -1080,7 +1082,7 @@ A = C(r1) × L + C(r2)
 
 本轮已接通属性重算、攻击请求、伤害计算到扣血、强化判定到物品写回、神石监听到效果执行的主要链路。保存了38份源码的哈希和带行号摘录，完成30项关键源码表达式核对、8项离散端点/取整核对；另扫描服务端54,434条物品、6,793条技能，对照客户端56,923条物品、7,160条技能。38份源码和2份服务端资源的Git blob哈希全部与固定提交清单一致。没有编译运行此模拟器、启动或附加游戏，也没有改动客户端。
 
-证据：[aion19-server-model.json](D:/RVE/.codex/local/aion-report-backup/binary/aion19-server-model.json)。复现：[analyze_aion19_server_model.py](D:/RVE/.codex/local/analyze_aion19_server_model.py)。源码摘录不是运行测试；概率枚举假设随机整数均匀，未审计随机数生成器的统计质量。
+证据：[aion19-server-model.json 归档副本](mechanics/evidence/server-model.json)。复现：[analyze_aion19_server_model.py](../server/analysis-code/analyze_aion19_server_model.py)。源码摘录不是运行测试；概率枚举假设随机整数均匀，未审计随机数生成器的统计质量。
 
 ### 一、资源对应的范围，比单独比版本号更有用
 
@@ -1840,3 +1842,126 @@ REA IDA适配器对两次 `read_bytes` 返回 `capability_unavailable/unsupporte
 
 
 本轮结束：每批REA正常close_binary并关闭代理；本次拥有的IDA停止RPC、确认数据库缓冲区落盘后，在PID/路径/精确UTC启动时间匹配的前提下结束卸载残留。13338端口不再监听，按工具清单核对未解决进程0。未新增自启。
+
+## 第十轮接入准备与资源/源码对照（2026-10-12）
+
+本阶段完成了本机REA通道和接入代理的验证、当前客户端资源与固定参考源码的对照；**尚未产生新的IDA函数分析结果**。用户选择继续IDA路线，等待提供支持IDAPython的版本。未运行游戏、未启动本阶段的IDA数据库，也未操作用户已经打开的IDA窗口。
+
+### 本机接入结果
+
+- 当前新安装的是 `C:\Program Files\IDA Freeware 8.4\ida64.exe`，文件版本8.4.24.0216；安装目录没有IDAPython。Free版不提供IDAPython API，不能直接接入这套REA→ida-pro-mcp链。依据：[Hex-Rays官方说明](https://hex-rays.com/faqs/am-i-getting-access-to-the-ida-development-kits-with-ida-free)。
+- REA本机stdio MCP已真实握手，取得139个工具的实际目录，`binary_session`返回成功；本次没有打开二进制目标。此结论不等于IDA后端已连接。
+- 在本地独立Python环境安装归档要求的mcp1.16.0/pydantic2.11.9，其他已解析版本留在本机清单。归档MIT代理复制到本机工作目录后真实stdio握手，取得48个工具，包含legacy profile所需的get_metadata/list_functions/decompile_function/disassemble_function；没有调用它们取得代码语义，也没有连接IDA RPC。
+- 本机配置和SDK响应保存在 `.codex/experiments/aion-round10`，不写入全局Codex注册、不包含IDA程序或数据库。可移植首批请求与批处理脚本保存在 `client/analysis-code/rea-round10`；脚本锁定Game.dll哈希，拒绝覆盖既有批次，并保存失败与关闭结果。
+
+### 可重复核对的资源与参考源码事实
+
+目标Game.dll SHA256仍为 `834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786`；samples和本轮下载的bin64程序包内副本相同。客户端解析了52条带counter_skill的技能记录：Block17、Parry22、dodge9、Dodge4。大小写原文保留，不假定比较方式。
+
+| 对照对象 | 本阶段观察 | 边界 |
+| --- | --- | --- |
+| 技能154／盾牌反击I | 当前客户端counter_skill=Block、chain_skill_prob2=10、required_leftweapon=Shield；中文说明写盾牌防御成功后使用 | 资源文字不能证明实际资格检查或清除状态的消费者 |
+| 同ID参考模板154 | 固定旧源码的chain_skill_prob=10 | 名称与数字相符是对照线索，未证明与当前chain_skill_prob2语义等同 |
+| 旧连锁概率消费 | Skill.java:507–528在效果处理后读取chain_skill_prob，产生chainSuccess；SM_CASTSPELL_END.java:169写连锁标志 | 不能据此把10解释成一次盾防触发反击的概率，或盾防概率的乘数 |
+| 旧攻击通知 | SM_ATTACK.java:72–93只按第一条attackList状态写32/64/128/256；98–100逐项写damage/status/shieldType | 没有证明与当前客户端协议布局完全相同，也不能把第九轮逐项OR标记和它合并成同一字段 |
+| 字段搜索边界 | 在固定gameserver的3066个.java/.xml/.xsd/.properties文件中，counter_skill、chain_skill_prob1、chain_skill_prob2字面量均未命中 | 不证明当前官方后台没有这些逻辑，也不涵盖字符串动态拼装或未扫描二进制依赖 |
+
+来源文件：当前 `client/resources/decoded-analysis-resources/Data/Skills/skills/client_skills.xml`；中文 `L10N/CHS/Data/Data/Strings/client_strings_skill.xml:3246`；参考 `server/reference-source/AionLightning-94fc8048/gameserver/src/org/openaion/gameserver/skill/model/SkillTemplate.java:94`、`skill/model/Skill.java:507`、`network/aion/serverpackets/SM_ATTACK.java:72`、`SM_CASTSPELL_END.java:169`。输入SHA256、逐技能字段、模板对照和搜索边界保存在 [资源/源码交叉核对JSON](../evidence/round10/resource-crosscheck.json)。
+
+### IDA接通后的首批问题
+
+1. `0x1806BC748`：通过REA函数dossier核对比较入口及其调用关系，确认Block/block的实际比较边界；若函数仍为跳板或保护入口，则继续追到真实消费者。
+2. `0x18039F2F0`：追登记容器的调用者，区分初始化登记与技能可用状态更新。
+3. `0x18039D5D0`：追条件技能分类调用者，连接UI更新/输入回调，再查技能记录+0x7A8是否进入随机比较或施放资格检查。
+
+这些地址沿用第九轮**同哈希样本**的VA，不能用于其他版本的Game.dll。首批请求已按本机REA实际工具目录核对；尚未执行。随后根据结果推进S_ATTACK、S_CASTSPELL_END及资格清除路径，保留当前官方PVP伤害公式未知，不将旧源码模型冒充当前后台。
+
+## 第十轮 IDA 9.5 实际分析（2026-10-12）
+
+本阶段已从接入准备转为实际分析。使用本机 `D:\REA\research\aionclassic2-2026-10-10\samples` 的四个核心模块；Game.dll SHA256 仍为 `834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786`。REA 6.1.0 的本机构建真实公布 139 个 MCP 工具，分析使用已验证的 IDA 9.5.261001、Python 3.12.13 和固定提交的现代 headless supervisor。IDA 安装通过 `D:\IDA95` 英文目录入口访问。
+
+本轮五批共 **23 次 REA MCP 分析请求：17 次成功、6 次失败**。23 次不含 open/close、目录枚举及内部诊断请求。成功响应通过各自具名工具契约和 Evidence schema；四个模块当前 SHA256 均保持一致。五批正常调用 `close_binary`，四个成功批次的 Evidence 所指向私有目录均已确认移除。未启动或附加 AION，未修改原样本，未生成完整脱壳文件。
+
+### 保护器指纹现在有了具体候选
+
+通过已安装的 DIE 3.09 对明确选择的四个原始模块输出 JSON，均退出 0，并复核输入哈希未变。
+
+| 模块 | DIE 报告的保护器标签 | 解释边界 |
+| --- | --- | --- |
+| Aion.bin | Obsidium；Oreans CodeVirtualizer | 指纹候选；具体版本字段为空，不能据此认定所有路径均被同样保护 |
+| Game.dll | Obsidium；Oreans CodeVirtualizer | 同上；不是已脱壳或已绕过保护的证明 |
+| CrySystem.dll | Obsidium；Oreans CodeVirtualizer | 同上 |
+| ScriptDLL64.dll | 本次没有 Protector 标签 | 签名未命中不证明不存在局部保护 |
+
+全部文件还报告了 MSVC/Linker 和 Authenticode 格式线索；这些不证明签名链有效或发行来源身份。原始响应与工具 SHA256 见 [DIE manifest](../evidence/round10/die-static/manifest.json)。这是外部静态识别结果，不冒称 REA Evidence。
+
+### 纠正比较入口的表示
+
+前一阶段计划把 `0x1806BC748` 当作比较函数入口分析。新取得的 `0x18053C1B0` 指令实际为：
+
+```text
+0x18053C1D3  mov rcx, [rdi]
+0x18053C1D6  mov rdx, rsi
+0x18053C1D9  call cs:qword_1806BC748
+0x18053C1DF  test eax, eax
+0x18053C1E1  jz ...
+```
+
+因此 **`Game.dll + 0x6BC748` 是间接调用的指针存储槽，不是此处已确定的比较函数体**。同哈希原始 PE 中该槽的 8 字节值为 `0x081E47C3`，不在本 PE 的首选映像地址空间内；原文件值不能当作已解析的运行时调用地址。可能存在装载/保护初始化过程，本轮未观察它。
+
+解析器依次检查 6 项、每项 16 字节；比较返回值低 32 位为 0 时返回表项的低 32 位值。原始 UTF-16 名称表分别为 `1=480`、`all=480`、`dodge=128`、`parry=64`、`block=32`、`resist=256`。`1` 和 `all` 是两条不同表项，返回值相同。
+
+这进一步确认了名称到掩码的解析形状，但 **Block/block 是否忽略大小写仍未知**。下一步应追指针槽的解析/写入来源或真实比较目标，不能凭存储槽地址推断是 `strcmp`、`wcscmp` 或不区分大小写的库函数。代码来自 [REA parser Evidence](../evidence/round10/ida95-counter/counter-name-parser-dossier.evidence.json)，原始字节与映射位置来自 [辅助 PE 表读取](../evidence/round10/counter-status-tables.json)。
+
+### 登记函数连接了两类条件表
+
+REA 返回 `0x18039F2F0` 的反编译和汇编，确认它建立/重用 56 字节关系节点，并按第三参数首 DWORD 的标签分派：标签 0 从参数 `+8` 取 DWORD，以 4 字节步长登记；标签 2 从参数 `+8` 取 QWORD，以 8 字节步长登记。具体运行时类型仍未知，此处是登记结构，不是已证明的施放资格检查。
+
+`xrefs_to` 报告的 6 条引用中，4 条代码引用位于 `0x18039D860`，另一条 `0x18039F5ED` 位于 `0x18039F430`；`0x1813ED8B0` 是 data 引用，生产者没有对应函数。通过后续指令中的实际 `call sub_18039F2F0` 确认代码边，而不是把所有 xrefs 当成直接调用者。
+
+`0x18039D860` 的 910 条返回指令保留了 3 项 counter 掩码遍历和登记调用：`counter_skill` 记录 `+0x768` 的值与表中 0x80/0x40/0x20 相交。原始表项分别为 dodge、parry、block，每项 24 字节。这些表项的第三个值还被显示侧用于索引查询，尚未确认其索引表的完整业务类型。
+
+另一条调用链 `0x18039F430 → 0x18039F2F0` 对输入字符串分词，并与 7 项状态名称表比较。已从原始字节读到分隔符 `,` 及 stagger、stumble、spin、openaerial、stun、poison、bleed。代码通过同一比较指针槽，按匹配键查树形登记结构，再调用登记函数；它是另一种状态名称登记路径，不是盾牌格挡次数或反击剩余时间的证据。
+
+证据：[登记函数](../evidence/round10/ida95-counter/counter-registry-dossier.evidence.json)、[owner 指令](../evidence/round10/ida95-follow/registry-owner-instructions.evidence.json)、[状态登记解析器](../evidence/round10/ida95-follow/registry-secondary-consumer-dossier.evidence.json)。
+
+### 新追到的掩码消费者属于显示路径
+
+| 消费函数 | 已观察分支 | 本轮结论 |
+| --- | --- | --- |
+| `0x1802B4E40`，switch case 45 | 输入记录 `+0xB0` 与 counter 表中的完整值逐项比较，匹配后取第三个槽，经索引查询/格式化显示；43/44 对应相邻条件表 | 扩展了显示项选择的证据，不是活跃反击资格状态 |
+| `0x1805921B0`，switch case 45 | 与同一 counter 表匹配，拼出 `Data/Skills/counter_%S`，随后交给资源加载路径；43/44 分支另用 cond/evade 前缀 | 这是 counter 图标资源选择；不能从图标路径推导服务器接受施放 |
+
+按原始表和格式模板推导，掩码 0x20 会选到 block 名称，从而形成 `Data/Skills/counter_block` 路径；该例子是静态推导，不是本次已显示或已加载图标的运行时观察。
+
+对表的第二、第三项单独查 xrefs 返回空，并不意味着它们未被读取：这里的指令取第一项地址，然后按 24 字节步进覆盖后续项。参见 [显示项 Evidence](../evidence/round10/ida95-consumers/counter-mask-consumer-a-dossier.evidence.json) 和 [图标 Evidence](../evidence/round10/ida95-consumers/counter-mask-consumer-b-dossier.evidence.json)。
+
+### 登记重建还受本地对象属性更新驱动
+
+`0x1804B4AF0` 保存对象 `+0x228` 的旧 DWORD，写入新参数，然后在特定本地对象匹配分支内比较旧/新值。发生变化且全局对象可用时，它在 `0x1804B4BAF` 调用 `0x18039D860`。本轮没有给 `+0x228` 赋予“等级”“反击次数”等未经确认的名字。
+
+另一个 `0x1804E17F0` 的 1,415 条返回指令在 `0x1804E29F2` 也调用登记重建函数，参数包括对象 `+0x228` 的值和虚表 `+0x100` 的返回值。这增加了登记更新入口的证据，尚未闭合它与反击控件更新、点击、施放请求及资格清除之间的关系。
+
+证据：[小更新函数](../evidence/round10/ida95-registry-owners/registry-update-small-dossier.evidence.json)、[大更新函数指令](../evidence/round10/ida95-registry-owners/registry-update-large-instructions.evidence.json)。
+
+### 失败记录和实际能力边界
+
+6 次失败原文全部保留：[核对结果](../evidence/round10/verification.json) 包含逐条工具名、请求文件和错误。
+
+- 2 次 `procedure_callers` 来自旧 attached 预备请求；现代 headless profile 不证明直接调用者，返回 capability_unavailable。后续改用 xrefs，结合原始 type 和明确 call 指令确认边。
+- 4 次为 unreadable_output：指针槽的 dossier、指针槽 xrefs、大 owner dossier、data 引用位置的函数定位。它们不证明样本不可分析，也不能把失败或空结果解释为没有比较器或没有消费者。
+- 大 owner 分项接口已成功返回 910 条指令。另用 REA 生产 `IdaSessionClient` 记录内部生产者响应，离线通过生产 normalizer 核对出 910 条指令、922 行伪代码和 18 个 callee；这属于内部故障诊断，未冒充一次成功的 MCP 工具结果。初版诊断脚本在会话已关闭后错误读取 void 返回值，脚本已修正；捕获的 idb_close 成功且 idb_list 为空。最初不可读响应的具体原因仍未确认。
+- IDA 引擎版本来自本机独立工具验证；REA Evidence 的 engine_version 仍保留 null，未伪造原协议未报告的版本。完整函数体范围、源代码局部变量和数据库修订仍未知。
+
+### 复现与后续问题
+
+脚本位于 `client/analysis-code/rea-round10`，证据位于 `evidence/round10`。本轮已经执行 `run-die-static.ps1`、`inspect-counter-data.py`、5 批 `run-rea-batch.mjs` 及 `verify-round10.mjs`。核对结果 passed=true，包含 15 项针对样本身份、具名契约、关键指令、原始表值和目录清理的检查；该 passed 不表示 23 个分析请求全部成功。
+
+接下来沿本轮确认的登记容器推进实际读取/清除者和 UIChainNode 控件的更新、输入、施放请求路径；继续定位技能记录 `+0x7A8` 的执行消费者。比较槽的运行时解析、完整脱壳、保护器准确版本、反击可用次数和当前官方 PVP/伤害公式继续保留未知。
+
+
+## 第十一轮本机续查（2026-10-12，IDA 9.5）
+
+本轮沿条件登记容器取得39次REA分析响应，29成功、10失败，14项证据核对通过。确认清理结构、递归关系查询、连锁图与顺序表示；找到chain_skill_prob2在UIChainNode的实际绘制消费者，仍未闭合反击激活、点击施放与资格消耗。
+
+详细地址、证据、失败诊断及下次入口见[第十一轮报告](AION_ROUND11_20261012.md)，核对见[verification.json](../evidence/round11/verification.json)。本机新增内容未发布到第九轮HTML/Release。

@@ -1,0 +1,51 @@
+{
+  "procedure": {
+    "address": "0x18039f290",
+    "name": "sub_18039F290",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x18039f290: movsxd r10, r8d",
+    "0x18039f293: add r10, r10",
+    "0x18039f296: mov r9, [rcx+r10*8+68h]",
+    "0x18039f29b: mov rcx, r9",
+    "0x18039f29e: mov r8, r9",
+    "0x18039f2a1: mov rax, [r9+8]",
+    "0x18039f2a5: cmp byte ptr [rax+19h], 0",
+    "0x18039f2a9: jnz short loc_18039F2C8",
+    "0x18039f2ab: nop dword ptr [rax+rax+00h]",
+    "0x18039f2b0: cmp [rax+20h], rdx",
+    "0x18039f2b4: jge short loc_18039F2BC",
+    "0x18039f2b6: mov rax, [rax+10h]",
+    "0x18039f2ba: jmp short loc_18039F2C2",
+    "0x18039f2bc: mov rcx, rax",
+    "0x18039f2bf: mov rax, [rax]",
+    "0x18039f2c2: cmp byte ptr [rax+19h], 0",
+    "0x18039f2c6: jz short loc_18039F2B0",
+    "0x18039f2c8: mov rax, r8",
+    "0x18039f2cb: cmp rcx, r9",
+    "0x18039f2ce: jz short loc_18039F2D6",
+    "0x18039f2d0: cmp rdx, [rcx+20h]",
+    "0x18039f2d4: jge short loc_18039F2DC",
+    "0x18039f2d6: mov rcx, r9",
+    "0x18039f2d9: mov r8, rax",
+    "0x18039f2dc: cmp rcx, r8",
+    "0x18039f2df: jz short loc_18039F2E6",
+    "0x18039f2e1: mov rax, [rcx+28h]",
+    "0x18039f2e5: retn",
+    "0x18039f2e6: xor eax, eax",
+    "0x18039f2e8: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

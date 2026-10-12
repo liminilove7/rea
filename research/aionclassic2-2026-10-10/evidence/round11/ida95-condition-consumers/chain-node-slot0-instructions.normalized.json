@@ -1,0 +1,37 @@
+{
+  "procedure": {
+    "address": "0x18027e7b0",
+    "name": "sub_18027E7B0",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x18027e7b0: mov [rsp+arg_0], rbx",
+    "0x18027e7b5: push rdi",
+    "0x18027e7b6: sub rsp, 20h",
+    "0x18027e7ba: mov ebx, edx",
+    "0x18027e7bc: mov rdi, rcx",
+    "0x18027e7bf: call sub_18027E6D0",
+    "0x18027e7c4: test bl, 1",
+    "0x18027e7c7: jz short loc_18027E7D6",
+    "0x18027e7c9: mov edx, 40h ; '@'",
+    "0x18027e7ce: mov rcx, rdi",
+    "0x18027e7d1: call sub_1806844F0",
+    "0x18027e7d6: mov rbx, [rsp+28h+arg_0]",
+    "0x18027e7db: mov rax, rdi",
+    "0x18027e7de: add rsp, 20h",
+    "0x18027e7e2: pop rdi",
+    "0x18027e7e3: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

@@ -1,0 +1,542 @@
+{
+  "evidence_id": "ev_3f86eb7bbc15e4a8cd4524aec8b620cd608db03ba3da44ccd4695524afe23886",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll",
+    "digest": {
+      "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "read_function_instructions",
+  "parameters": {
+    "procedure": "0x1804bc8d0",
+    "document": null
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 553.944,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 554.093,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-0e75ae3d79ff03eb1ee7c598a49accd6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": [
+            "0x1804bc8d0"
+          ],
+          "database": "rea-2f172f6b-2a13-441a-a302-1042de4cc235"
+        },
+        "result": [
+          {
+            "query": "0x1804bc8d0",
+            "fn": {
+              "addr": "0x1804bc8d0",
+              "name": "sub_1804BC8D0",
+              "size": "0xe4"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1804bc8d0",
+          "offset": 0,
+          "max_instructions": 100,
+          "database": "rea-2f172f6b-2a13-441a-a302-1042de4cc235"
+        },
+        "result": {
+          "addr": "0x1804bc8d0",
+          "asm": {
+            "name": "sub_1804BC8D0",
+            "start_ea": "0x1804bc8d0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "1804bc8d0",
+                "instruction": "sub rsp, 58h",
+                "label": "sub_1804BC8D0"
+              },
+              {
+                "addr": "1804bc8d4",
+                "instruction": "mov eax, [rcx+2ECh]"
+              },
+              {
+                "addr": "1804bc8da",
+                "instruction": "movaps xmm2, xmm1"
+              },
+              {
+                "addr": "1804bc8dd",
+                "instruction": "mov edx, eax"
+              },
+              {
+                "addr": "1804bc8df",
+                "instruction": "and edx, r8d"
+              },
+              {
+                "addr": "1804bc8e2",
+                "instruction": "test r8d, 20E0h"
+              },
+              {
+                "addr": "1804bc8e9",
+                "instruction": "jz loc_1804BC994",
+                "refs": [
+                  {
+                    "addr": "0x1804bc994",
+                    "name": "loc_1804BC994"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc8ef",
+                "instruction": "test edx, edx"
+              },
+              {
+                "addr": "1804bc8f1",
+                "instruction": "jnz short loc_1804BC944",
+                "refs": [
+                  {
+                    "addr": "0x1804bc944",
+                    "name": "loc_1804BC944"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc8f3",
+                "instruction": "movups xmm0, cs:xmmword_18075D0E8",
+                "refs": [
+                  {
+                    "addr": "0x18075d0e8",
+                    "name": "xmmword_18075D0E8"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc8fa",
+                "instruction": "xor eax, eax"
+              },
+              {
+                "addr": "1804bc8fc",
+                "instruction": "lea rdx, xmmword_180D720C0",
+                "refs": [
+                  {
+                    "addr": "0x180d720c0",
+                    "name": "xmmword_180D720C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc903",
+                "instruction": "movups xmm1, cs:xmmword_18075D0F8",
+                "refs": [
+                  {
+                    "addr": "0x18075d0f8",
+                    "name": "xmmword_18075D0F8"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc90a",
+                "instruction": "movaps [rsp+58h+var_28], xmm0"
+              },
+              {
+                "addr": "1804bc90f",
+                "instruction": "movaps [rsp+58h+var_18], xmm1"
+              },
+              {
+                "addr": "1804bc914",
+                "instruction": "nop dword ptr [rax+00h]"
+              },
+              {
+                "addr": "1804bc918",
+                "instruction": "nop dword ptr [rax+rax+00000000h]"
+              },
+              {
+                "addr": "1804bc920",
+                "instruction": "movdqu xmm0, xmmword ptr [rax+rdx]",
+                "label": "loc_1804BC920"
+              },
+              {
+                "addr": "1804bc925",
+                "instruction": "movdqu xmm1, [rsp+rax+58h+var_28]"
+              },
+              {
+                "addr": "1804bc92b",
+                "instruction": "por xmm1, xmm0"
+              },
+              {
+                "addr": "1804bc92f",
+                "instruction": "movdqu xmmword ptr [rax+rdx], xmm1"
+              },
+              {
+                "addr": "1804bc934",
+                "instruction": "add rax, 10h"
+              },
+              {
+                "addr": "1804bc938",
+                "instruction": "cmp rax, 20h ; ' '"
+              },
+              {
+                "addr": "1804bc93c",
+                "instruction": "jl short loc_1804BC920",
+                "refs": [
+                  {
+                    "addr": "0x1804bc920",
+                    "name": "loc_1804BC920"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc93e",
+                "instruction": "mov eax, [rcx+2ECh]"
+              },
+              {
+                "addr": "1804bc944",
+                "instruction": "mulss xmm2, cs:dword_1808754A0",
+                "label": "loc_1804BC944",
+                "refs": [
+                  {
+                    "addr": "0x1808754a0",
+                    "name": "dword_1808754A0"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc94c",
+                "instruction": "or eax, r8d"
+              },
+              {
+                "addr": "1804bc94f",
+                "instruction": "mov [rcx+2ECh], eax"
+              },
+              {
+                "addr": "1804bc955",
+                "instruction": "test r8b, 20h"
+              },
+              {
+                "addr": "1804bc959",
+                "instruction": "jz short loc_1804BC966",
+                "refs": [
+                  {
+                    "addr": "0x1804bc966",
+                    "name": "loc_1804BC966"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc95b",
+                "instruction": "cvttss2si rax, xmm2"
+              },
+              {
+                "addr": "1804bc960",
+                "instruction": "mov [rcx+2F0h], eax"
+              },
+              {
+                "addr": "1804bc966",
+                "instruction": "cvttss2si rax, xmm2",
+                "label": "loc_1804BC966"
+              },
+              {
+                "addr": "1804bc96b",
+                "instruction": "test r8b, 40h"
+              },
+              {
+                "addr": "1804bc96f",
+                "instruction": "jz short loc_1804BC977",
+                "refs": [
+                  {
+                    "addr": "0x1804bc977",
+                    "name": "loc_1804BC977"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc971",
+                "instruction": "mov [rcx+2F4h], eax"
+              },
+              {
+                "addr": "1804bc977",
+                "instruction": "test r8b, r8b",
+                "label": "loc_1804BC977"
+              },
+              {
+                "addr": "1804bc97a",
+                "instruction": "jns short loc_1804BC982",
+                "refs": [
+                  {
+                    "addr": "0x1804bc982",
+                    "name": "loc_1804BC982"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc97c",
+                "instruction": "mov [rcx+2F8h], eax"
+              },
+              {
+                "addr": "1804bc982",
+                "instruction": "bt r8d, 0Dh",
+                "label": "loc_1804BC982"
+              },
+              {
+                "addr": "1804bc987",
+                "instruction": "jnb short loc_1804BC9AF",
+                "refs": [
+                  {
+                    "addr": "0x1804bc9af",
+                    "name": "loc_1804BC9AF"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc989",
+                "instruction": "mov [rcx+2FCh], eax"
+              },
+              {
+                "addr": "1804bc98f",
+                "instruction": "add rsp, 58h"
+              },
+              {
+                "addr": "1804bc993",
+                "instruction": "retn"
+              },
+              {
+                "addr": "1804bc994",
+                "instruction": "test edx, edx",
+                "label": "loc_1804BC994"
+              },
+              {
+                "addr": "1804bc996",
+                "instruction": "jnz short loc_1804BC9AF",
+                "refs": [
+                  {
+                    "addr": "0x1804bc9af",
+                    "name": "loc_1804BC9AF"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc998",
+                "instruction": "or eax, r8d"
+              },
+              {
+                "addr": "1804bc99b",
+                "instruction": "xor r9d, r9d"
+              },
+              {
+                "addr": "1804bc99e",
+                "instruction": "mov [rcx+2ECh], eax"
+              },
+              {
+                "addr": "1804bc9a4",
+                "instruction": "xor eax, eax"
+              },
+              {
+                "addr": "1804bc9a6",
+                "instruction": "mov [rsp+58h+var_38], eax"
+              },
+              {
+                "addr": "1804bc9aa",
+                "instruction": "call sub_180488830",
+                "refs": [
+                  {
+                    "addr": "0x180488830",
+                    "name": "sub_180488830"
+                  }
+                ]
+              },
+              {
+                "addr": "1804bc9af",
+                "instruction": "add rsp, 58h",
+                "label": "loc_1804BC9AF"
+              },
+              {
+                "addr": "1804bc9b3",
+                "instruction": "retn"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_38",
+                "offset": "0x20",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_28",
+                "offset": "0x30",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_18",
+                "offset": "0x40",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x58",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              }
+            ]
+          },
+          "instruction_count": 54,
+          "total_instructions": null,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "procedure": {
+      "address": "0x1804bc8d0",
+      "name": "sub_1804BC8D0",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    },
+    "instructions": [
+      "0x1804bc8d0: sub rsp, 58h",
+      "0x1804bc8d4: mov eax, [rcx+2ECh]",
+      "0x1804bc8da: movaps xmm2, xmm1",
+      "0x1804bc8dd: mov edx, eax",
+      "0x1804bc8df: and edx, r8d",
+      "0x1804bc8e2: test r8d, 20E0h",
+      "0x1804bc8e9: jz loc_1804BC994",
+      "0x1804bc8ef: test edx, edx",
+      "0x1804bc8f1: jnz short loc_1804BC944",
+      "0x1804bc8f3: movups xmm0, cs:xmmword_18075D0E8",
+      "0x1804bc8fa: xor eax, eax",
+      "0x1804bc8fc: lea rdx, xmmword_180D720C0",
+      "0x1804bc903: movups xmm1, cs:xmmword_18075D0F8",
+      "0x1804bc90a: movaps [rsp+58h+var_28], xmm0",
+      "0x1804bc90f: movaps [rsp+58h+var_18], xmm1",
+      "0x1804bc914: nop dword ptr [rax+00h]",
+      "0x1804bc918: nop dword ptr [rax+rax+00000000h]",
+      "0x1804bc920: movdqu xmm0, xmmword ptr [rax+rdx]",
+      "0x1804bc925: movdqu xmm1, [rsp+rax+58h+var_28]",
+      "0x1804bc92b: por xmm1, xmm0",
+      "0x1804bc92f: movdqu xmmword ptr [rax+rdx], xmm1",
+      "0x1804bc934: add rax, 10h",
+      "0x1804bc938: cmp rax, 20h ; ' '",
+      "0x1804bc93c: jl short loc_1804BC920",
+      "0x1804bc93e: mov eax, [rcx+2ECh]",
+      "0x1804bc944: mulss xmm2, cs:dword_1808754A0",
+      "0x1804bc94c: or eax, r8d",
+      "0x1804bc94f: mov [rcx+2ECh], eax",
+      "0x1804bc955: test r8b, 20h",
+      "0x1804bc959: jz short loc_1804BC966",
+      "0x1804bc95b: cvttss2si rax, xmm2",
+      "0x1804bc960: mov [rcx+2F0h], eax",
+      "0x1804bc966: cvttss2si rax, xmm2",
+      "0x1804bc96b: test r8b, 40h",
+      "0x1804bc96f: jz short loc_1804BC977",
+      "0x1804bc971: mov [rcx+2F4h], eax",
+      "0x1804bc977: test r8b, r8b",
+      "0x1804bc97a: jns short loc_1804BC982",
+      "0x1804bc97c: mov [rcx+2F8h], eax",
+      "0x1804bc982: bt r8d, 0Dh",
+      "0x1804bc987: jnb short loc_1804BC9AF",
+      "0x1804bc989: mov [rcx+2FCh], eax",
+      "0x1804bc98f: add rsp, 58h",
+      "0x1804bc993: retn",
+      "0x1804bc994: test edx, edx",
+      "0x1804bc996: jnz short loc_1804BC9AF",
+      "0x1804bc998: or eax, r8d",
+      "0x1804bc99b: xor r9d, r9d",
+      "0x1804bc99e: mov [rcx+2ECh], eax",
+      "0x1804bc9a4: xor eax, eax",
+      "0x1804bc9a6: mov [rsp+58h+var_38], eax",
+      "0x1804bc9aa: call sub_180488830",
+      "0x1804bc9af: add rsp, 58h",
+      "0x1804bc9b3: retn"
+    ],
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1804bc8d0"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}

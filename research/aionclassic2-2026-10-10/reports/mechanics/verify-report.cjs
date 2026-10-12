@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-var-requires -- This standalone CommonJS verifier intentionally uses require. */
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const { pathToFileURL } = require('node:url');

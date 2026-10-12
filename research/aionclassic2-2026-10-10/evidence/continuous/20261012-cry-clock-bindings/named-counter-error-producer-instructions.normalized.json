@@ -1,0 +1,47 @@
+{
+  "procedure": {
+    "address": "0x1800a07a0",
+    "name": "sub_1800A07A0",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1800a07a0: sub rsp, 0A8h",
+    "0x1800a07a7: lea rcx, [rsp+0A8h+arg_8]",
+    "0x1800a07af: call sub_1806C6F75",
+    "0x1800a07b4: nop",
+    "0x1800a07b5: test eax, eax",
+    "0x1800a07b7: jz short loc_1800A07C9",
+    "0x1800a07b9: mov rax, [rsp+0A8h+arg_8]",
+    "0x1800a07c1: add rsp, 0A8h",
+    "0x1800a07c8: retn",
+    "0x1800a07c9: call sub_1806C8291",
+    "0x1800a07ce: nop",
+    "0x1800a07cf: mov r8d, 0Ah",
+    "0x1800a07d5: lea rcx, [rsp+0A8h+var_88]",
+    "0x1800a07da: mov edx, eax",
+    "0x1800a07dc: call sub_180020660",
+    "0x1800a07e1: mov r8, rax",
+    "0x1800a07e4: lea rdx, aTimerQueryperf; \"Timer: QueryPerformanceCounter failed w\"...",
+    "0x1800a07eb: lea rcx, [rsp+0A8h+var_68]",
+    "0x1800a07f0: call sub_18005FD80",
+    "0x1800a07f5: mov r8, rax",
+    "0x1800a07f8: lea rcx, [rsp+0A8h+var_48]",
+    "0x1800a07fd: mov edx, 6",
+    "0x1800a0802: call sub_1800A08B0",
+    "0x1800a0807: lea rdx, __TI2?AVException@CryptoPP@@; throw info for 'class CryptoPP::Exception'",
+    "0x1800a080e: lea rcx, [rsp+0A8h+var_48]",
+    "0x1800a0813: call sub_1801CA342"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

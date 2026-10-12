@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+  "targetExecuted": false,
+  "analysisComplete": false,
+  "anchors": [
+    {
+      "session": "20261012-cry-clock-bindings",
+      "name": "named-counter-error-producer-instructions",
+      "evidenceId": "ev_6f6538b771807df69ec1ca3b99e88f01a64eb8841fa3fa7a427c4688ea82a146",
+      "fragments": [
+        "0x1800a07af: call sub_1806C6F75",
+        "0x1800a07b5: test eax, eax",
+        "0x1800a07b7: jz short loc_1800A07C9",
+        "0x1800a07e4: lea rdx, aTimerQueryperf;"
+      ]
+    },
+    {
+      "session": "20261012-cry-clock-bindings",
+      "name": "named-frequency-error-producer-instructions",
+      "evidenceId": "ev_e1367b23c70a58b6d8018db75fac6829536c271870392d1f9b6e9c26baf2507d",
+      "fragments": [
+        "0x1800a083a: call sub_1806BD0DA",
+        "0x1800a0840: test eax, eax",
+        "0x1800a0842: jz short loc_1800A0853",
+        "0x1800a086e: lea rdx, aTimerQueryperf_0;"
+      ]
+    },
+    {
+      "session": "20261012-cry-timer",
+      "name": "timer-frequency-initialization-instructions",
+      "evidenceId": "ev_2387bf2ccc02c084738535d01c9b8388e653b9b24cc30907a20e2d0249b61a60",
+      "fragments": [
+        "0x18018a830: call sub_1806BD0DA",
+        "0x18018a845: mov rax, [rsp+38h+arg_0]",
+        "0x18018a84a: mov [rbx+20h], rax"
+      ]
+    },
+    {
+      "session": "20261012-cry-timer",
+      "name": "timer-high-resolution-counter-instructions",
+      "evidenceId": "ev_a3dbbbf67caa99d417c2d475e700c45243935da2577383843addedc6c07415f4",
+      "fragments": [
+        "0x18018b069: call sub_1806C6F75",
+        "0x18018b06f: mov rax, [rsp+28h+arg_0]"
+      ]
+    },
+    {
+      "session": "20261012-cry-clock-bindings",
+      "name": "timer-fallback-counter-retry-instructions",
+      "evidenceId": "ev_7c57081f914801df658679d3eae87f3656c5dc4787916fb029412e4b9f010c1f",
+      "fragments": [
+        "0x18018b084: call cs:qword_1801D0AB0",
+        "0x18018b08a: mov eax, eax"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency",
+      "fact": "Frequency output is counts per second."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter",
+      "fact": "Counter output is a 64-bit count."
+    }
+  ],
+  "checks": [
+    "CTimer and explicitly named failure branches call the same frequency and counter gateways",
+    "Full diagnostic strings retain their original file locations and bytes",
+    "Fallback counter remains an unresolved indirect pointer; no concrete API name assigned"
+  ],
+  "inference": "Identifying the shared gateways as the named APIs yields seconds from counter delta divided by counts-per-second frequency.",
+  "limitations": [
+    "The protected gateway final machine targets and actual game clock mode were not captured.",
+    "Static binding and documented units do not establish current server timing or live wall-clock window length."
+  ]
+}

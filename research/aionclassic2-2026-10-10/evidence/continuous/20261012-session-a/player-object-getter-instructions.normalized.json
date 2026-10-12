@@ -1,0 +1,47 @@
+{
+  "procedure": {
+    "address": "0x1804f9810",
+    "name": "sub_1804F9810",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1804f9810: push rbx",
+    "0x1804f9812: sub rsp, 20h",
+    "0x1804f9816: mov [rsp+28h+arg_0], 0",
+    "0x1804f981f: mov rbx, rcx",
+    "0x1804f9822: test rcx, rcx",
+    "0x1804f9825: jz short loc_1804F9860",
+    "0x1804f9827: mov rax, [rcx]",
+    "0x1804f982a: call qword ptr [rax+0B8h]",
+    "0x1804f9830: test rax, rax",
+    "0x1804f9833: jz short loc_1804F9855",
+    "0x1804f9835: mov rax, [rbx]",
+    "0x1804f9838: mov rcx, rbx",
+    "0x1804f983b: call qword ptr [rax+0B8h]",
+    "0x1804f9841: lea r8, [rsp+28h+arg_0]",
+    "0x1804f9846: mov edx, 2",
+    "0x1804f984b: mov rcx, rax",
+    "0x1804f984e: mov r9, [rax]",
+    "0x1804f9851: call qword ptr [r9+50h]",
+    "0x1804f9855: mov rax, [rsp+28h+arg_0]",
+    "0x1804f985a: add rsp, 20h",
+    "0x1804f985e: pop rbx",
+    "0x1804f985f: retn",
+    "0x1804f9860: xor eax, eax",
+    "0x1804f9862: add rsp, 20h",
+    "0x1804f9866: pop rbx",
+    "0x1804f9867: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

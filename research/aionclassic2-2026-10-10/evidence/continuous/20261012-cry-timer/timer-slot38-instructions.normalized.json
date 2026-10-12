@@ -1,0 +1,33 @@
+{
+  "procedure": {
+    "address": "0x18018aa80",
+    "name": "sub_18018AA80",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x18018aa80: sub rsp, 28h",
+    "0x18018aa84: mov rax, [rcx]",
+    "0x18018aa87: call qword ptr [rax+28h]",
+    "0x18018aa8a: movaps xmm1, xmm0",
+    "0x18018aa8d: xorps xmm0, xmm0",
+    "0x18018aa90: ucomiss xmm1, xmm0",
+    "0x18018aa93: jp short loc_18018AA97",
+    "0x18018aa95: jz short loc_18018AAA3",
+    "0x18018aa97: movss xmm0, cs:dword_180204380",
+    "0x18018aa9f: divss xmm0, xmm1",
+    "0x18018aaa3: add rsp, 28h",
+    "0x18018aaa7: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

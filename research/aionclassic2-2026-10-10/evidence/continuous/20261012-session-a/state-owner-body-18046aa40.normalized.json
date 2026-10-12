@@ -1,0 +1,49 @@
+{
+  "procedure": {
+    "address": "0x18046aa40",
+    "name": "sub_18046AA40",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x18046aa40: push rbx",
+    "0x18046aa42: sub rsp, 30h",
+    "0x18046aa46: lea eax, [rdx-0Dh]",
+    "0x18046aa49: mov rbx, rcx",
+    "0x18046aa4c: cmp eax, 1",
+    "0x18046aa4f: ja short loc_18046AAA0",
+    "0x18046aa51: test dword ptr [rcx+2ECh], 1800h",
+    "0x18046aa5b: jnz short loc_18046AAA0",
+    "0x18046aa5d: xor r8d, r8d",
+    "0x18046aa60: cmp edx, 0Dh",
+    "0x18046aa63: setnz dl",
+    "0x18046aa66: inc dl",
+    "0x18046aa68: call sub_18035A500",
+    "0x18046aa6d: movss xmm1, cs:dword_180874C1C",
+    "0x18046aa75: xor r9d, r9d",
+    "0x18046aa78: or dword ptr [rbx+2ECh], 1800h",
+    "0x18046aa82: mov r8d, 1800h",
+    "0x18046aa88: mov rcx, rbx",
+    "0x18046aa8b: mov [rsp+38h+var_18], 0",
+    "0x18046aa93: call sub_180488830",
+    "0x18046aa98: mov al, 1",
+    "0x18046aa9a: add rsp, 30h",
+    "0x18046aa9e: pop rbx",
+    "0x18046aa9f: retn",
+    "0x18046aaa0: xor al, al",
+    "0x18046aaa2: add rsp, 30h",
+    "0x18046aaa6: pop rbx",
+    "0x18046aaa7: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "procedure": {
+    "address": "0x1800570f0",
+    "name": "sub_1800570F0",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1800570f0: mov [rsp+arg_0], rbx",
+    "0x1800570f5: push rdi",
+    "0x1800570f6: sub rsp, 50h",
+    "0x1800570fa: mov ebx, edx",
+    "0x1800570fc: mov [rcx+324h], edx",
+    "0x180057102: mov rdi, rcx",
+    "0x180057105: call sub_181244AE3",
+    "0x18005710a: nop",
+    "0x18005710b: mov edx, ebx",
+    "0x18005710d: mov [rdi+328h], eax",
+    "0x180057113: call sub_1803B4680",
+    "0x180057118: test eax, eax",
+    "0x18005711a: jz short loc_18005718A",
+    "0x18005711c: xorps xmm3, xmm3",
+    "0x18005711f: mov [rsp+58h+var_38], 5",
+    "0x180057127: lea r8, aGbBody2; \"GB_BODY2\"",
+    "0x18005712e: mov rcx, rdi",
+    "0x180057131: lea rdx, aSysSkillstartf; \"sys_skillstartFX.skillstartFX.aura\"",
+    "0x180057138: call sub_18046FA90",
+    "0x18005713d: movups xmm0, cs:xmmword_18075D0E8",
+    "0x180057144: xor eax, eax",
+    "0x180057146: lea rcx, xmmword_180D720C0",
+    "0x18005714d: movups xmm1, cs:xmmword_18075D0F8",
+    "0x180057154: movaps [rsp+58h+var_28], xmm0",
+    "0x180057159: movaps [rsp+58h+var_18], xmm1",
+    "0x18005715e: xchg ax, ax",
+    "0x180057160: movdqu xmm0, xmmword ptr [rax+rcx]",
+    "0x180057165: movdqu xmm1, [rsp+rax+58h+var_28]",
+    "0x18005716b: por xmm1, xmm0",
+    "0x18005716f: movdqu xmmword ptr [rax+rcx], xmm1",
+    "0x180057174: add rax, 10h",
+    "0x180057178: cmp rax, 20h ; ' '",
+    "0x18005717c: jl short loc_180057160",
+    "0x18005717e: xor r8d, r8d",
+    "0x180057181: lea edx, [r8+0Ah]",
+    "0x180057185: call sub_18034A5C0",
+    "0x18005718a: mov rbx, [rsp+58h+arg_0]",
+    "0x18005718f: add rsp, 50h",
+    "0x180057193: pop rdi",
+    "0x180057194: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

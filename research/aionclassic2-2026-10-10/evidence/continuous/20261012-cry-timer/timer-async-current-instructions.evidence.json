@@ -1,0 +1,239 @@
+{
+  "evidence_id": "ev_9531dae58b3e961a12bc6d18a58389b899bfa40aed3a001d4c129aa6981a5489",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\CrySystem.dll",
+    "digest": {
+      "sha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\CrySystem.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "read_function_instructions",
+  "parameters": {
+    "procedure": "0x180171cf0",
+    "document": null
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 53.578,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-3c9a7ddbef78623a6cb1c26c499ebe18\\CrySystem.dll.i64",
+      "module": "CrySystem.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-3c9a7ddbef78623a6cb1c26c499ebe18\\CrySystem.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 4118
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 53.64,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-3c9a7ddbef78623a6cb1c26c499ebe18\\CrySystem.dll.i64",
+      "module": "CrySystem.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-3c9a7ddbef78623a6cb1c26c499ebe18\\CrySystem.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 4118
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": [
+            "0x180171cf0"
+          ],
+          "database": "rea-b1678341-9d8d-4242-a7d8-f6c3750a38f0"
+        },
+        "result": [
+          {
+            "query": "0x180171cf0",
+            "fn": {
+              "addr": "0x180171cf0",
+              "name": "sub_180171CF0",
+              "size": "0x2f"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x180171cf0",
+          "offset": 0,
+          "max_instructions": 100,
+          "database": "rea-b1678341-9d8d-4242-a7d8-f6c3750a38f0"
+        },
+        "result": {
+          "addr": "0x180171cf0",
+          "asm": {
+            "name": "sub_180171CF0",
+            "start_ea": "0x180171cf0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "180171cf0",
+                "instruction": "push rbx",
+                "label": "sub_180171CF0"
+              },
+              {
+                "addr": "180171cf2",
+                "instruction": "sub rsp, 20h"
+              },
+              {
+                "addr": "180171cf6",
+                "instruction": "mov rbx, rcx"
+              },
+              {
+                "addr": "180171cf9",
+                "instruction": "call qword ptr [rcx+8]"
+              },
+              {
+                "addr": "180171cfc",
+                "instruction": "sub rax, [rbx+10h]"
+              },
+              {
+                "addr": "180171d00",
+                "instruction": "xorps xmm1, xmm1"
+              },
+              {
+                "addr": "180171d03",
+                "instruction": "xorps xmm0, xmm0"
+              },
+              {
+                "addr": "180171d06",
+                "instruction": "cvtsi2sd xmm0, qword ptr [rbx+20h]"
+              },
+              {
+                "addr": "180171d0c",
+                "instruction": "cvtsi2sd xmm1, rax"
+              },
+              {
+                "addr": "180171d11",
+                "instruction": "divsd xmm1, xmm0"
+              },
+              {
+                "addr": "180171d15",
+                "instruction": "cvtpd2ps xmm0, xmm1"
+              },
+              {
+                "addr": "180171d19",
+                "instruction": "add rsp, 20h"
+              },
+              {
+                "addr": "180171d1d",
+                "instruction": "pop rbx"
+              },
+              {
+                "addr": "180171d1e",
+                "instruction": "retn"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "__return_address",
+                "offset": "0x28",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              }
+            ]
+          },
+          "instruction_count": 14,
+          "total_instructions": null,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "procedure": {
+      "address": "0x180171cf0",
+      "name": "sub_180171CF0",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    },
+    "instructions": [
+      "0x180171cf0: push rbx",
+      "0x180171cf2: sub rsp, 20h",
+      "0x180171cf6: mov rbx, rcx",
+      "0x180171cf9: call qword ptr [rcx+8]",
+      "0x180171cfc: sub rax, [rbx+10h]",
+      "0x180171d00: xorps xmm1, xmm1",
+      "0x180171d03: xorps xmm0, xmm0",
+      "0x180171d06: cvtsi2sd xmm0, qword ptr [rbx+20h]",
+      "0x180171d0c: cvtsi2sd xmm1, rax",
+      "0x180171d11: divsd xmm1, xmm0",
+      "0x180171d15: cvtpd2ps xmm0, xmm1",
+      "0x180171d19: add rsp, 20h",
+      "0x180171d1d: pop rbx",
+      "0x180171d1e: retn"
+    ],
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\CrySystem.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x180171cf0"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}

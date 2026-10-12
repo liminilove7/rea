@@ -1,0 +1,41 @@
+{
+  "procedure": {
+    "address": "0x1805a9a10",
+    "name": "sub_1805A9A10",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1805a9a10: push rbx",
+    "0x1805a9a12: sub rsp, 20h",
+    "0x1805a9a16: mov rbx, rcx",
+    "0x1805a9a19: call sub_18063CCC0",
+    "0x1805a9a1e: lea rax, const UIFlyGauge::`vftable'",
+    "0x1805a9a25: mov dword ptr [rbx+2E8h], 0FFFFh",
+    "0x1805a9a2f: mov [rbx], rax",
+    "0x1805a9a32: xor eax, eax",
+    "0x1805a9a34: mov [rbx+2E0h], rax",
+    "0x1805a9a3b: mov [rbx+30Ch], rax",
+    "0x1805a9a42: mov [rbx+314h], rax",
+    "0x1805a9a49: mov [rbx+31Ch], rax",
+    "0x1805a9a50: mov [rbx+2FCh], rax",
+    "0x1805a9a57: mov [rbx+304h], rax",
+    "0x1805a9a5e: mov rax, rbx",
+    "0x1805a9a61: mov dword ptr [rbx+2ECh], 0EA60h",
+    "0x1805a9a6b: mov dword ptr [rbx+2F0h], 0EA60h",
+    "0x1805a9a75: add rsp, 20h",
+    "0x1805a9a79: pop rbx",
+    "0x1805a9a7a: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}
