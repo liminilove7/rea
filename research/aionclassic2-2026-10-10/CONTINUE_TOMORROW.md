@@ -4,12 +4,13 @@
 
 - 当前工作改为持续逆向，不再按轮次交付，主记录为 [AION条件技能与施放机制分析](reports/AION持续分析.md)，新增原始结果见 `evidence/continuous/`。
 - 已连接 `S_ATTACK` 收到标志→受击对象→`476770→4BC8D0` 资格设置→`61EE50` 操作检查→施放和 Socket 发送。Block 对应角色 `0x80/+0x2F8`，`4BCA40` 到期清除；成功通知的 `0x20` 标志决定前置连招保存，`3B2500` 按 delay_id 更新同组冷却。选项已追到提交与本地 opt 文件流，CrySystem 的计时器已取得实际 REA 指令。全局使用消耗、保护桩 API 和官方判定仍未知。
+- GitHub 研究分支已归档现有报告、脚本和原始证据，首次提交 `89506ce7`。随后继续确认 `27E820` 返回 SkillItem，`+0x64` 来自技能添加通知并参与等级排序，绘制/施放对象身份已连接；完整 XML 中48条显式 prob1 均为0。详见主报告和 [新核对](evidence/continuous/chain-object-verification.json)。
 
 - 历史第十一轮 IDA 9.5 归档见 [第十一轮报告](reports/AION_ROUND11_20261012.md)：39 次请求、29 成功、10 失败，14 项核对通过，见 [核对 JSON](evidence/round11/verification.json)。该阶段当时尚未找到实际施放资格；后续证据以持续报告为准。
 - 优先续查 `2784E0 → 61EE50`、`13DF40/1E3660/2C4D60` 的关系调用上下文，以及 `283F40` 写入 `+0x870` 时间值的消费者。`39E770` 已确认递归关系查询，`39ECF0` 生成 `chainskill` 表示；不能直接当战斗激活状态。
 - [第十轮核对结果](evidence/round10/verification.json)：23 次 REA 请求，17 成功、6 失败；15 项证据核对通过，失败原文保留。
 - [四模块保护器指纹](evidence/round10/die-static/manifest.json)：前三模块报告 Obsidium/Oreans CodeVirtualizer 候选，准确版本未知。
-- 下面的第九轮 HTML 和 Release 链接保留为已发布归档；本机第十、十一轮新增内容尚未发布。
+- 下面的第九轮 HTML 和 Release 链接保留为原有下载归档；第十、十一轮及持续分析已上传 GitHub 研究分支，最新结论使用持续 Markdown 报告。
 
 - [最新图文报告](reports/mechanics/AION机制分析报告.html)，重点阅读第九轮续节；HTML需下载解压后在浏览器中打开。
 - [第九轮结论和证据定位](evidence/round9/REA_AION_ROUND9_20261011.md)
@@ -24,7 +25,7 @@ Game.dll SHA256：834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd7
 
 ## 优先入口
 
-1. 条件技能实际控制更新、输入回调和施放判定：第十一轮已确认39D600清理登记结构，39E700查非空关系、39E770递归查询关系、281830构造连锁图。27EA10消费+7A4/+7A8并选择绘制参数，27E820返回对象+64含义待查。仍需追战斗触发、资格检查与消耗；不要把登记结构清理当使用次数扣减。counter_skill +768，chain_time +7A0，chain_skill_prob1/2 +7A4/+7A8。
+1. 继续追全局使用消耗及别名/批量状态写入。资格触发、检查、施放请求、成功连招状态已查通，27E820的 SkillItem 来源已确认；`+0x64` 与技能等级表示的推断、发送宽度及动作标志分开记录。不要把登记结构清理或 SkillItem `+0x6C` 倒计时当 Player 的反击次数扣减。counter_skill +768，chain_time +7A0，chain_skill_prob1/2 +7A4/+7A8。
 2. 6BC748已由新指令确认是间接比较指针槽，而不是直接函数入口；原文件QWORD为0x081E47C3。追其解析/写入来源或运行时目标，继续保留Block/block大小写比较未知。
 3. 057930、01B610、068810与480890的方向分类/状态时间，继续追实际消费者和1244AE3时间单位；716/1382不能直接叫毫秒或盾反窗口。368E50的快照+3BC也待追使用者。
 4. RandomMoveLoc保留参数3的方向执行，以及移速相关虚表+18/+20/+478的具体实现。

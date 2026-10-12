@@ -61,6 +61,22 @@
 
 存储证据：[解析后的只读检查](../evidence/continuous/20261012-session-b/skill-record-postprocess-final-retry-instructions.normalized.json)、[记录存储复制](../evidence/continuous/20261012-session-b/skill-record-storage-retry-instructions.normalized.json)。
 
+## 连招绘制读取的是 SkillItem 的等级表示
+
+继续追踪 `27E820` 后，确认其返回对象来自管理器 `D4B010` 的 `+0x830` 分组树：它按连招组枚举资源技能，调用 `542790` 读取记录 `+0x794`，选取已有对象。当前 XML 解析器将 `chain_category_level` 写入该偏移，所以这里的排序值是连招分类等级，不能直接称为角色等级或盾防数值。
+
+`3B2370` 分配88字节并调用 `3A1940`；后者写入 SkillItem 虚表，原始 RTTI 名字为 `.?AVSkillItem@@`。`3B246E` 把第四参数的低16位经符号扩展写入 `SkillItem+0x64`，再通过 `3B1A60` 登记到 `+0x830`。登记方法使用其低16位作为内部排序键；`3B2100` 从此树取回对象。至此，生产者、登记、取回与绘制读取的对象身份已连接。
+
+当前 `S_ADD_SKILL` 内部 ID44 在 `4288CE` 进入 `431ED0`。该处理器从每条表示的 `+2` 读取 DWORD，经 `DI→R9D` 传到上述对象创建函数。这些用途支持把 `+0x64` 解释为收到的技能等级值；业务命名属于推断，实际加载等级和服务端含义没有运行时采样。它不是沿此链路读出的角色盾防值。
+
+还查到表示宽度的变化：普通操作 `3B2840` 取 `+0x64` 的低16位，传给 `014E40`，再写 Player `+0x14E0`。已定位的施放分支将该 WORD 传给 `3503C0`，而序列化器 `3503E2` 实际只把 `R8B` 写到缓冲 `+9`。动作函数在部分分支还会 OR `0x80` 到 `+0x14E0`，所以这个发送字节可能混有动作标志，不能把全部8位称为纯等级，更不能解释为服务端剩余使用次数。没有捕获加密后线上字节或对端接受结果。
+
+完整扫描已解 `client_skills.xml` 的7160条记录：185条含至少一个连招概率字段，48条显式 `chain_skill_prob1` 全为0，其余记录未写该字段。结合已确认的逐条清零/默认复制路径，在没有后续覆盖的前提下，全部这些 XML 装载记录的 UI 线性计算不依赖 `SkillItem+0x64`；技能154仍为 `0×值+10=10`。这里的10是绘制分支输入，依然不等于已经证明的官方触发率10%。
+
+另外，SkillItem 虚表 `+0x18` 对应 `3A19C0`，递减对象 `+0x6C`。管理器 `3A4320` 以 CrySystem 累计时间乘1000后计算增量，交给该虚方法。`+0x6C` 的倒计时与共享冷却 `+0x54` 的绝对截止值是不同字段；没有因相邻偏移或同一对象而合并其业务含义，也没有把这个字段作为 Player 反击资格消费的证据。其完整触发/业务用途仍待追踪。
+
+证据：[链组取回](../evidence/continuous/20261012-chain-value/chain-value-getter-instructions.normalized.json)、[分类等级读取](../evidence/continuous/20261012-chain-value/skill-rank-comparator-instructions.normalized.json)、[SkillItem 构造](../evidence/continuous/20261012-chain-value/skill-object-constructor-instructions.normalized.json)、[创建和字段写入](../evidence/continuous/20261012-chain-value/skill-object-main-update-instructions.normalized.json)、[技能添加通知](../evidence/continuous/20261012-chain-value/skill-list-message-instructions.normalized.json)、[等级分组登记](../evidence/continuous/20261012-chain-value/skill-object-group-insert-instructions.normalized.json)、[类型与虚表](../evidence/continuous/20261012-chain-value/original-skill-item-vtable.json)、[字段宽度与机制核对](../evidence/continuous/chain-object-verification.json)、[完整概率资源清单](../evidence/continuous/20261012-chain-value/chain-probability-resource-fields.json)。
+
 ## 收到的攻击标志写到受击对象
 
 当前具名注册表中的 `S_ATTACK` 内部 ID 为54；当前路由进入 `430D20`。这只是本地内部 ID，没有把它当网络线上的 opcode。处理器取得消息负载，在负载 `+0x0E` 读取 DWORD 状态标志，`+0x08` 读取目标 ID，再把状态表示传给攻击者组件虚表 `+0x288`，Player/AIObject 对应实现 `480890`。
@@ -133,6 +149,12 @@ Player 更新 `061C20` 的动作2分支进入 `046ED0`。在实际施放子状�
 
 `53C3F0` 解析 `delay_type/delay_time/delay_id`，分别写技能记录 `+0xD0/+0xD4/+0xE0`，并将 `(delay_id,技能ID)` 登记到 `95A6A8`。`3B2500` 先为本次技能对象写 `+0x50` 时长和 `+0x54` 截止时间，再查本次技能记录的 `+0xE0`，遍历相同组的其他已登记技能对象。
 
+新增确认两种收到通知的边界。`S_LOAD_SKILL_COOLTIME` 内部 ID51 的路由读取每项 ushort 技能 ID 和 DWORD 时间值，将时间值乘1000后加本次 `181244AE3` 的返回值，调用 `3B27D0` 写技能对象 `+0x54`；对象尚不存在时登记到管理器 `+0x868` 的暂存结构。这是客户端装载收到冷却表示的路径，没有因此识别受保护时钟 API 或采到实际服务器时间值。
+
+`S_RESET_SKILL_COOLING_TIME` 内部 ID73 的路由读取技能 ID 和一个 byte，再取技能记录 `+0xD4` 的 delay_time，将二者作为 `3B2500` 的时长及乘数传入。沿已确认的更新函数，byte 为0时产生零时长，非零时按该乘数更新；不能只凭名字断言每次通知必定清空所有冷却。它复用同组更新路径，并未成为 Player 反击资格清除的证据。内部 ID 仍不作为加密后网络 opcode。
+
+通知证据：[当前路由](../evidence/continuous/20261012-chain-value/skill-list-route-instructions.normalized.json)、[收到截止值写入与暂存](../evidence/continuous/20261012-chain-value/skill-value-update-instructions.normalized.json)、[来源与表示核对](../evidence/continuous/chain-object-verification.json)。
+
 同组其他对象的时长来源于自己的 `delay_time`。`delay_type=0` 时直接使用；非零分支将它乘另一路取得的比例、除以1000，并向零截断，再乘调用者输入倍率。`3B2840/3B4680` 都有冷却读取消费者。共享组、攻击速度相关比例及收到的主技能时长是不同输入，不把它们压成一个无条件公式。
 
 当前 Block 技能资源可归成下列组；数据是客户端声明，物理时间单位与当前官方实际冷却未作运行核验。
@@ -202,6 +224,6 @@ flowchart TD
 
 ## 核对与保留的失败
 
-本次持续工作累计保存743次真实 REA 请求：644成功、99失败；失败原文保留，不当成空逻辑。成功结果通过调用合同、Evidence 模式、样本哈希和数据库身份核对。语义核对分别覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)。数值模型属于离线推导，不是实际游戏测试。
+持续工作累计保存801次真实 REA 请求：695成功、106失败；失败原文保留，不当成空逻辑。成功结果通过调用合同、Evidence 模式、样本哈希和数据库身份核对。语义核对分别覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)、[SkillItem 来源和表示宽度](../evidence/continuous/chain-object-verification.json)。新增会话58次请求，51成功、7失败；未能读取的保护时间桩引用及其他失败均保留。数值模型属于离线推导，不是实际游戏测试。
 
-五个独立分析会话中，四个已取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续 CrySystem 查询正常关闭。两个原始 DLL 的前后 SHA-256 不变，未执行游戏，未向当前官方服务器发送请求。全部客户端及当前官方后台并未完成完整语义审计。
+六个独立分析会话中，五个已取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续 CrySystem 和 SkillItem 查询正常关闭。两个原始 DLL 的前后 SHA-256 不变，未执行游戏，未向当前官方服务器发送请求。全部客户端及当前官方后台并未完成完整语义审计。

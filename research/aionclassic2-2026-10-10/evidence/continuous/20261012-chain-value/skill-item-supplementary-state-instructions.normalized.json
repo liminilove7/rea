@@ -1,0 +1,40 @@
+{
+  "procedure": {
+    "address": "0x1803b4460",
+    "name": "sub_1803B4460",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1803b4460: push rbx",
+    "0x1803b4462: sub rsp, 20h",
+    "0x1803b4466: lea eax, [rdx-0A1A5D60h]",
+    "0x1803b446c: mov rbx, rcx",
+    "0x1803b446f: cmp eax, 1869Fh",
+    "0x1803b4474: jbe short loc_1803B447E",
+    "0x1803b4476: xor eax, eax",
+    "0x1803b4478: add rsp, 20h",
+    "0x1803b447c: pop rbx",
+    "0x1803b447d: retn",
+    "0x1803b447e: call sub_180397670",
+    "0x1803b4483: mov rdx, rax",
+    "0x1803b4486: lea rcx, dword_18095A690",
+    "0x1803b448d: call sub_1800E7D30",
+    "0x1803b4492: mov edx, eax",
+    "0x1803b4494: mov rcx, rbx",
+    "0x1803b4497: add rsp, 20h",
+    "0x1803b449b: pop rbx",
+    "0x1803b449c: jmp sub_1803B2100"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

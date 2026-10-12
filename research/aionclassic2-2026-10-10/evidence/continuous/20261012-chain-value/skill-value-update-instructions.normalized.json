@@ -1,0 +1,48 @@
+{
+  "procedure": {
+    "address": "0x1803b27d0",
+    "name": "sub_1803B27D0",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1803b27d0: mov [rsp+arg_0], rcx",
+    "0x1803b27d5: push rbx",
+    "0x1803b27d6: sub rsp, 40h",
+    "0x1803b27da: mov rbx, cs:qword_180D4B010",
+    "0x1803b27e1: mov r10d, r8d",
+    "0x1803b27e4: mov rcx, rbx",
+    "0x1803b27e7: call sub_1803B2100",
+    "0x1803b27ec: test rax, rax",
+    "0x1803b27ef: jz short loc_1803B27FB",
+    "0x1803b27f1: mov [rax+54h], r10d",
+    "0x1803b27f5: add rsp, 40h",
+    "0x1803b27f9: pop rbx",
+    "0x1803b27fa: retn",
+    "0x1803b27fb: mov dword ptr [rsp+48h+arg_0], edx",
+    "0x1803b27ff: lea rcx, [rbx+868h]",
+    "0x1803b2806: lea rdx, [rsp+48h+arg_0]",
+    "0x1803b280b: mov dword ptr [rsp+48h+arg_0+4], r10d",
+    "0x1803b2810: call sub_1800F1690",
+    "0x1803b2815: xor r8d, r8d",
+    "0x1803b2818: mov [rsp+48h+var_28], rax",
+    "0x1803b281d: lea rdx, [rsp+48h+var_18]",
+    "0x1803b2822: lea rcx, [rbx+868h]",
+    "0x1803b2829: lea r9, [rax+1Ch]",
+    "0x1803b282d: call sub_1801CD760",
+    "0x1803b2832: add rsp, 40h",
+    "0x1803b2836: pop rbx",
+    "0x1803b2837: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}
