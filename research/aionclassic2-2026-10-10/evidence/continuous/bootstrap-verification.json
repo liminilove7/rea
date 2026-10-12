@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "targetSha256": "17c8de936526f119e16c1923ba5922d3a524698f04c01562fc878424653cda1e",
+  "nativeTargetExecuted": false,
+  "wholeModuleComplete": false,
+  "verifiedAt": "2026-10-12T11:44:46.344Z",
+  "anchors": [
+    {
+      "file": "aion-original-bootstrap-entry-retry-instructions",
+      "evidenceId": "ev_8c08fb8107c736ad8fce295852e901532b54b97670fa1e0d72f72c9bcc2e9775",
+      "snippets": [
+        "0x1405ee000: jmp short loc_1405EE00A",
+        "0x1405ee00a: jmp loc_1405F000F",
+        "0x1405f000f: jmp sub_1405E2000"
+      ]
+    },
+    {
+      "file": "aion-protection-bootstrap-next-instructions",
+      "evidenceId": "ev_4782b2934294047ae2a9ff8d62c01462155ab32bf345802ed4b3f4f588a32bc2",
+      "snippets": [
+        "0x1405e2003: call sub_1405E2009"
+      ]
+    },
+    {
+      "file": "aion-protection-bootstrap-body-instructions",
+      "evidenceId": "ev_0ae1a61be7800837e69f6ed2721b61194d6a04548b2f6d07b7e173f82240505a",
+      "snippets": [
+        "0x1405e2010: sub rax, 499000h",
+        "0x1405e2016: sub rax, 7307BA8h",
+        "0x1405e201c: add rax, 7307B9Fh",
+        "0x1405e202a: mov ebx, 1000h",
+        "0x1405e202f: push 6D21FE52h",
+        "0x1405e2034: push 76145AC7h",
+        "0x1405e2040: add rax, 14h"
+      ]
+    },
+    {
+      "file": "aion-protection-bootstrap-page-transform-instructions",
+      "evidenceId": "ev_2279bda7f176f27cf6153a4bf1f771ce86b1a89dbb67d1644b43f285f926a06e",
+      "snippets": [
+        "0x1405e205b: shr ecx, 2",
+        "0x1405e2068: xor [rsi], eax",
+        "0x1405e206a: add [rsi], ebx",
+        "0x1405e206c: add rsi, 4",
+        "0x1405e2070: dec ecx",
+        "0x1405e2079: retn 20h"
+      ]
+    },
+    {
+      "file": "aion-crysystem-loader-consumer-instructions",
+      "evidenceId": "ev_e6a79ecbd4ab4f03680d2dcc31cbf2f9d69fcc09f623c2019ca80d6a3b6a411b",
+      "snippets": [
+        "0x1400118c3: lea rcx, aCrysystemDll",
+        "CrySystem.dll",
+        "0x1400118ca: call cs:qword_1400D3350",
+        "0x1400119eb: lea rdx, aCreatesystemin",
+        "CreateSystemInterface",
+        "0x1400119f5: call sub_140553F8A",
+        "0x140011a21: call rax",
+        "0x140011a23: mov cs:qword_140135920, rax",
+        "0x140011b79: lea rax, aGameDll",
+        "Game.dll",
+        "0x140011b80: mov [rsp+11E0h+var_1180], rax",
+        "0x140011bb1: call qword ptr [rax]"
+      ]
+    }
+  ],
+  "originalPageReproduction": {
+    "source": "Auxiliary original Aion.bin arithmetic reproduction anchored to saved REA bootstrap instructions",
+    "targetSha256": "17c8de936526f119e16c1923ba5922d3a524698f04c01562fc878424653cda1e",
+    "nativeTargetExecuted": false,
+    "emulatedTargetInstructions": false,
+    "imagebase": "0x140000000",
+    "stubRva": "0x5e2000",
+    "callReturnRva": "0x5e2008",
+    "initialReturnByte": "cc",
+    "targetRva": "0x149000",
+    "targetFileOffset": "0x148000",
+    "length": 4096,
+    "xorKey": "0x76145ac7",
+    "addKey": "0x6d21fe52",
+    "continuationRva": "0x149014",
+    "formula": "little-endian DWORD: ((cipher XOR xorKey) + addKey) modulo 2^32",
+    "originalPageSha256": "be06c044a4e4889721b22f6083c647323dbc752e872d6f84e2a368747617d7d3",
+    "transformedPageSha256": "345c8c5b2a9cee8ff449b35f8dc1530476907661031aeb8aba8cdd5c30fbbe4b",
+    "inverseRoundtripPassed": true,
+    "transformedContinuationPrefix": "e91c180000000000000800000000000000000000000000000000000000000000",
+    "binaryOutputWritten": false,
+    "limitations": [
+      "One observed 4096-byte region only; not a reconstructed PE or fully resolved original entry point.",
+      "No loader, native API, TLS, protection initialization or runtime state was executed or captured.",
+      "This arithmetic reproduction is distinct from REA observations and from software CPU instruction emulation."
+    ]
+  },
+  "unknowns": [
+    "Protected load/export lookup implementation and runtime resolved targets",
+    "Actual loaded DLL file paths and runtime interface instance identity",
+    "Full protection reconstruction and complete original entry point"
+  ]
+}

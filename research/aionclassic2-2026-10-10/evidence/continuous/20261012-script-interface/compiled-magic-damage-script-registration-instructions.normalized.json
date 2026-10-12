@@ -1,0 +1,62 @@
+{
+  "procedure": {
+    "address": "0x180172f10",
+    "name": "sub_180172F10",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x180172f10: push rbx",
+    "0x180172f12: sub rsp, 40h",
+    "0x180172f16: xor edx, edx; Val",
+    "0x180172f18: lea rcx, xmmword_180F70808; void *",
+    "0x180172f1f: mov r8d, 0A0h; Size",
+    "0x180172f25: call memset",
+    "0x180172f2a: movups xmm0, xmmword ptr cs:aMonster; \"Monster\"",
+    "0x180172f31: lea rax, const CMonster::`vftable'",
+    "0x180172f38: mov cs:qword_180F708A8, 0",
+    "0x180172f43: mov cs:qword_180F70800, rax",
+    "0x180172f4a: lea rbx, qword_180F70800",
+    "0x180172f51: mov [rsp+48h+arg_0], rbx",
+    "0x180172f56: lea r9, [rsp+48h+arg_0]",
+    "0x180172f5b: movzx eax, byte ptr [rsp+48h+arg_0]",
+    "0x180172f60: lea rdx, [rsp+48h+var_18]",
+    "0x180172f65: xor r8d, r8d",
+    "0x180172f68: mov [rsp+48h+var_28], al; char",
+    "0x180172f6c: lea rcx, qword_18103F828; this",
+    "0x180172f73: movups cs:xmmword_180F70808, xmm0",
+    "0x180172f7a: call sub_1806BF3E0",
+    "0x180172f7f: movups xmm0, xmmword ptr cs:aLdf4aMobMdamag; \"LDF4a_Mob_MDamage\"",
+    "0x180172f86: lea rax, const CLDF4a_Mob_MDamage::`vftable'",
+    "0x180172f8d: mov [rsp+48h+arg_0], rbx",
+    "0x180172f92: movups xmm1, xmmword ptr cs:aLdf4aMobMdamag+10h; \"b_MDamage\"",
+    "0x180172f99: mov cs:qword_180F70800, rax",
+    "0x180172fa0: lea r9, [rsp+48h+arg_0]",
+    "0x180172fa5: lea rax, qword_180F054B0",
+    "0x180172fac: xor r8d, r8d",
+    "0x180172faf: mov cs:qword_180F708A8, rax",
+    "0x180172fb6: lea rdx, [rsp+48h+var_18]",
+    "0x180172fbb: mov eax, dword ptr cs:aLdf4aMobMdamag+20h; \"e\"",
+    "0x180172fc1: lea rcx, qword_18103F828; this",
+    "0x180172fc8: mov cs:dword_180F70828, eax",
+    "0x180172fce: movzx eax, byte ptr [rsp+48h+arg_0]",
+    "0x180172fd3: mov [rsp+48h+var_28], al; char",
+    "0x180172fd7: movups cs:xmmword_180F70808, xmm0",
+    "0x180172fde: movups cs:xmmword_180F70818, xmm1",
+    "0x180172fe5: call sub_1806BF3E0",
+    "0x180172fea: add rsp, 40h",
+    "0x180172fee: pop rbx",
+    "0x180172fef: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

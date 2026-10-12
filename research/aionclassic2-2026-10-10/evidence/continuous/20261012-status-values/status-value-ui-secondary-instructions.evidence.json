@@ -1,0 +1,3415 @@
+{
+  "evidence_id": "ev_0d6e9e0e1681cfdb6d5a337420ba305eb1aca6d95ec1630618cee0177d1ae396",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll",
+    "digest": {
+      "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "read_function_instructions",
+  "parameters": {
+    "procedure": "0x1801039C7",
+    "document": null
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 244.105,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-a423862a3f69e82beba9a74cc1edbcc0\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-a423862a3f69e82beba9a74cc1edbcc0\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 244.39,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-a423862a3f69e82beba9a74cc1edbcc0\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-a423862a3f69e82beba9a74cc1edbcc0\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": [
+            "0x1801039C7"
+          ],
+          "database": "rea-b68d4e94-8189-4792-b148-83af86d3c3a0"
+        },
+        "result": [
+          {
+            "query": "0x1801039C7",
+            "fn": {
+              "addr": "0x1801035b0",
+              "name": "sub_1801035B0",
+              "size": "0x584"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1801035b0",
+          "offset": 0,
+          "max_instructions": 100,
+          "database": "rea-b68d4e94-8189-4792-b148-83af86d3c3a0"
+        },
+        "result": {
+          "addr": "0x1801035b0",
+          "asm": {
+            "name": "sub_1801035B0",
+            "start_ea": "0x1801035b0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "1801035b0",
+                "instruction": "push rbp",
+                "label": "sub_1801035B0"
+              },
+              {
+                "addr": "1801035b2",
+                "instruction": "push rsi"
+              },
+              {
+                "addr": "1801035b3",
+                "instruction": "push r14"
+              },
+              {
+                "addr": "1801035b5",
+                "instruction": "lea rbp, [rsp-7F0h]"
+              },
+              {
+                "addr": "1801035bd",
+                "instruction": "sub rsp, 8F0h"
+              },
+              {
+                "addr": "1801035c4",
+                "instruction": "mov rax, cs:qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801035cb",
+                "instruction": "mov rsi, rcx"
+              },
+              {
+                "addr": "1801035ce",
+                "instruction": "lea rcx, qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801035d5",
+                "instruction": "call qword ptr [rax+1E0h]"
+              },
+              {
+                "addr": "1801035db",
+                "instruction": "mov rcx, rax"
+              },
+              {
+                "addr": "1801035de",
+                "instruction": "call sub_1804F9810",
+                "refs": [
+                  {
+                    "addr": "0x1804f9810",
+                    "name": "sub_1804F9810"
+                  }
+                ]
+              },
+              {
+                "addr": "1801035e3",
+                "instruction": "mov r14, rax"
+              },
+              {
+                "addr": "1801035e6",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "1801035e9",
+                "instruction": "jz loc_180103B28",
+                "refs": [
+                  {
+                    "addr": "0x180103b28",
+                    "name": "loc_180103B28"
+                  }
+                ]
+              },
+              {
+                "addr": "1801035ef",
+                "instruction": "mov [rsp+900h+arg_0], rbx",
+                "label": "loc_1801035EF"
+              },
+              {
+                "addr": "1801035f7",
+                "instruction": "lea rcx, qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801035fe",
+                "instruction": "mov [rsp+900h+arg_10], rdi"
+              },
+              {
+                "addr": "180103606",
+                "instruction": "mov [rsp+900h+arg_18], r12"
+              },
+              {
+                "addr": "18010360e",
+                "instruction": "mov [rsp+900h+var_18], r13"
+              },
+              {
+                "addr": "180103616",
+                "instruction": "mov [rsp+900h+var_20], r15"
+              },
+              {
+                "addr": "18010361e",
+                "instruction": "call sub_18001D3C0",
+                "refs": [
+                  {
+                    "addr": "0x18001d3c0",
+                    "name": "sub_18001D3C0"
+                  }
+                ]
+              },
+              {
+                "addr": "180103623",
+                "instruction": "lea rcx, qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "18010362a",
+                "instruction": "call sub_180051A60",
+                "refs": [
+                  {
+                    "addr": "0x180051a60",
+                    "name": "sub_180051A60"
+                  }
+                ]
+              },
+              {
+                "addr": "18010362f",
+                "instruction": "mov r8d, [rsi+14h]"
+              },
+              {
+                "addr": "180103633",
+                "instruction": "xor r13d, r13d"
+              },
+              {
+                "addr": "180103636",
+                "instruction": "mov r9d, [rsi+10h]"
+              },
+              {
+                "addr": "18010363a",
+                "instruction": "mov edi, [rsi+0Ch]"
+              },
+              {
+                "addr": "18010363d",
+                "instruction": "mov r12d, cs:dword_180923010",
+                "refs": [
+                  {
+                    "addr": "0x180923010",
+                    "name": "dword_180923010"
+                  }
+                ]
+              },
+              {
+                "addr": "180103644",
+                "instruction": "lea ecx, [r8+1]"
+              },
+              {
+                "addr": "180103648",
+                "instruction": "imul edx, ecx, 64h ; 'd'"
+              },
+              {
+                "addr": "18010364b",
+                "instruction": "lea ebx, [r13+4]"
+              },
+              {
+                "addr": "18010364f",
+                "instruction": "add edx, r9d"
+              },
+              {
+                "addr": "180103652",
+                "instruction": "lea eax, [rdx+rdx*4]"
+              },
+              {
+                "addr": "180103655",
+                "instruction": "lea r15d, [rax+rax]"
+              },
+              {
+                "addr": "180103659",
+                "instruction": "lea eax, [rdi+r15]"
+              },
+              {
+                "addr": "18010365d",
+                "instruction": "lea ecx, [rax+rax*4]"
+              },
+              {
+                "addr": "180103660",
+                "instruction": "lea edx, [rcx+rcx]"
+              },
+              {
+                "addr": "180103663",
+                "instruction": "mov ecx, r13d"
+              },
+              {
+                "addr": "180103666",
+                "instruction": "cmp r12d, 2"
+              },
+              {
+                "addr": "18010366a",
+                "instruction": "jl short loc_1801036C4",
+                "refs": [
+                  {
+                    "addr": "0x1801036c4",
+                    "name": "loc_1801036C4"
+                  }
+                ]
+              },
+              {
+                "addr": "18010366c",
+                "instruction": "movd xmm3, r8d"
+              },
+              {
+                "addr": "180103671",
+                "instruction": "mov ecx, ebx"
+              },
+              {
+                "addr": "180103673",
+                "instruction": "pshufd xmm3, xmm3, 0"
+              },
+              {
+                "addr": "180103678",
+                "instruction": "pmulld xmm3, cs:xmmword_180875A30",
+                "refs": [
+                  {
+                    "addr": "0x180875a30",
+                    "name": "xmmword_180875A30"
+                  }
+                ]
+              },
+              {
+                "addr": "180103681",
+                "instruction": "movd xmm0, r9d"
+              },
+              {
+                "addr": "180103686",
+                "instruction": "pshufd xmm0, xmm0, 0"
+              },
+              {
+                "addr": "18010368b",
+                "instruction": "paddd xmm3, xmm0"
+              },
+              {
+                "addr": "18010368f",
+                "instruction": "movd xmm0, edi"
+              },
+              {
+                "addr": "180103693",
+                "instruction": "paddd xmm3, cs:xmmword_180875A30",
+                "refs": [
+                  {
+                    "addr": "0x180875a30",
+                    "name": "xmmword_180875A30"
+                  }
+                ]
+              },
+              {
+                "addr": "18010369b",
+                "instruction": "pmulld xmm3, cs:xmmword_180875A00",
+                "refs": [
+                  {
+                    "addr": "0x180875a00",
+                    "name": "xmmword_180875A00"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036a4",
+                "instruction": "pshufd xmm0, xmm0, 0"
+              },
+              {
+                "addr": "1801036a9",
+                "instruction": "paddd xmm3, xmm0"
+              },
+              {
+                "addr": "1801036ad",
+                "instruction": "pmulld xmm3, cs:xmmword_180875A00",
+                "refs": [
+                  {
+                    "addr": "0x180875a00",
+                    "name": "xmmword_180875A00"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036b6",
+                "instruction": "paddd xmm3, cs:xmmword_1808759B0",
+                "refs": [
+                  {
+                    "addr": "0x1808759b0",
+                    "name": "xmmword_1808759B0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036be",
+                "instruction": "movdqu [rsp+900h+var_8B0], xmm3"
+              },
+              {
+                "addr": "1801036c4",
+                "instruction": "mov eax, ecx",
+                "label": "loc_1801036C4"
+              },
+              {
+                "addr": "1801036c6",
+                "instruction": "cmp rax, rbx"
+              },
+              {
+                "addr": "1801036c9",
+                "instruction": "jnb short loc_1801036DE",
+                "refs": [
+                  {
+                    "addr": "0x1801036de",
+                    "name": "loc_1801036DE"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036cb",
+                "instruction": "add ecx, edx"
+              },
+              {
+                "addr": "1801036cd",
+                "instruction": "nop dword ptr [rax]"
+              },
+              {
+                "addr": "1801036d0",
+                "instruction": "mov dword ptr [rsp+rax*4+900h+var_8B0], ecx",
+                "label": "loc_1801036D0"
+              },
+              {
+                "addr": "1801036d4",
+                "instruction": "inc ecx"
+              },
+              {
+                "addr": "1801036d6",
+                "instruction": "inc rax"
+              },
+              {
+                "addr": "1801036d9",
+                "instruction": "cmp rax, rbx"
+              },
+              {
+                "addr": "1801036dc",
+                "instruction": "jl short loc_1801036D0",
+                "refs": [
+                  {
+                    "addr": "0x1801036d0",
+                    "name": "loc_1801036D0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036de",
+                "instruction": "test edi, edi",
+                "label": "loc_1801036DE"
+              },
+              {
+                "addr": "1801036e0",
+                "instruction": "jnz loc_18010378A",
+                "refs": [
+                  {
+                    "addr": "0x18010378a",
+                    "name": "loc_18010378A"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036e6",
+                "instruction": "cmp [rsi+8], r13d"
+              },
+              {
+                "addr": "1801036ea",
+                "instruction": "jnz loc_1801037A0",
+                "refs": [
+                  {
+                    "addr": "0x1801037a0",
+                    "name": "loc_1801037A0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036f0",
+                "instruction": "mov rax, cs:qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036f7",
+                "instruction": "lea rcx, qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801036fe",
+                "instruction": "call qword ptr [rax+1E0h]"
+              },
+              {
+                "addr": "180103704",
+                "instruction": "mov [rbp+800h+arg_8], r13"
+              },
+              {
+                "addr": "18010370b",
+                "instruction": "mov rdi, rax"
+              },
+              {
+                "addr": "18010370e",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "180103711",
+                "instruction": "jz short loc_180103756",
+                "refs": [
+                  {
+                    "addr": "0x180103756",
+                    "name": "loc_180103756"
+                  }
+                ]
+              },
+              {
+                "addr": "180103713",
+                "instruction": "mov rdx, [rax]"
+              },
+              {
+                "addr": "180103716",
+                "instruction": "mov rcx, rax"
+              },
+              {
+                "addr": "180103719",
+                "instruction": "call qword ptr [rdx+0B8h]"
+              },
+              {
+                "addr": "18010371f",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "180103722",
+                "instruction": "jz short loc_180103745",
+                "refs": [
+                  {
+                    "addr": "0x180103745",
+                    "name": "loc_180103745"
+                  }
+                ]
+              },
+              {
+                "addr": "180103724",
+                "instruction": "mov rdx, [rdi]"
+              },
+              {
+                "addr": "180103727",
+                "instruction": "mov rcx, rdi"
+              },
+              {
+                "addr": "18010372a",
+                "instruction": "call qword ptr [rdx+0B8h]"
+              },
+              {
+                "addr": "180103730",
+                "instruction": "lea r8, [rbp+800h+arg_8]"
+              },
+              {
+                "addr": "180103737",
+                "instruction": "mov edx, 2"
+              },
+              {
+                "addr": "18010373c",
+                "instruction": "mov rcx, rax"
+              },
+              {
+                "addr": "18010373f",
+                "instruction": "mov rdi, [rax]"
+              },
+              {
+                "addr": "180103742",
+                "instruction": "call qword ptr [rdi+50h]"
+              },
+              {
+                "addr": "180103745",
+                "instruction": "mov rax, [rbp+800h+arg_8]",
+                "label": "loc_180103745"
+              },
+              {
+                "addr": "18010374c",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "18010374f",
+                "instruction": "jz short loc_180103756",
+                "refs": [
+                  {
+                    "addr": "0x180103756",
+                    "name": "loc_180103756"
+                  }
+                ]
+              },
+              {
+                "addr": "180103751",
+                "instruction": "mov edx, [rax+2Ch]"
+              },
+              {
+                "addr": "180103754",
+                "instruction": "jmp short loc_18010378A",
+                "refs": [
+                  {
+                    "addr": "0x18010378a",
+                    "name": "loc_18010378A"
+                  }
+                ]
+              },
+              {
+                "addr": "180103756",
+                "instruction": "movsxd rcx, dword ptr cs:qword_180D66888",
+                "label": "loc_180103756",
+                "refs": [
+                  {
+                    "addr": "0x180d66888",
+                    "name": "qword_180D66888"
+                  }
+                ]
+              },
+              {
+                "addr": "18010375d",
+                "instruction": "test ecx, ecx"
+              },
+              {
+                "addr": "18010375f",
+                "instruction": "js short loc_180103787",
+                "refs": [
+                  {
+                    "addr": "0x180103787",
+                    "name": "loc_180103787"
+                  }
+                ]
+              },
+              {
+                "addr": "180103761",
+                "instruction": "mov rdx, cs:qword_180D66408",
+                "refs": [
+                  {
+                    "addr": "0x180d66408",
+                    "name": "qword_180D66408"
+                  }
+                ]
+              },
+              {
+                "addr": "180103768",
+                "instruction": "mov rax, qword ptr cs:xmmword_180D66410",
+                "refs": [
+                  {
+                    "addr": "0x180d66410",
+                    "name": "xmmword_180D66410"
+                  }
+                ]
+              },
+              {
+                "addr": "18010376f",
+                "instruction": "sub rax, rdx"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_8E0",
+                "offset": "0x20",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8D8",
+                "offset": "0x28",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_8D0",
+                "offset": "0x30",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_8C8",
+                "offset": "0x38",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8C0",
+                "offset": "0x40",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8B0",
+                "offset": "0x50",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8A0",
+                "offset": "0x60",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_890",
+                "offset": "0x70",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_880",
+                "offset": "0x80",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_87C",
+                "offset": "0x84",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_878",
+                "offset": "0x88",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_874",
+                "offset": "0x8c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_870",
+                "offset": "0x90",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_86C",
+                "offset": "0x94",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_868",
+                "offset": "0x98",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_864",
+                "offset": "0x9c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_860",
+                "offset": "0xa0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_85C",
+                "offset": "0xa4",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_858",
+                "offset": "0xa8",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_854",
+                "offset": "0xac",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_850",
+                "offset": "0xb0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_84C",
+                "offset": "0xb4",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84B",
+                "offset": "0xb5",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84A",
+                "offset": "0xb6",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_849",
+                "offset": "0xb7",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_847",
+                "offset": "0xb9",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_846",
+                "offset": "0xba",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_845",
+                "offset": "0xbb",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_813",
+                "offset": "0xed",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_20",
+                "offset": "0x8e0",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_18",
+                "offset": "0x8e8",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__saved_registers",
+                "offset": "0x900",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x908",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              },
+              {
+                "name": "arg_0",
+                "offset": "0x910",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_8",
+                "offset": "0x918",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_10",
+                "offset": "0x920",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_18",
+                "offset": "0x928",
+                "size": "0x8",
+                "type": "_QWORD"
+              }
+            ]
+          },
+          "instruction_count": 100,
+          "total_instructions": null,
+          "cursor": {
+            "next": 100
+          }
+        }
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1801035b0",
+          "offset": 100,
+          "max_instructions": 100,
+          "database": "rea-b68d4e94-8189-4792-b148-83af86d3c3a0"
+        },
+        "result": {
+          "addr": "0x1801035b0",
+          "asm": {
+            "name": "sub_1801035B0",
+            "start_ea": "0x1801035b0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "180103772",
+                "instruction": "sar rax, 3"
+              },
+              {
+                "addr": "180103776",
+                "instruction": "cmp ecx, eax"
+              },
+              {
+                "addr": "180103778",
+                "instruction": "jge short loc_180103787",
+                "refs": [
+                  {
+                    "addr": "0x180103787",
+                    "name": "loc_180103787"
+                  }
+                ]
+              },
+              {
+                "addr": "18010377a",
+                "instruction": "mov rcx, [rdx+rcx*8]"
+              },
+              {
+                "addr": "18010377e",
+                "instruction": "test rcx, rcx"
+              },
+              {
+                "addr": "180103781",
+                "instruction": "jz short loc_180103787",
+                "refs": [
+                  {
+                    "addr": "0x180103787",
+                    "name": "loc_180103787"
+                  }
+                ]
+              },
+              {
+                "addr": "180103783",
+                "instruction": "mov edx, [rcx]"
+              },
+              {
+                "addr": "180103785",
+                "instruction": "jmp short loc_18010378A",
+                "refs": [
+                  {
+                    "addr": "0x18010378a",
+                    "name": "loc_18010378A"
+                  }
+                ]
+              },
+              {
+                "addr": "180103787",
+                "instruction": "mov edx, r13d",
+                "label": "loc_180103787"
+              },
+              {
+                "addr": "18010378a",
+                "instruction": "cmp [rsi+8], r13d",
+                "label": "loc_18010378A"
+              },
+              {
+                "addr": "18010378e",
+                "instruction": "jnz short loc_1801037A0",
+                "refs": [
+                  {
+                    "addr": "0x1801037a0",
+                    "name": "loc_1801037A0"
+                  }
+                ]
+              },
+              {
+                "addr": "180103790",
+                "instruction": "movsxd rax, dword ptr [rsi+0Ch]"
+              },
+              {
+                "addr": "180103794",
+                "instruction": "mov dword ptr [rsp+rax*4+900h+var_8B0], edx"
+              },
+              {
+                "addr": "180103798",
+                "instruction": "nop dword ptr [rax+rax+00000000h]"
+              },
+              {
+                "addr": "1801037a0",
+                "instruction": "mov edi, [rsi+2Ch]",
+                "label": "loc_1801037A0"
+              },
+              {
+                "addr": "1801037a3",
+                "instruction": "xor eax, eax"
+              },
+              {
+                "addr": "1801037a5",
+                "instruction": "mov qword ptr [rsp+900h+var_8C0], rax"
+              },
+              {
+                "addr": "1801037aa",
+                "instruction": "xorps xmm0, xmm0"
+              },
+              {
+                "addr": "1801037ad",
+                "instruction": "mov qword ptr [rsp+900h+var_8C0+8], rax"
+              },
+              {
+                "addr": "1801037b2",
+                "instruction": "xorps xmm1, xmm1"
+              },
+              {
+                "addr": "1801037b5",
+                "instruction": "movdqu [rsp+900h+var_8A0], xmm0"
+              },
+              {
+                "addr": "1801037bb",
+                "instruction": "movdqu [rsp+900h+var_890], xmm1"
+              },
+              {
+                "addr": "1801037c1",
+                "instruction": "cmp r12d, 2"
+              },
+              {
+                "addr": "1801037c5",
+                "instruction": "jl short loc_18010380E",
+                "refs": [
+                  {
+                    "addr": "0x18010380e",
+                    "name": "loc_18010380E"
+                  }
+                ]
+              },
+              {
+                "addr": "1801037c7",
+                "instruction": "movd xmm2, dword ptr [rsi+14h]"
+              },
+              {
+                "addr": "1801037cc",
+                "instruction": "mov ecx, 3ECh"
+              },
+              {
+                "addr": "1801037d1",
+                "instruction": "movd xmm0, dword ptr [rsi+10h]"
+              },
+              {
+                "addr": "1801037d6",
+                "instruction": "pshufd xmm2, xmm2, 0"
+              },
+              {
+                "addr": "1801037db",
+                "instruction": "pmulld xmm2, cs:xmmword_180875A30",
+                "refs": [
+                  {
+                    "addr": "0x180875a30",
+                    "name": "xmmword_180875A30"
+                  }
+                ]
+              },
+              {
+                "addr": "1801037e4",
+                "instruction": "pshufd xmm0, xmm0, 0"
+              },
+              {
+                "addr": "1801037e9",
+                "instruction": "paddd xmm2, xmm0"
+              },
+              {
+                "addr": "1801037ed",
+                "instruction": "paddd xmm2, cs:xmmword_180875A30",
+                "refs": [
+                  {
+                    "addr": "0x180875a30",
+                    "name": "xmmword_180875A30"
+                  }
+                ]
+              },
+              {
+                "addr": "1801037f5",
+                "instruction": "pmulld xmm2, cs:xmmword_180875A00",
+                "refs": [
+                  {
+                    "addr": "0x180875a00",
+                    "name": "xmmword_180875A00"
+                  }
+                ]
+              },
+              {
+                "addr": "1801037fe",
+                "instruction": "paddd xmm2, cs:xmmword_1808759B0",
+                "refs": [
+                  {
+                    "addr": "0x1808759b0",
+                    "name": "xmmword_1808759B0"
+                  }
+                ]
+              },
+              {
+                "addr": "180103806",
+                "instruction": "movdqu [rsp+900h+var_8C0], xmm2"
+              },
+              {
+                "addr": "18010380c",
+                "instruction": "jmp short loc_180103816",
+                "refs": [
+                  {
+                    "addr": "0x180103816",
+                    "name": "loc_180103816"
+                  }
+                ]
+              },
+              {
+                "addr": "18010380e",
+                "instruction": "mov ecx, 3E8h",
+                "label": "loc_18010380E"
+              },
+              {
+                "addr": "180103813",
+                "instruction": "mov rbx, r13"
+              },
+              {
+                "addr": "180103816",
+                "instruction": "cmp rbx, 4",
+                "label": "loc_180103816"
+              },
+              {
+                "addr": "18010381a",
+                "instruction": "jnb short loc_18010383F",
+                "refs": [
+                  {
+                    "addr": "0x18010383f",
+                    "name": "loc_18010383F"
+                  }
+                ]
+              },
+              {
+                "addr": "18010381c",
+                "instruction": "imul eax, [rsi+14h], 64h ; 'd'"
+              },
+              {
+                "addr": "180103820",
+                "instruction": "add eax, [rsi+10h]"
+              },
+              {
+                "addr": "180103823",
+                "instruction": "lea eax, [rax+rax*4]"
+              },
+              {
+                "addr": "180103826",
+                "instruction": "lea ecx, [rcx+rax*2]"
+              },
+              {
+                "addr": "180103829",
+                "instruction": "nop dword ptr [rax+00000000h]"
+              },
+              {
+                "addr": "180103830",
+                "instruction": "mov dword ptr [rsp+rbx*4+900h+var_8C0], ecx",
+                "label": "loc_180103830"
+              },
+              {
+                "addr": "180103834",
+                "instruction": "inc ecx"
+              },
+              {
+                "addr": "180103836",
+                "instruction": "inc rbx"
+              },
+              {
+                "addr": "180103839",
+                "instruction": "cmp rbx, 4"
+              },
+              {
+                "addr": "18010383d",
+                "instruction": "jl short loc_180103830",
+                "refs": [
+                  {
+                    "addr": "0x180103830",
+                    "name": "loc_180103830"
+                  }
+                ]
+              },
+              {
+                "addr": "18010383f",
+                "instruction": "test r15d, r15d",
+                "label": "loc_18010383F"
+              },
+              {
+                "addr": "180103842",
+                "instruction": "jz short loc_180103871",
+                "refs": [
+                  {
+                    "addr": "0x180103871",
+                    "name": "loc_180103871"
+                  }
+                ]
+              },
+              {
+                "addr": "180103844",
+                "instruction": "lea rax, [rsp+900h+var_8C0]"
+              },
+              {
+                "addr": "180103849",
+                "instruction": "xor r9d, r9d"
+              },
+              {
+                "addr": "18010384c",
+                "instruction": "mov [rsp+900h+var_8C8], rax"
+              },
+              {
+                "addr": "180103851",
+                "instruction": "lea r8, [rsp+900h+var_8B0]"
+              },
+              {
+                "addr": "180103856",
+                "instruction": "mov [rsp+900h+var_8D0], edi"
+              },
+              {
+                "addr": "18010385a",
+                "instruction": "lea rax, [rsp+900h+var_8A0]"
+              },
+              {
+                "addr": "18010385f",
+                "instruction": "mov [rsp+900h+var_8D8], r13b"
+              },
+              {
+                "addr": "180103864",
+                "instruction": "mov ecx, r15d"
+              },
+              {
+                "addr": "180103867",
+                "instruction": "mov [rsp+900h+var_8E0], rax"
+              },
+              {
+                "addr": "18010386c",
+                "instruction": "call sub_180352B60",
+                "refs": [
+                  {
+                    "addr": "0x180352b60",
+                    "name": "sub_180352B60"
+                  }
+                ]
+              },
+              {
+                "addr": "180103871",
+                "instruction": "mov ebx, r13d",
+                "label": "loc_180103871"
+              },
+              {
+                "addr": "180103874",
+                "instruction": "cmp [rsi+1Ch], r13d"
+              },
+              {
+                "addr": "180103878",
+                "instruction": "jle loc_180103B00",
+                "refs": [
+                  {
+                    "addr": "0x180103b00",
+                    "name": "loc_180103B00"
+                  }
+                ]
+              },
+              {
+                "addr": "18010387e",
+                "instruction": "mov r12d, 0AC00h"
+              },
+              {
+                "addr": "180103884",
+                "instruction": "nop dword ptr [rax+00h]"
+              },
+              {
+                "addr": "180103888",
+                "instruction": "nop dword ptr [rax+rax+00000000h]"
+              },
+              {
+                "addr": "180103890",
+                "instruction": "mov eax, ebx",
+                "label": "loc_180103890"
+              },
+              {
+                "addr": "180103892",
+                "instruction": "lea rcx, [rbp+800h+var_87C]"
+              },
+              {
+                "addr": "180103896",
+                "instruction": "cdq"
+              },
+              {
+                "addr": "180103897",
+                "instruction": "mov r8d, 859h"
+              },
+              {
+                "addr": "18010389d",
+                "instruction": "and edx, 3"
+              },
+              {
+                "addr": "1801038a0",
+                "instruction": "add eax, edx"
+              },
+              {
+                "addr": "1801038a2",
+                "instruction": "mov r15d, eax"
+              },
+              {
+                "addr": "1801038a5",
+                "instruction": "and eax, 3"
+              },
+              {
+                "addr": "1801038a8",
+                "instruction": "sub eax, edx"
+              },
+              {
+                "addr": "1801038aa",
+                "instruction": "sar r15d, 2"
+              },
+              {
+                "addr": "1801038ae",
+                "instruction": "xor edx, edx"
+              },
+              {
+                "addr": "1801038b0",
+                "instruction": "mov edi, eax"
+              },
+              {
+                "addr": "1801038b2",
+                "instruction": "call sub_1806A8630",
+                "refs": [
+                  {
+                    "addr": "0x1806a8630",
+                    "name": "sub_1806A8630"
+                  }
+                ]
+              },
+              {
+                "addr": "1801038b7",
+                "instruction": "mov ecx, [rsi+14h]"
+              },
+              {
+                "addr": "1801038ba",
+                "instruction": "inc ecx"
+              },
+              {
+                "addr": "1801038bc",
+                "instruction": "imul edx, ecx, 64h ; 'd'"
+              },
+              {
+                "addr": "1801038bf",
+                "instruction": "add edx, [rsi+10h]"
+              },
+              {
+                "addr": "1801038c2",
+                "instruction": "lea ecx, [rdx+rdx*4]"
+              },
+              {
+                "addr": "1801038c5",
+                "instruction": "lea eax, [rdi+rcx*2]"
+              },
+              {
+                "addr": "1801038c8",
+                "instruction": "mov ecx, [rsi+0Ch]"
+              },
+              {
+                "addr": "1801038cb",
+                "instruction": "mov [rbp+800h+var_880], eax"
+              },
+              {
+                "addr": "1801038ce",
+                "instruction": "cmp ebx, ecx"
+              },
+              {
+                "addr": "1801038d0",
+                "instruction": "jnz loc_18010397B",
+                "refs": [
+                  {
+                    "addr": "0x18010397b",
+                    "name": "loc_18010397B"
+                  }
+                ]
+              },
+              {
+                "addr": "1801038d6",
+                "instruction": "mov rax, cs:qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801038dd",
+                "instruction": "lea rcx, qword_180D647C0",
+                "refs": [
+                  {
+                    "addr": "0x180d647c0",
+                    "name": "qword_180D647C0"
+                  }
+                ]
+              },
+              {
+                "addr": "1801038e4",
+                "instruction": "call qword ptr [rax+1E0h]"
+              },
+              {
+                "addr": "1801038ea",
+                "instruction": "mov [rbp+800h+arg_8], r13"
+              },
+              {
+                "addr": "1801038f1",
+                "instruction": "mov rdi, rax"
+              },
+              {
+                "addr": "1801038f4",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "1801038f7",
+                "instruction": "jz short loc_18010393F",
+                "refs": [
+                  {
+                    "addr": "0x18010393f",
+                    "name": "loc_18010393F"
+                  }
+                ]
+              },
+              {
+                "addr": "1801038f9",
+                "instruction": "mov rdx, [rax]"
+              },
+              {
+                "addr": "1801038fc",
+                "instruction": "mov rcx, rax"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_8E0",
+                "offset": "0x20",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8D8",
+                "offset": "0x28",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_8D0",
+                "offset": "0x30",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_8C8",
+                "offset": "0x38",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8C0",
+                "offset": "0x40",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8B0",
+                "offset": "0x50",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8A0",
+                "offset": "0x60",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_890",
+                "offset": "0x70",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_880",
+                "offset": "0x80",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_87C",
+                "offset": "0x84",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_878",
+                "offset": "0x88",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_874",
+                "offset": "0x8c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_870",
+                "offset": "0x90",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_86C",
+                "offset": "0x94",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_868",
+                "offset": "0x98",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_864",
+                "offset": "0x9c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_860",
+                "offset": "0xa0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_85C",
+                "offset": "0xa4",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_858",
+                "offset": "0xa8",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_854",
+                "offset": "0xac",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_850",
+                "offset": "0xb0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_84C",
+                "offset": "0xb4",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84B",
+                "offset": "0xb5",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84A",
+                "offset": "0xb6",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_849",
+                "offset": "0xb7",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_847",
+                "offset": "0xb9",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_846",
+                "offset": "0xba",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_845",
+                "offset": "0xbb",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_813",
+                "offset": "0xed",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_20",
+                "offset": "0x8e0",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_18",
+                "offset": "0x8e8",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__saved_registers",
+                "offset": "0x900",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x908",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              },
+              {
+                "name": "arg_0",
+                "offset": "0x910",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_8",
+                "offset": "0x918",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_10",
+                "offset": "0x920",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_18",
+                "offset": "0x928",
+                "size": "0x8",
+                "type": "_QWORD"
+              }
+            ]
+          },
+          "instruction_count": 100,
+          "total_instructions": null,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1801035b0",
+          "offset": 200,
+          "max_instructions": 100,
+          "database": "rea-b68d4e94-8189-4792-b148-83af86d3c3a0"
+        },
+        "result": {
+          "addr": "0x1801035b0",
+          "asm": {
+            "name": "sub_1801035B0",
+            "start_ea": "0x1801035b0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "1801038ff",
+                "instruction": "call qword ptr [rdx+0B8h]"
+              },
+              {
+                "addr": "180103905",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "180103908",
+                "instruction": "jz short loc_18010392B",
+                "refs": [
+                  {
+                    "addr": "0x18010392b",
+                    "name": "loc_18010392B"
+                  }
+                ]
+              },
+              {
+                "addr": "18010390a",
+                "instruction": "mov rdx, [rdi]"
+              },
+              {
+                "addr": "18010390d",
+                "instruction": "mov rcx, rdi"
+              },
+              {
+                "addr": "180103910",
+                "instruction": "call qword ptr [rdx+0B8h]"
+              },
+              {
+                "addr": "180103916",
+                "instruction": "lea r8, [rbp+800h+arg_8]"
+              },
+              {
+                "addr": "18010391d",
+                "instruction": "mov edx, 2"
+              },
+              {
+                "addr": "180103922",
+                "instruction": "mov rcx, rax"
+              },
+              {
+                "addr": "180103925",
+                "instruction": "mov rdi, [rax]"
+              },
+              {
+                "addr": "180103928",
+                "instruction": "call qword ptr [rdi+50h]"
+              },
+              {
+                "addr": "18010392b",
+                "instruction": "mov rax, [rbp+800h+arg_8]",
+                "label": "loc_18010392B"
+              },
+              {
+                "addr": "180103932",
+                "instruction": "test rax, rax"
+              },
+              {
+                "addr": "180103935",
+                "instruction": "jz short loc_18010393F",
+                "refs": [
+                  {
+                    "addr": "0x18010393f",
+                    "name": "loc_18010393F"
+                  }
+                ]
+              },
+              {
+                "addr": "180103937",
+                "instruction": "mov eax, [rax+2Ch]"
+              },
+              {
+                "addr": "18010393a",
+                "instruction": "mov ecx, [rsi+0Ch]"
+              },
+              {
+                "addr": "18010393d",
+                "instruction": "jmp short loc_180103982",
+                "refs": [
+                  {
+                    "addr": "0x180103982",
+                    "name": "loc_180103982"
+                  }
+                ]
+              },
+              {
+                "addr": "18010393f",
+                "instruction": "movsxd rcx, dword ptr cs:qword_180D66888",
+                "label": "loc_18010393F",
+                "refs": [
+                  {
+                    "addr": "0x180d66888",
+                    "name": "qword_180D66888"
+                  }
+                ]
+              },
+              {
+                "addr": "180103946",
+                "instruction": "test ecx, ecx"
+              },
+              {
+                "addr": "180103948",
+                "instruction": "js short loc_180103973",
+                "refs": [
+                  {
+                    "addr": "0x180103973",
+                    "name": "loc_180103973"
+                  }
+                ]
+              },
+              {
+                "addr": "18010394a",
+                "instruction": "mov rax, qword ptr cs:xmmword_180D66410",
+                "refs": [
+                  {
+                    "addr": "0x180d66410",
+                    "name": "xmmword_180D66410"
+                  }
+                ]
+              },
+              {
+                "addr": "180103951",
+                "instruction": "mov rdx, cs:qword_180D66408",
+                "refs": [
+                  {
+                    "addr": "0x180d66408",
+                    "name": "qword_180D66408"
+                  }
+                ]
+              },
+              {
+                "addr": "180103958",
+                "instruction": "sub rax, rdx"
+              },
+              {
+                "addr": "18010395b",
+                "instruction": "sar rax, 3"
+              },
+              {
+                "addr": "18010395f",
+                "instruction": "cmp ecx, eax"
+              },
+              {
+                "addr": "180103961",
+                "instruction": "jge short loc_180103973",
+                "refs": [
+                  {
+                    "addr": "0x180103973",
+                    "name": "loc_180103973"
+                  }
+                ]
+              },
+              {
+                "addr": "180103963",
+                "instruction": "mov rcx, [rdx+rcx*8]"
+              },
+              {
+                "addr": "180103967",
+                "instruction": "test rcx, rcx"
+              },
+              {
+                "addr": "18010396a",
+                "instruction": "jz short loc_180103973",
+                "refs": [
+                  {
+                    "addr": "0x180103973",
+                    "name": "loc_180103973"
+                  }
+                ]
+              },
+              {
+                "addr": "18010396c",
+                "instruction": "mov eax, [rcx]"
+              },
+              {
+                "addr": "18010396e",
+                "instruction": "mov ecx, [rsi+0Ch]"
+              },
+              {
+                "addr": "180103971",
+                "instruction": "jmp short loc_180103982",
+                "refs": [
+                  {
+                    "addr": "0x180103982",
+                    "name": "loc_180103982"
+                  }
+                ]
+              },
+              {
+                "addr": "180103973",
+                "instruction": "mov ecx, [rsi+0Ch]",
+                "label": "loc_180103973"
+              },
+              {
+                "addr": "180103976",
+                "instruction": "mov eax, r13d"
+              },
+              {
+                "addr": "180103979",
+                "instruction": "jmp short loc_180103982",
+                "refs": [
+                  {
+                    "addr": "0x180103982",
+                    "name": "loc_180103982"
+                  }
+                ]
+              },
+              {
+                "addr": "18010397b",
+                "instruction": "lea eax, [rax+rax*4]",
+                "label": "loc_18010397B"
+              },
+              {
+                "addr": "18010397e",
+                "instruction": "lea eax, [r15+rax*2]"
+              },
+              {
+                "addr": "180103982",
+                "instruction": "mov [rbp+800h+var_87C], eax",
+                "label": "loc_180103982"
+              },
+              {
+                "addr": "180103985",
+                "instruction": "cmp ebx, ecx"
+              },
+              {
+                "addr": "180103987",
+                "instruction": "jnz short loc_180103992",
+                "refs": [
+                  {
+                    "addr": "0x180103992",
+                    "name": "loc_180103992"
+                  }
+                ]
+              },
+              {
+                "addr": "180103989",
+                "instruction": "mov eax, [r14+11A0h]"
+              },
+              {
+                "addr": "180103990",
+                "instruction": "jmp short loc_180103997",
+                "refs": [
+                  {
+                    "addr": "0x180103997",
+                    "name": "loc_180103997"
+                  }
+                ]
+              },
+              {
+                "addr": "180103992",
+                "instruction": "mov eax, 2710h",
+                "label": "loc_180103992"
+              },
+              {
+                "addr": "180103997",
+                "instruction": "mov [rbp+800h+var_878], eax",
+                "label": "loc_180103997"
+              },
+              {
+                "addr": "18010399a",
+                "instruction": "jnz short loc_1801039AE",
+                "refs": [
+                  {
+                    "addr": "0x1801039ae",
+                    "name": "loc_1801039AE"
+                  }
+                ]
+              },
+              {
+                "addr": "18010399c",
+                "instruction": "mov eax, [r14+119Ch]"
+              },
+              {
+                "addr": "1801039a3",
+                "instruction": "test eax, eax"
+              },
+              {
+                "addr": "1801039a5",
+                "instruction": "cmovs eax, r13d"
+              },
+              {
+                "addr": "1801039a9",
+                "instruction": "mov [rbp+800h+var_874], eax"
+              },
+              {
+                "addr": "1801039ac",
+                "instruction": "jmp short loc_1801039B5",
+                "refs": [
+                  {
+                    "addr": "0x1801039b5",
+                    "name": "loc_1801039B5"
+                  }
+                ]
+              },
+              {
+                "addr": "1801039ae",
+                "instruction": "mov [rbp+800h+var_874], 2328h",
+                "label": "loc_1801039AE"
+              },
+              {
+                "addr": "1801039b5",
+                "instruction": "cmp ebx, ecx",
+                "label": "loc_1801039B5"
+              },
+              {
+                "addr": "1801039b7",
+                "instruction": "mov [rbp+800h+var_870], 2710h"
+              },
+              {
+                "addr": "1801039be",
+                "instruction": "mov rcx, [r14+8]"
+              },
+              {
+                "addr": "1801039c2",
+                "instruction": "mov eax, 186A0h"
+              },
+              {
+                "addr": "1801039c7",
+                "instruction": "cmovz eax, cs:dword_180D71BC8",
+                "refs": [
+                  {
+                    "addr": "0x180d71bc8",
+                    "name": "dword_180D71BC8"
+                  }
+                ]
+              },
+              {
+                "addr": "1801039ce",
+                "instruction": "mov dl, 1"
+              },
+              {
+                "addr": "1801039d0",
+                "instruction": "mov [rbp+800h+var_868], eax"
+              },
+              {
+                "addr": "1801039d3",
+                "instruction": "mov eax, 15F90h"
+              },
+              {
+                "addr": "1801039d8",
+                "instruction": "cmovz eax, cs:dword_180D71BCC",
+                "refs": [
+                  {
+                    "addr": "0x180d71bcc",
+                    "name": "dword_180D71BCC"
+                  }
+                ]
+              },
+              {
+                "addr": "1801039df",
+                "instruction": "mov [rbp+800h+var_864], eax"
+              },
+              {
+                "addr": "1801039e2",
+                "instruction": "mov eax, dword ptr cs:qword_180D66898+4"
+              },
+              {
+                "addr": "1801039e8",
+                "instruction": "mov [rbp+800h+var_860], eax"
+              },
+              {
+                "addr": "1801039eb",
+                "instruction": "mov eax, dword ptr cs:qword_180D66898",
+                "refs": [
+                  {
+                    "addr": "0x180d66898",
+                    "name": "qword_180D66898"
+                  }
+                ]
+              },
+              {
+                "addr": "1801039f1",
+                "instruction": "mov [rbp+800h+var_85C], eax"
+              },
+              {
+                "addr": "1801039f4",
+                "instruction": "mov [rbp+800h+var_86C], 2328h"
+              },
+              {
+                "addr": "1801039fb",
+                "instruction": "mov rax, [rcx]"
+              },
+              {
+                "addr": "1801039fe",
+                "instruction": "call qword ptr [rax+8]"
+              },
+              {
+                "addr": "180103a01",
+                "instruction": "mov rcx, [r14+8]"
+              },
+              {
+                "addr": "180103a05",
+                "instruction": "mov dl, 1"
+              },
+              {
+                "addr": "180103a07",
+                "instruction": "movss xmm0, dword ptr [rax]"
+              },
+              {
+                "addr": "180103a0b",
+                "instruction": "movss [rbp+800h+var_858], xmm0"
+              },
+              {
+                "addr": "180103a10",
+                "instruction": "mov rax, [rcx]"
+              },
+              {
+                "addr": "180103a13",
+                "instruction": "call qword ptr [rax+8]"
+              },
+              {
+                "addr": "180103a16",
+                "instruction": "mov rcx, [r14+8]"
+              },
+              {
+                "addr": "180103a1a",
+                "instruction": "mov dl, 1"
+              },
+              {
+                "addr": "180103a1c",
+                "instruction": "movss xmm0, dword ptr [rax+4]"
+              },
+              {
+                "addr": "180103a21",
+                "instruction": "movss [rbp+800h+var_854], xmm0"
+              },
+              {
+                "addr": "180103a26",
+                "instruction": "mov rax, [rcx]"
+              },
+              {
+                "addr": "180103a29",
+                "instruction": "call qword ptr [rax+8]"
+              },
+              {
+                "addr": "180103a2c",
+                "instruction": "mov ecx, [rsi+0Ch]"
+              },
+              {
+                "addr": "180103a2f",
+                "instruction": "movss xmm0, dword ptr [rax+8]"
+              },
+              {
+                "addr": "180103a34",
+                "instruction": "movss [rbp+800h+var_850], xmm0"
+              },
+              {
+                "addr": "180103a39",
+                "instruction": "cmp ebx, ecx"
+              },
+              {
+                "addr": "180103a3b",
+                "instruction": "jnz short loc_180103A4A",
+                "refs": [
+                  {
+                    "addr": "0x180103a4a",
+                    "name": "loc_180103A4A"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a3d",
+                "instruction": "movzx eax, byte ptr [r14+228h]"
+              },
+              {
+                "addr": "180103a45",
+                "instruction": "mov [rbp+800h+var_84C], al"
+              },
+              {
+                "addr": "180103a48",
+                "instruction": "jmp short loc_180103A71",
+                "refs": [
+                  {
+                    "addr": "0x180103a71",
+                    "name": "loc_180103A71"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a4a",
+                "instruction": "call sub_1812557A5",
+                "label": "loc_180103A4A",
+                "refs": [
+                  {
+                    "addr": "0x1812557a5",
+                    "name": "sub_1812557A5"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a4f",
+                "instruction": "nop"
+              },
+              {
+                "addr": "180103a50",
+                "instruction": "mov edi, eax"
+              },
+              {
+                "addr": "180103a52",
+                "instruction": "mov eax, 2AAAAAABh"
+              },
+              {
+                "addr": "180103a57",
+                "instruction": "imul edi"
+              },
+              {
+                "addr": "180103a59",
+                "instruction": "sar edx, 1"
+              },
+              {
+                "addr": "180103a5b",
+                "instruction": "mov ecx, edx"
+              },
+              {
+                "addr": "180103a5d",
+                "instruction": "shr ecx, 1Fh"
+              },
+              {
+                "addr": "180103a60",
+                "instruction": "add edx, ecx"
+              },
+              {
+                "addr": "180103a62",
+                "instruction": "lea ecx, [rdx+rdx*2]"
+              },
+              {
+                "addr": "180103a65",
+                "instruction": "shl ecx, 2"
+              },
+              {
+                "addr": "180103a68",
+                "instruction": "sub edi, ecx"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_8E0",
+                "offset": "0x20",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8D8",
+                "offset": "0x28",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_8D0",
+                "offset": "0x30",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_8C8",
+                "offset": "0x38",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8C0",
+                "offset": "0x40",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8B0",
+                "offset": "0x50",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8A0",
+                "offset": "0x60",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_890",
+                "offset": "0x70",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_880",
+                "offset": "0x80",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_87C",
+                "offset": "0x84",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_878",
+                "offset": "0x88",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_874",
+                "offset": "0x8c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_870",
+                "offset": "0x90",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_86C",
+                "offset": "0x94",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_868",
+                "offset": "0x98",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_864",
+                "offset": "0x9c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_860",
+                "offset": "0xa0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_85C",
+                "offset": "0xa4",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_858",
+                "offset": "0xa8",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_854",
+                "offset": "0xac",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_850",
+                "offset": "0xb0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_84C",
+                "offset": "0xb4",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84B",
+                "offset": "0xb5",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84A",
+                "offset": "0xb6",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_849",
+                "offset": "0xb7",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_847",
+                "offset": "0xb9",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_846",
+                "offset": "0xba",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_845",
+                "offset": "0xbb",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_813",
+                "offset": "0xed",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_20",
+                "offset": "0x8e0",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_18",
+                "offset": "0x8e8",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__saved_registers",
+                "offset": "0x900",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x908",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              },
+              {
+                "name": "arg_0",
+                "offset": "0x910",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_8",
+                "offset": "0x918",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_10",
+                "offset": "0x920",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_18",
+                "offset": "0x928",
+                "size": "0x8",
+                "type": "_QWORD"
+              }
+            ]
+          },
+          "instruction_count": 100,
+          "total_instructions": null,
+          "cursor": {
+            "next": 300
+          }
+        }
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1801035b0",
+          "offset": 300,
+          "max_instructions": 100,
+          "database": "rea-b68d4e94-8189-4792-b148-83af86d3c3a0"
+        },
+        "result": {
+          "addr": "0x1801035b0",
+          "asm": {
+            "name": "sub_1801035B0",
+            "start_ea": "0x1801035b0",
+            "segment": "   ",
+            "lines": [
+              {
+                "addr": "180103a6a",
+                "instruction": "mov ecx, [rsi+0Ch]"
+              },
+              {
+                "addr": "180103a6d",
+                "instruction": "mov [rbp+800h+var_84C], dil"
+              },
+              {
+                "addr": "180103a71",
+                "instruction": "cmp ebx, ecx",
+                "label": "loc_180103A71"
+              },
+              {
+                "addr": "180103a73",
+                "instruction": "jnz short loc_180103A7F",
+                "refs": [
+                  {
+                    "addr": "0x180103a7f",
+                    "name": "loc_180103A7F"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a75",
+                "instruction": "movzx eax, byte ptr [r14+22Ch]"
+              },
+              {
+                "addr": "180103a7d",
+                "instruction": "jmp short loc_180103A96",
+                "refs": [
+                  {
+                    "addr": "0x180103a96",
+                    "name": "loc_180103A96"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a7f",
+                "instruction": "call sub_1812557A5",
+                "label": "loc_180103A7F",
+                "refs": [
+                  {
+                    "addr": "0x1812557a5",
+                    "name": "sub_1812557A5"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a84",
+                "instruction": "nop"
+              },
+              {
+                "addr": "180103a85",
+                "instruction": "and eax, 80000001h"
+              },
+              {
+                "addr": "180103a8a",
+                "instruction": "jge short loc_180103A93",
+                "refs": [
+                  {
+                    "addr": "0x180103a93",
+                    "name": "loc_180103A93"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a8c",
+                "instruction": "dec eax"
+              },
+              {
+                "addr": "180103a8e",
+                "instruction": "or eax, 0FFFFFFFEh"
+              },
+              {
+                "addr": "180103a91",
+                "instruction": "inc eax"
+              },
+              {
+                "addr": "180103a93",
+                "instruction": "mov ecx, [rsi+0Ch]",
+                "label": "loc_180103A93"
+              },
+              {
+                "addr": "180103a96",
+                "instruction": "mov [rbp+800h+var_84B], al",
+                "label": "loc_180103A96"
+              },
+              {
+                "addr": "180103a99",
+                "instruction": "cmp ebx, ecx"
+              },
+              {
+                "addr": "180103a9b",
+                "instruction": "jnz short loc_180103AA7",
+                "refs": [
+                  {
+                    "addr": "0x180103aa7",
+                    "name": "loc_180103AA7"
+                  }
+                ]
+              },
+              {
+                "addr": "180103a9d",
+                "instruction": "movzx eax, byte ptr [r14+3Eh]"
+              },
+              {
+                "addr": "180103aa2",
+                "instruction": "mov [rbp+800h+var_84A], al"
+              },
+              {
+                "addr": "180103aa5",
+                "instruction": "jmp short loc_180103AAB",
+                "refs": [
+                  {
+                    "addr": "0x180103aab",
+                    "name": "loc_180103AAB"
+                  }
+                ]
+              },
+              {
+                "addr": "180103aa7",
+                "instruction": "mov [rbp+800h+var_84A], 41h ; 'A'",
+                "label": "loc_180103AA7"
+              },
+              {
+                "addr": "180103aab",
+                "instruction": "cmp ebx, 1",
+                "label": "loc_180103AAB"
+              },
+              {
+                "addr": "180103aae",
+                "instruction": "mov [rbp+800h+var_849], 101h"
+              },
+              {
+                "addr": "180103ab4",
+                "instruction": "setz al"
+              },
+              {
+                "addr": "180103ab7",
+                "instruction": "mov [rbp+800h+var_847], al"
+              },
+              {
+                "addr": "180103aba",
+                "instruction": "mov [rbp+800h+var_846], al"
+              },
+              {
+                "addr": "180103abd",
+                "instruction": "cmp ebx, ecx"
+              },
+              {
+                "addr": "180103abf",
+                "instruction": "jnz short loc_180103AD7",
+                "refs": [
+                  {
+                    "addr": "0x180103ad7",
+                    "name": "loc_180103AD7"
+                  }
+                ]
+              },
+              {
+                "addr": "180103ac1",
+                "instruction": "lea rdx, [r14+42h]"
+              },
+              {
+                "addr": "180103ac5",
+                "instruction": "mov r8d, 1Ah"
+              },
+              {
+                "addr": "180103acb",
+                "instruction": "lea rcx, [rbp+800h+var_845]"
+              },
+              {
+                "addr": "180103acf",
+                "instruction": "call cs:qword_1806BC740",
+                "refs": [
+                  {
+                    "addr": "0x1806bc740",
+                    "name": "qword_1806BC740"
+                  }
+                ]
+              },
+              {
+                "addr": "180103ad5",
+                "instruction": "jmp short loc_180103AE7",
+                "refs": [
+                  {
+                    "addr": "0x180103ae7",
+                    "name": "loc_180103AE7"
+                  }
+                ]
+              },
+              {
+                "addr": "180103ad7",
+                "instruction": "movzx eax, r12w",
+                "label": "loc_180103AD7"
+              },
+              {
+                "addr": "180103adb",
+                "instruction": "lea rdi, [rbp+800h+var_845]"
+              },
+              {
+                "addr": "180103adf",
+                "instruction": "mov ecx, 19h"
+              },
+              {
+                "addr": "180103ae4",
+                "instruction": "rep stosw"
+              },
+              {
+                "addr": "180103ae7",
+                "instruction": "lea rdx, [rbp+800h+var_880]",
+                "label": "loc_180103AE7"
+              },
+              {
+                "addr": "180103aeb",
+                "instruction": "mov [rbp+800h+var_813], r13w"
+              },
+              {
+                "addr": "180103af0",
+                "instruction": "call sub_180352DB0",
+                "refs": [
+                  {
+                    "addr": "0x180352db0",
+                    "name": "sub_180352DB0"
+                  }
+                ]
+              },
+              {
+                "addr": "180103af5",
+                "instruction": "inc ebx"
+              },
+              {
+                "addr": "180103af7",
+                "instruction": "cmp ebx, [rsi+1Ch]"
+              },
+              {
+                "addr": "180103afa",
+                "instruction": "jl loc_180103890",
+                "refs": [
+                  {
+                    "addr": "0x180103890",
+                    "name": "loc_180103890"
+                  }
+                ]
+              },
+              {
+                "addr": "180103b00",
+                "instruction": "mov r13, [rsp+900h+var_18]",
+                "label": "loc_180103B00"
+              },
+              {
+                "addr": "180103b08",
+                "instruction": "mov r12, [rsp+900h+arg_18]"
+              },
+              {
+                "addr": "180103b10",
+                "instruction": "mov rdi, [rsp+900h+arg_10]"
+              },
+              {
+                "addr": "180103b18",
+                "instruction": "mov rbx, [rsp+900h+arg_0]"
+              },
+              {
+                "addr": "180103b20",
+                "instruction": "mov r15, [rsp+900h+var_20]"
+              },
+              {
+                "addr": "180103b28",
+                "instruction": "add rsp, 8F0h",
+                "label": "loc_180103B28"
+              },
+              {
+                "addr": "180103b2f",
+                "instruction": "pop r14"
+              },
+              {
+                "addr": "180103b31",
+                "instruction": "pop rsi"
+              },
+              {
+                "addr": "180103b32",
+                "instruction": "pop rbp"
+              },
+              {
+                "addr": "180103b33",
+                "instruction": "retn"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "var_8E0",
+                "offset": "0x20",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8D8",
+                "offset": "0x28",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_8D0",
+                "offset": "0x30",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_8C8",
+                "offset": "0x38",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_8C0",
+                "offset": "0x40",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8B0",
+                "offset": "0x50",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_8A0",
+                "offset": "0x60",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_890",
+                "offset": "0x70",
+                "size": "0x10",
+                "type": "_OWORD"
+              },
+              {
+                "name": "var_880",
+                "offset": "0x80",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_87C",
+                "offset": "0x84",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_878",
+                "offset": "0x88",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_874",
+                "offset": "0x8c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_870",
+                "offset": "0x90",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_86C",
+                "offset": "0x94",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_868",
+                "offset": "0x98",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_864",
+                "offset": "0x9c",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_860",
+                "offset": "0xa0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_85C",
+                "offset": "0xa4",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_858",
+                "offset": "0xa8",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_854",
+                "offset": "0xac",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_850",
+                "offset": "0xb0",
+                "size": "0x4",
+                "type": "_DWORD"
+              },
+              {
+                "name": "var_84C",
+                "offset": "0xb4",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84B",
+                "offset": "0xb5",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_84A",
+                "offset": "0xb6",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_849",
+                "offset": "0xb7",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_847",
+                "offset": "0xb9",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_846",
+                "offset": "0xba",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_845",
+                "offset": "0xbb",
+                "size": "0x1",
+                "type": "_BYTE"
+              },
+              {
+                "name": "var_813",
+                "offset": "0xed",
+                "size": "0x2",
+                "type": "_WORD"
+              },
+              {
+                "name": "var_20",
+                "offset": "0x8e0",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "var_18",
+                "offset": "0x8e8",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__saved_registers",
+                "offset": "0x900",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "__return_address",
+                "offset": "0x908",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              },
+              {
+                "name": "arg_0",
+                "offset": "0x910",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_8",
+                "offset": "0x918",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_10",
+                "offset": "0x920",
+                "size": "0x8",
+                "type": "_QWORD"
+              },
+              {
+                "name": "arg_18",
+                "offset": "0x928",
+                "size": "0x8",
+                "type": "_QWORD"
+              }
+            ]
+          },
+          "instruction_count": 53,
+          "total_instructions": null,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "procedure": {
+      "address": "0x1801035b0",
+      "name": "sub_1801035B0",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    },
+    "instructions": [
+      "0x1801035b0: push rbp",
+      "0x1801035b2: push rsi",
+      "0x1801035b3: push r14",
+      "0x1801035b5: lea rbp, [rsp-7F0h]",
+      "0x1801035bd: sub rsp, 8F0h",
+      "0x1801035c4: mov rax, cs:qword_180D647C0",
+      "0x1801035cb: mov rsi, rcx",
+      "0x1801035ce: lea rcx, qword_180D647C0",
+      "0x1801035d5: call qword ptr [rax+1E0h]",
+      "0x1801035db: mov rcx, rax",
+      "0x1801035de: call sub_1804F9810",
+      "0x1801035e3: mov r14, rax",
+      "0x1801035e6: test rax, rax",
+      "0x1801035e9: jz loc_180103B28",
+      "0x1801035ef: mov [rsp+900h+arg_0], rbx",
+      "0x1801035f7: lea rcx, qword_180D647C0",
+      "0x1801035fe: mov [rsp+900h+arg_10], rdi",
+      "0x180103606: mov [rsp+900h+arg_18], r12",
+      "0x18010360e: mov [rsp+900h+var_18], r13",
+      "0x180103616: mov [rsp+900h+var_20], r15",
+      "0x18010361e: call sub_18001D3C0",
+      "0x180103623: lea rcx, qword_180D647C0",
+      "0x18010362a: call sub_180051A60",
+      "0x18010362f: mov r8d, [rsi+14h]",
+      "0x180103633: xor r13d, r13d",
+      "0x180103636: mov r9d, [rsi+10h]",
+      "0x18010363a: mov edi, [rsi+0Ch]",
+      "0x18010363d: mov r12d, cs:dword_180923010",
+      "0x180103644: lea ecx, [r8+1]",
+      "0x180103648: imul edx, ecx, 64h ; 'd'",
+      "0x18010364b: lea ebx, [r13+4]",
+      "0x18010364f: add edx, r9d",
+      "0x180103652: lea eax, [rdx+rdx*4]",
+      "0x180103655: lea r15d, [rax+rax]",
+      "0x180103659: lea eax, [rdi+r15]",
+      "0x18010365d: lea ecx, [rax+rax*4]",
+      "0x180103660: lea edx, [rcx+rcx]",
+      "0x180103663: mov ecx, r13d",
+      "0x180103666: cmp r12d, 2",
+      "0x18010366a: jl short loc_1801036C4",
+      "0x18010366c: movd xmm3, r8d",
+      "0x180103671: mov ecx, ebx",
+      "0x180103673: pshufd xmm3, xmm3, 0",
+      "0x180103678: pmulld xmm3, cs:xmmword_180875A30",
+      "0x180103681: movd xmm0, r9d",
+      "0x180103686: pshufd xmm0, xmm0, 0",
+      "0x18010368b: paddd xmm3, xmm0",
+      "0x18010368f: movd xmm0, edi",
+      "0x180103693: paddd xmm3, cs:xmmword_180875A30",
+      "0x18010369b: pmulld xmm3, cs:xmmword_180875A00",
+      "0x1801036a4: pshufd xmm0, xmm0, 0",
+      "0x1801036a9: paddd xmm3, xmm0",
+      "0x1801036ad: pmulld xmm3, cs:xmmword_180875A00",
+      "0x1801036b6: paddd xmm3, cs:xmmword_1808759B0",
+      "0x1801036be: movdqu [rsp+900h+var_8B0], xmm3",
+      "0x1801036c4: mov eax, ecx",
+      "0x1801036c6: cmp rax, rbx",
+      "0x1801036c9: jnb short loc_1801036DE",
+      "0x1801036cb: add ecx, edx",
+      "0x1801036cd: nop dword ptr [rax]",
+      "0x1801036d0: mov dword ptr [rsp+rax*4+900h+var_8B0], ecx",
+      "0x1801036d4: inc ecx",
+      "0x1801036d6: inc rax",
+      "0x1801036d9: cmp rax, rbx",
+      "0x1801036dc: jl short loc_1801036D0",
+      "0x1801036de: test edi, edi",
+      "0x1801036e0: jnz loc_18010378A",
+      "0x1801036e6: cmp [rsi+8], r13d",
+      "0x1801036ea: jnz loc_1801037A0",
+      "0x1801036f0: mov rax, cs:qword_180D647C0",
+      "0x1801036f7: lea rcx, qword_180D647C0",
+      "0x1801036fe: call qword ptr [rax+1E0h]",
+      "0x180103704: mov [rbp+800h+arg_8], r13",
+      "0x18010370b: mov rdi, rax",
+      "0x18010370e: test rax, rax",
+      "0x180103711: jz short loc_180103756",
+      "0x180103713: mov rdx, [rax]",
+      "0x180103716: mov rcx, rax",
+      "0x180103719: call qword ptr [rdx+0B8h]",
+      "0x18010371f: test rax, rax",
+      "0x180103722: jz short loc_180103745",
+      "0x180103724: mov rdx, [rdi]",
+      "0x180103727: mov rcx, rdi",
+      "0x18010372a: call qword ptr [rdx+0B8h]",
+      "0x180103730: lea r8, [rbp+800h+arg_8]",
+      "0x180103737: mov edx, 2",
+      "0x18010373c: mov rcx, rax",
+      "0x18010373f: mov rdi, [rax]",
+      "0x180103742: call qword ptr [rdi+50h]",
+      "0x180103745: mov rax, [rbp+800h+arg_8]",
+      "0x18010374c: test rax, rax",
+      "0x18010374f: jz short loc_180103756",
+      "0x180103751: mov edx, [rax+2Ch]",
+      "0x180103754: jmp short loc_18010378A",
+      "0x180103756: movsxd rcx, dword ptr cs:qword_180D66888",
+      "0x18010375d: test ecx, ecx",
+      "0x18010375f: js short loc_180103787",
+      "0x180103761: mov rdx, cs:qword_180D66408",
+      "0x180103768: mov rax, qword ptr cs:xmmword_180D66410",
+      "0x18010376f: sub rax, rdx",
+      "0x180103772: sar rax, 3",
+      "0x180103776: cmp ecx, eax",
+      "0x180103778: jge short loc_180103787",
+      "0x18010377a: mov rcx, [rdx+rcx*8]",
+      "0x18010377e: test rcx, rcx",
+      "0x180103781: jz short loc_180103787",
+      "0x180103783: mov edx, [rcx]",
+      "0x180103785: jmp short loc_18010378A",
+      "0x180103787: mov edx, r13d",
+      "0x18010378a: cmp [rsi+8], r13d",
+      "0x18010378e: jnz short loc_1801037A0",
+      "0x180103790: movsxd rax, dword ptr [rsi+0Ch]",
+      "0x180103794: mov dword ptr [rsp+rax*4+900h+var_8B0], edx",
+      "0x180103798: nop dword ptr [rax+rax+00000000h]",
+      "0x1801037a0: mov edi, [rsi+2Ch]",
+      "0x1801037a3: xor eax, eax",
+      "0x1801037a5: mov qword ptr [rsp+900h+var_8C0], rax",
+      "0x1801037aa: xorps xmm0, xmm0",
+      "0x1801037ad: mov qword ptr [rsp+900h+var_8C0+8], rax",
+      "0x1801037b2: xorps xmm1, xmm1",
+      "0x1801037b5: movdqu [rsp+900h+var_8A0], xmm0",
+      "0x1801037bb: movdqu [rsp+900h+var_890], xmm1",
+      "0x1801037c1: cmp r12d, 2",
+      "0x1801037c5: jl short loc_18010380E",
+      "0x1801037c7: movd xmm2, dword ptr [rsi+14h]",
+      "0x1801037cc: mov ecx, 3ECh",
+      "0x1801037d1: movd xmm0, dword ptr [rsi+10h]",
+      "0x1801037d6: pshufd xmm2, xmm2, 0",
+      "0x1801037db: pmulld xmm2, cs:xmmword_180875A30",
+      "0x1801037e4: pshufd xmm0, xmm0, 0",
+      "0x1801037e9: paddd xmm2, xmm0",
+      "0x1801037ed: paddd xmm2, cs:xmmword_180875A30",
+      "0x1801037f5: pmulld xmm2, cs:xmmword_180875A00",
+      "0x1801037fe: paddd xmm2, cs:xmmword_1808759B0",
+      "0x180103806: movdqu [rsp+900h+var_8C0], xmm2",
+      "0x18010380c: jmp short loc_180103816",
+      "0x18010380e: mov ecx, 3E8h",
+      "0x180103813: mov rbx, r13",
+      "0x180103816: cmp rbx, 4",
+      "0x18010381a: jnb short loc_18010383F",
+      "0x18010381c: imul eax, [rsi+14h], 64h ; 'd'",
+      "0x180103820: add eax, [rsi+10h]",
+      "0x180103823: lea eax, [rax+rax*4]",
+      "0x180103826: lea ecx, [rcx+rax*2]",
+      "0x180103829: nop dword ptr [rax+00000000h]",
+      "0x180103830: mov dword ptr [rsp+rbx*4+900h+var_8C0], ecx",
+      "0x180103834: inc ecx",
+      "0x180103836: inc rbx",
+      "0x180103839: cmp rbx, 4",
+      "0x18010383d: jl short loc_180103830",
+      "0x18010383f: test r15d, r15d",
+      "0x180103842: jz short loc_180103871",
+      "0x180103844: lea rax, [rsp+900h+var_8C0]",
+      "0x180103849: xor r9d, r9d",
+      "0x18010384c: mov [rsp+900h+var_8C8], rax",
+      "0x180103851: lea r8, [rsp+900h+var_8B0]",
+      "0x180103856: mov [rsp+900h+var_8D0], edi",
+      "0x18010385a: lea rax, [rsp+900h+var_8A0]",
+      "0x18010385f: mov [rsp+900h+var_8D8], r13b",
+      "0x180103864: mov ecx, r15d",
+      "0x180103867: mov [rsp+900h+var_8E0], rax",
+      "0x18010386c: call sub_180352B60",
+      "0x180103871: mov ebx, r13d",
+      "0x180103874: cmp [rsi+1Ch], r13d",
+      "0x180103878: jle loc_180103B00",
+      "0x18010387e: mov r12d, 0AC00h",
+      "0x180103884: nop dword ptr [rax+00h]",
+      "0x180103888: nop dword ptr [rax+rax+00000000h]",
+      "0x180103890: mov eax, ebx",
+      "0x180103892: lea rcx, [rbp+800h+var_87C]",
+      "0x180103896: cdq",
+      "0x180103897: mov r8d, 859h",
+      "0x18010389d: and edx, 3",
+      "0x1801038a0: add eax, edx",
+      "0x1801038a2: mov r15d, eax",
+      "0x1801038a5: and eax, 3",
+      "0x1801038a8: sub eax, edx",
+      "0x1801038aa: sar r15d, 2",
+      "0x1801038ae: xor edx, edx",
+      "0x1801038b0: mov edi, eax",
+      "0x1801038b2: call sub_1806A8630",
+      "0x1801038b7: mov ecx, [rsi+14h]",
+      "0x1801038ba: inc ecx",
+      "0x1801038bc: imul edx, ecx, 64h ; 'd'",
+      "0x1801038bf: add edx, [rsi+10h]",
+      "0x1801038c2: lea ecx, [rdx+rdx*4]",
+      "0x1801038c5: lea eax, [rdi+rcx*2]",
+      "0x1801038c8: mov ecx, [rsi+0Ch]",
+      "0x1801038cb: mov [rbp+800h+var_880], eax",
+      "0x1801038ce: cmp ebx, ecx",
+      "0x1801038d0: jnz loc_18010397B",
+      "0x1801038d6: mov rax, cs:qword_180D647C0",
+      "0x1801038dd: lea rcx, qword_180D647C0",
+      "0x1801038e4: call qword ptr [rax+1E0h]",
+      "0x1801038ea: mov [rbp+800h+arg_8], r13",
+      "0x1801038f1: mov rdi, rax",
+      "0x1801038f4: test rax, rax",
+      "0x1801038f7: jz short loc_18010393F",
+      "0x1801038f9: mov rdx, [rax]",
+      "0x1801038fc: mov rcx, rax",
+      "0x1801038ff: call qword ptr [rdx+0B8h]",
+      "0x180103905: test rax, rax",
+      "0x180103908: jz short loc_18010392B",
+      "0x18010390a: mov rdx, [rdi]",
+      "0x18010390d: mov rcx, rdi",
+      "0x180103910: call qword ptr [rdx+0B8h]",
+      "0x180103916: lea r8, [rbp+800h+arg_8]",
+      "0x18010391d: mov edx, 2",
+      "0x180103922: mov rcx, rax",
+      "0x180103925: mov rdi, [rax]",
+      "0x180103928: call qword ptr [rdi+50h]",
+      "0x18010392b: mov rax, [rbp+800h+arg_8]",
+      "0x180103932: test rax, rax",
+      "0x180103935: jz short loc_18010393F",
+      "0x180103937: mov eax, [rax+2Ch]",
+      "0x18010393a: mov ecx, [rsi+0Ch]",
+      "0x18010393d: jmp short loc_180103982",
+      "0x18010393f: movsxd rcx, dword ptr cs:qword_180D66888",
+      "0x180103946: test ecx, ecx",
+      "0x180103948: js short loc_180103973",
+      "0x18010394a: mov rax, qword ptr cs:xmmword_180D66410",
+      "0x180103951: mov rdx, cs:qword_180D66408",
+      "0x180103958: sub rax, rdx",
+      "0x18010395b: sar rax, 3",
+      "0x18010395f: cmp ecx, eax",
+      "0x180103961: jge short loc_180103973",
+      "0x180103963: mov rcx, [rdx+rcx*8]",
+      "0x180103967: test rcx, rcx",
+      "0x18010396a: jz short loc_180103973",
+      "0x18010396c: mov eax, [rcx]",
+      "0x18010396e: mov ecx, [rsi+0Ch]",
+      "0x180103971: jmp short loc_180103982",
+      "0x180103973: mov ecx, [rsi+0Ch]",
+      "0x180103976: mov eax, r13d",
+      "0x180103979: jmp short loc_180103982",
+      "0x18010397b: lea eax, [rax+rax*4]",
+      "0x18010397e: lea eax, [r15+rax*2]",
+      "0x180103982: mov [rbp+800h+var_87C], eax",
+      "0x180103985: cmp ebx, ecx",
+      "0x180103987: jnz short loc_180103992",
+      "0x180103989: mov eax, [r14+11A0h]",
+      "0x180103990: jmp short loc_180103997",
+      "0x180103992: mov eax, 2710h",
+      "0x180103997: mov [rbp+800h+var_878], eax",
+      "0x18010399a: jnz short loc_1801039AE",
+      "0x18010399c: mov eax, [r14+119Ch]",
+      "0x1801039a3: test eax, eax",
+      "0x1801039a5: cmovs eax, r13d",
+      "0x1801039a9: mov [rbp+800h+var_874], eax",
+      "0x1801039ac: jmp short loc_1801039B5",
+      "0x1801039ae: mov [rbp+800h+var_874], 2328h",
+      "0x1801039b5: cmp ebx, ecx",
+      "0x1801039b7: mov [rbp+800h+var_870], 2710h",
+      "0x1801039be: mov rcx, [r14+8]",
+      "0x1801039c2: mov eax, 186A0h",
+      "0x1801039c7: cmovz eax, cs:dword_180D71BC8",
+      "0x1801039ce: mov dl, 1",
+      "0x1801039d0: mov [rbp+800h+var_868], eax",
+      "0x1801039d3: mov eax, 15F90h",
+      "0x1801039d8: cmovz eax, cs:dword_180D71BCC",
+      "0x1801039df: mov [rbp+800h+var_864], eax",
+      "0x1801039e2: mov eax, dword ptr cs:qword_180D66898+4",
+      "0x1801039e8: mov [rbp+800h+var_860], eax",
+      "0x1801039eb: mov eax, dword ptr cs:qword_180D66898",
+      "0x1801039f1: mov [rbp+800h+var_85C], eax",
+      "0x1801039f4: mov [rbp+800h+var_86C], 2328h",
+      "0x1801039fb: mov rax, [rcx]",
+      "0x1801039fe: call qword ptr [rax+8]",
+      "0x180103a01: mov rcx, [r14+8]",
+      "0x180103a05: mov dl, 1",
+      "0x180103a07: movss xmm0, dword ptr [rax]",
+      "0x180103a0b: movss [rbp+800h+var_858], xmm0",
+      "0x180103a10: mov rax, [rcx]",
+      "0x180103a13: call qword ptr [rax+8]",
+      "0x180103a16: mov rcx, [r14+8]",
+      "0x180103a1a: mov dl, 1",
+      "0x180103a1c: movss xmm0, dword ptr [rax+4]",
+      "0x180103a21: movss [rbp+800h+var_854], xmm0",
+      "0x180103a26: mov rax, [rcx]",
+      "0x180103a29: call qword ptr [rax+8]",
+      "0x180103a2c: mov ecx, [rsi+0Ch]",
+      "0x180103a2f: movss xmm0, dword ptr [rax+8]",
+      "0x180103a34: movss [rbp+800h+var_850], xmm0",
+      "0x180103a39: cmp ebx, ecx",
+      "0x180103a3b: jnz short loc_180103A4A",
+      "0x180103a3d: movzx eax, byte ptr [r14+228h]",
+      "0x180103a45: mov [rbp+800h+var_84C], al",
+      "0x180103a48: jmp short loc_180103A71",
+      "0x180103a4a: call sub_1812557A5",
+      "0x180103a4f: nop",
+      "0x180103a50: mov edi, eax",
+      "0x180103a52: mov eax, 2AAAAAABh",
+      "0x180103a57: imul edi",
+      "0x180103a59: sar edx, 1",
+      "0x180103a5b: mov ecx, edx",
+      "0x180103a5d: shr ecx, 1Fh",
+      "0x180103a60: add edx, ecx",
+      "0x180103a62: lea ecx, [rdx+rdx*2]",
+      "0x180103a65: shl ecx, 2",
+      "0x180103a68: sub edi, ecx",
+      "0x180103a6a: mov ecx, [rsi+0Ch]",
+      "0x180103a6d: mov [rbp+800h+var_84C], dil",
+      "0x180103a71: cmp ebx, ecx",
+      "0x180103a73: jnz short loc_180103A7F",
+      "0x180103a75: movzx eax, byte ptr [r14+22Ch]",
+      "0x180103a7d: jmp short loc_180103A96",
+      "0x180103a7f: call sub_1812557A5",
+      "0x180103a84: nop",
+      "0x180103a85: and eax, 80000001h",
+      "0x180103a8a: jge short loc_180103A93",
+      "0x180103a8c: dec eax",
+      "0x180103a8e: or eax, 0FFFFFFFEh",
+      "0x180103a91: inc eax",
+      "0x180103a93: mov ecx, [rsi+0Ch]",
+      "0x180103a96: mov [rbp+800h+var_84B], al",
+      "0x180103a99: cmp ebx, ecx",
+      "0x180103a9b: jnz short loc_180103AA7",
+      "0x180103a9d: movzx eax, byte ptr [r14+3Eh]",
+      "0x180103aa2: mov [rbp+800h+var_84A], al",
+      "0x180103aa5: jmp short loc_180103AAB",
+      "0x180103aa7: mov [rbp+800h+var_84A], 41h ; 'A'",
+      "0x180103aab: cmp ebx, 1",
+      "0x180103aae: mov [rbp+800h+var_849], 101h",
+      "0x180103ab4: setz al",
+      "0x180103ab7: mov [rbp+800h+var_847], al",
+      "0x180103aba: mov [rbp+800h+var_846], al",
+      "0x180103abd: cmp ebx, ecx",
+      "0x180103abf: jnz short loc_180103AD7",
+      "0x180103ac1: lea rdx, [r14+42h]",
+      "0x180103ac5: mov r8d, 1Ah",
+      "0x180103acb: lea rcx, [rbp+800h+var_845]",
+      "0x180103acf: call cs:qword_1806BC740",
+      "0x180103ad5: jmp short loc_180103AE7",
+      "0x180103ad7: movzx eax, r12w",
+      "0x180103adb: lea rdi, [rbp+800h+var_845]",
+      "0x180103adf: mov ecx, 19h",
+      "0x180103ae4: rep stosw",
+      "0x180103ae7: lea rdx, [rbp+800h+var_880]",
+      "0x180103aeb: mov [rbp+800h+var_813], r13w",
+      "0x180103af0: call sub_180352DB0",
+      "0x180103af5: inc ebx",
+      "0x180103af7: cmp ebx, [rsi+1Ch]",
+      "0x180103afa: jl loc_180103890",
+      "0x180103b00: mov r13, [rsp+900h+var_18]",
+      "0x180103b08: mov r12, [rsp+900h+arg_18]",
+      "0x180103b10: mov rdi, [rsp+900h+arg_10]",
+      "0x180103b18: mov rbx, [rsp+900h+arg_0]",
+      "0x180103b20: mov r15, [rsp+900h+var_20]",
+      "0x180103b28: add rsp, 8F0h",
+      "0x180103b2f: pop r14",
+      "0x180103b31: pop rsi",
+      "0x180103b32: pop rbp",
+      "0x180103b33: retn"
+    ],
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1801035b0"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}

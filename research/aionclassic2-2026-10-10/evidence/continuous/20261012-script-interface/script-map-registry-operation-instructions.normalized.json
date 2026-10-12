@@ -1,0 +1,37 @@
+{
+  "procedure": {
+    "address": "0x1806e1250",
+    "name": "sub_1806E1250",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1806e1250: push rbx",
+    "0x1806e1252: sub rsp, 50h",
+    "0x1806e1256: movzx eax, [rsp+58h+arg_8]",
+    "0x1806e125b: lea r9, [rsp+58h+var_28]",
+    "0x1806e1260: mov rbx, rcx",
+    "0x1806e1263: mov [rsp+58h+var_28], edx",
+    "0x1806e1267: mov [rsp+58h+var_20], r8",
+    "0x1806e126c: lea rdx, [rsp+58h+var_18]",
+    "0x1806e1271: xor r8d, r8d",
+    "0x1806e1274: mov [rsp+58h+var_38], al; char",
+    "0x1806e1278: lea rcx, qword_18103F890; this",
+    "0x1806e127f: call sub_1806E0E30",
+    "0x1806e1284: mov rax, rbx",
+    "0x1806e1287: add rsp, 50h",
+    "0x1806e128b: pop rbx",
+    "0x1806e128c: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

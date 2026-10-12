@@ -1,0 +1,38 @@
+{
+  "procedure": {
+    "address": "0x1804b2b20",
+    "name": "sub_1804B2B20",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1804b2b20: sub rsp, 28h",
+    "0x1804b2b24: mov rcx, [rcx+8]",
+    "0x1804b2b28: test rcx, rcx",
+    "0x1804b2b2b: jz short loc_1804B2B53",
+    "0x1804b2b2d: mov rax, [rcx]",
+    "0x1804b2b30: mov [rsp+28h+var_8], rbx",
+    "0x1804b2b35: movzx ebx, word ptr cs:dword_180D6CB08",
+    "0x1804b2b3c: call qword ptr [rax+298h]",
+    "0x1804b2b42: cmp ax, bx",
+    "0x1804b2b45: mov rbx, [rsp+28h+var_8]",
+    "0x1804b2b4a: jnz short loc_1804B2B53",
+    "0x1804b2b4c: mov al, 1",
+    "0x1804b2b4e: add rsp, 28h",
+    "0x1804b2b52: retn",
+    "0x1804b2b53: xor al, al",
+    "0x1804b2b55: add rsp, 28h",
+    "0x1804b2b59: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

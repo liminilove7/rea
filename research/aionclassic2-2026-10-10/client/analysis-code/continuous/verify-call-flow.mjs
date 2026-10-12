@@ -78,14 +78,20 @@ assert.equal(original.readBigUInt64LE(0x841cd8 + 0x190), 0x1800570f0n);
 assert.equal(original.readBigUInt64LE(0x841cd8 + 0x2b8), 0x180012720n);
 assert.equal(original.readBigUInt64LE(0x841cd8 + 0x260), 0x180058ca0n);
 assert.ok(tables);
-const reportFile = path.join(study, 'reports/AION持续分析.md');
-const reportText = await readFile(reportFile, 'utf8');
-for (const match of reportText.matchAll(/\]\(([^)]+)\)/g)) {
-  if (/^https?:/.test(match[1])) continue;
-  await access(path.resolve(path.dirname(reportFile), match[1]));
+const checkedReports = ['reports/AION持续分析.md', 'reports/AION对象身份与状态通知.md',
+  'reports/AION脚本模块接口.md', 'reports/AION启动与模块装载.md', 'README.md', 'CONTINUE_TOMORROW.md'];
+let checkedLocalLinks = 0;
+for (const report of checkedReports) {
+  const reportFile = path.join(study, report);
+  const reportText = await readFile(reportFile, 'utf8');
+  for (const match of reportText.matchAll(/\]\(([^)]+)\)/g)) {
+    if (/^https?:/.test(match[1])) continue;
+    await access(path.resolve(path.dirname(reportFile), match[1]));
+    checkedLocalLinks++;
+  }
 }
 await writeFile(path.join(root, 'call-flow-verification.json'), JSON.stringify({ passed: true,
-  targetSha256: expected, targetExecuted: false, analysisComplete: false, anchors,
+  targetSha256: expected, targetExecuted: false, analysisComplete: false, anchors, checkedReports, checkedLocalLinks,
   checks: ['REA instruction anchors preserve target identity and the received-record object transfer',
     'Success notification branches distinguish reset, permitted chain update and cooldown',
     'Network output and local recording remain separate', 'Original Player slots and report evidence links verified'],

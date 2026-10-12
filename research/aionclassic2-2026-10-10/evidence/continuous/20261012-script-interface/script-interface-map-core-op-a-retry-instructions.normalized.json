@@ -1,0 +1,42 @@
+{
+  "procedure": {
+    "address": "0x180926e70",
+    "name": "sub_180926E70",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x180926e70: mov [rsp+arg_0], rbx",
+    "0x180926e75: push rdi",
+    "0x180926e76: sub rsp, 130h",
+    "0x180926e7d: mov rbx, rdx",
+    "0x180926e80: mov rdi, rcx",
+    "0x180926e83: xor edx, edx; Val",
+    "0x180926e85: lea rcx, [rsp+138h+Buffer]; void *",
+    "0x180926e8a: mov r8d, 104h; Size",
+    "0x180926e90: call memset",
+    "0x180926e95: mov r9, rbx",
+    "0x180926e98: lea r8, aSquestEventQue; \"%squest\\\\event_quest.xml\"",
+    "0x180926e9f: mov edx, 104h; BufferCount",
+    "0x180926ea4: lea rcx, [rsp+138h+Buffer]; Buffer",
+    "0x180926ea9: call swprintf",
+    "0x180926eae: lea rdx, [rsp+138h+Buffer]",
+    "0x180926eb3: mov rcx, rdi",
+    "0x180926eb6: call sub_180926ED0",
+    "0x180926ebb: mov rbx, [rsp+138h+arg_0]",
+    "0x180926ec3: add rsp, 130h",
+    "0x180926eca: pop rdi",
+    "0x180926ecb: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

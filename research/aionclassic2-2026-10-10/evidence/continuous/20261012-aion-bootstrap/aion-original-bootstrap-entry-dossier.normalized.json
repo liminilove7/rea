@@ -1,0 +1,39 @@
+{
+  "procedure": {
+    "address": "0x1405ee000",
+    "name": "start",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    },
+    "signature": null,
+    "locals": []
+  },
+  "pseudocode": "void __noreturn start()\n{\n  sub_1405E2000(); /*0x1405f000f*/\n}",
+  "assembly": [
+    "0x1405ee000: jmp short loc_1405EE00A",
+    "0x1405ee00a: jmp loc_1405F000F",
+    "0x1405f000f: jmp sub_1405E2000"
+  ],
+  "comments": [],
+  "callers": [],
+  "callees": [],
+  "incoming_references": [],
+  "outgoing_references": [],
+  "referenced_strings": [],
+  "referenced_names": [],
+  "basic_blocks": [],
+  "native_api": null,
+  "native_value_flow": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+    "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+    "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+  ]
+}

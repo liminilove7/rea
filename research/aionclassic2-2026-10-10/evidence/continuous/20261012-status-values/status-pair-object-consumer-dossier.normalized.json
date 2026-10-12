@@ -1,0 +1,84 @@
+{
+  "procedure": {
+    "address": "0x180488f00",
+    "name": "sub_180488F00",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    },
+    "signature": null,
+    "locals": []
+  },
+  "pseudocode": "__int64 __fastcall sub_180488F00(__int64 *a1, unsigned int a2, unsigned int a3)\n{\n  bool v3; // zf\n  __int64 v7; // rax\n  __int64 result; // rax\n\n  v3 = *((_DWORD *)a1 + 1124) == 0; /*0x180488f0f*/\n  *((_DWORD *)a1 + 1129) = a2; /*0x180488f1b*/\n  *((_DWORD *)a1 + 1128) = a3; /*0x180488f24*/\n  if ( v3 ) /*0x180488f2b*/\n  {\n    v7 = *a1; /*0x180488f2d*/\n    *((_DWORD *)a1 + 1127) = a2; /*0x180488f30*/\n    (*(void (**)(void))(v7 + 1088))(); /*0x180488f36*/\n  }\n  if ( (int)sub_18124E7DF(a1: a2, a2: 100, a3) >= 1 ) /*0x180488f4f*/\n    LOBYTE(result) = sub_18124E7DF(a1: a2, a2: 100, a3); /*0x180488f62*/\n  else\n    LOBYTE(result) = 1; /*0x180488f51*/\n  result = (unsigned __int8)result; /*0x180488f71*/\n  if ( a2 == 0 ) /*0x180488f74*/\n    result = 0; /*0x180488f74*/\n  *((_BYTE *)a1 + 64) = result; /*0x180488f77*/\n  return result; /*0x180488f7a*/\n}",
+  "assembly": [
+    "0x180488f00: mov [rsp+arg_0], rbx",
+    "0x180488f05: mov [rsp+arg_8], rsi",
+    "0x180488f0a: push rdi",
+    "0x180488f0b: sub rsp, 20h",
+    "0x180488f0f: cmp dword ptr [rcx+1190h], 0",
+    "0x180488f16: mov esi, r8d",
+    "0x180488f19: mov edi, edx",
+    "0x180488f1b: mov [rcx+11A4h], edx",
+    "0x180488f21: mov rbx, rcx",
+    "0x180488f24: mov [rcx+11A0h], r8d",
+    "0x180488f2b: jnz short loc_180488F3C",
+    "0x180488f2d: mov rax, [rcx]",
+    "0x180488f30: mov [rcx+119Ch], edx",
+    "0x180488f36: call qword ptr [rax+440h]",
+    "0x180488f3c: mov r8d, esi",
+    "0x180488f3f: mov edx, 64h ; 'd'",
+    "0x180488f44: mov ecx, edi",
+    "0x180488f46: call sub_18124E7DF",
+    "0x180488f4b: nop",
+    "0x180488f4c: cmp eax, 1",
+    "0x180488f4f: jge short loc_180488F58",
+    "0x180488f51: mov eax, 1",
+    "0x180488f56: jmp short loc_180488F68",
+    "0x180488f58: mov r8d, esi",
+    "0x180488f5b: mov edx, 64h ; 'd'",
+    "0x180488f60: mov ecx, edi",
+    "0x180488f62: call sub_18124E7DF",
+    "0x180488f67: nop",
+    "0x180488f68: mov rsi, [rsp+28h+arg_8]",
+    "0x180488f6d: xor ecx, ecx",
+    "0x180488f6f: test edi, edi",
+    "0x180488f71: movzx eax, al",
+    "0x180488f74: cmovz eax, ecx",
+    "0x180488f77: mov [rbx+40h], al",
+    "0x180488f7a: mov rbx, [rsp+28h+arg_0]",
+    "0x180488f7f: add rsp, 20h",
+    "0x180488f83: pop rdi",
+    "0x180488f84: retn"
+  ],
+  "comments": [],
+  "callers": [],
+  "callees": [
+    {
+      "address": "0x18124e7df",
+      "name": "sub_18124E7DF",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    }
+  ],
+  "incoming_references": [],
+  "outgoing_references": [],
+  "referenced_strings": [],
+  "referenced_names": [],
+  "basic_blocks": [],
+  "native_api": null,
+  "native_value_flow": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+    "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+    "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+  ]
+}

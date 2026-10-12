@@ -218,12 +218,18 @@ flowchart TD
 
 ## 正在继续核对的链路
 
+新增[对象身份与状态通知取证](AION对象身份与状态通知.md)及[状态核对](../evidence/continuous/status-values-verification.json)。`581B40` 的已读构造/调用链操作 UI3DView；`0638E0` 的两个数据引用已确认属于 CHAININFO 异常展开元数据。当前 `S_HIT_POINT` 路由连接收到值、角色更新与显示通知，`S_FLIGHT_POINT` 的字段单独绑定。受保护时钟软件 CPU 实验已经定位具体原始影子数据读取和最终取址失败，尚未返回时间值；它是辅助仿真证据，不能与真实 REA 查询或原生游戏运行混算。
+
 - 已连接收到的状态表示与本地资格、操作发送和成功连招标志；继续核对使用消耗、批量复位及间接调用。
 - 时间接口的保护桩目标与运行时单位；XML 默认路径和 `chainskill` 文件/请求消费者已追到，实际运行值及落盘/对端结果尚未采集。
 - 当前客户端伤害/PVP 参数执行路径与固定旧服务端模型的差异；当前官方后台代码不在这些客户端样本中。
 
+四个原始模块的入口、导出和声明导入已重新核对。REA 进一步取得 [ScriptDLL64 静态接口与编译脚本登记](AION脚本模块接口.md)：返回对象由 RTTI 绑定为 IScriptDLLImpl，十个虚槽目标均已读取；具体 MDamage 类的四个虚槽是两个短返回函数，描述数据与外部实现仍待查。另有 [Aion.bin 启动与模块装载](AION启动与模块装载.md)：已连接 CrySystem 模块名、具名工厂查询、返回接口调用及 Game.dll 初始化记录，并用真实 REA 指令补证第一层4096字节变换。模块入口与接口的进展不代表所有脚本、保护导入或当前后台已经审计完毕。
+
 ## 核对与保留的失败
 
-持续工作累计保存801次真实 REA 请求：695成功、106失败；失败原文保留，不当成空逻辑。成功结果通过调用合同、Evidence 模式、样本哈希和数据库身份核对。语义核对分别覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)、[SkillItem 来源和表示宽度](../evidence/continuous/chain-object-verification.json)。新增会话58次请求，51成功、7失败；未能读取的保护时间桩引用及其他失败均保留。数值模型属于离线推导，不是实际游戏测试。
+持续工作累计保存982次真实 REA 分析/状态请求：828成功、154失败；开启和关闭响应另存。826个成功分析结果通过具名合同、Evidence、样本哈希和数据库身份核对；另两个 binary_session 状态请求按自己的合同核对路径、哈希及 provider，不能当成带分析 Evidence 的指令取证。失败原文保留，不当成空逻辑。
 
-六个独立分析会话中，五个已取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续 CrySystem 和 SkillItem 查询正常关闭。两个原始 DLL 的前后 SHA-256 不变，未执行游戏，未向当前官方服务器发送请求。全部客户端及当前官方后台并未完成完整语义审计。
+语义核对覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)、[SkillItem 来源和表示宽度](../evidence/continuous/chain-object-verification.json)、[对象与异常元数据](../evidence/continuous/state-audit-verification.json)、[HP/飞行值](../evidence/continuous/status-values-verification.json)、[脚本接口](../evidence/continuous/script-interface-verification.json)及[启动与装载](../evidence/continuous/bootstrap-verification.json)。本次继续新增181次 REA 请求，133成功、48失败。数值模型、原始 PE 算术与软件 CPU 实验分别记源，不纳入 REA 请求计数，也不当实际游戏测试。
+
+十个独立分析会话中，九个取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续会话正常关闭。四个原始模块的前后 SHA-256 不变，没有原生运行客户端，也未向当前官方服务器发送请求；时钟软件 CPU 实验的指令执行与数据读取单独声明。全部客户端及当前官方后台并未完成完整语义审计。

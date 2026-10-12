@@ -1,0 +1,162 @@
+{
+  "evidence_id": "ev_c735cd9841c99245742c14a31cd0bcc0c207e75c0c8511daddba5f6e18c79260",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll",
+    "digest": {
+      "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "xrefs",
+  "parameters": {
+    "document": null,
+    "address": "0x1805e0230"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 559.988,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-f7881fd383c7daaf394e5af6f167d12b\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-f7881fd383c7daaf394e5af6f167d12b\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 560.167,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-f7881fd383c7daaf394e5af6f167d12b\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-f7881fd383c7daaf394e5af6f167d12b\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 16509
+    },
+    "observations": [
+      {
+        "tool": "xrefs_to",
+        "arguments": {
+          "addrs": [
+            "0x1805e0230"
+          ],
+          "limit": 1000,
+          "database": "rea-1f8d39d7-1a16-4f1c-846e-5b6f3e8f69fb"
+        },
+        "result": [
+          {
+            "addr": "0x1805e0230",
+            "xrefs": [
+              {
+                "addr": "0x1801be8c8",
+                "type": "code",
+                "fn": {
+                  "addr": "0x1801be730",
+                  "name": "sub_1801BE730",
+                  "size": "0x27b"
+                }
+              },
+              {
+                "addr": "0x180227df3",
+                "type": "code",
+                "fn": {
+                  "addr": "0x180227b70",
+                  "name": "sub_180227B70",
+                  "size": "0x362"
+                }
+              },
+              {
+                "addr": "0x1802283c5",
+                "type": "code",
+                "fn": {
+                  "addr": "0x180227ee0",
+                  "name": "sub_180227EE0",
+                  "size": "0x625"
+                }
+              },
+              {
+                "addr": "0x1805dd466",
+                "type": "code",
+                "fn": {
+                  "addr": "0x1805dcda0",
+                  "name": "sub_1805DCDA0",
+                  "size": "0xd14"
+                }
+              },
+              {
+                "addr": "0x181409798",
+                "type": "data",
+                "fn": null
+              }
+            ],
+            "more": false,
+            "xref_count": 5
+          }
+        ]
+      }
+    ]
+  },
+  "normalized_result": [
+    "0x1801be8c8",
+    "0x180227df3",
+    "0x1802283c5",
+    "0x1805dd466",
+    "0x181409798"
+  ],
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1805e0230"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}

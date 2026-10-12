@@ -1,0 +1,288 @@
+{
+  "evidence_id": "ev_0ae1a61be7800837e69f6ed2721b61194d6a04548b2f6d07b7e173f82240505a",
+  "subject": {
+    "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Aion.bin",
+    "digest": {
+      "sha256": "17c8de936526f119e16c1923ba5922d3a524698f04c01562fc878424653cda1e"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Aion.bin"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA Pro MCP adapter",
+    "version": "1"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "read_function_instructions",
+  "parameters": {
+    "procedure": "0x1405E2009",
+    "document": null
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 394.14,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-c96e7c84371a895d9c8201ae86fb65dd\\Aion.bin.i64",
+      "module": "Aion.bin",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-c96e7c84371a895d9c8201ae86fb65dd\\Aion.bin",
+      "imagebase": "0x140000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 1674
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 394.19,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-c96e7c84371a895d9c8201ae86fb65dd\\Aion.bin.i64",
+      "module": "Aion.bin",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-c96e7c84371a895d9c8201ae86fb65dd\\Aion.bin",
+      "imagebase": "0x140000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 1674
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": [
+            "0x1405E2009"
+          ],
+          "database": "rea-a1cd13fc-afdc-4702-a5fc-ddbfde6f65a5"
+        },
+        "result": [
+          {
+            "query": "0x1405E2009",
+            "fn": {
+              "addr": "0x1405e2009",
+              "name": "sub_1405E2009",
+              "size": "0x43"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "disasm",
+        "arguments": {
+          "addr": "0x1405e2009",
+          "offset": 0,
+          "max_instructions": 100,
+          "database": "rea-a1cd13fc-afdc-4702-a5fc-ddbfde6f65a5"
+        },
+        "result": {
+          "addr": "0x1405e2009",
+          "asm": {
+            "name": "sub_1405E2009",
+            "start_ea": "0x1405e2009",
+            "segment": "hptuwvop",
+            "lines": [
+              {
+                "addr": "1405e2009",
+                "instruction": "pop rax",
+                "label": "sub_1405E2009"
+              },
+              {
+                "addr": "1405e200a",
+                "instruction": "mov rbx, rax"
+              },
+              {
+                "addr": "1405e200d",
+                "instruction": "inc rax"
+              },
+              {
+                "addr": "1405e2010",
+                "instruction": "sub rax, 499000h"
+              },
+              {
+                "addr": "1405e2016",
+                "instruction": "sub rax, 7307BA8h"
+              },
+              {
+                "addr": "1405e201c",
+                "instruction": "add rax, 7307B9Fh"
+              },
+              {
+                "addr": "1405e2022",
+                "instruction": "cmp byte ptr [rbx], 0CCh"
+              },
+              {
+                "addr": "1405e2025",
+                "instruction": "jnz short loc_1405E2040",
+                "refs": [
+                  {
+                    "addr": "0x1405e2040",
+                    "name": "loc_1405E2040"
+                  }
+                ]
+              },
+              {
+                "addr": "1405e2027",
+                "instruction": "mov byte ptr [rbx], 0"
+              },
+              {
+                "addr": "1405e202a",
+                "instruction": "mov ebx, 1000h"
+              },
+              {
+                "addr": "1405e202f",
+                "instruction": "push 6D21FE52h"
+              },
+              {
+                "addr": "1405e2034",
+                "instruction": "push 76145AC7h"
+              },
+              {
+                "addr": "1405e2039",
+                "instruction": "push rbx"
+              },
+              {
+                "addr": "1405e203a",
+                "instruction": "push rax"
+              },
+              {
+                "addr": "1405e203b",
+                "instruction": "call sub_1405E204C",
+                "refs": [
+                  {
+                    "addr": "0x1405e204c",
+                    "name": "sub_1405E204C"
+                  }
+                ]
+              },
+              {
+                "addr": "1405e2040",
+                "instruction": "add rax, 14h",
+                "label": "loc_1405E2040"
+              },
+              {
+                "addr": "1405e2044",
+                "instruction": "mov [rsp-8+arg_10], rax"
+              },
+              {
+                "addr": "1405e2049",
+                "instruction": "pop rbx"
+              },
+              {
+                "addr": "1405e204a",
+                "instruction": "pop rax"
+              },
+              {
+                "addr": "1405e204b",
+                "instruction": "retn"
+              }
+            ],
+            "stack_frame": [
+              {
+                "name": "__return_address",
+                "offset": "0x0",
+                "size": "0x8",
+                "type": "_UNKNOWN *"
+              },
+              {
+                "name": "arg_10",
+                "offset": "0x18",
+                "size": "0x8",
+                "type": "_QWORD"
+              }
+            ]
+          },
+          "instruction_count": 20,
+          "total_instructions": null,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": {
+    "procedure": {
+      "address": "0x1405e2009",
+      "name": "sub_1405E2009",
+      "classification": null,
+      "body": {
+        "available": false,
+        "reason": "IDA MCP does not report complete function body ranges."
+      }
+    },
+    "instructions": [
+      "0x1405e2009: pop rax",
+      "0x1405e200a: mov rbx, rax",
+      "0x1405e200d: inc rax",
+      "0x1405e2010: sub rax, 499000h",
+      "0x1405e2016: sub rax, 7307BA8h",
+      "0x1405e201c: add rax, 7307B9Fh",
+      "0x1405e2022: cmp byte ptr [rbx], 0CCh",
+      "0x1405e2025: jnz short loc_1405E2040",
+      "0x1405e2027: mov byte ptr [rbx], 0",
+      "0x1405e202a: mov ebx, 1000h",
+      "0x1405e202f: push 6D21FE52h",
+      "0x1405e2034: push 76145AC7h",
+      "0x1405e2039: push rbx",
+      "0x1405e203a: push rax",
+      "0x1405e203b: call sub_1405E204C",
+      "0x1405e2040: add rax, 14h",
+      "0x1405e2044: mov [rsp-8+arg_10], rax",
+      "0x1405e2049: pop rbx",
+      "0x1405e204a: pop rax",
+      "0x1405e204b: retn"
+    ],
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Aion.bin"
+    },
+    {
+      "kind": "address",
+      "address": "0x1405e2009"
+    }
+  ],
+  "evidence_links": [],
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+  }
+}
