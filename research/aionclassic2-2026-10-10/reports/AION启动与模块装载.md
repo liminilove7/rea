@@ -30,6 +30,18 @@
 
 Game 的固定对象/系统指针与 CrySystem 计时器绑定见[持续报告](AION持续分析.md)；ScriptDLL64 的独立静态接口及编译脚本登记见[脚本模块接口](AION脚本模块接口.md)。未观察的运行时路径、保护状态及当前官方后台仍保留未知。
 
+## CrySystem 继续接到 Game 初始化
+
+继续查询同哈希 CrySystem.dll 原始 CSystem 虚表第一槽，目标是 `16E0F0`。该函数取得初始化记录中的 Game 名称，沿模块装载帮助函数取得模块表示，再明确查询 **CreateGameInstance**；`16E3F4` 调用返回的函数指针，并把对象保存到 **CSystem `+0x3538`**。
+
+其中一条初始化分支从 `+0x3538` 取得 Game 接口，RCX 传 Game、RDX 传当前 CSystem，并调用 Game 虚表第一槽。另一分支向保护调用接口传入回调 `170F20` 及含 CSystem 指针的上下文；回调通过 CSystem 虚表 **`+0xD8→171F70`** 读取 `this+0x3538`，同样把 CSystem 传给 Game 第一槽。代码中的回调与上下文已经绑定，底层线程/API的确切名称和运行结果尚未捕获。
+
+Game 的先前原始虚表将第一槽绑定到 `044C20`；该函数保存 RDX，最终在 `044C74` 写 **Game `+0x6630`**。因此，从 Aion 的系统工厂与初始化记录，到 CrySystem 的 Game 工厂、Game 初始化参数，再到资格计时所用的全局系统指针，现在有了跨模块的实际指令接力。这个接力描述样本代码，在游戏进程中加载的文件路径和接口实例仍待运行时核验。
+
+此外，CSystem `+0x148→172040` 返回 `this+0x2DA0`，被 `13E730` 的内建脚本绑定初始化消费。探索时查询的 `+0x140→16FA70` 返回的是 `this+0x26F0`，不能因为工作文件名含 `game` 就当成 Game getter；准确的 Game getter 是上面的 `+0xD8`。内建脚本绑定与 ScriptDLL64 的外部参数尚未建立同一对象身份。
+
+证据：[CSystem 第一槽与工厂](../evidence/continuous/20261012-system-game-binding/system-initialization-first-slot-instructions.normalized.json)、[回调](../evidence/continuous/20261012-system-game-binding/system-game-initialization-callback-instructions.normalized.json)、[Game getter](../evidence/continuous/20261012-system-game-binding/system-game-interface-slot-d8-instructions.normalized.json)、[原始虚槽](../evidence/continuous/20261012-system-game-binding/original-system-game-script-slots.json)、[Game 系统参数保存](../evidence/continuous/20261012-session-c/game-interface-slot-0-instructions.normalized.json)、[脚本字段获取](../evidence/continuous/20261012-system-game-binding/system-script-binding-slot-148-instructions.normalized.json)、[跨模块核对](../evidence/continuous/system-game-binding-verification.json)。
+
 ## 本机诊断的范围
 
 对重复的 `unreadable_output` 保存失败后，执行 `rea doctor --provider ida --format json`。IDA 注册、Node、私有工作目录权限的显式检查通过；该诊断明确没有启动 IDA，不能解释全部上游运行时读取失败，也不替代真实查询。整体 `environment_healthy=false` 包括其他可选引擎与非本任务客户端登记，不能把它扩大成当前 IDA 读取链路不工作，也不能宣称全部可选环境已经齐备。[诊断原文](../evidence/continuous/ida-doctor-20261012.json)。

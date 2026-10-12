@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "sourceDigests": {
+    "CrySystem.dll": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+    "Game.dll": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+  },
+  "nativeTargetExecuted": false,
+  "wholeClientComplete": false,
+  "verifiedAt": "2026-10-12T12:04:24.742Z",
+  "anchors": [
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-initialization-first-slot-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_67498954dccbafc6e23382f0f9264cbea25238079ccbde87dfe9f7c5e0fbe84c",
+      "snippets": [
+        "0x18016e10b: mov r14, rdx",
+        "0x18016e10e: mov rdi, rcx",
+        "0x18016e3b8: lea rdx, aCreategameinst",
+        "CreateGameInstance",
+        "0x18016e3bf: call sub_1806BCFC7",
+        "0x18016e3cc: mov rbx, rax",
+        "0x18016e3f4: call rbx",
+        "0x18016e3f6: mov [rdi+3538h], rax",
+        "0x18016e44c: mov [r13+0], rdi",
+        "0x18016e478: lea r8, sub_180170F20",
+        "0x18016e4b6: mov rcx, [rdi+3538h]",
+        "0x18016e4bd: mov rdx, rdi",
+        "0x18016e4d5: call qword ptr [rax]"
+      ]
+    },
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-game-initialization-callback-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_bfea9fc7de3f2db872dc8f90ce856244243b0235e36bad1dfd587e5df89ee16b",
+      "snippets": [
+        "0x180170f2e: mov rcx, [rcx]",
+        "0x180170f34: call qword ptr [rax+0D8h]",
+        "0x180170f4b: mov rcx, rax",
+        "0x180170f58: mov rdx, [rbx]",
+        "0x180170f5b: call qword ptr [r10]"
+      ]
+    },
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-game-interface-slot-d8-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_d5cbc3b6a6197049b562e7d09d6f688d8e435bc047ee5b62c2d1a6b40e238b22",
+      "snippets": [
+        "0x180171f70: mov rax, [rcx+3538h]"
+      ]
+    },
+    {
+      "directory": "20261012-session-c",
+      "file": "game-interface-slot-0-instructions",
+      "targetSha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786",
+      "evidenceId": "ev_f1cd8a5ce38b61899b1b1274a843d09da83ee0e8a7b3f51c9a599d37e4abc4b7",
+      "snippets": [
+        "0x180044c48: mov rdi, rdx",
+        "0x180044c4b: mov rsi, rcx",
+        "0x180044c74: mov [rsi+6630h], rdi"
+      ]
+    },
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-game-interface-getter-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_7688004b2347967996d70abfebab4a2b699fbd3c3bb72cb50968a1de52413ba1",
+      "snippets": [
+        "0x18016fa70: mov rax, [rcx+26F0h]"
+      ]
+    },
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-script-binding-slot-148-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_325fb5cae78aeab028b3ee4c2c7eafde0810e2d2ea1b76907481f403afffac38",
+      "snippets": [
+        "0x180172040: mov rax, [rcx+2DA0h]"
+      ]
+    },
+    {
+      "directory": "20261012-system-game-binding",
+      "file": "system-script-binding-initializer-instructions",
+      "targetSha256": "8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061",
+      "evidenceId": "ev_e571d787ae9b2b663adfa2601ca1ae0057ee0ec281e80540f488b287f637c37d",
+      "snippets": [
+        "0x18013e781: call qword ptr [rax+148h]"
+      ]
+    }
+  ],
+  "originalSystemSlots": [
+    {
+      "slot": "0x0",
+      "fileOffset": "0x211a60",
+      "preferredVa": "0x18016e0f0"
+    },
+    {
+      "slot": "0xd8",
+      "fileOffset": "0x211b38",
+      "preferredVa": "0x180171f70"
+    },
+    {
+      "slot": "0x140",
+      "fileOffset": "0x211ba0",
+      "preferredVa": "0x18016fa70"
+    },
+    {
+      "slot": "0x148",
+      "fileOffset": "0x211ba8",
+      "preferredVa": "0x180172040"
+    }
+  ],
+  "observations": [
+    "Named Game factory pointer is invoked and stored in CSystem +3538.",
+    "Both returned-Game initialization paths pass the CSystem pointer; callback uses the bound +D8 getter.",
+    "Game initialization stores that parameter into its +6630 field.",
+    "System slot +140 returns +26F0 and is not the bound Game getter; +148 returns +2DA0 for script binding."
+  ],
+  "unknowns": [
+    "Runtime DLL paths and original protected API targets",
+    "Full built-in script object semantics and ScriptDLL external parameter binding"
+  ]
+}

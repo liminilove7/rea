@@ -6,7 +6,7 @@
 - 已连接 `S_ATTACK` 收到标志→受击对象→`476770→4BC8D0` 资格设置→`61EE50` 操作检查→施放和 Socket 发送。Block 对应角色 `0x80/+0x2F8`，`4BCA40` 到期清除；成功通知的 `0x20` 标志决定前置连招保存，`3B2500` 按 delay_id 更新同组冷却。选项已追到提交与本地 opt 文件流，CrySystem 的计时器已取得实际 REA 指令。全局使用消耗、保护桩 API 和官方判定仍未知。
 - GitHub main 与研究分支已归档报告、脚本和原始证据。已确认 `27E820` 返回 SkillItem，`+0x64` 来自技能添加通知并参与等级排序，绘制/施放对象身份已连接；完整 XML 中48条显式 prob1 均为0。详见主报告和 [来源核对](evidence/continuous/chain-object-verification.json)。
 - 新增[对象身份与状态通知](reports/AION对象身份与状态通知.md)：`581B40` 已读直接调用链操作 UI3DView，不能当 Player 状态；复位引用 `8A1060/8A1070` 是 CHAININFO。HP 收到字段与显示字段分开，`D71BCC/D71BC8` 对应 S_FLIGHT_POINT。时钟入口的软件 CPU 实验读取原始影子地址 `1810E4790`，最终取址失败；不代表获得运行时 API 或完整脱壳。
-- 已扩展实际 REA 查询到 [ScriptDLL64 的 IScriptDLLImpl 与编译脚本登记](reports/AION脚本模块接口.md) 和 [Aion.bin 入口/装载](reports/AION启动与模块装载.md)。累积982次分析/状态请求；十个会话中九个正常关闭，原有 CrySystem 清理失败仍单独保留。继续沿 ScriptDLL 外部接口、描述字段生产者和系统第一虚槽的 Game 初始化消费者查证。
+- 已扩展实际 REA 查询到 [ScriptDLL64 的 IScriptDLLImpl 与编译脚本登记](reports/AION脚本模块接口.md) 和 [Aion.bin 入口/装载](reports/AION启动与模块装载.md)。累积991次分析/状态请求；十一个会话中十个正常关闭，原有 CrySystem 清理失败仍单独保留。系统第一虚槽已连接 Game 工厂、同步初始化与回调初始化；继续沿 ScriptDLL 外部接口、描述字段生产者和运行时保护解析查证。
 
 - 历史第十一轮 IDA 9.5 归档见 [第十一轮报告](reports/AION_ROUND11_20261012.md)：39 次请求、29 成功、10 失败，14 项核对通过，见 [核对 JSON](evidence/round11/verification.json)。该阶段当时尚未找到实际施放资格；后续证据以持续报告为准。
 - 优先续查 `2784E0 → 61EE50`、`13DF40/1E3660/2C4D60` 的关系调用上下文，以及 `283F40` 写入 `+0x870` 时间值的消费者。`39E770` 已确认递归关系查询，`39ECF0` 生成 `chainskill` 表示；不能直接当战斗激活状态。

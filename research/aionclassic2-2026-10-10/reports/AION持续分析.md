@@ -228,8 +228,8 @@ flowchart TD
 
 ## 核对与保留的失败
 
-持续工作累计保存982次真实 REA 分析/状态请求：828成功、154失败；开启和关闭响应另存。826个成功分析结果通过具名合同、Evidence、样本哈希和数据库身份核对；另两个 binary_session 状态请求按自己的合同核对路径、哈希及 provider，不能当成带分析 Evidence 的指令取证。失败原文保留，不当成空逻辑。
+持续工作累计保存991次真实 REA 分析/状态请求：836成功、155失败；开启和关闭响应另存。834个成功分析结果通过具名合同、Evidence、样本哈希和数据库身份核对；另两个 binary_session 状态请求按自己的合同核对路径、哈希及 provider，不能当成带分析 Evidence 的指令取证。失败原文保留，不当成空逻辑。
 
-语义核对覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)、[SkillItem 来源和表示宽度](../evidence/continuous/chain-object-verification.json)、[对象与异常元数据](../evidence/continuous/state-audit-verification.json)、[HP/飞行值](../evidence/continuous/status-values-verification.json)、[脚本接口](../evidence/continuous/script-interface-verification.json)及[启动与装载](../evidence/continuous/bootstrap-verification.json)。本次继续新增181次 REA 请求，133成功、48失败。数值模型、原始 PE 算术与软件 CPU 实验分别记源，不纳入 REA 请求计数，也不当实际游戏测试。
+语义核对覆盖 [资格和拒绝检查](../evidence/continuous/counter-mechanism-verification.json)、[收到事件与施放链](../evidence/continuous/call-flow-verification.json)、[保存/共享冷却/计时器](../evidence/continuous/storage-time-cooldown-verification.json)、[具名计数器共用桩](../evidence/continuous/clock-binding-verification.json)、[SkillItem 来源和表示宽度](../evidence/continuous/chain-object-verification.json)、[对象与异常元数据](../evidence/continuous/state-audit-verification.json)、[HP/飞行值](../evidence/continuous/status-values-verification.json)、[脚本接口](../evidence/continuous/script-interface-verification.json)、[启动与装载](../evidence/continuous/bootstrap-verification.json)及[系统/Game 参数接力](../evidence/continuous/system-game-binding-verification.json)。本次继续新增190次 REA 请求，141成功、49失败。数值模型、原始 PE 算术与软件 CPU 实验分别记源，不纳入 REA 请求计数，也不当实际游戏测试。
 
-十个独立分析会话中，九个取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续会话正常关闭。四个原始模块的前后 SHA-256 不变，没有原生运行客户端，也未向当前官方服务器发送请求；时钟软件 CPU 实验的指令执行与数据读取单独声明。全部客户端及当前官方后台并未完成完整语义审计。
+十一个独立分析会话中，十个取得正常关闭结果并确认私有目录移除。首次 CrySystem 计时会话返回 `cleanup_incomplete`，因工作进程释放无法核验而保留私有目录；其原始错误和目录状态记录在 verification.json，不能把这一会话称为清理完成。后续会话正常关闭。四个原始模块的前后 SHA-256 不变，没有原生运行客户端，也未向当前官方服务器发送请求；时钟软件 CPU 实验的指令执行与数据读取单独声明。全部客户端及当前官方后台并未完成完整语义审计。

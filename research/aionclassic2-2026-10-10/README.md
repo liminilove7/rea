@@ -10,7 +10,7 @@
 
 新增[对象身份与状态通知取证](reports/AION对象身份与状态通知.md)：排除 UI3DView 同偏移写入，识别 Player 复位引用中的异常展开元数据，连接 S_HIT_POINT 的对象/显示字段，并区分 S_FLIGHT_POINT。受保护时钟的离线 CPU 轨迹与明确失败边界也已保留。
 
-另见[脚本模块接口](reports/AION脚本模块接口.md)与[启动和模块装载](reports/AION启动与模块装载.md)：十个 IScriptDLLImpl 虚槽、具体编译脚本登记，以及 CrySystem 工厂与 Game 初始化记录均取得 REA 指令。累计982次持续分析/状态请求，成功828、失败154；所有失败及未完成范围保留。
+另见[脚本模块接口](reports/AION脚本模块接口.md)与[启动和模块装载](reports/AION启动与模块装载.md)：十个 IScriptDLLImpl 虚槽、具体编译脚本登记，以及 CrySystem 工厂与 Game 初始化记录均取得 REA 指令。累计991次持续分析/状态请求，成功836、失败155；所有失败及未完成范围保留。
 
 最新归档新增第九轮REA分析、原始响应与失败记录、49项HTML检查。整客户端及当前官方后台尚未完整破解。
 
