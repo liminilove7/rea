@@ -1,0 +1,597 @@
+{
+  "name": "analyze_function",
+  "arguments": {
+    "procedure": "0x180074C71"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"result\":{\"procedure\":{\"address\":\"0x180074c60\",\"name\":\"sub_180074C60\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"},\"signature\":null,\"locals\":[]},\"pseudocode\":\"__int64 sub_180074C60()\\n{\\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\\n\\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\\n    return 1; /*0x180074c6f*/\\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\\n    return 1; /*0x180074cc0*/\\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\\n  return 0; /*0x180074cb8*/\\n}\",\"assembly\":[\"0x180074c60: sub rsp, 138h\",\"0x180074c67: cmp cs:qword_180938AF0, 0\",\"0x180074c6f: jnz short loc_180074CC0\",\"0x180074c71: lea r8, aScriptdll64Dll; \\\"ScriptDLL64.dll\\\"\",\"0x180074c78: mov edx, 104h\",\"0x180074c7d: lea rcx, [rsp+138h+var_118]\",\"0x180074c82: call sub_18006C820\",\"0x180074c87: lea rcx, [rsp+138h+var_118]\",\"0x180074c8c: call sub_18124A742\",\"0x180074c91: nop\",\"0x180074c92: mov cs:qword_180938AF0, rax\",\"0x180074c99: test rax, rax\",\"0x180074c9c: jnz short loc_180074CC0\",\"0x180074c9e: mov rax, cs:off_180938A90\",\"0x180074ca5: lea rdx, aErrorCanNotLoa; \\\"ERROR: can not load ScriptDLL.dll\\\"\",\"0x180074cac: lea rcx, off_180938A90\",\"0x180074cb3: call qword ptr [rax+10h]\",\"0x180074cb6: xor eax, eax\",\"0x180074cb8: add rsp, 138h\",\"0x180074cbf: retn\",\"0x180074cc0: mov eax, 1\",\"0x180074cc5: add rsp, 138h\",\"0x180074ccc: retn\"],\"comments\":[],\"callers\":[],\"callees\":[{\"address\":\"0x18006c820\",\"name\":\"sub_18006C820\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}},{\"address\":\"0x18124a742\",\"name\":\"sub_18124A742\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}}],\"incoming_references\":[],\"outgoing_references\":[],\"referenced_strings\":[],\"referenced_names\":[],\"basic_blocks\":[],\"native_api\":null,\"native_value_flow\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\",\"Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin.\"]},\"evidence_id\":\"ev_d8c4a0fd7473150081a6cc02877541d8f4634b332fa88694f0d4fd0ce6985eec\",\"evidence\":{\"evidence_id\":\"ev_d8c4a0fd7473150081a6cc02877541d8f4634b332fa88694f0d4fd0ce6985eec\",\"subject\":{\"name\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\Game.dll\",\"digest\":{\"sha256\":\"834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786\"},\"format\":\"pe\",\"architecture\":\"x86_64\",\"local_path\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\Game.dll\"},\"provider\":{\"id\":\"ida\",\"name\":\"IDA Pro MCP adapter\",\"version\":\"1\"},\"predicate_type\":\"rea.analysis\",\"operation\":\"analyze_function\",\"parameters\":{\"procedure\":\"0x180074C71\"},\"raw_result\":{\"upstream\":{\"name\":\"ida-pro-mcp\",\"version\":\"1.0.0\"},\"metadata_before\":{\"status\":\"ok\",\"uptime_sec\":156.293,\"idb_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\\\Game.dll.i64\",\"module\":\"Game.dll\",\"input_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\\\Game.dll\",\"imagebase\":\"0x180000000\",\"auto_analysis_ready\":true,\"hexrays_ready\":true,\"strings_cache_ready\":true,\"strings_cache_size\":16509},\"metadata_after\":{\"status\":\"ok\",\"uptime_sec\":156.641,\"idb_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\\\Game.dll.i64\",\"module\":\"Game.dll\",\"input_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\\\Game.dll\",\"imagebase\":\"0x180000000\",\"auto_analysis_ready\":true,\"hexrays_ready\":true,\"strings_cache_ready\":true,\"strings_cache_size\":16509},\"observations\":[{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x180074C71\"],\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":[{\"query\":\"0x180074C71\",\"fn\":{\"addr\":\"0x180074c60\",\"name\":\"sub_180074C60\",\"size\":\"0x6d\"},\"error\":null}]},{\"tool\":\"disasm\",\"arguments\":{\"addr\":\"0x180074c60\",\"offset\":0,\"max_instructions\":100,\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":{\"addr\":\"0x180074c60\",\"asm\":{\"name\":\"sub_180074C60\",\"start_ea\":\"0x180074c60\",\"segment\":\"   \",\"lines\":[{\"addr\":\"180074c60\",\"instruction\":\"sub rsp, 138h\",\"label\":\"sub_180074C60\"},{\"addr\":\"180074c67\",\"instruction\":\"cmp cs:qword_180938AF0, 0\",\"refs\":[{\"addr\":\"0x180938af0\",\"name\":\"qword_180938AF0\"}]},{\"addr\":\"180074c6f\",\"instruction\":\"jnz short loc_180074CC0\",\"refs\":[{\"addr\":\"0x180074cc0\",\"name\":\"loc_180074CC0\"}]},{\"addr\":\"180074c71\",\"instruction\":\"lea r8, aScriptdll64Dll; \\\"ScriptDLL64.dll\\\"\",\"refs\":[{\"addr\":\"0x180772068\",\"name\":\"aScriptdll64Dll\",\"string\":\"ScriptDLL64.dll\"}]},{\"addr\":\"180074c78\",\"instruction\":\"mov edx, 104h\"},{\"addr\":\"180074c7d\",\"instruction\":\"lea rcx, [rsp+138h+var_118]\"},{\"addr\":\"180074c82\",\"instruction\":\"call sub_18006C820\",\"refs\":[{\"addr\":\"0x18006c820\",\"name\":\"sub_18006C820\"}]},{\"addr\":\"180074c87\",\"instruction\":\"lea rcx, [rsp+138h+var_118]\"},{\"addr\":\"180074c8c\",\"instruction\":\"call sub_18124A742\",\"refs\":[{\"addr\":\"0x18124a742\",\"name\":\"sub_18124A742\"}]},{\"addr\":\"180074c91\",\"instruction\":\"nop\"},{\"addr\":\"180074c92\",\"instruction\":\"mov cs:qword_180938AF0, rax\",\"refs\":[{\"addr\":\"0x180938af0\",\"name\":\"qword_180938AF0\"}]},{\"addr\":\"180074c99\",\"instruction\":\"test rax, rax\"},{\"addr\":\"180074c9c\",\"instruction\":\"jnz short loc_180074CC0\",\"refs\":[{\"addr\":\"0x180074cc0\",\"name\":\"loc_180074CC0\"}]},{\"addr\":\"180074c9e\",\"instruction\":\"mov rax, cs:off_180938A90\",\"refs\":[{\"addr\":\"0x180938a90\",\"name\":\"off_180938A90\"}]},{\"addr\":\"180074ca5\",\"instruction\":\"lea rdx, aErrorCanNotLoa; \\\"ERROR: can not load ScriptDLL.dll\\\"\",\"refs\":[{\"addr\":\"0x180772078\",\"name\":\"aErrorCanNotLoa\",\"string\":\"ERROR: can not load ScriptDLL.dll\"}]},{\"addr\":\"180074cac\",\"instruction\":\"lea rcx, off_180938A90\",\"refs\":[{\"addr\":\"0x180938a90\",\"name\":\"off_180938A90\"}]},{\"addr\":\"180074cb3\",\"instruction\":\"call qword ptr [rax+10h]\"},{\"addr\":\"180074cb6\",\"instruction\":\"xor eax, eax\"},{\"addr\":\"180074cb8\",\"instruction\":\"add rsp, 138h\"},{\"addr\":\"180074cbf\",\"instruction\":\"retn\"},{\"addr\":\"180074cc0\",\"instruction\":\"mov eax, 1\",\"label\":\"loc_180074CC0\"},{\"addr\":\"180074cc5\",\"instruction\":\"add rsp, 138h\"},{\"addr\":\"180074ccc\",\"instruction\":\"retn\"}],\"stack_frame\":[{\"name\":\"var_118\",\"offset\":\"0x20\",\"size\":\"0x1\",\"type\":\"_BYTE\"},{\"name\":\"__return_address\",\"offset\":\"0x138\",\"size\":\"0x8\",\"type\":\"_UNKNOWN *\"}]},\"instruction_count\":23,\"total_instructions\":null,\"cursor\":{\"done\":true}}},{\"tool\":\"decompile\",\"arguments\":{\"addr\":\"0x180074c60\",\"offset\":0,\"max_lines\":100,\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":{\"addr\":\"0x180074c60\",\"code\":\"__int64 sub_180074C60()\\n{\\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\\n\\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\\n    return 1; /*0x180074c6f*/\\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\\n    return 1; /*0x180074cc0*/\\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\\n  return 0; /*0x180074cb8*/\\n}\",\"line_count\":13,\"total_lines\":13,\"truncated\":false,\"cursor\":{\"done\":true},\"refs\":[{\"addr\":\"0x180938af0\",\"name\":\"qword_180938AF0\"},{\"addr\":\"0x18006c820\",\"name\":\"sub_18006C820\"},{\"addr\":\"0x180772068\",\"name\":\"aScriptdll64Dll\",\"string\":\"ScriptDLL64.dll\"},{\"addr\":\"0x18124a742\",\"name\":\"sub_18124A742\"},{\"addr\":\"0x180938a90\",\"name\":\"off_180938A90\"},{\"addr\":\"0x180772078\",\"name\":\"aErrorCanNotLoa\",\"string\":\"ERROR: can not load ScriptDLL.dll\"}]}},{\"tool\":\"callees\",\"arguments\":{\"addrs\":[\"0x180074c60\"],\"limit\":500,\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":[{\"addr\":\"0x180074c60\",\"callees\":[{\"addr\":\"0x18006c820\",\"name\":\"sub_18006C820\",\"type\":\"internal\"},{\"addr\":\"0x18124a742\",\"name\":\"sub_18124A742\",\"type\":\"internal\"}],\"more\":false}]},{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x18006c820\"],\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":[{\"query\":\"0x18006c820\",\"fn\":{\"addr\":\"0x18006c820\",\"name\":\"sub_18006C820\",\"size\":\"0x1d\"},\"error\":null}]},{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x18124a742\"],\"database\":\"rea-081e1775-9575-4792-af71-fe2032e7f495\"},\"result\":[{\"query\":\"0x18124a742\",\"fn\":{\"addr\":\"0x18124a742\",\"name\":\"sub_18124A742\",\"size\":\"0x11\"},\"error\":null}]}]},\"normalized_result\":{\"procedure\":{\"address\":\"0x180074c60\",\"name\":\"sub_180074C60\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"},\"signature\":null,\"locals\":[]},\"pseudocode\":\"__int64 sub_180074C60()\\n{\\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\\n\\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\\n    return 1; /*0x180074c6f*/\\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\\n    return 1; /*0x180074cc0*/\\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\\n  return 0; /*0x180074cb8*/\\n}\",\"assembly\":[\"0x180074c60: sub rsp, 138h\",\"0x180074c67: cmp cs:qword_180938AF0, 0\",\"0x180074c6f: jnz short loc_180074CC0\",\"0x180074c71: lea r8, aScriptdll64Dll; \\\"ScriptDLL64.dll\\\"\",\"0x180074c78: mov edx, 104h\",\"0x180074c7d: lea rcx, [rsp+138h+var_118]\",\"0x180074c82: call sub_18006C820\",\"0x180074c87: lea rcx, [rsp+138h+var_118]\",\"0x180074c8c: call sub_18124A742\",\"0x180074c91: nop\",\"0x180074c92: mov cs:qword_180938AF0, rax\",\"0x180074c99: test rax, rax\",\"0x180074c9c: jnz short loc_180074CC0\",\"0x180074c9e: mov rax, cs:off_180938A90\",\"0x180074ca5: lea rdx, aErrorCanNotLoa; \\\"ERROR: can not load ScriptDLL.dll\\\"\",\"0x180074cac: lea rcx, off_180938A90\",\"0x180074cb3: call qword ptr [rax+10h]\",\"0x180074cb6: xor eax, eax\",\"0x180074cb8: add rsp, 138h\",\"0x180074cbf: retn\",\"0x180074cc0: mov eax, 1\",\"0x180074cc5: add rsp, 138h\",\"0x180074ccc: retn\"],\"comments\":[],\"callers\":[],\"callees\":[{\"address\":\"0x18006c820\",\"name\":\"sub_18006C820\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}},{\"address\":\"0x18124a742\",\"name\":\"sub_18124A742\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}}],\"incoming_references\":[],\"outgoing_references\":[],\"referenced_strings\":[],\"referenced_names\":[],\"basic_blocks\":[],\"native_api\":null,\"native_value_flow\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\",\"Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin.\"]},\"confidence\":\"observed\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\"],\"locations\":[{\"kind\":\"artifact-path\",\"path\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\Game.dll\"},{\"kind\":\"address\",\"address\":\"0x180074c60\"}],\"evidence_links\":[],\"analysis_profile\":{\"provider\":{\"id\":\"ida\",\"name\":\"IDA Pro MCP adapter\",\"version\":\"1\"},\"parameters\":{\"version_scope\":\"rea-ida-adapter\",\"engine_version\":null,\"upstream_distribution_version\":null,\"mode\":\"headless\",\"compatibility_profile\":\"database-supervisor\",\"database_revision\":null,\"cache_policy\":\"live\",\"registration_digest\":\"1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760\"},\"digest\":\"f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a\"}}}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "procedure": {
+          "address": "0x180074c60",
+          "name": "sub_180074C60",
+          "classification": null,
+          "body": {
+            "available": false,
+            "reason": "IDA MCP does not report complete function body ranges."
+          },
+          "signature": null,
+          "locals": []
+        },
+        "pseudocode": "__int64 sub_180074C60()\n{\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\n\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\n    return 1; /*0x180074c6f*/\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\n    return 1; /*0x180074cc0*/\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\n  return 0; /*0x180074cb8*/\n}",
+        "assembly": [
+          "0x180074c60: sub rsp, 138h",
+          "0x180074c67: cmp cs:qword_180938AF0, 0",
+          "0x180074c6f: jnz short loc_180074CC0",
+          "0x180074c71: lea r8, aScriptdll64Dll; \"ScriptDLL64.dll\"",
+          "0x180074c78: mov edx, 104h",
+          "0x180074c7d: lea rcx, [rsp+138h+var_118]",
+          "0x180074c82: call sub_18006C820",
+          "0x180074c87: lea rcx, [rsp+138h+var_118]",
+          "0x180074c8c: call sub_18124A742",
+          "0x180074c91: nop",
+          "0x180074c92: mov cs:qword_180938AF0, rax",
+          "0x180074c99: test rax, rax",
+          "0x180074c9c: jnz short loc_180074CC0",
+          "0x180074c9e: mov rax, cs:off_180938A90",
+          "0x180074ca5: lea rdx, aErrorCanNotLoa; \"ERROR: can not load ScriptDLL.dll\"",
+          "0x180074cac: lea rcx, off_180938A90",
+          "0x180074cb3: call qword ptr [rax+10h]",
+          "0x180074cb6: xor eax, eax",
+          "0x180074cb8: add rsp, 138h",
+          "0x180074cbf: retn",
+          "0x180074cc0: mov eax, 1",
+          "0x180074cc5: add rsp, 138h",
+          "0x180074ccc: retn"
+        ],
+        "comments": [],
+        "callers": [],
+        "callees": [
+          {
+            "address": "0x18006c820",
+            "name": "sub_18006C820",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            }
+          },
+          {
+            "address": "0x18124a742",
+            "name": "sub_18124A742",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            }
+          }
+        ],
+        "incoming_references": [],
+        "outgoing_references": [],
+        "referenced_strings": [],
+        "referenced_names": [],
+        "basic_blocks": [],
+        "native_api": null,
+        "native_value_flow": null,
+        "limitations": [
+          "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+          "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+          "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+          "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+          "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+          "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+          "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+          "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+        ]
+      },
+      "evidence_id": "ev_d8c4a0fd7473150081a6cc02877541d8f4634b332fa88694f0d4fd0ce6985eec",
+      "evidence": {
+        "evidence_id": "ev_d8c4a0fd7473150081a6cc02877541d8f4634b332fa88694f0d4fd0ce6985eec",
+        "subject": {
+          "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll",
+          "digest": {
+            "sha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786"
+          },
+          "format": "pe",
+          "architecture": "x86_64",
+          "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+        },
+        "provider": {
+          "id": "ida",
+          "name": "IDA Pro MCP adapter",
+          "version": "1"
+        },
+        "predicate_type": "rea.analysis",
+        "operation": "analyze_function",
+        "parameters": {
+          "procedure": "0x180074C71"
+        },
+        "raw_result": {
+          "upstream": {
+            "name": "ida-pro-mcp",
+            "version": "1.0.0"
+          },
+          "metadata_before": {
+            "status": "ok",
+            "uptime_sec": 156.293,
+            "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\Game.dll.i64",
+            "module": "Game.dll",
+            "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\Game.dll",
+            "imagebase": "0x180000000",
+            "auto_analysis_ready": true,
+            "hexrays_ready": true,
+            "strings_cache_ready": true,
+            "strings_cache_size": 16509
+          },
+          "metadata_after": {
+            "status": "ok",
+            "uptime_sec": 156.641,
+            "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\Game.dll.i64",
+            "module": "Game.dll",
+            "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-70e04976cd36b856d28e9be6e7d2b1f0\\Game.dll",
+            "imagebase": "0x180000000",
+            "auto_analysis_ready": true,
+            "hexrays_ready": true,
+            "strings_cache_ready": true,
+            "strings_cache_size": 16509
+          },
+          "observations": [
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x180074C71"
+                ],
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": [
+                {
+                  "query": "0x180074C71",
+                  "fn": {
+                    "addr": "0x180074c60",
+                    "name": "sub_180074C60",
+                    "size": "0x6d"
+                  },
+                  "error": null
+                }
+              ]
+            },
+            {
+              "tool": "disasm",
+              "arguments": {
+                "addr": "0x180074c60",
+                "offset": 0,
+                "max_instructions": 100,
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": {
+                "addr": "0x180074c60",
+                "asm": {
+                  "name": "sub_180074C60",
+                  "start_ea": "0x180074c60",
+                  "segment": "   ",
+                  "lines": [
+                    {
+                      "addr": "180074c60",
+                      "instruction": "sub rsp, 138h",
+                      "label": "sub_180074C60"
+                    },
+                    {
+                      "addr": "180074c67",
+                      "instruction": "cmp cs:qword_180938AF0, 0",
+                      "refs": [
+                        {
+                          "addr": "0x180938af0",
+                          "name": "qword_180938AF0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c6f",
+                      "instruction": "jnz short loc_180074CC0",
+                      "refs": [
+                        {
+                          "addr": "0x180074cc0",
+                          "name": "loc_180074CC0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c71",
+                      "instruction": "lea r8, aScriptdll64Dll; \"ScriptDLL64.dll\"",
+                      "refs": [
+                        {
+                          "addr": "0x180772068",
+                          "name": "aScriptdll64Dll",
+                          "string": "ScriptDLL64.dll"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c78",
+                      "instruction": "mov edx, 104h"
+                    },
+                    {
+                      "addr": "180074c7d",
+                      "instruction": "lea rcx, [rsp+138h+var_118]"
+                    },
+                    {
+                      "addr": "180074c82",
+                      "instruction": "call sub_18006C820",
+                      "refs": [
+                        {
+                          "addr": "0x18006c820",
+                          "name": "sub_18006C820"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c87",
+                      "instruction": "lea rcx, [rsp+138h+var_118]"
+                    },
+                    {
+                      "addr": "180074c8c",
+                      "instruction": "call sub_18124A742",
+                      "refs": [
+                        {
+                          "addr": "0x18124a742",
+                          "name": "sub_18124A742"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c91",
+                      "instruction": "nop"
+                    },
+                    {
+                      "addr": "180074c92",
+                      "instruction": "mov cs:qword_180938AF0, rax",
+                      "refs": [
+                        {
+                          "addr": "0x180938af0",
+                          "name": "qword_180938AF0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c99",
+                      "instruction": "test rax, rax"
+                    },
+                    {
+                      "addr": "180074c9c",
+                      "instruction": "jnz short loc_180074CC0",
+                      "refs": [
+                        {
+                          "addr": "0x180074cc0",
+                          "name": "loc_180074CC0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074c9e",
+                      "instruction": "mov rax, cs:off_180938A90",
+                      "refs": [
+                        {
+                          "addr": "0x180938a90",
+                          "name": "off_180938A90"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074ca5",
+                      "instruction": "lea rdx, aErrorCanNotLoa; \"ERROR: can not load ScriptDLL.dll\"",
+                      "refs": [
+                        {
+                          "addr": "0x180772078",
+                          "name": "aErrorCanNotLoa",
+                          "string": "ERROR: can not load ScriptDLL.dll"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074cac",
+                      "instruction": "lea rcx, off_180938A90",
+                      "refs": [
+                        {
+                          "addr": "0x180938a90",
+                          "name": "off_180938A90"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "180074cb3",
+                      "instruction": "call qword ptr [rax+10h]"
+                    },
+                    {
+                      "addr": "180074cb6",
+                      "instruction": "xor eax, eax"
+                    },
+                    {
+                      "addr": "180074cb8",
+                      "instruction": "add rsp, 138h"
+                    },
+                    {
+                      "addr": "180074cbf",
+                      "instruction": "retn"
+                    },
+                    {
+                      "addr": "180074cc0",
+                      "instruction": "mov eax, 1",
+                      "label": "loc_180074CC0"
+                    },
+                    {
+                      "addr": "180074cc5",
+                      "instruction": "add rsp, 138h"
+                    },
+                    {
+                      "addr": "180074ccc",
+                      "instruction": "retn"
+                    }
+                  ],
+                  "stack_frame": [
+                    {
+                      "name": "var_118",
+                      "offset": "0x20",
+                      "size": "0x1",
+                      "type": "_BYTE"
+                    },
+                    {
+                      "name": "__return_address",
+                      "offset": "0x138",
+                      "size": "0x8",
+                      "type": "_UNKNOWN *"
+                    }
+                  ]
+                },
+                "instruction_count": 23,
+                "total_instructions": null,
+                "cursor": {
+                  "done": true
+                }
+              }
+            },
+            {
+              "tool": "decompile",
+              "arguments": {
+                "addr": "0x180074c60",
+                "offset": 0,
+                "max_lines": 100,
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": {
+                "addr": "0x180074c60",
+                "code": "__int64 sub_180074C60()\n{\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\n\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\n    return 1; /*0x180074c6f*/\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\n    return 1; /*0x180074cc0*/\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\n  return 0; /*0x180074cb8*/\n}",
+                "line_count": 13,
+                "total_lines": 13,
+                "truncated": false,
+                "cursor": {
+                  "done": true
+                },
+                "refs": [
+                  {
+                    "addr": "0x180938af0",
+                    "name": "qword_180938AF0"
+                  },
+                  {
+                    "addr": "0x18006c820",
+                    "name": "sub_18006C820"
+                  },
+                  {
+                    "addr": "0x180772068",
+                    "name": "aScriptdll64Dll",
+                    "string": "ScriptDLL64.dll"
+                  },
+                  {
+                    "addr": "0x18124a742",
+                    "name": "sub_18124A742"
+                  },
+                  {
+                    "addr": "0x180938a90",
+                    "name": "off_180938A90"
+                  },
+                  {
+                    "addr": "0x180772078",
+                    "name": "aErrorCanNotLoa",
+                    "string": "ERROR: can not load ScriptDLL.dll"
+                  }
+                ]
+              }
+            },
+            {
+              "tool": "callees",
+              "arguments": {
+                "addrs": [
+                  "0x180074c60"
+                ],
+                "limit": 500,
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": [
+                {
+                  "addr": "0x180074c60",
+                  "callees": [
+                    {
+                      "addr": "0x18006c820",
+                      "name": "sub_18006C820",
+                      "type": "internal"
+                    },
+                    {
+                      "addr": "0x18124a742",
+                      "name": "sub_18124A742",
+                      "type": "internal"
+                    }
+                  ],
+                  "more": false
+                }
+              ]
+            },
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x18006c820"
+                ],
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": [
+                {
+                  "query": "0x18006c820",
+                  "fn": {
+                    "addr": "0x18006c820",
+                    "name": "sub_18006C820",
+                    "size": "0x1d"
+                  },
+                  "error": null
+                }
+              ]
+            },
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x18124a742"
+                ],
+                "database": "rea-081e1775-9575-4792-af71-fe2032e7f495"
+              },
+              "result": [
+                {
+                  "query": "0x18124a742",
+                  "fn": {
+                    "addr": "0x18124a742",
+                    "name": "sub_18124A742",
+                    "size": "0x11"
+                  },
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        "normalized_result": {
+          "procedure": {
+            "address": "0x180074c60",
+            "name": "sub_180074C60",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            },
+            "signature": null,
+            "locals": []
+          },
+          "pseudocode": "__int64 sub_180074C60()\n{\n  _BYTE v1[280]; // [rsp+20h] [rbp-118h] BYREF\n\n  if ( qword_180938AF0 != 0 ) /*0x180074c6f*/\n    return 1; /*0x180074c6f*/\n  sub_18006C820(a1: v1, a2: 260, a3: aScriptdll64Dll); /*0x180074c82*/\n  qword_180938AF0 = sub_18124A742(a1: v1); /*0x180074c92*/\n  if ( qword_180938AF0 != 0 ) /*0x180074c9c*/\n    return 1; /*0x180074cc0*/\n  ((void (__fastcall *)(void ***, char *))off_180938A90[2])(a1: &off_180938A90, a2: aErrorCanNotLoa); /*0x180074cb3*/\n  return 0; /*0x180074cb8*/\n}",
+          "assembly": [
+            "0x180074c60: sub rsp, 138h",
+            "0x180074c67: cmp cs:qword_180938AF0, 0",
+            "0x180074c6f: jnz short loc_180074CC0",
+            "0x180074c71: lea r8, aScriptdll64Dll; \"ScriptDLL64.dll\"",
+            "0x180074c78: mov edx, 104h",
+            "0x180074c7d: lea rcx, [rsp+138h+var_118]",
+            "0x180074c82: call sub_18006C820",
+            "0x180074c87: lea rcx, [rsp+138h+var_118]",
+            "0x180074c8c: call sub_18124A742",
+            "0x180074c91: nop",
+            "0x180074c92: mov cs:qword_180938AF0, rax",
+            "0x180074c99: test rax, rax",
+            "0x180074c9c: jnz short loc_180074CC0",
+            "0x180074c9e: mov rax, cs:off_180938A90",
+            "0x180074ca5: lea rdx, aErrorCanNotLoa; \"ERROR: can not load ScriptDLL.dll\"",
+            "0x180074cac: lea rcx, off_180938A90",
+            "0x180074cb3: call qword ptr [rax+10h]",
+            "0x180074cb6: xor eax, eax",
+            "0x180074cb8: add rsp, 138h",
+            "0x180074cbf: retn",
+            "0x180074cc0: mov eax, 1",
+            "0x180074cc5: add rsp, 138h",
+            "0x180074ccc: retn"
+          ],
+          "comments": [],
+          "callers": [],
+          "callees": [
+            {
+              "address": "0x18006c820",
+              "name": "sub_18006C820",
+              "classification": null,
+              "body": {
+                "available": false,
+                "reason": "IDA MCP does not report complete function body ranges."
+              }
+            },
+            {
+              "address": "0x18124a742",
+              "name": "sub_18124A742",
+              "classification": null,
+              "body": {
+                "available": false,
+                "reason": "IDA MCP does not report complete function body ranges."
+              }
+            }
+          ],
+          "incoming_references": [],
+          "outgoing_references": [],
+          "referenced_strings": [],
+          "referenced_names": [],
+          "basic_blocks": [],
+          "native_api": null,
+          "native_value_flow": null,
+          "limitations": [
+            "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+            "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+            "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+            "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+            "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+            "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+            "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+            "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+          ]
+        },
+        "confidence": "observed",
+        "authority": "shipped-artifact",
+        "environment": null,
+        "limitations": [
+          "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+          "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+          "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+          "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+          "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+          "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+          "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile."
+        ],
+        "locations": [
+          {
+            "kind": "artifact-path",
+            "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\Game.dll"
+          },
+          {
+            "kind": "address",
+            "address": "0x180074c60"
+          }
+        ],
+        "evidence_links": [],
+        "analysis_profile": {
+          "provider": {
+            "id": "ida",
+            "name": "IDA Pro MCP adapter",
+            "version": "1"
+          },
+          "parameters": {
+            "version_scope": "rea-ida-adapter",
+            "engine_version": null,
+            "upstream_distribution_version": null,
+            "mode": "headless",
+            "compatibility_profile": "database-supervisor",
+            "database_revision": null,
+            "cache_policy": "live",
+            "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+          },
+          "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+        }
+      }
+    }
+  }
+}

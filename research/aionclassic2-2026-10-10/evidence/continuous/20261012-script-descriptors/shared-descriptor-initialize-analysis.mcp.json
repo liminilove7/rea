@@ -1,0 +1,617 @@
+{
+  "name": "analyze_function",
+  "arguments": {
+    "procedure": "0x1801C5060"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"result\":{\"procedure\":{\"address\":\"0x1801c5060\",\"name\":\"sub_1801C5060\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"},\"signature\":null,\"locals\":[]},\"pseudocode\":\"__int64 sub_1801C5060()\\n{\\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\\n  qword_180F05558 = 0; /*0x1801c5086*/\\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\\n  wcscpy((wchar_t *)xmmword_180F054B8, L\\\"Monster\\\"); /*0x1801c50c1*/\\n  return sub_1806BF3E0( /*0x1801c50cd*/\\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\\n           a2: (char)&qword_180F054B0);\\n}\",\"assembly\":[\"0x1801c5060: sub rsp, 48h\",\"0x1801c5064: xor edx, edx; Val\",\"0x1801c5066: lea rcx, xmmword_180F054B8; void *\",\"0x1801c506d: mov r8d, 0A0h; Size\",\"0x1801c5073: call memset\",\"0x1801c5078: movups xmm0, xmmword ptr cs:aMonster; \\\"Monster\\\"\",\"0x1801c507f: lea rax, const CMonster::`vftable'\",\"0x1801c5086: mov cs:qword_180F05558, 0\",\"0x1801c5091: mov cs:qword_180F054B0, rax\",\"0x1801c5098: lea r9, [rsp+48h+arg_0]\",\"0x1801c509d: lea rax, qword_180F054B0\",\"0x1801c50a4: xor r8d, r8d\",\"0x1801c50a7: mov [rsp+48h+arg_0], rax\",\"0x1801c50ac: lea rdx, [rsp+48h+var_18]\",\"0x1801c50b1: movzx eax, byte ptr [rsp+48h+arg_0]\",\"0x1801c50b6: lea rcx, qword_18103F828; this\",\"0x1801c50bd: mov [rsp+48h+var_28], al; char\",\"0x1801c50c1: movups cs:xmmword_180F054B8, xmm0\",\"0x1801c50c8: call sub_1806BF3E0\",\"0x1801c50cd: add rsp, 48h\",\"0x1801c50d1: retn\"],\"comments\":[],\"callers\":[],\"callees\":[{\"address\":\"0x1809323a0\",\"name\":\"memset\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}},{\"address\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}}],\"incoming_references\":[],\"outgoing_references\":[],\"referenced_strings\":[],\"referenced_names\":[],\"basic_blocks\":[],\"native_api\":null,\"native_value_flow\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\",\"Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin.\"]},\"evidence_id\":\"ev_eed65790672063c3b67312e94bf7c68290aeb723b7bebb62196af54331291f20\",\"evidence\":{\"evidence_id\":\"ev_eed65790672063c3b67312e94bf7c68290aeb723b7bebb62196af54331291f20\",\"subject\":{\"name\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\ScriptDLL64.dll\",\"digest\":{\"sha256\":\"ea42f2e51de3d46b14e958f11c4f33dc9e78a92cf62765c6a42f0cb79584ca27\"},\"format\":\"pe\",\"architecture\":\"x86_64\",\"local_path\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\ScriptDLL64.dll\"},\"provider\":{\"id\":\"ida\",\"name\":\"IDA Pro MCP adapter\",\"version\":\"1\"},\"predicate_type\":\"rea.analysis\",\"operation\":\"analyze_function\",\"parameters\":{\"procedure\":\"0x1801C5060\"},\"raw_result\":{\"upstream\":{\"name\":\"ida-pro-mcp\",\"version\":\"1.0.0\"},\"metadata_before\":{\"status\":\"ok\",\"uptime_sec\":325.422,\"idb_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\\\ScriptDLL64.dll.i64\",\"module\":\"ScriptDLL64.dll\",\"input_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\\\ScriptDLL64.dll\",\"imagebase\":\"0x180000000\",\"auto_analysis_ready\":true,\"hexrays_ready\":true,\"strings_cache_ready\":true,\"strings_cache_size\":35087},\"metadata_after\":{\"status\":\"ok\",\"uptime_sec\":325.734,\"idb_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\\\ScriptDLL64.dll.i64\",\"module\":\"ScriptDLL64.dll\",\"input_path\":\"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\\\ScriptDLL64.dll\",\"imagebase\":\"0x180000000\",\"auto_analysis_ready\":true,\"hexrays_ready\":true,\"strings_cache_ready\":true,\"strings_cache_size\":35087},\"observations\":[{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x1801C5060\"],\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":[{\"query\":\"0x1801C5060\",\"fn\":{\"addr\":\"0x1801c5060\",\"name\":\"sub_1801C5060\",\"size\":\"0x72\"},\"error\":null}]},{\"tool\":\"disasm\",\"arguments\":{\"addr\":\"0x1801c5060\",\"offset\":0,\"max_instructions\":100,\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":{\"addr\":\"0x1801c5060\",\"asm\":{\"name\":\"sub_1801C5060\",\"start_ea\":\"0x1801c5060\",\"segment\":\".text\",\"lines\":[{\"addr\":\"1801c5060\",\"instruction\":\"sub rsp, 48h\",\"label\":\"sub_1801C5060\"},{\"addr\":\"1801c5064\",\"instruction\":\"xor edx, edx; Val\",\"comments\":[\"Val\"]},{\"addr\":\"1801c5066\",\"instruction\":\"lea rcx, xmmword_180F054B8; void *\",\"comments\":[\"void *\"],\"refs\":[{\"addr\":\"0x180f054b8\",\"name\":\"xmmword_180F054B8\"}]},{\"addr\":\"1801c506d\",\"instruction\":\"mov r8d, 0A0h; Size\",\"comments\":[\"Size\"]},{\"addr\":\"1801c5073\",\"instruction\":\"call memset\",\"refs\":[{\"addr\":\"0x1809323a0\",\"name\":\"memset\"}]},{\"addr\":\"1801c5078\",\"instruction\":\"movups xmm0, xmmword ptr cs:aMonster; \\\"Monster\\\"\",\"refs\":[{\"addr\":\"0x180a4d3f8\",\"name\":\"aMonster\",\"string\":\"潍獮整�\"}]},{\"addr\":\"1801c507f\",\"instruction\":\"lea rax, const CMonster::`vftable'\",\"refs\":[{\"addr\":\"0x180a4d148\",\"name\":\"??_7CMonster@@6B@\"}]},{\"addr\":\"1801c5086\",\"instruction\":\"mov cs:qword_180F05558, 0\",\"refs\":[{\"addr\":\"0x180f05558\",\"name\":\"qword_180F05558\"}]},{\"addr\":\"1801c5091\",\"instruction\":\"mov cs:qword_180F054B0, rax\",\"refs\":[{\"addr\":\"0x180f054b0\",\"name\":\"qword_180F054B0\"}]},{\"addr\":\"1801c5098\",\"instruction\":\"lea r9, [rsp+48h+arg_0]\"},{\"addr\":\"1801c509d\",\"instruction\":\"lea rax, qword_180F054B0\",\"refs\":[{\"addr\":\"0x180f054b0\",\"name\":\"qword_180F054B0\"}]},{\"addr\":\"1801c50a4\",\"instruction\":\"xor r8d, r8d\"},{\"addr\":\"1801c50a7\",\"instruction\":\"mov [rsp+48h+arg_0], rax\"},{\"addr\":\"1801c50ac\",\"instruction\":\"lea rdx, [rsp+48h+var_18]\"},{\"addr\":\"1801c50b1\",\"instruction\":\"movzx eax, byte ptr [rsp+48h+arg_0]\"},{\"addr\":\"1801c50b6\",\"instruction\":\"lea rcx, qword_18103F828; this\",\"comments\":[\"this\"],\"refs\":[{\"addr\":\"0x18103f828\",\"name\":\"qword_18103F828\"}]},{\"addr\":\"1801c50bd\",\"instruction\":\"mov [rsp+48h+var_28], al; char\",\"comments\":[\"char\"]},{\"addr\":\"1801c50c1\",\"instruction\":\"movups cs:xmmword_180F054B8, xmm0\",\"refs\":[{\"addr\":\"0x180f054b8\",\"name\":\"xmmword_180F054B8\"}]},{\"addr\":\"1801c50c8\",\"instruction\":\"call sub_1806BF3E0\",\"refs\":[{\"addr\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\"}]},{\"addr\":\"1801c50cd\",\"instruction\":\"add rsp, 48h\"},{\"addr\":\"1801c50d1\",\"instruction\":\"retn\"}],\"stack_frame\":[{\"name\":\"var_28\",\"offset\":\"0x20\",\"size\":\"0x1\",\"type\":\"char\"},{\"name\":\"var_18\",\"offset\":\"0x30\",\"size\":\"0x1\",\"type\":\"_BYTE\"},{\"name\":\"__return_address\",\"offset\":\"0x48\",\"size\":\"0x8\",\"type\":\"_UNKNOWN *\"},{\"name\":\"arg_0\",\"offset\":\"0x50\",\"size\":\"0x8\",\"type\":\"_QWORD\"}]},\"instruction_count\":21,\"total_instructions\":null,\"cursor\":{\"done\":true}}},{\"tool\":\"decompile\",\"arguments\":{\"addr\":\"0x1801c5060\",\"offset\":0,\"max_lines\":100,\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":{\"addr\":\"0x1801c5060\",\"code\":\"__int64 sub_1801C5060()\\n{\\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\\n  qword_180F05558 = 0; /*0x1801c5086*/\\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\\n  wcscpy((wchar_t *)xmmword_180F054B8, L\\\"Monster\\\"); /*0x1801c50c1*/\\n  return sub_1806BF3E0( /*0x1801c50cd*/\\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\\n           a2: (char)&qword_180F054B0);\\n}\",\"line_count\":10,\"total_lines\":10,\"truncated\":false,\"cursor\":{\"done\":true},\"refs\":[{\"addr\":\"0x1809323a0\",\"name\":\"memset\"},{\"addr\":\"0x180f054b8\",\"name\":\"xmmword_180F054B8\"},{\"addr\":\"0x180f05558\",\"name\":\"qword_180F05558\"},{\"addr\":\"0x180f054b0\",\"name\":\"qword_180F054B0\"},{\"addr\":\"0x180a4d148\",\"name\":\"??_7CMonster@@6B@\"},{\"addr\":\"0x180a4d3f8\",\"name\":\"aMonster\",\"string\":\"潍獮整�\"},{\"addr\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\"},{\"addr\":\"0x18103f828\",\"name\":\"qword_18103F828\"}]}},{\"tool\":\"callees\",\"arguments\":{\"addrs\":[\"0x1801c5060\"],\"limit\":500,\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":[{\"addr\":\"0x1801c5060\",\"callees\":[{\"addr\":\"0x1809323a0\",\"name\":\"memset\",\"type\":\"internal\"},{\"addr\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\",\"type\":\"internal\"}],\"more\":false}]},{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x1809323a0\"],\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":[{\"query\":\"0x1809323a0\",\"fn\":{\"addr\":\"0x1809323a0\",\"name\":\"memset\",\"size\":\"0x190\"},\"error\":null}]},{\"tool\":\"lookup_funcs\",\"arguments\":{\"queries\":[\"0x1806bf3e0\"],\"database\":\"rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3\"},\"result\":[{\"query\":\"0x1806bf3e0\",\"fn\":{\"addr\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\",\"size\":\"0x115\"},\"error\":null}]}]},\"normalized_result\":{\"procedure\":{\"address\":\"0x1801c5060\",\"name\":\"sub_1801C5060\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"},\"signature\":null,\"locals\":[]},\"pseudocode\":\"__int64 sub_1801C5060()\\n{\\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\\n  qword_180F05558 = 0; /*0x1801c5086*/\\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\\n  wcscpy((wchar_t *)xmmword_180F054B8, L\\\"Monster\\\"); /*0x1801c50c1*/\\n  return sub_1806BF3E0( /*0x1801c50cd*/\\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\\n           a2: (char)&qword_180F054B0);\\n}\",\"assembly\":[\"0x1801c5060: sub rsp, 48h\",\"0x1801c5064: xor edx, edx; Val\",\"0x1801c5066: lea rcx, xmmword_180F054B8; void *\",\"0x1801c506d: mov r8d, 0A0h; Size\",\"0x1801c5073: call memset\",\"0x1801c5078: movups xmm0, xmmword ptr cs:aMonster; \\\"Monster\\\"\",\"0x1801c507f: lea rax, const CMonster::`vftable'\",\"0x1801c5086: mov cs:qword_180F05558, 0\",\"0x1801c5091: mov cs:qword_180F054B0, rax\",\"0x1801c5098: lea r9, [rsp+48h+arg_0]\",\"0x1801c509d: lea rax, qword_180F054B0\",\"0x1801c50a4: xor r8d, r8d\",\"0x1801c50a7: mov [rsp+48h+arg_0], rax\",\"0x1801c50ac: lea rdx, [rsp+48h+var_18]\",\"0x1801c50b1: movzx eax, byte ptr [rsp+48h+arg_0]\",\"0x1801c50b6: lea rcx, qword_18103F828; this\",\"0x1801c50bd: mov [rsp+48h+var_28], al; char\",\"0x1801c50c1: movups cs:xmmword_180F054B8, xmm0\",\"0x1801c50c8: call sub_1806BF3E0\",\"0x1801c50cd: add rsp, 48h\",\"0x1801c50d1: retn\"],\"comments\":[],\"callers\":[],\"callees\":[{\"address\":\"0x1809323a0\",\"name\":\"memset\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}},{\"address\":\"0x1806bf3e0\",\"name\":\"sub_1806BF3E0\",\"classification\":null,\"body\":{\"available\":false,\"reason\":\"IDA MCP does not report complete function body ranges.\"}}],\"incoming_references\":[],\"outgoing_references\":[],\"referenced_strings\":[],\"referenced_names\":[],\"basic_blocks\":[],\"native_api\":null,\"native_value_flow\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\",\"Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin.\"]},\"confidence\":\"observed\",\"authority\":\"shipped-artifact\",\"environment\":null,\"limitations\":[\"Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.\",\"Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.\",\"Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.\",\"Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.\",\"Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.\",\"Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.\",\"Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.\"],\"locations\":[{\"kind\":\"artifact-path\",\"path\":\"D:\\\\REA\\\\research\\\\aionclassic2-2026-10-10\\\\samples\\\\ScriptDLL64.dll\"},{\"kind\":\"address\",\"address\":\"0x1801c5060\"}],\"evidence_links\":[],\"analysis_profile\":{\"provider\":{\"id\":\"ida\",\"name\":\"IDA Pro MCP adapter\",\"version\":\"1\"},\"parameters\":{\"version_scope\":\"rea-ida-adapter\",\"engine_version\":null,\"upstream_distribution_version\":null,\"mode\":\"headless\",\"compatibility_profile\":\"database-supervisor\",\"database_revision\":null,\"cache_policy\":\"live\",\"registration_digest\":\"1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760\"},\"digest\":\"f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a\"}}}"
+      }
+    ],
+    "structuredContent": {
+      "result": {
+        "procedure": {
+          "address": "0x1801c5060",
+          "name": "sub_1801C5060",
+          "classification": null,
+          "body": {
+            "available": false,
+            "reason": "IDA MCP does not report complete function body ranges."
+          },
+          "signature": null,
+          "locals": []
+        },
+        "pseudocode": "__int64 sub_1801C5060()\n{\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\n  qword_180F05558 = 0; /*0x1801c5086*/\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\n  wcscpy((wchar_t *)xmmword_180F054B8, L\"Monster\"); /*0x1801c50c1*/\n  return sub_1806BF3E0( /*0x1801c50cd*/\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\n           a2: (char)&qword_180F054B0);\n}",
+        "assembly": [
+          "0x1801c5060: sub rsp, 48h",
+          "0x1801c5064: xor edx, edx; Val",
+          "0x1801c5066: lea rcx, xmmword_180F054B8; void *",
+          "0x1801c506d: mov r8d, 0A0h; Size",
+          "0x1801c5073: call memset",
+          "0x1801c5078: movups xmm0, xmmword ptr cs:aMonster; \"Monster\"",
+          "0x1801c507f: lea rax, const CMonster::`vftable'",
+          "0x1801c5086: mov cs:qword_180F05558, 0",
+          "0x1801c5091: mov cs:qword_180F054B0, rax",
+          "0x1801c5098: lea r9, [rsp+48h+arg_0]",
+          "0x1801c509d: lea rax, qword_180F054B0",
+          "0x1801c50a4: xor r8d, r8d",
+          "0x1801c50a7: mov [rsp+48h+arg_0], rax",
+          "0x1801c50ac: lea rdx, [rsp+48h+var_18]",
+          "0x1801c50b1: movzx eax, byte ptr [rsp+48h+arg_0]",
+          "0x1801c50b6: lea rcx, qword_18103F828; this",
+          "0x1801c50bd: mov [rsp+48h+var_28], al; char",
+          "0x1801c50c1: movups cs:xmmword_180F054B8, xmm0",
+          "0x1801c50c8: call sub_1806BF3E0",
+          "0x1801c50cd: add rsp, 48h",
+          "0x1801c50d1: retn"
+        ],
+        "comments": [],
+        "callers": [],
+        "callees": [
+          {
+            "address": "0x1809323a0",
+            "name": "memset",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            }
+          },
+          {
+            "address": "0x1806bf3e0",
+            "name": "sub_1806BF3E0",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            }
+          }
+        ],
+        "incoming_references": [],
+        "outgoing_references": [],
+        "referenced_strings": [],
+        "referenced_names": [],
+        "basic_blocks": [],
+        "native_api": null,
+        "native_value_flow": null,
+        "limitations": [
+          "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+          "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+          "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+          "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+          "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+          "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+          "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+          "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+        ]
+      },
+      "evidence_id": "ev_eed65790672063c3b67312e94bf7c68290aeb723b7bebb62196af54331291f20",
+      "evidence": {
+        "evidence_id": "ev_eed65790672063c3b67312e94bf7c68290aeb723b7bebb62196af54331291f20",
+        "subject": {
+          "name": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\ScriptDLL64.dll",
+          "digest": {
+            "sha256": "ea42f2e51de3d46b14e958f11c4f33dc9e78a92cf62765c6a42f0cb79584ca27"
+          },
+          "format": "pe",
+          "architecture": "x86_64",
+          "local_path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\ScriptDLL64.dll"
+        },
+        "provider": {
+          "id": "ida",
+          "name": "IDA Pro MCP adapter",
+          "version": "1"
+        },
+        "predicate_type": "rea.analysis",
+        "operation": "analyze_function",
+        "parameters": {
+          "procedure": "0x1801C5060"
+        },
+        "raw_result": {
+          "upstream": {
+            "name": "ida-pro-mcp",
+            "version": "1.0.0"
+          },
+          "metadata_before": {
+            "status": "ok",
+            "uptime_sec": 325.422,
+            "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\ScriptDLL64.dll.i64",
+            "module": "ScriptDLL64.dll",
+            "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\ScriptDLL64.dll",
+            "imagebase": "0x180000000",
+            "auto_analysis_ready": true,
+            "hexrays_ready": true,
+            "strings_cache_ready": true,
+            "strings_cache_size": 35087
+          },
+          "metadata_after": {
+            "status": "ok",
+            "uptime_sec": 325.734,
+            "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\ScriptDLL64.dll.i64",
+            "module": "ScriptDLL64.dll",
+            "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-9ebaa52fd044b39013ce2899e7e09cfc\\ScriptDLL64.dll",
+            "imagebase": "0x180000000",
+            "auto_analysis_ready": true,
+            "hexrays_ready": true,
+            "strings_cache_ready": true,
+            "strings_cache_size": 35087
+          },
+          "observations": [
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x1801C5060"
+                ],
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": [
+                {
+                  "query": "0x1801C5060",
+                  "fn": {
+                    "addr": "0x1801c5060",
+                    "name": "sub_1801C5060",
+                    "size": "0x72"
+                  },
+                  "error": null
+                }
+              ]
+            },
+            {
+              "tool": "disasm",
+              "arguments": {
+                "addr": "0x1801c5060",
+                "offset": 0,
+                "max_instructions": 100,
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": {
+                "addr": "0x1801c5060",
+                "asm": {
+                  "name": "sub_1801C5060",
+                  "start_ea": "0x1801c5060",
+                  "segment": ".text",
+                  "lines": [
+                    {
+                      "addr": "1801c5060",
+                      "instruction": "sub rsp, 48h",
+                      "label": "sub_1801C5060"
+                    },
+                    {
+                      "addr": "1801c5064",
+                      "instruction": "xor edx, edx; Val",
+                      "comments": [
+                        "Val"
+                      ]
+                    },
+                    {
+                      "addr": "1801c5066",
+                      "instruction": "lea rcx, xmmword_180F054B8; void *",
+                      "comments": [
+                        "void *"
+                      ],
+                      "refs": [
+                        {
+                          "addr": "0x180f054b8",
+                          "name": "xmmword_180F054B8"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c506d",
+                      "instruction": "mov r8d, 0A0h; Size",
+                      "comments": [
+                        "Size"
+                      ]
+                    },
+                    {
+                      "addr": "1801c5073",
+                      "instruction": "call memset",
+                      "refs": [
+                        {
+                          "addr": "0x1809323a0",
+                          "name": "memset"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c5078",
+                      "instruction": "movups xmm0, xmmword ptr cs:aMonster; \"Monster\"",
+                      "refs": [
+                        {
+                          "addr": "0x180a4d3f8",
+                          "name": "aMonster",
+                          "string": "潍獮整�"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c507f",
+                      "instruction": "lea rax, const CMonster::`vftable'",
+                      "refs": [
+                        {
+                          "addr": "0x180a4d148",
+                          "name": "??_7CMonster@@6B@"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c5086",
+                      "instruction": "mov cs:qword_180F05558, 0",
+                      "refs": [
+                        {
+                          "addr": "0x180f05558",
+                          "name": "qword_180F05558"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c5091",
+                      "instruction": "mov cs:qword_180F054B0, rax",
+                      "refs": [
+                        {
+                          "addr": "0x180f054b0",
+                          "name": "qword_180F054B0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c5098",
+                      "instruction": "lea r9, [rsp+48h+arg_0]"
+                    },
+                    {
+                      "addr": "1801c509d",
+                      "instruction": "lea rax, qword_180F054B0",
+                      "refs": [
+                        {
+                          "addr": "0x180f054b0",
+                          "name": "qword_180F054B0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c50a4",
+                      "instruction": "xor r8d, r8d"
+                    },
+                    {
+                      "addr": "1801c50a7",
+                      "instruction": "mov [rsp+48h+arg_0], rax"
+                    },
+                    {
+                      "addr": "1801c50ac",
+                      "instruction": "lea rdx, [rsp+48h+var_18]"
+                    },
+                    {
+                      "addr": "1801c50b1",
+                      "instruction": "movzx eax, byte ptr [rsp+48h+arg_0]"
+                    },
+                    {
+                      "addr": "1801c50b6",
+                      "instruction": "lea rcx, qword_18103F828; this",
+                      "comments": [
+                        "this"
+                      ],
+                      "refs": [
+                        {
+                          "addr": "0x18103f828",
+                          "name": "qword_18103F828"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c50bd",
+                      "instruction": "mov [rsp+48h+var_28], al; char",
+                      "comments": [
+                        "char"
+                      ]
+                    },
+                    {
+                      "addr": "1801c50c1",
+                      "instruction": "movups cs:xmmword_180F054B8, xmm0",
+                      "refs": [
+                        {
+                          "addr": "0x180f054b8",
+                          "name": "xmmword_180F054B8"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c50c8",
+                      "instruction": "call sub_1806BF3E0",
+                      "refs": [
+                        {
+                          "addr": "0x1806bf3e0",
+                          "name": "sub_1806BF3E0"
+                        }
+                      ]
+                    },
+                    {
+                      "addr": "1801c50cd",
+                      "instruction": "add rsp, 48h"
+                    },
+                    {
+                      "addr": "1801c50d1",
+                      "instruction": "retn"
+                    }
+                  ],
+                  "stack_frame": [
+                    {
+                      "name": "var_28",
+                      "offset": "0x20",
+                      "size": "0x1",
+                      "type": "char"
+                    },
+                    {
+                      "name": "var_18",
+                      "offset": "0x30",
+                      "size": "0x1",
+                      "type": "_BYTE"
+                    },
+                    {
+                      "name": "__return_address",
+                      "offset": "0x48",
+                      "size": "0x8",
+                      "type": "_UNKNOWN *"
+                    },
+                    {
+                      "name": "arg_0",
+                      "offset": "0x50",
+                      "size": "0x8",
+                      "type": "_QWORD"
+                    }
+                  ]
+                },
+                "instruction_count": 21,
+                "total_instructions": null,
+                "cursor": {
+                  "done": true
+                }
+              }
+            },
+            {
+              "tool": "decompile",
+              "arguments": {
+                "addr": "0x1801c5060",
+                "offset": 0,
+                "max_lines": 100,
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": {
+                "addr": "0x1801c5060",
+                "code": "__int64 sub_1801C5060()\n{\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\n  qword_180F05558 = 0; /*0x1801c5086*/\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\n  wcscpy((wchar_t *)xmmword_180F054B8, L\"Monster\"); /*0x1801c50c1*/\n  return sub_1806BF3E0( /*0x1801c50cd*/\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\n           a2: (char)&qword_180F054B0);\n}",
+                "line_count": 10,
+                "total_lines": 10,
+                "truncated": false,
+                "cursor": {
+                  "done": true
+                },
+                "refs": [
+                  {
+                    "addr": "0x1809323a0",
+                    "name": "memset"
+                  },
+                  {
+                    "addr": "0x180f054b8",
+                    "name": "xmmword_180F054B8"
+                  },
+                  {
+                    "addr": "0x180f05558",
+                    "name": "qword_180F05558"
+                  },
+                  {
+                    "addr": "0x180f054b0",
+                    "name": "qword_180F054B0"
+                  },
+                  {
+                    "addr": "0x180a4d148",
+                    "name": "??_7CMonster@@6B@"
+                  },
+                  {
+                    "addr": "0x180a4d3f8",
+                    "name": "aMonster",
+                    "string": "潍獮整�"
+                  },
+                  {
+                    "addr": "0x1806bf3e0",
+                    "name": "sub_1806BF3E0"
+                  },
+                  {
+                    "addr": "0x18103f828",
+                    "name": "qword_18103F828"
+                  }
+                ]
+              }
+            },
+            {
+              "tool": "callees",
+              "arguments": {
+                "addrs": [
+                  "0x1801c5060"
+                ],
+                "limit": 500,
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": [
+                {
+                  "addr": "0x1801c5060",
+                  "callees": [
+                    {
+                      "addr": "0x1809323a0",
+                      "name": "memset",
+                      "type": "internal"
+                    },
+                    {
+                      "addr": "0x1806bf3e0",
+                      "name": "sub_1806BF3E0",
+                      "type": "internal"
+                    }
+                  ],
+                  "more": false
+                }
+              ]
+            },
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x1809323a0"
+                ],
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": [
+                {
+                  "query": "0x1809323a0",
+                  "fn": {
+                    "addr": "0x1809323a0",
+                    "name": "memset",
+                    "size": "0x190"
+                  },
+                  "error": null
+                }
+              ]
+            },
+            {
+              "tool": "lookup_funcs",
+              "arguments": {
+                "queries": [
+                  "0x1806bf3e0"
+                ],
+                "database": "rea-11ae6a11-366d-4b9c-abbf-f4eff1cc76d3"
+              },
+              "result": [
+                {
+                  "query": "0x1806bf3e0",
+                  "fn": {
+                    "addr": "0x1806bf3e0",
+                    "name": "sub_1806BF3E0",
+                    "size": "0x115"
+                  },
+                  "error": null
+                }
+              ]
+            }
+          ]
+        },
+        "normalized_result": {
+          "procedure": {
+            "address": "0x1801c5060",
+            "name": "sub_1801C5060",
+            "classification": null,
+            "body": {
+              "available": false,
+              "reason": "IDA MCP does not report complete function body ranges."
+            },
+            "signature": null,
+            "locals": []
+          },
+          "pseudocode": "__int64 sub_1801C5060()\n{\n  memset(a1: xmmword_180F054B8, Val: 0, Size: sizeof(xmmword_180F054B8)); /*0x1801c5073*/\n  qword_180F05558 = 0; /*0x1801c5086*/\n  qword_180F054B0 = (__int64)&CMonster::`vftable'; /*0x1801c5091*/\n  wcscpy((wchar_t *)xmmword_180F054B8, L\"Monster\"); /*0x1801c50c1*/\n  return sub_1806BF3E0( /*0x1801c50cd*/\n           this: (std::_Tree_val<struct std::_Tree_simple_types<struct std::pair<void * const, struct _anonymous_namespace_::_Mutex_count_pair>>> *)&qword_18103F828,\n           a2: (char)&qword_180F054B0);\n}",
+          "assembly": [
+            "0x1801c5060: sub rsp, 48h",
+            "0x1801c5064: xor edx, edx; Val",
+            "0x1801c5066: lea rcx, xmmword_180F054B8; void *",
+            "0x1801c506d: mov r8d, 0A0h; Size",
+            "0x1801c5073: call memset",
+            "0x1801c5078: movups xmm0, xmmword ptr cs:aMonster; \"Monster\"",
+            "0x1801c507f: lea rax, const CMonster::`vftable'",
+            "0x1801c5086: mov cs:qword_180F05558, 0",
+            "0x1801c5091: mov cs:qword_180F054B0, rax",
+            "0x1801c5098: lea r9, [rsp+48h+arg_0]",
+            "0x1801c509d: lea rax, qword_180F054B0",
+            "0x1801c50a4: xor r8d, r8d",
+            "0x1801c50a7: mov [rsp+48h+arg_0], rax",
+            "0x1801c50ac: lea rdx, [rsp+48h+var_18]",
+            "0x1801c50b1: movzx eax, byte ptr [rsp+48h+arg_0]",
+            "0x1801c50b6: lea rcx, qword_18103F828; this",
+            "0x1801c50bd: mov [rsp+48h+var_28], al; char",
+            "0x1801c50c1: movups cs:xmmword_180F054B8, xmm0",
+            "0x1801c50c8: call sub_1806BF3E0",
+            "0x1801c50cd: add rsp, 48h",
+            "0x1801c50d1: retn"
+          ],
+          "comments": [],
+          "callers": [],
+          "callees": [
+            {
+              "address": "0x1809323a0",
+              "name": "memset",
+              "classification": null,
+              "body": {
+                "available": false,
+                "reason": "IDA MCP does not report complete function body ranges."
+              }
+            },
+            {
+              "address": "0x1806bf3e0",
+              "name": "sub_1806BF3E0",
+              "classification": null,
+              "body": {
+                "available": false,
+                "reason": "IDA MCP does not report complete function body ranges."
+              }
+            }
+          ],
+          "incoming_references": [],
+          "outgoing_references": [],
+          "referenced_strings": [],
+          "referenced_names": [],
+          "basic_blocks": [],
+          "native_api": null,
+          "native_value_flow": null,
+          "limitations": [
+            "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+            "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+            "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+            "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+            "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+            "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+            "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile.",
+            "Stack frame records are not evidence of source locals. Rendered comments do not identify regular versus inline origin."
+          ]
+        },
+        "confidence": "observed",
+        "authority": "shipped-artifact",
+        "environment": null,
+        "limitations": [
+          "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+          "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+          "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+          "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+          "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+          "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence.",
+          "Modern upstream xrefs classify references as code or data, without proving call edges. Direct callers are unavailable in this profile."
+        ],
+        "locations": [
+          {
+            "kind": "artifact-path",
+            "path": "D:\\REA\\research\\aionclassic2-2026-10-10\\samples\\ScriptDLL64.dll"
+          },
+          {
+            "kind": "address",
+            "address": "0x1801c5060"
+          }
+        ],
+        "evidence_links": [],
+        "analysis_profile": {
+          "provider": {
+            "id": "ida",
+            "name": "IDA Pro MCP adapter",
+            "version": "1"
+          },
+          "parameters": {
+            "version_scope": "rea-ida-adapter",
+            "engine_version": null,
+            "upstream_distribution_version": null,
+            "mode": "headless",
+            "compatibility_profile": "database-supervisor",
+            "database_revision": null,
+            "cache_policy": "live",
+            "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+          },
+          "digest": "f62992e84fb65b7fee110e7d0d35b57ab1983370151b682a465a17e587496b6a"
+        }
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@
 
 新增[对象身份与状态通知取证](reports/AION对象身份与状态通知.md)：排除 UI3DView 同偏移写入，识别 Player 复位引用中的异常展开元数据，连接 S_HIT_POINT 的对象/显示字段，并区分 S_FLIGHT_POINT。受保护时钟的离线 CPU 轨迹与明确失败边界也已保留。
 
-另见[脚本模块接口](reports/AION脚本模块接口.md)与[启动和模块装载](reports/AION启动与模块装载.md)：十个 IScriptDLLImpl 虚槽、具体编译脚本登记，以及 CrySystem 工厂与 Game 初始化记录均取得 REA 指令。累计991次持续分析/状态请求，成功836、失败155；所有失败及未完成范围保留。
+另见[脚本模块接口](reports/AION脚本模块接口.md)与[启动和模块装载](reports/AION启动与模块装载.md)：已连接 IScriptDLLImpl、共享 CMonster、Game 的 NpcScriptMgr 调用者及0x28版本校验。已读客户端对象操作槽为短返回体，不能当作官方后台伤害公式。累计1053次持续分析/状态请求，成功882、失败171；所有失败及未完成范围保留。
 
 最新归档新增第九轮REA分析、原始响应与失败记录、49项HTML检查。整客户端及当前官方后台尚未完整破解。
 
@@ -18,7 +18,7 @@
 
 本机已继续完成第十轮 IDA 9.5 实际分析：23 次 REA 请求、17 成功、6 失败，15 项证据核对通过。新增保护器指纹候选、间接比较槽纠正、条件登记与显示消费者追踪；结果见 [完整分析记录](reports/AION_ANALYSIS.md) 文末和 [第十轮核对 JSON](evidence/round10/verification.json)。此阶段新增内容尚未发布到上述 Release。
 
-2026-10-12 的 Markdown 报告、分析脚本、第十/十一轮及持续分析原始响应已同步到 [GitHub main](https://github.com/liminilove7/rea/tree/main/research/aionclassic2-2026-10-10)，同时保留[研究分支](https://github.com/liminilove7/rea/tree/codex/aion-research-archive-20261011/research/aionclassic2-2026-10-10)。上面的 Release 和 HTML 仍为第九轮归档；最新结论请阅读持续分析 Markdown。新增归档不包含样本二进制。
+2026-10-12至13日的 Markdown 报告、分析脚本、第十/十一轮及持续分析原始响应同步到 [GitHub main](https://github.com/liminilove7/rea/tree/main/research/aionclassic2-2026-10-10)，同时保留[研究分支](https://github.com/liminilove7/rea/tree/codex/aion-research-archive-20261011/research/aionclassic2-2026-10-10)。上面的 Release 和 HTML 仍为第九轮归档；最新结论请阅读持续分析 Markdown。新增归档不包含样本二进制。
 
 ## 阅读入口
 

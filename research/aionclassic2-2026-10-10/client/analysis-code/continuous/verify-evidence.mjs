@@ -20,6 +20,10 @@ const { analysisErrorProjectionSchema } = await import(pathToFileURL(path.join(r
 const { evidenceSchema } = await import(pathToFileURL(path.join(repository, 'dist/domain/evidence.js')).href);
 assert.equal(createHash('sha256').update(await readFile(path.join(study, 'samples/Game.dll'))).digest('hex'), expected);
 const sessions = [];
+async function workspacePresent(workspace) {
+  try { await access(workspace); return true; }
+  catch (error) { if (error.code === 'ENOENT') return false; throw error; }
+}
 for (const entry of await readdir(root, { withFileTypes: true })) {
   if (!entry.isDirectory()) continue;
   const directory = path.join(root, entry.name);
@@ -75,6 +79,7 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
   let closed = false;
   let cleanupConfirmed = false;
   let cleanupFailure = null;
+  let interruptionObservation = null;
   const retainedWorkspaces = [];
   try {
     const summary = await read('session-summary.json');
@@ -93,8 +98,20 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
       cleanupConfirmed = true;
     }
   } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  try {
+    interruptionObservation = await read('interruption-observation.json');
+    assert.equal(interruptionObservation.normalCloseReceiptPresent, false);
+    assert.equal(interruptionObservation.afterSha256, sessionDigest);
+    assert.equal(interruptionObservation.completedRequests, rows.length);
+    assert.ok(workspaces.has(interruptionObservation.privateWorkspace));
+    assert.equal(interruptionObservation.nativeTargetExecuted, false);
+    assert.equal(closed, false);
+    for (const workspace of workspaces) {
+      if (await workspacePresent(workspace)) retainedWorkspaces.push(workspace);
+    }
+  } catch (error) { if (error.code !== 'ENOENT') throw error; }
   sessions.push({ directory: entry.name, sample: path.basename(progress.target), targetSha256: sessionDigest, requests: rows.length, successes, evidenceSuccesses, sessionStateChecks, failures,
-    closed, cleanupConfirmed, cleanupFailure, retainedWorkspaces, privateWorkspaces: [...workspaces] });
+    closed, cleanupConfirmed, cleanupFailure, interruptionObservation, retainedWorkspaces, privateWorkspaces: [...workspaces] });
 }
 const report = { passed: true, targetSha256: expected, targetExecuted: false, analysisComplete: false,
   verifiedAt: new Date().toISOString(), cleanupComplete: sessions.every(session => session.closed && session.cleanupConfirmed), sessions,

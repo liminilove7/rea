@@ -74,7 +74,8 @@ for (const row of binding.functions) assert.equal(source.readBigUInt64LE(Number.
 const report = { passed: true, targetSha256: expected, nativeTargetExecuted: false, wholeModuleComplete: false,
   verifiedAt: new Date().toISOString(), anchors, interfaceType: rtti.typeName, interfaceSlots: rtti.functions,
   compiledScript: binding,
-  unknowns: ['Actual external caller parameter type and implementation', 'Compiled script descriptor producer/consumer',
-    'Runtime initialization and all compiled script behavior', 'Current authoritative PvP/damage formula'] };
+  unknowns: ['Actual runtime external caller identity and any patched implementation', 'All compiled script parent-link consumers',
+    'Runtime initialization and all compiled script behavior', 'Current authoritative PvP/damage formula'],
+  subsequentStaticBinding: 'Game.dll NpcScriptMgr caller and shared ScriptDLL CMonster initialization are checked separately in game-script-binding-verification.json and script-descriptors-verification.json' };
 await writeFile(path.join(root, 'script-interface-verification.json'), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ passed: true, instructionAnchors: anchors.length, interfaceSlots: rtti.functions.length, compiledScriptSlots: binding.functions.length }));

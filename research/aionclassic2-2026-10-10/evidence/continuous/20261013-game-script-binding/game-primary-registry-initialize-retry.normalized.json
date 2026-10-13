@@ -1,0 +1,50 @@
+{
+  "procedure": {
+    "address": "0x1800010a0",
+    "name": "sub_1800010A0",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1800010a0: push rbx",
+    "0x1800010a2: sub rsp, 20h",
+    "0x1800010a6: call sub_180079470",
+    "0x1800010ab: xor ebx, ebx",
+    "0x1800010ad: mov cs:qword_180938A98, rax",
+    "0x1800010b4: mov cs:qword_180938AA8, rbx",
+    "0x1800010bb: mov cs:qword_180938AB0, rbx",
+    "0x1800010c2: call sub_180079470",
+    "0x1800010c7: mov cs:qword_180938AA8, rax",
+    "0x1800010ce: mov cs:qword_180938AB8, rbx",
+    "0x1800010d5: mov cs:qword_180938AC0, rbx",
+    "0x1800010dc: call sub_180079420",
+    "0x1800010e1: xorps xmm0, xmm0",
+    "0x1800010e4: mov cs:qword_180938AB8, rax",
+    "0x1800010eb: xor edx, edx",
+    "0x1800010ed: movdqa cs:xmmword_180938AE0, xmm0",
+    "0x1800010f5: mov r8d, 13B00h",
+    "0x1800010fb: mov cs:qword_180938B00, rbx",
+    "0x180001102: lea rcx, dword_180938B0C",
+    "0x180001109: mov cs:qword_180938AC8, rbx",
+    "0x180001110: mov cs:qword_180938AD0, rbx",
+    "0x180001117: mov cs:qword_180938AF0, rbx",
+    "0x18000111e: mov cs:qword_180938AD8, rbx",
+    "0x180001125: call sub_1806A8630",
+    "0x18000112a: lea rcx, sub_1806B2A30",
+    "0x180001131: mov cs:dword_180938B08, ebx",
+    "0x180001137: add rsp, 20h",
+    "0x18000113b: pop rbx",
+    "0x18000113c: jmp sub_180684C0C"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}
