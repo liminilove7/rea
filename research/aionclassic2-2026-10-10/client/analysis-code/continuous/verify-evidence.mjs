@@ -14,6 +14,8 @@ const knownSamples = new Map([
   ['CrySystem.dll', '8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061'],
   ['ScriptDLL64.dll', 'ea42f2e51de3d46b14e958f11c4f33dc9e78a92cf62765c6a42f0cb79584ca27'],
   ['Aion.bin', '17c8de936526f119e16c1923ba5922d3a524698f04c01562fc878424653cda1e'],
+  ['CryEntitySystem.dll', 'd99a60818f27bbe7f50ebef6e4ba6026b25b6d062b60db3ad3ae0eace22f4b90'],
+  ['CryPhysics.dll', '7afd2f7080d8180888d47a790acb1e5ae31533ee260c6563e18661057cf7c38f'],
 ]);
 const { toolContract } = await import(pathToFileURL(path.join(repository, 'dist/contracts/toolContracts.js')).href);
 const { analysisErrorProjectionSchema } = await import(pathToFileURL(path.join(repository, 'dist/contracts/errorSchemas.js')).href);
@@ -39,7 +41,9 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
   const sessionDigest = knownSamples.get(path.basename(progress.target));
   const expectedBase = path.basename(progress.target) === 'Aion.bin' ? '0x140000000' : '0x180000000';
   assert.ok(sessionDigest, 'Session must bind a known case sample');
-  assert.equal(path.resolve(progress.target), path.join(study, 'samples', path.basename(progress.target)));
+  const admittedSourceDirectory = ['CryEntitySystem.dll', 'CryPhysics.dll'].includes(path.basename(progress.target))
+    ? 'client/programs/aion-bin64/bin64' : 'samples';
+  assert.equal(path.resolve(progress.target), path.join(study, admittedSourceDirectory, path.basename(progress.target)));
   assert.equal(progress.targetSha256, sessionDigest);
   assert.equal(createHash('sha256').update(await readFile(progress.target)).digest('hex'), sessionDigest);
   for (const row of rows) {

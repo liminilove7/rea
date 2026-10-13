@@ -79,7 +79,7 @@ assert.equal(original.readBigUInt64LE(0x841cd8 + 0x2b8), 0x180012720n);
 assert.equal(original.readBigUInt64LE(0x841cd8 + 0x260), 0x180058ca0n);
 assert.ok(tables);
 const checkedReports = ['reports/AION持续分析.md', 'reports/AION对象身份与状态通知.md',
-  'reports/AION脚本模块接口.md', 'reports/AION启动与模块装载.md', 'README.md', 'CONTINUE_TOMORROW.md'];
+  'reports/AION脚本模块接口.md', 'reports/AION启动与模块装载.md', 'reports/AION移速动作与攻速修改研究.md', 'README.md', 'CONTINUE_TOMORROW.md'];
 let checkedLocalLinks = 0;
 for (const report of checkedReports) {
   const reportFile = path.join(study, report);

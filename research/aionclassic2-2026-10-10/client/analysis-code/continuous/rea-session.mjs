@@ -16,10 +16,14 @@ const sampleDigests = new Map([
   ['CrySystem.dll', '8705aeef77411a28e178832f2f242128b0b018b9546f58878c9e69df8f4e9061'],
   ['ScriptDLL64.dll', 'ea42f2e51de3d46b14e958f11c4f33dc9e78a92cf62765c6a42f0cb79584ca27'],
   ['Aion.bin', '17c8de936526f119e16c1923ba5922d3a524698f04c01562fc878424653cda1e'],
+  ['CryEntitySystem.dll', 'd99a60818f27bbe7f50ebef6e4ba6026b25b6d062b60db3ad3ae0eace22f4b90'],
+  ['CryPhysics.dll', '7afd2f7080d8180888d47a790acb1e5ae31533ee260c6563e18661057cf7c38f'],
 ]);
 const expected = sampleDigests.get(values.sample);
 if (!expected) throw Error('Sample must be an identity-locked case input');
-const target = path.join(study, 'samples', values.sample);
+const target = ['CryEntitySystem.dll', 'CryPhysics.dll'].includes(values.sample)
+  ? path.join(study, 'client/programs/aion-bin64/bin64', values.sample)
+  : path.join(study, 'samples', values.sample);
 const digest = async () => createHash('sha256').update(await readFile(target)).digest('hex');
 if (await digest() !== expected) throw Error('Unexpected case sample');
 await mkdir(path.dirname(values.output), { recursive: true });
