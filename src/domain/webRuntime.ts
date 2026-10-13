@@ -3,7 +3,6 @@ import {
   browserAllowedOriginsSchema,
   browserEndpointSchema,
 } from "./browserObservation.js";
-import { browserVersionSchema } from "./browserObservationSchemas.js";
 import { jsonObjectSchema } from "./jsonValue.js";
 
 // CDP positions are zero-based and relative to the resource named by url.
@@ -85,9 +84,6 @@ export const webRuntimeTargetSchema = z.object({
   frame_id: z.string().min(1),
   loader_id: z.string().nullable(),
 });
-
-/** Producer product identity is observed separately from the unknown host platform. */
-export const webRuntimeBrowserSchema = browserVersionSchema;
 
 /** Complete runtime evidence has explicit byte budgets rather than silent item truncation. */
 export const WEB_RUNTIME_LIMITS = {

@@ -1,3 +1,4 @@
+import { snapshotEnvironment } from "../process/snapshotEnvironment.js";
 import { dirname, join } from "node:path";
 import { execFileOutput } from "../process/ExecFileOutput.js";
 
@@ -6,11 +7,13 @@ export const ghidraJavaLaunch = async (options: {
   readonly platform: NodeJS.Platform;
   readonly analyzeHeadlessPath: string;
   readonly javaHome: string;
+  readonly javaVmName?: string;
   readonly homeRoot: string;
   readonly tempRoot: string;
   readonly arguments: readonly string[];
   readonly environment: NodeJS.ProcessEnv;
   readonly signal?: AbortSignal;
+  readonly onStderr: (mode: "-envvars" | "-vmargs", stderr: string) => void;
 }): Promise<{
   readonly command: string;
   readonly arguments: readonly string[];
@@ -25,12 +28,21 @@ export const ghidraJavaLaunch = async (options: {
   ];
   const supportArguments = [
     ...isolatedProperties,
+    // Only identified HotSpot VMs have these unified-logging semantics. OpenJ9
+    // uses different -Xlog behavior; missing VM identity must stay unknown.
+    ...(/^(?:OpenJDK|Java HotSpot\(TM\)) (?:64-Bit )?(?:Server|Client|Zero) VM$/u.test(
+      options.javaVmName ?? "",
+    )
+      ? ["-Xlog:disable", "-Xlog:all=warning:stderr"]
+      : []),
     "-cp",
     join(supportRoot, "LaunchSupport.jar"),
     "LaunchSupport",
     installRoot,
   ];
-  const environment = { ...options.environment };
+  const environment = {
+    ...snapshotEnvironment(options.environment, options.platform),
+  };
   const configuredEnvironment = await execFileOutput(
     command,
     [...supportArguments, "-envvars"],
@@ -39,10 +51,13 @@ export const ghidraJavaLaunch = async (options: {
       ...(options.signal === undefined ? {} : { signal: options.signal }),
     },
   );
+  options.onStderr("-envvars", configuredEnvironment.stderr);
   for (const line of configuredEnvironment.stdout.split(/\r?\n/u)) {
     if (line === "") continue;
     const separator = line.indexOf("=");
-    const key = line.slice(0, separator);
+    const sourceKey = line.slice(0, separator);
+    const key =
+      options.platform === "win32" ? sourceKey.toUpperCase() : sourceKey;
     if (separator < 1 || !/^[A-Za-z_][A-Za-z0-9_]*$/u.test(key))
       throw new Error(
         `Invalid Ghidra LaunchSupport environment entry: ${line}`,
@@ -58,6 +73,7 @@ export const ghidraJavaLaunch = async (options: {
       ...(options.signal === undefined ? {} : { signal: options.signal }),
     },
   );
+  options.onStderr("-vmargs", configuredArguments.stderr);
   const vmArguments = configuredArguments.stdout
     .split(/\r?\n/u)
     .filter((line) => line !== "");

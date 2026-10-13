@@ -1,28 +1,31 @@
-import type { McpServer } from "@modelcontextprotocol/server";
+import type { EvidenceMcpServer } from "./EvidenceMcpServer.js";
 
-import type { BinarySessionPort } from "../application/binary/BinarySession.js";
+import type { BinarySessionPort } from "../application/binary/BinarySessionPort.js";
 import type { ProviderAvailability } from "../application/AnalysisProvider.js";
 import { AnalysisCancelledError } from "../domain/analysisErrorCore.js";
-import { buildCapabilityInventory } from "../application/CapabilityInventory.js";
+import {
+  buildCapabilityInventory,
+  compactToolAvailability,
+} from "../application/CapabilityInventory.js";
 import { toolContract } from "../contracts/toolContracts.js";
-import type { ClientFeatureAvailability } from "../contracts/toolOutputSchemaPrimitives.js";
+import type {
+  ClientFeatureAvailability,
+  ToolAvailability,
+} from "../contracts/toolOutputSchemaPrimitives.js";
 import { jsonObjectSchema } from "../domain/jsonValue.js";
 import { createServerIdentity } from "../serverIdentity.js";
 import { mcpClientMetadata } from "./mcpClientMetadata.js";
-import type { SessionAvailability } from "./sessionAvailabilityPolicy.js";
+import type { AvailabilityPolicy } from "../application/CapabilityInventory.js";
 import { toolRegistrationOptions } from "./toolRegistrationOptions.js";
-import { toCallToolResult } from "./toolResult.js";
 import { err } from "../domain/result.js";
-
-type ToolAvailability = ReturnType<typeof buildCapabilityInventory>[number];
 
 /** Inputs required to register the binary session status tool. */
 export interface SessionStatusToolOptions {
-  readonly server: McpServer;
+  readonly server: EvidenceMcpServer;
   readonly session: BinarySessionPort;
   readonly contract: ReturnType<typeof toolContract<"binary_session">>;
   readonly startedAt: string;
-  readonly availabilityPolicy: () => SessionAvailability;
+  readonly availabilityPolicy: () => AvailabilityPolicy;
   readonly androidAnalysisAvailability: (
     signal: AbortSignal,
   ) => Promise<ProviderAvailability>;
@@ -55,7 +58,7 @@ export const registerSessionStatusTool = (
         );
       } catch (cause) {
         if (!context.mcpReq.signal.aborted) throw cause;
-        return toCallToolResult(
+        return server.delivery.toCallToolResult(
           err(new AnalysisCancelledError("binary_session")),
           contract,
         );
@@ -86,7 +89,7 @@ export const registerSessionStatusTool = (
         ...(client === undefined ? {} : { client }),
         ...(protocolVersion === undefined ? {} : { protocolVersion }),
       });
-      return toCallToolResult(
+      return server.delivery.toCallToolResult(
         {
           ok: true,
           value: projectSessionStatus({
@@ -112,7 +115,7 @@ const projectSessionStatus = (options: {
 }) =>
   jsonObjectSchema.parse({
     ...options.status,
-    tool_availability: options.toolAvailability,
+    tool_availability: compactToolAvailability(options.toolAvailability),
     client_features: options.clientFeatures,
     server_identity: options.serverIdentity,
   });

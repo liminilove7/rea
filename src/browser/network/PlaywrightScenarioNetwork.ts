@@ -2,7 +2,7 @@ import type {
   BrowserNetworkBody,
   BrowserNetworkContentSelection,
 } from "../../domain/browserNetworkEvidence.js";
-import type { BrowserScenarioEvent } from "../../domain/browserScenarioCapture.js";
+import type { BrowserScenarioEvent } from "../../domain/browserScenarioCaptureValues.js";
 import type { BrowserScenarioSecrets } from "../BrowserScenarioSecrets.js";
 import {
   captureNetworkBody,
@@ -128,7 +128,7 @@ export class PlaywrightScenarioNetwork {
     transaction.response = { source: response, sequence };
   }
 
-  /** Record completion and read the original completed response, never a later refetch. */
+  /** Record completion and read selected content through the response API. */
   finished(request: ScenarioNetworkRequest): void {
     if (!this.accepting) return;
     const transaction = this.transaction(request);

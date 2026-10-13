@@ -50,14 +50,14 @@ const keyMethod = (item: Method): Keyed<Method> => ({
   item,
   exactKey:
     item.body.status === "present" && item.body.normalized_il_sha256 !== null
-      ? stableKey([
+      ? sha256([
           "method-exact",
           item.signature.raw_sha256,
           item.body.normalized_il_sha256,
         ])
       : null,
   // The raw blob is the exact signature; decoding only feeds shape keys.
-  signatureKey: stableKey([
+  signatureKey: sha256([
     "method-signature",
     item.declaring_type,
     item.name,
@@ -65,7 +65,7 @@ const keyMethod = (item: Method): Keyed<Method> => ({
   ]),
   structuralKey:
     item.signature.parse_status === "decoded" && item.body.status === "present"
-      ? stableKey([
+      ? sha256([
           "method-structural",
           item.signature.kind,
           item.signature.calling_convention,
@@ -98,25 +98,23 @@ const keyField = (item: Field): Keyed<Field> => ({
   item,
   exactKey:
     item.signature.parse_status === "decoded"
-      ? stableKey(["field-exact", item.signature.raw_sha256])
+      ? sha256(["field-exact", item.signature.raw_sha256])
       : null,
   // Only an undecoded field reaches this round: a decoded field with the
   // same raw signature already met its counterpart in the exact round.
-  signatureKey: stableKey([
+  signatureKey: sha256([
     "field-signature",
     item.declaring_type,
     item.name,
     item.signature.raw_sha256,
   ]),
-  structuralKey: stableKey([
+  structuralKey: sha256([
     "field-structural",
     item.signature.kind,
     item.signature.field_type,
     item.flags,
   ]),
 });
-
-const stableKey = (value: JsonValue): string => sha256(value);
 
 const matchMethods = (
   left: readonly Keyed<Method>[],
@@ -252,22 +250,74 @@ const groupBy = <Item>(
   return grouped;
 };
 
+/** Whether a side's inventory observed members of this declaring type. */
+const observedBy =
+  (side: ManagedMemberComparisonSide) =>
+  ({ declaring_type }: { readonly declaring_type: string | null }): boolean =>
+    side.result.selection === null ||
+    (declaring_type !== null &&
+      side.result.selection.type_names.includes(declaring_type));
+
+/**
+ * Pair only members whose declaring type both sides observed. A member outside
+ * the other side's selection stays one-sided, so a type selection never yields
+ * a remap to a member of a type the other side did not inspect.
+ */
+const matchObserved = <Item extends { readonly declaring_type: string | null }>(
+  left: readonly Item[],
+  right: readonly Item[],
+  sides: {
+    readonly inLeft: (item: Item) => boolean;
+    readonly inRight: (item: Item) => boolean;
+  },
+  match: (
+    left: readonly Keyed<Item>[],
+    right: readonly Keyed<Item>[],
+  ) => ReturnType<typeof matchByKeys<Item>>,
+  key: (item: Item) => Keyed<Item>,
+): ReturnType<typeof matchByKeys<Item>> => {
+  const matched = match(
+    left.filter(sides.inRight).map(key),
+    right.filter(sides.inLeft).map(key),
+  );
+  return {
+    ...matched,
+    leftOnly: [
+      ...matched.leftOnly,
+      ...left.filter((item) => !sides.inRight(item)).map(key),
+    ],
+    rightOnly: [
+      ...matched.rightOnly,
+      ...right.filter((item) => !sides.inLeft(item)).map(key),
+    ],
+  };
+};
+
 export const keyMembers = (
   left: ManagedMemberComparisonSide,
   right: ManagedMemberComparisonSide,
 ): {
   readonly methodMatches: ReturnType<typeof matchMethods>;
   readonly fieldMatches: ReturnType<typeof matchFields>;
-} => ({
-  methodMatches: matchMethods(
-    left.result.methods.map(keyMethod),
-    right.result.methods.map(keyMethod),
-  ),
-  fieldMatches: matchFields(
-    left.result.fields.map(keyField),
-    right.result.fields.map(keyField),
-  ),
-});
+} => {
+  const sides = { inLeft: observedBy(left), inRight: observedBy(right) };
+  return {
+    methodMatches: matchObserved(
+      left.result.methods,
+      right.result.methods,
+      sides,
+      matchMethods,
+      keyMethod,
+    ),
+    fieldMatches: matchObserved(
+      left.result.fields,
+      right.result.fields,
+      sides,
+      matchFields,
+      keyField,
+    ),
+  };
+};
 
 export const parseManagedMemberEvidence = (
   evidence: unknown,

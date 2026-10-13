@@ -15,6 +15,52 @@ the original run after a partial publication.
 For a release that needs an independently frozen application checkpoint, use
 the optional manual path below. It retains explicit prepare and publish phases.
 
+## Contributor-aware release notes
+
+Use [the rea-changelog-update skill](https://github.com/morluto/rea/blob/main/.agents/skills/rea-changelog-update/SKILL.md)
+to turn the bot draft into grouped Highlights, Changes, and Fixes with inline
+`Thanks @...` credit. `npm run release:notes -- inventory` collects the full
+selected Git range and paginated GitHub PR/author/closing-issue metadata;
+`record --summary` produces a compact provenance link for public notes, while
+`record` produces the full record for review. Credit a contribution once even
+when it appears in highlights, details and migrations; omit maintainer
+`@morluto` self-thanks. Keep complete authorship metadata in the inventory
+instead of duplicating a credit ledger in the release body. `check` validates credits
+and optional PR-body equality, and `render` writes the verified release section.
+Run a subcommand without its required options to see its usage. GitHub reads
+require an authenticated `gh`; record/check/render work offline from the saved
+inventory and complete local Git history.
+
+Save a finalized inventory on the release branch at
+`docs/releases/VERSION.contributions.json`. Review unknown identities and
+reverted/backported work explicitly; GitHub metadata does not establish the
+quality of a user-facing claim. Preserve the existing breaking-change section
+and checkpoint checks. The contribution inventory is a reviewed snapshot, not
+a signed attestation; the offline checker verifies local range coverage and
+credit consistency, not GitHub's authorship independently.
+
+Before editing the live PR, add `rea:release-notes-finalized` to prevent ordinary
+main-push proposals from overwriting the editorial notes. Wait for any already
+running proposal to finish. The guard applies to main-push automation; do not
+run manual checkpoint preparation over finalized notes. Remove the label to
+resume bot regeneration. The label does not freeze the base branch: new base
+commits require re-inventorying and re-reviewing the notes.
+
+Update both the release branch's `CHANGELOG.md` and the PR body, preserving
+Release Please's surrounding metadata. Before creating a release, the workflow
+checks an inventory when present, requires its target to equal the reviewed
+merge's first parent, and compares the freshly fetched PR body to the changelog.
+It rejects changes outside the release metadata paths and stale credit records
+before any tag or publication. Review the diffs within allowed metadata paths
+as well, especially package dependencies and scripts. Existing candidates without inventories retain their current
+checks. Merging still starts publication; a notes edit does not authorize a
+merge or release by itself.
+
+The checker supports inline Release Please PR bodies up to GitHub's 65,536
+character limit, including the surrounding header/footer. Overflow-link PR
+bodies need a separate integration and fail explicitly; credits are never
+silently truncated.
+
 ## 1. Select a source for a manual checkpoint
 
 Use the next minor version proposed by Release Please, including releases with
@@ -34,6 +80,9 @@ The checkpoint validator rejects a candidate whose package, lockfile, manifest,
 registry metadata or changelog disagrees with that version before creating a tag.
 
 ### Compatibility and version selection
+
+For the 6.2 candidate, review the [6.1 to 6.2 migration guide](migration-6.2.md)
+alongside the changelog before publication.
 
 REA uses Release Please's `always-bump-minor` strategy: every release increments
 minor and resets patch, including releases with breaking changes. For example,
@@ -169,6 +218,15 @@ release baseline and can propose an already-published version again.
 After publication, open a PR from the release branch back to main. Preserve
 main's later implementation changes and regenerate ignored build outputs from
 the combined contracts with the released package version.
+Before merging, check whether GitHub permits merge commits:
+
+```bash
+gh api repos/morluto/rea --jq .allow_merge_commit
+```
+
+If disabled, a maintainer must arrange an approved ancestry-preserving merge
+path before synchronization can finish. Squash and rebase merges do not put the
+released tag in main's ancestry. Do not substitute them for this step.
 Review and test this synchronization PR, then use a merge commit so the release
 tag remains in main's ancestry. Keep the released tag unchanged.
 

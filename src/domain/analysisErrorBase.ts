@@ -1,3 +1,5 @@
+import type { JsonValue } from "./jsonValue.js";
+
 /** Stable tags exposed by safe analysis-error projections. */
 const ANALYSIS_ERROR_TAGS = [
   "AnalysisProtocolError",
@@ -51,19 +53,26 @@ export interface AnalysisCleanupObservation {
 
 /** Optional provider-neutral context that must survive typed error projection. */
 export interface AnalysisErrorOptions extends ErrorOptions {
-  readonly capturedOutput?: AnalysisCapturedOutput;
-  readonly cleanup?: AnalysisCleanupObservation;
-  readonly partialObservation?: AnalysisPartialObservation;
+  /** Producer-owned, caller-safe facts retained through every typed projection. */
+  readonly diagnostics?: Readonly<Record<string, JsonValue>> | undefined;
+  readonly capturedOutput?: AnalysisCapturedOutput | undefined;
+  readonly cleanup?: AnalysisCleanupObservation | undefined;
+  readonly partialObservation?: AnalysisPartialObservation | undefined;
 }
 
 /** Base class for expected analysis, provider, and session failures. */
 export abstract class AnalysisError extends Error {
+  readonly diagnostics: Readonly<Record<string, JsonValue>> | undefined;
   readonly capturedOutput: AnalysisCapturedOutput | undefined;
   readonly cleanup: AnalysisCleanupObservation | undefined;
   readonly cleanupIncomplete: boolean;
   readonly cleanupResources: readonly string[];
   constructor(message: string, options?: AnalysisErrorOptions) {
     super(message, options);
+    this.diagnostics =
+      options?.diagnostics === undefined
+        ? undefined
+        : structuredClone(options.diagnostics);
     this.capturedOutput =
       options?.capturedOutput === undefined
         ? undefined
@@ -77,8 +86,14 @@ export abstract class AnalysisError extends Error {
   readonly userMessage: string | undefined = undefined;
   readonly userCategory: "cancelled" | undefined = undefined;
   readonly executionFailure: string | undefined = undefined;
-  readonly partialObservation: AnalysisPartialObservation | undefined;
+  partialObservation: AnalysisPartialObservation | undefined;
   readonly cleanupReport: ProcessCaptureCleanupReport | undefined = undefined;
+
+  /** Retain a completed observation when a later step fails. */
+  retainPartialObservation(observation: AnalysisPartialObservation): this {
+    this.partialObservation ??= observation;
+    return this;
+  }
 }
 import type {
   PartialProcessCaptureObservation,
@@ -87,10 +102,48 @@ import type {
 import type { FileOffsetPartialObservation } from "./native/fileOffsetPartialObservation.js";
 import type { NativeCallPartialObservation } from "./native/nativeCallPartialObservation.js";
 import type { ElectronActivePartialObservation } from "./javascript/electronActiveObservation.js";
+import type { JavaScriptRuntimeObservation } from "./javascript/javascriptRuntimeObservation.js";
+import type {
+  ArtifactInventoryPartialObservation,
+  ArtifactExtractionPartialObservation,
+} from "./artifactPartialObservation.js";
+import type { WebScriptExportPartialObservation } from "./webScriptExport.js";
+import type { JavaScriptRecoveryPartialObservation } from "./javascript/javascriptRecovery.js";
+import type { BrowserScenarioPartialObservation } from "./browserScenarioCapture.js";
+import type { Evidence } from "./evidence.js";
+import type { AndroidPartialObservation } from "./android/androidPartialObservation.js";
+import type { FirmwarePartialObservation } from "./firmware/firmwareAnalysis.js";
+import type {
+  AdbActivityStartPartialObservation,
+  AdbAcquiredFilePartialObservation,
+  AdbPackagePullPartialObservation,
+} from "./adb/adbDeviceAnalysis.js";
+import type { NativeUiObservationResult } from "./native/nativeUiObservation.js";
+import type { BinaryLayout } from "./native/binaryLayout.js";
+import type {
+  RecordedCrash,
+  RecordedCrashPartialObservation,
+} from "./native/recordedCrash.js";
 
 /** Provider-neutral evidence collected before a typed analysis failure. */
 export type AnalysisPartialObservation =
   | PartialProcessCaptureObservation
   | NativeCallPartialObservation
   | FileOffsetPartialObservation
-  | ElectronActivePartialObservation;
+  | ElectronActivePartialObservation
+  | BrowserScenarioPartialObservation
+  | JavaScriptRuntimeObservation
+  | ArtifactInventoryPartialObservation
+  | ArtifactExtractionPartialObservation
+  | WebScriptExportPartialObservation
+  | JavaScriptRecoveryPartialObservation
+  | Evidence
+  | BinaryLayout
+  | RecordedCrash
+  | RecordedCrashPartialObservation
+  | AndroidPartialObservation
+  | FirmwarePartialObservation
+  | NativeUiObservationResult
+  | AdbActivityStartPartialObservation
+  | AdbAcquiredFilePartialObservation
+  | AdbPackagePullPartialObservation;

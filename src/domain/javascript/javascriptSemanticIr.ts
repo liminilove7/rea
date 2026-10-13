@@ -5,15 +5,9 @@ import type {
   JavaScriptSemanticReturnCoverage,
 } from "./javascriptSemanticCoverage.js";
 
-export type {
-  JavaScriptSemanticPrimitive,
-  JavaScriptSemanticProperty,
-  JavaScriptSemanticResourceLimit,
-  JavaScriptSemanticValue,
-} from "./javascriptSemanticValueTypes.js";
-
 /** One exact module origin followed through imports, requires, or aliases. */
 export interface JavaScriptModuleOrigin {
+  readonly resolutionMode?: "import" | "require";
   readonly specifier: string;
   readonly importedPath: readonly string[];
 }
@@ -380,7 +374,7 @@ export interface JavaScriptSemanticObjectOperation {
   readonly ownerCallableId: string | null;
   readonly objectBindingId: string | null;
   readonly targetBindingId: string | null;
-  readonly propertyName: string | null;
+  readonly propertyPath: readonly string[] | null;
   readonly resolution: "complete" | "partial";
 }
 
@@ -399,8 +393,10 @@ export interface JavaScriptSemanticFrontier {
 
 /** Static import/export relationship retained for cross-file composition. */
 export interface JavaScriptSemanticModuleLink {
+  readonly resolutionMode?: "import" | "require";
   readonly kind:
     | "import"
+    | "type-import"
     | "require"
     | "export"
     | "re-export"
@@ -441,24 +437,6 @@ export interface JavaScriptSemanticIr {
   readonly coverage: JavaScriptSemanticCoverage;
   readonly limitations: readonly string[];
 }
-
-/** Find the innermost resolved reference at one source coordinate. */
-export const semanticReferenceAt = (
-  ir: JavaScriptSemanticIr,
-  line: number,
-  column: number,
-): JavaScriptSemanticReference | undefined =>
-  ir.references.find(
-    ({ location }) =>
-      location.start.line === line && location.start.column === column,
-  );
-
-/** Read one binding by its deterministic semantic identifier. */
-export const semanticBinding = (
-  ir: JavaScriptSemanticIr,
-  bindingId: string,
-): JavaScriptSemanticBinding | undefined =>
-  ir.bindings.find(({ bindingId: candidate }) => candidate === bindingId);
 
 /** Fail-closed result when Babel cannot produce an inert syntax tree. */
 export const failedJavaScriptSemanticIr = (): JavaScriptSemanticIr => ({

@@ -29,18 +29,37 @@ it("returns a nonzero exit for a streamed JSON analysis failure", async () => {
   );
   expect(result.code).toBe(1);
   expect(JSON.parse(result.stdout)).toMatchObject({
-    code: "artifact_operation_failed",
-    details: { reason: "io" },
+    code: "invalid_request",
+    details: { issues: [{ path: ["input_path"], reason: "invalid_value" }] },
   });
 });
 
 // `analyze` routes a JavaScript directory to the same workflow and must keep
 // its typed cancellation contract.
-it
-  .skipIf(process.platform === "win32")
-  .each(["analyze-javascript-application", "analyze"])(
-  "returns a typed cancelled CLI result and exit 130 after SIGINT through %s",
-  async (command) => {
+it.skipIf(process.platform === "win32").each([
+  {
+    command: "analyze-javascript-application",
+    phase: "analyze_javascript_application",
+    parsedFiles: null,
+  },
+  {
+    command: "analyze",
+    phase: "analyze_javascript_application",
+    parsedFiles: null,
+  },
+  {
+    command: "analyze-javascript-application",
+    phase: "build_javascript_application_graph",
+    parsedFiles: 1,
+  },
+  {
+    command: "analyze-javascript-application",
+    phase: "hash_javascript_application_evidence",
+    parsedFiles: 1,
+  },
+])(
+  "returns typed cancellation and exit 130 after SIGINT through $command during $phase",
+  async ({ command, phase, parsedFiles }) => {
     const root = await createTestTempDirectory("rea-cli-js-cancellation-");
     await writeFile(join(root, "main.js"), "export const observed = 1;\n");
     const child = spawn(
@@ -70,7 +89,11 @@ it
         const line = partial.slice(0, newline);
         partial = partial.slice(newline + 1);
         const parsed = progressSchema.safeParse(JSON.parse(line));
-        if (parsed.success && !requested) {
+        if (
+          parsed.success &&
+          parsed.data.rea_progress.phase === phase &&
+          !requested
+        ) {
           requested = true;
           child.kill("SIGINT");
         }
@@ -89,5 +112,18 @@ it
       code: "cancelled",
       details: { reason: "cancelled" },
     });
+    if (parsedFiles !== null)
+      expect(JSON.parse(stdout)).toMatchObject({
+        details: {
+          partial_observation: {
+            normalized_result: {
+              statistics: {
+                parsed_javascript_files: parsedFiles,
+                parse_failures: 0,
+              },
+            },
+          },
+        },
+      });
   },
 );

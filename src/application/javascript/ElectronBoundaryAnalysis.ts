@@ -1,4 +1,4 @@
-import { compareCodePoints } from "../../domain/canonicalOrdering.js";
+import { compareUnicodeCodePoints } from "../../domain/unicodeCodePointOrder.js";
 import type { ElectronIpcFinding } from "../../domain/javascript/electronStaticAnalysisTypes.js";
 import type { ElectronBoundarySummary } from "../../domain/javascript/javascriptApplicationAnalysis.js";
 import type { JavaScriptModuleArtifactAnalysis } from "./JavaScriptArtifactAnalysisTypes.js";
@@ -37,7 +37,7 @@ export const collectElectronIpcRecords = (
         finding,
       })),
     )
-    .sort((left, right) => compareCodePoints(left.key, right.key));
+    .sort((left, right) => compareUnicodeCodePoints(left.key, right.key));
 
 /** Match only exact literal channels and retain ambiguous matches separately. */
 export const classifyElectronIpcPairings = (
@@ -220,5 +220,9 @@ const resolvesToFile = (input: ResolveToFileInput): boolean => {
   );
 };
 
-const ipcRecordKey = (path: string, finding: ElectronIpcFinding): string =>
-  `${path}\0${String(finding.location.start.line)}:${String(finding.location.start.column)}\0${finding.side}\0${finding.operation}`;
+const ipcRecordKey = (path: string, finding: ElectronIpcFinding): string => {
+  const identity = `${path}\0${String(finding.location.start.line)}:${String(finding.location.start.column)}\0${finding.side}\0${finding.operation}\0${finding.channel ?? finding.channel_expression}\0${JSON.stringify(finding.handler_location)}`;
+  return finding.invocation_location === undefined
+    ? identity
+    : `${identity}\0${String(finding.invocation_location.start.line)}:${String(finding.invocation_location.start.column)}`;
+};

@@ -1,12 +1,14 @@
+import { compareUnicodeCodePoints } from "./unicodeCodePointOrder.js";
 import { z } from "zod";
 
-import {
-  type ArtifactInventoryResult,
-  type ArtifactNode,
-  type ArtifactOccurrence,
+import type {
+  ArtifactInventoryResult,
+  ArtifactNode,
+  ArtifactOccurrence,
 } from "./artifactGraph.js";
 import { evidenceSchema } from "./evidence.js";
 import {
+  hasCompleteInventoryCoverage,
   parseArtifactInventoryEvidence,
   type InventorySet,
 } from "./artifactInventoryEvidence.js";
@@ -102,10 +104,8 @@ export const compareArtifacts = (
   const right = parseArtifactInventoryEvidence(rightEvidence);
   const leftComplete = left.inventory.complete;
   const rightComplete = right.inventory.complete;
-  const leftCovered =
-    leftComplete && !hasCoverageLimitation(left.inventory.limitations);
-  const rightCovered =
-    rightComplete && !hasCoverageLimitation(right.inventory.limitations);
+  const leftCovered = hasCompleteInventoryCoverage(left.inventory);
+  const rightCovered = hasCompleteInventoryCoverage(right.inventory);
   const limitations = [
     ...left.inventory.limitations.map((item) => `Left: ${item}`),
     ...right.inventory.limitations.map((item) => `Right: ${item}`),
@@ -121,6 +121,10 @@ export const compareArtifacts = (
     ],
     leftCovered && rightCovered,
   );
+  applyRootHashChange(left.inventory, right.inventory, changes, [
+    ...left.evidence.map(({ evidence_id: id }) => id),
+    ...right.evidence.map(({ evidence_id: id }) => id),
+  ]);
   const summary = summarize(
     left.inventory,
     right.inventory,
@@ -146,7 +150,7 @@ export const compareArtifacts = (
     right_manifest_id: right.inventory.manifest.manifest_id,
     summary,
     changes,
-    limitations: [...new Set(limitations)].sort((a, b) => a.localeCompare(b)),
+    limitations: [...new Set(limitations)].sort(compareUnicodeCodePoints),
   });
 };
 
@@ -170,7 +174,7 @@ const compareOccurrences = (
   const rightRelations = relationsByPath(right);
   const paths = [
     ...new Set([...leftByPath.keys(), ...rightByPath.keys()]),
-  ].sort((a, b) => a.localeCompare(b, "en"));
+  ].sort(compareUnicodeCodePoints);
   const output: ArtifactChange[] = [];
   for (const path of paths) {
     const leftOccurrence = leftByPath.get(path);
@@ -288,8 +292,17 @@ const changedDimensions = (input: {
     boolean,
   ][] = [
     ["content", left.sha256 !== right.sha256],
-    ["kind", left.kind !== right.kind],
-    ["format", left.format !== right.format],
+    [
+      "kind",
+      input.leftOccurrence?.artifact_kind !==
+        input.rightOccurrence?.artifact_kind,
+    ],
+    [
+      "format",
+      left.format !== right.format ||
+        input.leftOccurrence?.artifact_format !==
+          input.rightOccurrence?.artifact_format,
+    ],
     ["size", left.size !== right.size],
     [
       "executable",
@@ -317,7 +330,6 @@ const metadataChanged = (
 ): boolean =>
   left.media_type !== right.media_type ||
   left.architecture !== right.architecture ||
-  left.executable !== right.executable ||
   left.content_state !== right.content_state ||
   input.leftOccurrence?.entry_kind !== input.rightOccurrence?.entry_kind ||
   input.leftOccurrence?.encrypted !== input.rightOccurrence?.encrypted ||
@@ -341,19 +353,20 @@ const relationsByPath = (
     inventory.occurrences.map((item) => [item.occurrence_id, item]),
   );
   for (const edge of inventory.edges) {
-    const path = edge.logical_path ?? ".";
-    const values = output.get(path);
     const occurrence = occurrences.get(edge.occurrence_id);
+    // An incomplete inventory can omit the occurrence that names the child.
+    if (occurrence?.artifact_id === null || occurrence === undefined) continue;
+    const path = occurrence.logical_path;
+    const values = output.get(path);
     const projection: RelationProjection = {
       parent_logical_path:
-        occurrence?.parent_occurrence_id === null ||
-        occurrence?.parent_occurrence_id === undefined
+        occurrence.parent_occurrence_id === null
           ? null
           : (occurrences.get(occurrence.parent_occurrence_id)?.logical_path ??
             null),
-      child_artifact_id: edge.child_artifact_id,
+      child_artifact_id: occurrence.artifact_id,
       relation: edge.relation,
-      logical_path: edge.logical_path,
+      logical_path: occurrence.logical_path,
       producer: edge.producer,
     };
     if (values === undefined) output.set(path, [projection]);
@@ -361,7 +374,7 @@ const relationsByPath = (
   }
   for (const values of output.values())
     values.sort((left, right) =>
-      canonicalJson(left).localeCompare(canonicalJson(right)),
+      compareUnicodeCodePoints(canonicalJson(left), canonicalJson(right)),
     );
   return output;
 };
@@ -418,8 +431,52 @@ const summarize = (
   };
 };
 
-const hasCoverageLimitation = (limitations: readonly string[]): boolean =>
-  limitations.some(
-    (limitation) =>
-      !/integrity contradiction\(s\) were recorded/u.test(limitation),
+// Differing manifest root digests prove a root content change even when node
+// details are unavailable. Fold that fact into an existing root row so one
+// logical path keeps one classification.
+const applyRootHashChange = (
+  left: InventorySet,
+  right: InventorySet,
+  changes: ArtifactChange[],
+  evidenceLinks: readonly string[],
+): void => {
+  if (left.manifest.root_sha256 === right.manifest.root_sha256) return;
+  const index = changes.findIndex((change) => change.logical_path === ".");
+  const existing = changes[index];
+  if (existing !== undefined) {
+    if (
+      existing.dimensions.includes("content") ||
+      (existing.classification !== "unknown" &&
+        existing.classification !== "changed")
+    )
+      return;
+    changes[index] = {
+      ...existing,
+      classification: "changed",
+      dimensions: comparisonDimensionSchema.options.filter(
+        (dimension) =>
+          dimension === "content" || existing.dimensions.includes(dimension),
+      ),
+      evidence_links: [
+        ...new Set([...existing.evidence_links, ...evidenceLinks]),
+      ],
+    };
+    return;
+  }
+  const leftRoot = left.occurrences.find(
+    (occurrence) => occurrence.logical_path === ".",
   );
+  const rightRoot = right.occurrences.find(
+    (occurrence) => occurrence.logical_path === ".",
+  );
+  changes.push({
+    classification: "changed",
+    logical_path: ".",
+    dimensions: ["content"],
+    left_occurrence_id: leftRoot?.occurrence_id ?? null,
+    right_occurrence_id: rightRoot?.occurrence_id ?? null,
+    left_artifact_id: leftRoot?.artifact_id ?? null,
+    right_artifact_id: rightRoot?.artifact_id ?? null,
+    evidence_links: [...evidenceLinks],
+  });
+};

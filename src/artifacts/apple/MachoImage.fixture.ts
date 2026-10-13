@@ -11,11 +11,17 @@ export const LC = {
   DYLD_ENVIRONMENT: 0x27,
   CODE_SIGNATURE: 0x1d,
   BUILD_VERSION: 0x32,
+  VERSION_MIN_MACOSX: 0x24,
+  VERSION_MIN_IPHONEOS: 0x25,
+  VERSION_MIN_TVOS: 0x2f,
+  VERSION_MIN_WATCHOS: 0x30,
 } as const;
 
 export const CPU = {
+  i386: { type: 7, subtype: 3 },
   arm64: { type: 0x0100000c, subtype: 0 },
   arm64e: { type: 0x0100000c, subtype: 0x80000002 },
+  arm64eX1: { type: 0x0100000c, subtype: 0x8000000c },
   x86_64: { type: 0x01000007, subtype: 3 },
 } as const;
 
@@ -83,6 +89,16 @@ export const buildVersionCommand = (platform: number): Uint8Array => {
   view.setUint32(0, LC.BUILD_VERSION, true);
   view.setUint32(4, bytes.length, true);
   view.setUint32(8, platform, true);
+  return bytes;
+};
+
+/** `version_min_command` carrying `LC_VERSION_MIN_*` semantics. */
+export const versionMinCommand = (command: number): Uint8Array => {
+  const bytes = new Uint8Array(16);
+  const view = new DataView(bytes.buffer);
+  view.setUint32(0, command, true);
+  view.setUint32(4, bytes.length, true);
+  view.setUint32(8, 0x00090000, true);
   return bytes;
 };
 

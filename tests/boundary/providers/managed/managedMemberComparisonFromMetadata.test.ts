@@ -160,11 +160,13 @@ describe("managed member comparison uncertainty", () => {
     const leftPartial = {
       ...left.result,
       fields: [],
+      metadata: { ...left.result.metadata, status: "partial" as const },
       coverage: { ...left.result.coverage, state: "partial" as const },
     };
     const rightPartial = {
       ...right.result,
       methods: [],
+      metadata: { ...right.result.metadata, status: "partial" as const },
       coverage: { ...right.result.coverage, state: "partial" as const },
     };
     const result = compareManagedMembers(
@@ -266,7 +268,8 @@ describe("managed member comparison of undecoded signatures", () => {
       "/tmp/undecoded-method-renamed.dll",
     );
     expect(left.result.methods[0]?.signature.parse_status).toBe("unsupported");
-    expect(renamed.result.coverage.state).toBe("complete");
+    expect(renamed.result.metadata.status).toBe("complete");
+    expect(renamed.result.coverage.state).toBe("partial");
 
     const exact = compareManagedMembers(left, renamed);
     expect(exact.methods).toEqual([
@@ -308,7 +311,7 @@ describe("managed member comparison of undecoded signatures", () => {
   it("pairs undecoded signatures by exact declared type, name, and raw bytes", () => {
     const undecoded = {
       methodSignature: Buffer.from([0x00, 0x00, 0x7f]),
-      fieldSignature: Buffer.from([0x06, 0x15]),
+      fieldSignature: Buffer.from([0x06, 0x7f]),
     };
     const left = inspect(
       buildManagedPeFixture(undecoded),
@@ -318,7 +321,8 @@ describe("managed member comparison of undecoded signatures", () => {
       buildManagedPeFixture(undecoded),
       "/tmp/undecoded-right.dll",
     );
-    expect(left.result.coverage.state).toBe("complete");
+    expect(left.result.metadata.status).toBe("complete");
+    expect(left.result.coverage.state).toBe("partial");
     expect(left.result.methods[0]?.signature.parse_status).toBe("unsupported");
     expect(left.result.fields[0]?.signature.parse_status).toBe("unsupported");
     const result = compareManagedMembers(left, right);
@@ -338,11 +342,11 @@ describe("managed member comparison of undecoded signatures", () => {
     });
   });
 
-  it("keeps unmatched undecoded members unknown in complete inventories", () => {
+  it("keeps unmatched undecoded members unknown with complete metadata inventories", () => {
     const left = inspect(
       buildManagedPeFixture({
         methodSignature: Buffer.from([0x00, 0x00, 0x7f]),
-        fieldSignature: Buffer.from([0x06, 0x15]),
+        fieldSignature: Buffer.from([0x06, 0x7f]),
       }),
       "/tmp/undecoded-before.dll",
     );
@@ -353,7 +357,8 @@ describe("managed member comparison of undecoded signatures", () => {
       }),
       "/tmp/undecoded-after.dll",
     );
-    expect(right.result.coverage.state).toBe("complete");
+    expect(right.result.metadata.status).toBe("complete");
+    expect(right.result.coverage.state).toBe("partial");
     const result = compareManagedMembers(left, right);
     expect(result.summary).toMatchObject({ added: 0, removed: 0, unknown: 4 });
     for (const item of [...result.methods, ...result.fields])
@@ -369,13 +374,14 @@ describe("managed member comparison of undecoded signatures", () => {
     const right = inspect(
       buildManagedPeFixture({
         methodSignature: Buffer.from([0x00, 0x00, 0x7f]),
-        fieldSignature: Buffer.from([0x06, 0x15]),
+        fieldSignature: Buffer.from([0x06, 0x7f]),
       }),
       "/tmp/undecoded-after.dll",
     );
     expect(left.result.methods[0]?.signature.parse_status).toBe("decoded");
     expect(left.result.fields[0]?.signature.parse_status).toBe("decoded");
-    expect(right.result.coverage.state).toBe("complete");
+    expect(right.result.metadata.status).toBe("complete");
+    expect(right.result.coverage.state).toBe("partial");
     const result = compareManagedMembers(left, right);
     expect(result.summary).toMatchObject({ added: 0, removed: 0, unknown: 4 });
     for (const item of [...result.methods, ...result.fields])
@@ -453,9 +459,83 @@ describe("managed member comparison of ambiguous undecoded signatures", () => {
   });
 });
 
-const inspect = (bytes: Buffer, path: string) => {
+describe("managed member comparison of selected types", () => {
+  it("keeps members outside the other side's selection unknown", () => {
+    const left = inspect(buildManagedPeFixture(), "/tmp/left-all.dll");
+    const right = inspect(buildManagedPeFixture(), "/tmp/right-selected.dll", [
+      "Missing.Type",
+    ]);
+    const result = compareManagedMembers(
+      { evidenceId: left.evidenceId, result: left.result },
+      { evidenceId: right.evidenceId, result: right.result },
+    );
+
+    expect(result.summary).toMatchObject({ added: 0, removed: 0, unknown: 2 });
+    expect(result.methods[0]).toMatchObject({
+      status: "unknown",
+      left: { token: "0x06000001" },
+      right: null,
+    });
+    expect(result.coverage.status).toBe("partial");
+    expect(result.limitations).toContain(
+      "The observations select different declaring types; a member outside the other side's selection is unknown, not added or removed.",
+    );
+  });
+
+  it("does not remap members across types neither side observed", () => {
+    const left = inspect(buildManagedPeFixture(), "/tmp/left-a.dll", [
+      "Fixture.Program",
+    ]);
+    const right = inspect(
+      buildManagedPeFixture({
+        mvid: Buffer.from("00112233445566778899aabbccddeefe", "hex"),
+        typeName: "A",
+        typeNamespace: "X",
+      }),
+      "/tmp/right-b.dll",
+      ["X.A"],
+    );
+    const result = compareManagedMembers(
+      { evidenceId: left.evidenceId, result: left.result },
+      { evidenceId: right.evidenceId, result: right.result },
+    );
+
+    expect(result.matching.exact_il_signature).toBe(0);
+    expect(result.summary).toMatchObject({
+      unchanged: 0,
+      added: 0,
+      removed: 0,
+      unknown: 4,
+    });
+  });
+
+  it("compares two identical selections within those types", () => {
+    const left = inspect(buildManagedPeFixture(), "/tmp/left-sel.dll", [
+      "Fixture.Program",
+    ]);
+    const right = inspect(buildManagedPeFixture(), "/tmp/right-sel.dll", [
+      "Fixture.Program",
+    ]);
+    const result = compareManagedMembers(
+      { evidenceId: left.evidenceId, result: left.result },
+      { evidenceId: right.evidenceId, result: right.result },
+    );
+
+    expect(result.methods[0]).toMatchObject({ status: "unchanged" });
+    expect(result.coverage.status).toBe("complete-within-inputs");
+    expect(result.limitations).toContain(
+      "Both observations cover only the selected declaring types (Fixture.Program); member totals and statuses describe those types, not the whole assembly.",
+    );
+  });
+});
+
+const inspect = (bytes: Buffer, path: string, typeNames?: string[]) => {
   const target = managedPeFixtureTarget(bytes, path);
-  const result = inspectManagedMembersBytes(bytes, target);
+  const result = inspectManagedMembersBytes(
+    bytes,
+    target,
+    typeNames === undefined ? {} : { typeNames },
+  );
   return {
     result,
     evidenceId: `ev_${hash(Buffer.from(path))}`,

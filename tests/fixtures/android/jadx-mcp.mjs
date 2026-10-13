@@ -6,15 +6,27 @@ import { z } from "zod";
 // It is a protocol fixture, not evidence of JADX decompiler support.
 const mode = process.env.REA_FAKE_JADX_MODE ?? "normal";
 const server = new McpServer({
-  name: "rea-jadx-bridge",
-  version: mode === "version" ? "99.0.0" : "1",
+  name: mode === "empty-server-identity" ? "" : "rea-jadx-bridge",
+  version:
+    mode === "empty-server-identity" ? "" : mode === "version" ? "99.0.0" : "1",
 });
+const requestedCount = Number.parseInt(
+  process.env.REA_FAKE_JADX_CLASS_COUNT ?? "",
+  10,
+);
+const generatedCount =
+  Number.isInteger(requestedCount) && requestedCount >= 0
+    ? requestedCount
+    : mode === "large-inventory"
+      ? 9000
+      : 400;
 const classes = [
   "fixture.Target",
   ...Array.from(
-    { length: mode === "large-inventory" ? 9000 : 400 },
+    { length: generatedCount },
     (_, index) => `fixture.Class${index}`,
   ),
+  ...(mode === "duplicate-class-name" ? ["fixture.Target"] : []),
 ];
 const methods = [
   {
@@ -60,16 +72,17 @@ register("load_apk", async ({ path }) => {
     resources: "full",
   });
 });
-register("get_app_info", () =>
-  json({
+register("get_app_info", () => {
+  if (mode === "rpc-disconnect") process.exit(17);
+  return json({
     package: "fixture",
     version_name: "1",
     version_code: "1",
     min_sdk: "26",
     target_sdk: "33",
     permissions: ["android.permission.INTERNET"],
-  }),
-);
+  });
+});
 register("get_android_manifest", () => {
   if (mode === "tool-error" || mode === "cleanup-failure")
     return {
@@ -146,3 +159,6 @@ for (const name of ["get_xrefs_to_class", "get_xrefs_to_method"])
     }),
   );
 await server.connect(new StdioServerTransport());
+// A refused cleanup must leave a live process for verified fixture teardown.
+// Otherwise stdin EOF races the ownership scan with the server's natural exit.
+if (mode === "cleanup-failure") setInterval(() => {}, 1000);

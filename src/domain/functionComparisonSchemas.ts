@@ -3,13 +3,8 @@ import { evidenceSchema } from "./evidence.js";
 import { digestSchema } from "./../domain/digests.js";
 import { prefixedDigestSchema } from "./../domain/digests.js";
 
-const comparisonStatusSchema = z.enum([
-  "unchanged",
-  "changed",
-  "truncated",
-  "unknown",
-]);
-const dimensionNameSchema = z.enum([
+const comparisonStatusSchema = z.enum(["unchanged", "changed", "unknown"]);
+export const functionComparisonDimensionNameSchema = z.enum([
   "identity",
   "pseudocode",
   "assembly",
@@ -34,7 +29,7 @@ const textDeltaSchema = z.object({
 });
 
 const functionDimensionContextShape = {
-  dimension: dimensionNameSchema,
+  dimension: functionComparisonDimensionNameSchema,
   left_count: z.number().int().min(0).nullable(),
   right_count: z.number().int().min(0).nullable(),
   evidence_links: z.array(evidenceIdSchema).min(2),
@@ -60,7 +55,7 @@ const functionDimensionSchema = z.union([
   }),
   z.object({
     ...functionDimensionContextShape,
-    status: z.enum(["truncated", "unknown"]),
+    status: z.literal("unknown"),
     left_digest: z.null(),
     right_digest: z.null(),
     text_delta: z.null(),
@@ -92,7 +87,6 @@ export const functionComparisonResultSchema = z.object({
   summary: z.object({
     unchanged: z.number().int().min(0),
     changed: z.number().int().min(0),
-    truncated: z.number().int().min(0),
     unknown: z.number().int().min(0),
   }),
   dimensions: z.array(functionDimensionSchema).length(8),
@@ -104,4 +98,6 @@ export type FunctionComparisonResult = z.infer<
   typeof functionComparisonResultSchema
 >;
 export type FunctionDimension = z.infer<typeof functionDimensionSchema>;
-export type DimensionName = z.infer<typeof dimensionNameSchema>;
+export type DimensionName = z.infer<
+  typeof functionComparisonDimensionNameSchema
+>;

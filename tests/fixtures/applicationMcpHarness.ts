@@ -1,3 +1,4 @@
+import { ok as resultOk } from "../../src/domain/result.js";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 
 import { createTestBinarySession } from "./binarySession.js";
@@ -13,12 +14,22 @@ export interface ApplicationMcpHarness {
 }
 
 /** Connect application workflows through the production MCP registration. */
-export async function createApplicationMcpHarness(): Promise<ApplicationMcpHarness> {
-  const session = createTestBinarySession(() => ({
-    execute: () => Promise.resolve(observed(null)),
-    close: () => Promise.resolve(),
-  }));
-  const server = createServer(session, session);
+export async function createApplicationMcpHarness(
+  options: {
+    readonly session?: BinarySession;
+    readonly serverOptions?: Parameters<typeof createServer>[1];
+  } = {},
+): Promise<ApplicationMcpHarness> {
+  const session =
+    options.session ??
+    createTestBinarySession(() => ({
+      execute: () => Promise.resolve(observed(null)),
+      close: () => Promise.resolve(resultOk(null)),
+    }));
+  const server = createServer(
+    { kind: "session", session },
+    options.serverOptions,
+  );
   const client = new Client({
     name: "application-workflow-test",
     version: "1",

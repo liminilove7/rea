@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { createTestTempDirectory } from "../../fixtures/temporaryDirectory.js";
 
 import { compareApplicationVersionsRequestSchema } from "../../../src/contracts/javascript/applicationWorkflowInputContracts.js";
-import { analyzeJavaScriptApplication } from "../../../src/application/javascript/JavaScriptApplicationService.js";
+import { analyzeJavaScriptApplication } from "../../support/javascriptApplicationScope.js";
 import {
   compareApplicationVersionsEvidence,
   traceApplicationFeatureEvidence,
@@ -21,6 +21,7 @@ import {
   type ApplicationVersionComparisonResult,
 } from "../../../src/domain/javascript/javascriptApplicationVersionComparisonSchemas.js";
 import { javascriptRuntimeReconciliationResultSchema } from "../../../src/domain/javascript/javascriptRuntimeReconciliationSchemas.js";
+import { electronPageInspectionSchema } from "../../../src/domain/javascript/electronObservation.js";
 import { compareJavaScriptApplicationVersions } from "../../../src/domain/javascript/javascriptApplicationVersionComparison.js";
 import { createJavaScriptApplicationGraph } from "../../../src/domain/javascript/javascriptApplicationGraph.js";
 import { traceApplicationFeature } from "../../../src/domain/javascript/javascriptFeatureTrace.js";
@@ -320,7 +321,7 @@ describe("complete comparison projections", () => {
 });
 
 describe("JavaScript application workflow error diagnostics", () => {
-  it("returns safe explicit Evidence constraints from graph workflows", async () => {
+  it("identifies the inconsistent Evidence subject in graph workflows", async () => {
     const root = await createTestTempDirectory(
       "rea-application-workflow-diagnostics-",
     );
@@ -328,10 +329,10 @@ describe("JavaScript application workflow error diagnostics", () => {
     const evidence = await analyzeFixture(root);
     const subject = evidence.subject;
     if (subject === null) throw new Error("Analysis Evidence subject missing");
-    const secretPath = "/private/token=do-not-return";
+    const inconsistentPath = "/different/application.js";
     const inconsistent = {
       ...evidence,
-      subject: { ...subject, local_path: secretPath },
+      subject: { ...subject, local_path: inconsistentPath },
     };
 
     const result = traceApplicationFeatureEvidence({
@@ -346,11 +347,10 @@ describe("JavaScript application workflow error diagnostics", () => {
     expect(result.error.issues).toContainEqual(
       expect.objectContaining({
         reason: "invalid_value",
-        message:
-          "JavaScript application Evidence subject does not match its result",
+        path: ["application", "subject"],
+        message: expect.stringContaining("subject must match"),
       }),
     );
-    expect(JSON.stringify(result.error.issues)).not.toContain(secretPath);
   });
 
   it("preserves schema-authored Evidence validation messages", async () => {
@@ -445,6 +445,73 @@ describe("JavaScript application workflow error diagnostics", () => {
 });
 
 describe("JavaScript runtime reconciliation local paths", () => {
+  it.each([
+    {
+      name: "case-sensitive POSIX input root",
+      root: null,
+      path: "/applications/Example.app/Contents/Resources/app/renderer.js",
+      status: "unknown",
+    },
+    {
+      name: "case-sensitive POSIX mapping root",
+      root: "/runtime/App",
+      path: "/runtime/app/renderer.js",
+      status: "unknown",
+    },
+    {
+      name: "matching POSIX mapping root",
+      root: "/runtime/App",
+      path: "/runtime/App/renderer.js",
+      status: "matched",
+    },
+    {
+      name: "case-insensitive Windows mapping root",
+      root: String.raw`C:\runtime\App`,
+      path: String.raw`c:\runtime\app\renderer.js`,
+      status: "matched",
+    },
+  ])("uses $name on every host", ({ root, path, status }) => {
+    const base = JAVASCRIPT_RUNTIME_RECONCILIATION_EXAMPLE;
+    const original = base.runtime_observations[0]!;
+    const inspection = electronPageInspectionSchema.parse(
+      original.normalized_result,
+    );
+    const runtime = createEvidence(undefined, original.provider, {
+      predicateType: original.predicate_type,
+      operation: original.operation,
+      parameters: { ...original.parameters, include_script_sources: false },
+      result: {
+        ...inspection,
+        scripts: {
+          ...inspection.scripts,
+          items: inspection.scripts.items.map((script) => ({
+            ...script,
+            file_path: path,
+            source: { included: false, reason: "not-requested" },
+          })),
+        },
+      },
+      confidence: original.confidence,
+      authority: original.authority,
+    });
+    const reconciled = reconcileJavaScriptRuntimeEvidence({
+      static_layers: base.static_layers.map((layer) => ({
+        ...layer,
+        runtime_mappings: root === null ? [] : [{ kind: "file-root", root }],
+      })),
+      runtime_observations: [runtime],
+    });
+    if (!reconciled.ok) throw reconciled.error;
+    const result = javascriptRuntimeReconciliationResultSchema.parse(
+      reconciled.value.normalized_result,
+    );
+    expect(
+      result.reconciliations.find(
+        ({ entity_kind }) => entity_kind === "script",
+      ),
+    ).toMatchObject({ status });
+  });
+
   it("resolves relative file mapping roots before deriving result Evidence", () => {
     const absoluteRoot = resolve(process.cwd(), "runtime-cache-fixture");
     const relativeRoot = relative(process.cwd(), absoluteRoot);

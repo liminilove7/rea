@@ -3,7 +3,7 @@ import type {
   ExecutionOptions,
 } from "./AnalysisProvider.js";
 import { toolContract } from "../contracts/toolContracts.js";
-import type { BinaryTarget } from "../domain/binaryTarget.js";
+import type { BinaryTarget } from "../domain/binaryTargetTypes.js";
 import { createEvidence } from "../domain/evidence.js";
 import { parseFunctionDossier } from "../domain/hopperValues.js";
 import { jsonObjectSchema, type JsonValue } from "../domain/jsonValue.js";
@@ -46,6 +46,9 @@ export const executeFunctionAnalysisEvidence = async (
       rawResult: observation.rawResult,
       limitations: observation.limitations,
       locations: observation.locations,
+      ...(observation.relationshipCoverage === undefined
+        ? {}
+        : { relationshipCoverage: observation.relationshipCoverage }),
       ...(observation.analysisProfile === undefined
         ? {}
         : { analysisProfile: observation.analysisProfile }),

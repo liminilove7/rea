@@ -1,10 +1,12 @@
 import { readFile, readdir } from "node:fs/promises";
+import type { ProcessSamplingCoverage } from "../../domain/process/processCaptureCoverage.js";
 import type {
   ProcessSample,
   RecordProcessCaptureEvent,
 } from "../../domain/process/processCapture.js";
 import { execFileOutput } from "../ExecFileOutput.js";
 import { readProcessRunId } from "../ProcessOwnership.js";
+import { monotonicProcessCaptureClock } from "./ProcessCaptureClock.js";
 const PROC_READ_CONCURRENCY = 64;
 
 interface ProcessRow {
@@ -357,7 +359,7 @@ const inspectInitializedPtyRoot = async (
     return undefined;
   let observedRunId: string | undefined;
   try {
-    observedRunId = await readProcessRunId(rootPid);
+    observedRunId = await readProcessRunId(rootPid, undefined, signal);
   } catch (cause: unknown) {
     // Unreadable run identity means the root cannot be attributed.
     void cause;
@@ -455,7 +457,10 @@ export const startProcessSampler = (options: {
   readonly limit: number;
   readonly samples: ProcessSample[];
   readonly recordEvent?: RecordProcessCaptureEvent;
-}): (() => Promise<{ readonly partial: boolean }>) => {
+}): (() => Promise<{
+  readonly partial: boolean;
+  readonly coverage: ProcessSamplingCoverage;
+}>) => {
   const { rootPid, runId, started, limit, samples } = options;
   const identities = new Map<number, string>();
   const lastObservations = new Map<number, string>();
@@ -463,6 +468,9 @@ export const startProcessSampler = (options: {
   let stopped = false;
   let abortCurrent: (() => void) | undefined;
   let partial = false;
+  let limitReached = false;
+  let samplingFailures = 0;
+  let firstSamplingFailure: string | null = null;
   let rootInitialized = false;
 
   const sample = (): void => {
@@ -484,7 +492,7 @@ export const startProcessSampler = (options: {
       }
       return sampleProcesses({
         rootPid,
-        elapsedMs: Date.now() - started,
+        elapsedMs: monotonicProcessCaptureClock() - started,
         limit: limit + 1,
         identities,
         signal: controller.signal,
@@ -501,6 +509,7 @@ export const startProcessSampler = (options: {
           if (lastObservations.get(value.pid) === observation) continue;
           if (samples.length >= limit) {
             partial = true;
+            limitReached = true;
             continue;
           }
           lastObservations.set(value.pid, observation);
@@ -510,8 +519,16 @@ export const startProcessSampler = (options: {
         }
       })
       .catch((cause: unknown) => {
-        if (!(cause instanceof Error && cause.name === "AbortError"))
+        if (!(cause instanceof Error && cause.name === "AbortError")) {
           partial = true;
+          samplingFailures += 1;
+          firstSamplingFailure ??=
+            cause instanceof Error
+              ? `${cause.name}: ${cause.message}`
+              : typeof cause === "string"
+                ? cause
+                : `Unexpected sampling rejection (${typeof cause})`;
+        }
       })
       .then(() => {
         abortCurrent = undefined;
@@ -527,6 +544,17 @@ export const startProcessSampler = (options: {
     clearInterval(timer);
     abortCurrent?.();
     await pending;
-    return { partial };
+    return {
+      partial,
+      coverage: {
+        sample_limit: limit,
+        sampling_partial: partial,
+        retained_samples: samples.length,
+        sample_limit_reached: limitReached,
+        sampling_failures: samplingFailures,
+        first_sampling_failure: firstSamplingFailure,
+        coverage: "sampled",
+      },
+    };
   };
 };

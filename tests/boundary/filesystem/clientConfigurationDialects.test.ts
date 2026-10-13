@@ -11,27 +11,14 @@ import { supportedClients } from "../../../src/application/SupportedClients.js";
 import { PRODUCT_IDENTITY } from "../../../src/identity.js";
 import { isOwnedClientRegistrationCommand } from "../../../src/application/ClientRegistrationIdentity.js";
 import { createTestTempDirectory } from "../../fixtures/temporaryDirectory.js";
+import {
+  clearClientLocationEnvironment,
+  NPX_REGISTRATION_COMMAND,
+} from "../../fixtures/clientEnvironment.js";
 
-const command = [
-  "npx",
-  "-y",
-  PRODUCT_IDENTITY.registrationPackageSpecifier,
-  "mcp",
-] as const;
+const command = NPX_REGISTRATION_COMMAND;
 
-beforeEach(() => {
-  for (const name of [
-    "APPDATA",
-    "CLAUDE_CONFIG_DIR",
-    "CODEX_HOME",
-    "COPILOT_HOME",
-    "GROK_HOME",
-    "OPENCODE_CONFIG",
-    "SAND_DATA_ROOT",
-    "XDG_CONFIG_HOME",
-  ])
-    vi.stubEnv(name, undefined);
-});
+beforeEach(clearClientLocationEnvironment);
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -44,10 +31,28 @@ const getClients = (home: string) =>
       "commandcode",
       "vscode",
       "devin",
+      "omp",
+      "pi",
     ].includes(name),
   );
 
 describe("additional client configuration dialects", () => {
+  it("treats an empty XDG config home as unset for OpenCode setup", async () => {
+    const home = await createTestTempDirectory("rea-opencode-empty-xdg-");
+    const client = supportedClients(home, "linux", {
+      XDG_CONFIG_HOME: "",
+    }).find(({ name }) => name === "opencode");
+    const expectedPath = join(home, ".config/opencode/opencode.json");
+    if (client === undefined) throw new Error("missing opencode client");
+
+    expect(client.configPath).toBe(expectedPath);
+    expect(client.configPaths).toContain(expectedPath);
+    expect(
+      await configureClientConfiguration(client, {}, command),
+    ).toMatchObject({ status: "configured" });
+    expect(await readFile(expectedPath, "utf8")).toContain('"mcp"');
+  });
+
   it.each([
     "opencode",
     "antigravity",
@@ -55,6 +60,8 @@ describe("additional client configuration dialects", () => {
     "commandcode",
     "vscode",
     "devin",
+    "omp",
+    "pi",
   ] as const)("registers, reads back, and uninstalls %s", async (name) => {
     const home = await createTestTempDirectory("rea-client-dialect-");
     const client = getClients(home).find(
@@ -89,7 +96,7 @@ describe("additional client configuration dialects", () => {
         command,
         enabled: true,
       });
-    if (name === "vscode")
+    if (name === "vscode" || name === "omp" || name === "pi")
       expect(registration).toMatchObject({
         type: "stdio",
         command: "npx",
@@ -494,6 +501,16 @@ describe("platform-aware client config paths", () => {
     ).toBe(true);
     expect(
       isOwnedClientRegistrationCommand(["npx", "-y", "another-package", "mcp"]),
+    ).toBe(false);
+    expect(
+      isOwnedClientRegistrationCommand([
+        "bunx",
+        `${PRODUCT_IDENTITY.packageName}@3.2.0`,
+        "mcp",
+      ]),
+    ).toBe(true);
+    expect(
+      isOwnedClientRegistrationCommand(["bunx", "another-package", "mcp"]),
     ).toBe(false);
     expect(
       isOwnedClientRegistrationCommand(

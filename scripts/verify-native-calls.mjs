@@ -1,3 +1,4 @@
+import { requireMcpToolError } from "./lib/mcp-verifier-results.mjs";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
@@ -94,8 +95,8 @@ const checkScenario = async (binary) => {
   });
   const greet = result.events.filter(({ symbol }) => symbol === GREET);
   const add = result.events.filter(({ symbol }) => symbol === "rea_call_add");
-  assert.equal(greet.length, 3);
-  assert.equal(add.length, 3);
+  assert.equal(greet.length, 3, JSON.stringify(result));
+  assert.equal(add.length, 3, JSON.stringify(result));
   for (const [index, event] of greet.entries()) {
     assert.equal(event.receiver_class, "ReaCallGreeter");
     assert.equal(event.selector, "greet:times:");
@@ -232,12 +233,12 @@ const checkHardenedRuntime = async (directory, binary) => {
       { timeout: CLI_TIMEOUT_MS },
     );
     assert.equal(deniedMcp.isError, true, JSON.stringify(deniedMcp));
-    assert.equal(deniedMcp.structuredContent.error.code, denied.code);
+    assert.equal(requireMcpToolError(deniedMcp).code, denied.code);
     assert.match(
-      deniedMcp.structuredContent.error.details.reason,
+      requireMcpToolError(deniedMcp).details.reason,
       /^debugger-attach-denied: /u,
     );
-    assert.ok(deniedMcp.structuredContent.error.details.partial_observation);
+    assert.ok(requireMcpToolError(deniedMcp).details.partial_observation);
   });
   const allowed = join(directory, "debuggable");
   const entitlements = join(directory, "get-task-allow.plist");

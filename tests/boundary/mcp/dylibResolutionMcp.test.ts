@@ -1,3 +1,4 @@
+import { parseMcpToolError } from "../../fixtures/mcpToolError.js";
 import { chmod, mkdir, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -7,11 +8,13 @@ import { z } from "zod";
 
 import { ArtifactProvider } from "../../../src/artifacts/ArtifactProvider.js";
 import {
+  CPU,
   FILE_TYPE,
   LC,
   buildVersionCommand,
   dylibCommand,
   dyldEnvironmentCommand,
+  fatImage,
   machoImage,
   rpathCommand,
 } from "../../../src/artifacts/apple/MachoImage.fixture.js";
@@ -23,8 +26,8 @@ import { createTestTempDirectory } from "../../fixtures/temporaryDirectory.js";
 const withClient = async (
   verify: (client: Client) => Promise<void>,
 ): Promise<void> => {
-  const session = createTestBinarySession(new ArtifactProvider());
-  const server = createServer(session, session);
+  const session = createTestBinarySession(new ArtifactProvider(process.env));
+  const server = createServer({ kind: "session", session });
   const client = new Client({ name: "dylib-mcp-test", version: "1" });
   const [clientTransport, serverTransport] =
     InMemoryTransport.createLinkedPair();
@@ -39,7 +42,7 @@ const withClient = async (
 };
 
 const structuredResult = (value: unknown): unknown =>
-  z.object({ result: z.unknown() }).parse(value).result;
+  z.object({ normalized_result: z.unknown() }).parse(value).normalized_result;
 
 it("traces dylib resolution for an opened app bundle and rejects a changed target", async () => {
   const app = join(
@@ -107,7 +110,45 @@ it("traces dylib resolution for an opened app bundle and rejects a changed targe
       arguments: {},
     });
     expect(changed.isError).toBe(true);
-    expect(JSON.stringify(changed.structuredContent)).toContain("integrity");
+    expect(JSON.stringify(parseMcpToolError(changed))).toContain("integrity");
+  });
+});
+
+it("traces architecture slices from a universal Mach-O target", async () => {
+  const root = await createTestTempDirectory("rea-dylib-universal-");
+  const executable = join(root, "Universal");
+  const cpu = process.arch === "arm64" ? CPU.arm64 : CPU.x86_64;
+  const architecture = process.arch === "arm64" ? "arm64" : "x86_64";
+  await writeFile(
+    executable,
+    fatImage([
+      {
+        cpu,
+        bytes: machoImage({
+          cpu,
+          commands: [buildVersionCommand(1)],
+        }),
+      },
+    ]),
+  );
+
+  await withClient(async (client) => {
+    const opened = await client.callTool({
+      name: "open_binary",
+      arguments: { path: executable },
+    });
+    expect(opened.isError, JSON.stringify(opened)).not.toBe(true);
+    const called = await client.callTool({
+      name: "trace_dylib_resolution",
+      arguments: { architecture },
+    });
+    expect(called.isError, JSON.stringify(called.structuredContent)).not.toBe(
+      true,
+    );
+    const trace = dylibResolutionResultSchema.parse(
+      structuredResult(called.structuredContent),
+    );
+    expect(trace.roots).toEqual([{ image: "Universal", architecture }]);
   });
 });
 
@@ -126,7 +167,7 @@ it("rejects targets that are not Mach-O", async () => {
       arguments: {},
     });
     expect(called.isError).toBe(true);
-    expect(called.structuredContent).toMatchObject({
+    expect(parseMcpToolError(called)).toMatchObject({
       error: { code: "unsupported_target", category: "unsupported_target" },
     });
   });
@@ -153,7 +194,7 @@ it("reports target kinds that artifact operations cannot inspect as unsupported"
       const open = { name: "open_binary", arguments: { path } };
       expect((await client.callTool(open)).isError, path).not.toBe(true);
       const called = await client.callTool({ name: operation, arguments: {} });
-      expect(called.structuredContent, operation).toMatchObject({
+      expect(parseMcpToolError(called), operation).toMatchObject({
         error: {
           code: "unsupported_target",
           message: expect.stringContaining(`${operation} at ${path}`),
@@ -206,7 +247,7 @@ it("traces a standalone Mach-O file whose name ends in .app", async () => {
   });
 });
 
-it.skipIf(process.getuid?.() === 0)(
+it.skipIf(process.platform === "win32" || process.getuid?.() === 0)(
   "keeps a permission denied while canonicalizing the opened bundle",
   async () => {
     const parent = await createTestTempDirectory("rea-dylib-mcp-revoked-");
@@ -230,7 +271,7 @@ it.skipIf(process.getuid?.() === 0)(
           arguments: {},
         });
         expect(called.isError).toBe(true);
-        expect(JSON.stringify(called.structuredContent)).toMatch(
+        expect(JSON.stringify(parseMcpToolError(called))).toMatch(
           /Permission denied \(EACCES\)/u,
         );
       } finally {
@@ -410,52 +451,57 @@ it.each([
   },
 );
 
-it("reports caller-selected roots that cannot be traced as invalid input", async () => {
-  const app = join(
-    await createTestTempDirectory("rea-dylib-roots-"),
-    "Fixture.app",
-  );
-  await mkdir(join(app, "Contents/MacOS"), { recursive: true });
-  await writeFile(
-    join(app, "Contents/Info.plist"),
-    "<plist><dict><key>CFBundleExecutable</key><string>App</string></dict></plist>",
-  );
-  await writeFile(
-    join(app, "Contents/MacOS/App"),
-    machoImage({ commands: [buildVersionCommand(1)] }),
-  );
-  await symlink("/bin/ls", join(app, "Contents/MacOS/outside"));
-  await withClient(async (client) => {
-    const opened = await client.callTool({
-      name: "open_binary",
-      arguments: { path: app },
-    });
-    expect(opened.isError, JSON.stringify(opened)).not.toBe(true);
-    for (const [root, message] of [
-      ["Contents/MacOS/Missing", "is not a regular file"],
-      ["Contents/MacOS", "is not a regular file"],
-      ["Contents/Info.plist", "is not a Mach-O image"],
-      ["Contents/MacOS/outside", "resolves outside the analyzed root"],
-    ] as const) {
-      const called = await client.callTool({
-        name: "trace_dylib_resolution",
-        arguments: { roots: ["Contents/MacOS/App", root] },
-      });
-      expect(called.isError, root).toBe(true);
-      expect(called.structuredContent, root).toMatchObject({
-        error: {
-          code: "invalid_request",
-          details: {
-            issues: [
-              {
-                path: ["roots", 1],
-                reason: "invalid_value",
-                message: expect.stringContaining(`Root ${root} ${message}`),
-              },
-            ],
+for (const [root, message] of [
+  ["Contents/MacOS/Missing", "is not a regular file"],
+  ["Contents/MacOS", "is not a regular file"],
+  ["Contents/Info.plist", "is not a Mach-O image"],
+  ["Contents/MacOS/outside", "resolves outside the analyzed root"],
+] as const) {
+  const needsFileSymlink = root === "Contents/MacOS/outside";
+  // File symlinks on Windows need Developer Mode or an elevated token.
+  it.skipIf(process.platform === "win32" && needsFileSymlink)(
+    `reports caller-selected root ${root} as invalid input`,
+    async () => {
+      const app = join(
+        await createTestTempDirectory("rea-dylib-roots-"),
+        "Fixture.app",
+      );
+      await mkdir(join(app, "Contents/MacOS"), { recursive: true });
+      await writeFile(
+        join(app, "Contents/Info.plist"),
+        "<plist><dict><key>CFBundleExecutable</key><string>App</string></dict></plist>",
+      );
+      await writeFile(
+        join(app, "Contents/MacOS/App"),
+        machoImage({ commands: [buildVersionCommand(1)] }),
+      );
+      if (needsFileSymlink) await symlink("/bin/ls", join(app, root));
+      await withClient(async (client) => {
+        const opened = await client.callTool({
+          name: "open_binary",
+          arguments: { path: app },
+        });
+        expect(opened.isError, JSON.stringify(opened)).not.toBe(true);
+        const called = await client.callTool({
+          name: "trace_dylib_resolution",
+          arguments: { roots: ["Contents/MacOS/App", root] },
+        });
+        expect(called.isError, root).toBe(true);
+        expect(parseMcpToolError(called), root).toMatchObject({
+          error: {
+            code: "invalid_request",
+            details: {
+              issues: [
+                {
+                  path: ["roots", 1],
+                  reason: "invalid_value",
+                  message: expect.stringContaining(`Root ${root} ${message}`),
+                },
+              ],
+            },
           },
-        },
+        });
       });
-    }
-  });
-});
+    },
+  );
+}

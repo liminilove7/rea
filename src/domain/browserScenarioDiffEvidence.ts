@@ -1,10 +1,10 @@
 import type {
-  BrowserScenarioCapture,
   BrowserScenarioCompleteness,
   BrowserScenarioCompletenessSection,
   BrowserScenarioStep,
   BrowserStepArtifacts,
-} from "./browserScenarioCapture.js";
+} from "./browserScenarioCaptureValues.js";
+import type { BrowserScenarioCapture } from "./browserScenarioCapture.js";
 import type {
   BrowserScenarioArtifactKind,
   BrowserScenarioEvidenceState,
@@ -123,29 +123,32 @@ export const networkContentCoverageReason = (
 ): string | undefined => {
   const left = before.scenario.network_content;
   const right = after.scenario.network_content;
-  if (left === undefined || right === undefined) {
-    const events = [...before.events.items, ...after.events.items];
-    if (
-      events.some((event) => event.kind === "network-content") ||
-      ((left === undefined) !== (right === undefined) &&
-        events.some(
-          (event) =>
-            event.kind === "request" ||
-            event.kind === "response" ||
-            event.kind === "request-failed" ||
-            event.kind === "request-finished" ||
-            event.kind === "request-unfinished",
-        ))
-    )
-      return "Network content selection is unknown in a legacy capture; capture both sides with matching content selection.";
-    return undefined;
-  }
   return left.request_body !== right.request_body ||
     left.response_body !== right.response_body ||
     left.header_values !== right.header_values
     ? "Network content selections differ; capture both sides with matching content selection before comparing network evidence."
     : undefined;
 };
+
+/** Different or unrecorded event-family selection is missing comparability, not an observed website change. */
+export const eventFamilyCoverageReason = (
+  before: BrowserScenarioCapture,
+  after: BrowserScenarioCapture,
+): string | undefined => {
+  const left = before.scenario.event_families;
+  const right = after.scenario.event_families;
+  if (left === undefined || right === undefined)
+    return "Event family selection is unknown in a legacy capture; capture both sides with matching event families before comparing event evidence.";
+  const leftFamilies = new Set(left);
+  const rightFamilies = new Set(right);
+  return leftFamilies.size === rightFamilies.size &&
+    [...leftFamilies].every((family) => rightFamilies.has(family))
+    ? undefined
+    : `Event family selections differ (${familyList(leftFamilies)} before, ${familyList(rightFamilies)} after); capture both sides with matching event families before comparing event evidence.`;
+};
+
+const familyList = (families: ReadonlySet<string>): string =>
+  families.size === 0 ? "none" : [...families].sort().join(", ");
 
 /** Wrap one value as captured comparison evidence. */
 export const captured = <Value>(value: Value): CaptureState<Value> => ({

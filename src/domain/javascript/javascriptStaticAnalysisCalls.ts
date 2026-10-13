@@ -1,5 +1,6 @@
 import * as t from "@babel/types";
 
+import { htmlUrlText, stripQueryAndFragment } from "../artifactPathSyntax.js";
 import { sanitizeEndpointCandidate } from "../browserObservation.js";
 import {
   addFindingOnce,
@@ -7,11 +8,11 @@ import {
 } from "./javascriptStaticAnalysisFindings.js";
 import {
   STATIC_ROUTE_CALL_NAMES,
+  argumentNode,
   argumentValue,
   calleeName,
   endpointArgument as endpointArgumentHelper,
   prefixedArgument,
-  semanticStaticPropertyName,
   range,
   rangeForOffsets,
   sourceSlice,
@@ -20,12 +21,24 @@ import {
   storageKind,
   stringValue,
 } from "./javascriptStaticAnalysisHelpers.js";
+import {
+  semanticStaticPropertyName,
+  unwrapJavaScriptExpression,
+} from "./javascriptAstValues.js";
 import type {
   JavaScriptAnalysisAccumulator as AnalysisAccumulator,
   JavaScriptEndpointInput as EndpointInput,
   JavaScriptFindingContext as FindingContext,
   JavaScriptReferenceInput as ReferenceInput,
 } from "./javascriptStaticAnalysisState.js";
+import {
+  resolveSemanticBindingState,
+  type JavaScriptSemanticAnalysisState,
+} from "./javascriptSemanticState.js";
+import {
+  isUnmodifiedGlobalReference,
+  isUnmodifiedImportMetaUrl,
+} from "./javascriptSemanticAmbientWrites.js";
 
 type JavaScriptCallLike =
   | t.CallExpression
@@ -37,6 +50,7 @@ export const inspectCall = (
   source: string,
   node: JavaScriptCallLike,
   context: FindingContext,
+  bindings: JavaScriptSemanticAnalysisState,
 ): void => {
   const { accumulator } = context;
   const name = calleeName(node.callee);
@@ -59,12 +73,33 @@ export const inspectCall = (
     });
   for (const specifier of vitePreloadDependencySpecifiers(source, node, name))
     addReference(context, { node, kind: "dynamic-import", specifier });
-  if (name === "Worker" || name.endsWith(".Worker"))
-    addReference(context, { node, kind: "worker", specifier: first });
+  const worker = t.isNewExpression(node) ? node : undefined;
+  const workerConstructor =
+    worker === undefined
+      ? undefined
+      : workerConstructorKind(worker.callee, bindings);
+  if (
+    workerConstructor !== undefined ||
+    name === "Worker" ||
+    name.endsWith(".Worker")
+  )
+    addReference(context, {
+      node,
+      kind: "worker",
+      // Node string paths use the process cwd or filesystem root, neither of
+      // which is established by the analyzed source's artifact location.
+      specifier:
+        (workerConstructor === "node" ? undefined : first) ??
+        (workerConstructor === undefined || worker === undefined
+          ? undefined
+          : workerUrlSpecifier(worker, bindings)),
+    });
   if (name.endsWith("serviceWorker.register"))
     addReference(context, { node, kind: "service-worker", specifier: first });
   inspectEndpointCall(node, name, first, context);
   inspectStorageCall(node, name, first, context);
+  if (first === "audio" || first === "video")
+    noteMediaElementPreloads(node, accumulator);
   if (name.endsWith("loadFile") && first !== undefined)
     addLocatedFinding(context, {
       collection: accumulator.roles,
@@ -93,6 +128,86 @@ export const inspectCall = (
         location: range(node),
       },
     });
+};
+
+const workerUrlSpecifier = (
+  worker: t.NewExpression,
+  bindings: JavaScriptSemanticAnalysisState,
+): string | undefined => {
+  const argumentExpression = argumentNode(worker.arguments[0]);
+  if (argumentExpression === undefined) return undefined;
+  const node = unwrapJavaScriptExpression(argumentExpression).node;
+  if (!t.isNewExpression(node)) return undefined;
+  const callee = unwrapJavaScriptExpression(node.callee).node;
+  if (
+    !isUnmodifiedGlobalReference(callee, bindings, "URL") ||
+    !isUnmodifiedImportMetaUrl(argumentNode(node.arguments[1]), bindings)
+  )
+    return undefined;
+  const specifier = stringValue(node.arguments[0]);
+  if (specifier === undefined) return undefined;
+  const pathname = stripQueryAndFragment(specifier);
+  // The module URL's scheme and filesystem/origin root are unavailable. Only
+  // relative pathnames can establish a location within the artifact; retain
+  // rooted paths and paths requiring URL text normalization as expressions.
+  // Malformed percent escapes survive HTTP URL parsing but cannot be converted
+  // from a file URL to a Node Worker path. Without the base scheme, keep that
+  // ambiguity unknown; query and fragment bytes do not affect pathname lookup.
+  return pathname.length > 0 &&
+    !pathname.startsWith("/") &&
+    !/%(?![0-9a-f]{2})/iu.test(pathname) &&
+    stripQueryAndFragment(htmlUrlText(specifier)) === pathname
+    ? specifier
+    : undefined;
+};
+
+const workerConstructorKind = (
+  callee: t.Node,
+  bindings: JavaScriptSemanticAnalysisState,
+): "browser" | "node" | undefined => {
+  const node = unwrapJavaScriptExpression(callee).node;
+  const member =
+    t.isMemberExpression(node) &&
+    semanticStaticPropertyName(node.property, node.computed) === "Worker";
+  const root = unwrapJavaScriptExpression(member ? node.object : node).node;
+  if (!t.isIdentifier(root)) return undefined;
+  const browserGlobal = member
+    ? ["globalThis", "window", "self"].includes(root.name)
+    : root.name === "Worker";
+  if (browserGlobal && isUnmodifiedGlobalReference(node, bindings, "Worker"))
+    return "browser";
+  const binding = resolveSemanticBindingState(bindings, root, root.name);
+  const [origin] = binding?.directOrigins ?? [];
+  // Named ESM exports and module namespace exports are read-only. Default
+  // imports and CommonJS objects can replace Worker, so their identity is unknown.
+  return binding?.runtimeImport === true &&
+    binding.definitions.length === 1 &&
+    binding.directOrigins.length === 1 &&
+    origin !== undefined &&
+    (origin.specifier === "worker_threads" ||
+      origin.specifier === "node:worker_threads") &&
+    (member
+      ? origin.importedPath.length === 0
+      : origin.importedPath.length === 1 && origin.importedPath[0] === "Worker")
+    ? "node"
+    : undefined;
+};
+
+// Element factories such as jsx("audio", props) and createElement("video",
+// props) carry the HTML media `preload` hint ("none", "metadata", "auto"),
+// which never names an Electron preload script.
+const noteMediaElementPreloads = (
+  node: JavaScriptCallLike,
+  accumulator: AnalysisAccumulator,
+): void => {
+  const props = node.arguments[1];
+  if (!t.isObjectExpression(props)) return;
+  for (const property of props.properties)
+    if (
+      t.isObjectProperty(property) &&
+      semanticStaticPropertyName(property.key, property.computed) === "preload"
+    )
+      accumulator.mediaElementPreloads.add(property);
 };
 
 const requireCallSpecifier = (
@@ -182,6 +297,13 @@ const inspectEndpointCall = (
     });
 };
 
+/** Record tRPC procedures, tRPC link URLs and named GraphQL operations. */
+export const inspectRpcNode = (node: t.Node, context: FindingContext): void => {
+  const rpc = context.rpcScan.inspect(node);
+  if (rpc !== undefined)
+    addEndpoint(context, { node, kind: "network", ...rpc });
+};
+
 export const inspectRouteProperty = (
   node: t.ObjectProperty,
   context: FindingContext,
@@ -201,6 +323,7 @@ export const inspectRoleProperty = (
   context: FindingContext,
 ): void => {
   if (semanticStaticPropertyName(node.key, node.computed) !== "preload") return;
+  if (context.accumulator.mediaElementPreloads.has(node)) return;
   const path = staticPath(node.value);
   if (path === undefined) return;
   addLocatedFinding(context, {
@@ -306,13 +429,34 @@ export const addSourceMapDirectives = (
       end === null
     )
       continue;
-    const match = /^(?:\/\/|\/\*)[#@]\s*sourceMappingURL\s*=\s*([^\s*]+)/u.exec(
-      source.slice(start, end),
-    );
-    if (match === null) continue;
-    const declared = match[1];
-    if (declared === undefined || declared.length === 0) continue;
-    const location = rangeForOffsets(source, start, start + match[0].length);
+    const commentSource = source.slice(start, end);
+    if (
+      !(commentSource.startsWith("//") || commentSource.startsWith("/*")) ||
+      !(commentSource[2] === "#" || commentSource[2] === "@")
+    )
+      continue;
+    // Single-class searches avoid regex backtracking over unbounded whitespace
+    // or inline URLs, which can exhaust the engine stack on two-byte strings.
+    const nameOffset = commentSource.slice(3).search(/\S/u);
+    if (nameOffset === -1) continue;
+    const nameStart = 3 + nameOffset;
+    if (!commentSource.startsWith("sourceMappingURL", nameStart)) continue;
+    const nameEnd = nameStart + "sourceMappingURL".length;
+    const equalsOffset = commentSource.slice(nameEnd).search(/\S/u);
+    if (equalsOffset === -1) continue;
+    const equalsStart = nameEnd + equalsOffset;
+    if (!commentSource.startsWith("=", equalsStart)) continue;
+    const urlOffset = commentSource.slice(equalsStart + 1).search(/\S/u);
+    if (urlOffset === -1) continue;
+    const declaredStart = equalsStart + 1 + urlOffset;
+    const terminator = commentSource
+      .slice(declaredStart)
+      .search(commentSource.startsWith("//") ? /\s/u : /[\s*]/u);
+    const declaredEnd =
+      terminator === -1 ? commentSource.length : declaredStart + terminator;
+    if (declaredEnd === declaredStart) continue;
+    const declared = commentSource.slice(declaredStart, declaredEnd);
+    const location = rangeForOffsets(source, start, start + declaredEnd);
     addFindingOnce(accumulator, `source-map\0${declared}`, () =>
       accumulator.sourceMaps.push({ declared_url: declared, location }),
     );

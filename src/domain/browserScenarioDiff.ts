@@ -1,12 +1,11 @@
-import {
-  type BrowserScenarioCapture,
-  type BrowserScenarioStep,
-} from "./browserScenarioCapture.js";
+import type { BrowserScenarioCapture } from "./browserScenarioCapture.js";
+import type { BrowserScenarioStep } from "./browserScenarioCaptureValues.js";
 import {
   actionState,
   artifactEvidenceState,
   captured,
   eventEvidenceState,
+  eventFamilyCoverageReason,
   eventsFor,
   networkContentCoverageReason,
   screenshotProjection,
@@ -26,13 +25,6 @@ import {
   commitBrowserScenarioNormalization,
   digestNormalizedScenarioValue,
 } from "./browserScenarioNormalization.js";
-
-export {
-  browserScenarioDiffSchema,
-  compareBrowserScenariosInputSchema,
-  type BrowserScenarioDiff,
-  type CompareBrowserScenariosInput,
-} from "./browserScenarioDiffValues.js";
 
 type ComparableArtifact = {
   readonly artifact: BrowserScenarioArtifactKind;
@@ -341,12 +333,23 @@ const compareStepArtifacts = (
       ),
       beforeState: eventEvidenceState(input.beforeCapture, input.beforeStep),
       afterState: eventEvidenceState(input.afterCapture, input.afterStep),
-      incomparableReason: networkContentCoverageReason(
+      incomparableReason: eventCoverageReason(
         input.beforeCapture,
         input.afterCapture,
       ),
     }),
   ];
+};
+
+const eventCoverageReason = (
+  before: BrowserScenarioCapture,
+  after: BrowserScenarioCapture,
+): string | undefined => {
+  const reasons = [
+    eventFamilyCoverageReason(before, after),
+    networkContentCoverageReason(before, after),
+  ].filter((reason) => reason !== undefined);
+  return reasons.length === 0 ? undefined : reasons.join(" ");
 };
 
 interface CompareCapturedValuesInput<Value> {

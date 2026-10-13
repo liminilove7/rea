@@ -10,6 +10,7 @@ import {
 import { join } from "node:path";
 import { promisify } from "node:util";
 
+import { buildBinary } from "plist";
 import { describe, expect, it } from "vitest";
 
 import { parseBinaryTarget } from "../../../src/application/BinaryTargetResolver.js";
@@ -19,11 +20,47 @@ import {
 } from "../../../src/application/AppBundleExecutable.js";
 import {
   dosMz,
+  elf,
+  fat,
   pe,
   thinMach,
 } from "../../../src/domain/binaryTarget.fixture.js";
 import { projectAnalysisError } from "../../../src/domain/analysisErrorProjection.js";
+import { createEvidence, parseEvidence } from "../../../src/domain/evidence.js";
 import { createTestTempDirectory } from "../../fixtures/temporaryDirectory.js";
+
+it.each([{ cpus: [0x0100000c] }, { cpus: [0x01000007, 0x0100000c] }])(
+  "preserves a FAT container's format in the resolved target and Evidence ($cpus)",
+  async ({ cpus }) => {
+    const directory = await createTestTempDirectory("rea-universal-target-");
+    const path = join(directory, "image");
+    await writeFile(path, fat(cpus));
+    const resolved = await parseBinaryTarget(path, {
+      hostArchitecture: "arm64",
+    });
+    if (!resolved.ok) throw resolved.error;
+    expect(resolved.value).toMatchObject({
+      kind: "executable",
+      format: "mach-o-universal",
+      architecture: "arm64",
+    });
+    const evidence = createEvidence(
+      resolved.value,
+      { id: "fixture", name: "Fixture", version: "1" },
+      {
+        operation: "inspect_macho",
+        parameters: {},
+        result: null,
+      },
+    );
+    expect(
+      parseEvidence(JSON.parse(JSON.stringify(evidence))).subject,
+    ).toMatchObject({
+      format: "mach-o-universal",
+      architecture: "arm64",
+    });
+  },
+);
 
 describe("binary target I/O: app plist permissions and decoding", () => {
   it.each([
@@ -209,6 +246,17 @@ describe("binary target I/O: package classification", () => {
     });
   });
 
+  it("classifies a binary plist by its magic under any extension", async () => {
+    const directory = await createTestTempDirectory("rea-bplist-target-");
+    const path = join(directory, "Model.archive");
+    await writeFile(path, buildBinary({ $archiver: "NSKeyedArchiver" }));
+    const result = await parseBinaryTarget(path);
+    expect(result.ok && result.value).toMatchObject({
+      kind: "artifact",
+      format: "plist",
+    });
+  });
+
   it("does not trust a ZIP-family extension without ZIP magic", async () => {
     const directory = await createTestTempDirectory("rea-fake-archive-");
     const path = join(directory, "fake.zip");
@@ -226,12 +274,16 @@ describe("binary target I/O: filesystem and app bundle target resolution", () =>
     const directory = await createTestTempDirectory("rea-target-");
     await writeFile(join(directory, "sample.hop"), "database");
     await writeFile(join(directory, "text"), "hello");
-    const database = await parseBinaryTarget("sample.hop", directory);
+    const database = await parseBinaryTarget("sample.hop", { cwd: directory });
     expect(database.ok && database.value.sha256).toBe(
       "3549b0028b75d981cdda2e573e9cb49dedc200185876df299f912b79f69dabd8",
     );
-    expect((await parseBinaryTarget("text", directory)).ok).toBe(false);
-    expect((await parseBinaryTarget("missing", directory)).ok).toBe(false);
+    expect((await parseBinaryTarget("text", { cwd: directory })).ok).toBe(
+      false,
+    );
+    expect((await parseBinaryTarget("missing", { cwd: directory })).ok).toBe(
+      false,
+    );
   });
 
   it.skipIf(process.platform === "win32" || process.getuid?.() === 0)(
@@ -242,7 +294,10 @@ describe("binary target I/O: filesystem and app bundle target resolution", () =>
       await writeFile(path, thinMach(0xcffaedfe, 0x0100000c));
       await chmod(path, 0);
       try {
-        const result = await parseBinaryTarget(path, directory, "arm64");
+        const result = await parseBinaryTarget(path, {
+          cwd: directory,
+          hostArchitecture: "arm64",
+        });
         expect(result.ok).toBe(false);
         if (result.ok) return;
         expect(result.error).toMatchObject({ path, systemCode: "EACCES" });
@@ -275,7 +330,10 @@ describe("binary target I/O: filesystem and app bundle target resolution", () =>
       join(programs, "Example & Tool"),
       thinMach(0xfeedfacf, 0x0100000c),
     );
-    const result = await parseBinaryTarget(app, directory, "arm64");
+    const result = await parseBinaryTarget(app, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok && result.value).toMatchObject({
       path: await realpath(join(programs, "Example & Tool")),
       format: "mach-o",
@@ -300,7 +358,14 @@ describe("binary target I/O: filesystem and app bundle target resolution", () =>
     await mkdir(join(contents, "MacOS"), { recursive: true });
     if (plist !== undefined)
       await writeFile(join(contents, "Info.plist"), plist);
-    expect((await parseBinaryTarget(app, directory, "arm64")).ok).toBe(false);
+    expect(
+      (
+        await parseBinaryTarget(app, {
+          cwd: directory,
+          hostArchitecture: "arm64",
+        })
+      ).ok,
+    ).toBe(false);
   });
 
   it.skipIf(process.platform === "win32")(
@@ -318,7 +383,14 @@ describe("binary target I/O: filesystem and app bundle target resolution", () =>
         "<plist><dict><key>CFBundleExecutable</key><string>Escaping</string></dict></plist>",
       );
       await symlink(outside, join(programs, "Escaping"));
-      expect((await parseBinaryTarget(app, directory, "arm64")).ok).toBe(false);
+      expect(
+        (
+          await parseBinaryTarget(app, {
+            cwd: directory,
+            hostArchitecture: "arm64",
+          })
+        ).ok,
+      ).toBe(false);
     },
   );
 });
@@ -327,12 +399,11 @@ describe("binary target I/O: explicit kinds and executable headers", () => {
   it("honors an explicit database kind without relying on the file suffix", async () => {
     const directory = await createTestTempDirectory("rea-target-");
     await writeFile(join(directory, "saved-analysis"), "database");
-    const result = await parseBinaryTarget(
-      "saved-analysis",
-      directory,
-      "arm64",
-      "database",
-    );
+    const result = await parseBinaryTarget("saved-analysis", {
+      cwd: directory,
+      hostArchitecture: "arm64",
+      targetKind: "database",
+    });
     expect(result.ok && result.value).toMatchObject({
       kind: "database",
       format: "analysis-database",
@@ -343,7 +414,10 @@ describe("binary target I/O: explicit kinds and executable headers", () => {
     const directory = await createTestTempDirectory("rea-target-");
     const path = join(directory, "delayed.exe");
     await writeFile(path, pe(0x8664, 8192));
-    const result = await parseBinaryTarget(path, directory, "x64");
+    const result = await parseBinaryTarget(path, {
+      cwd: directory,
+      hostArchitecture: "x64",
+    });
     expect(result.ok && result.value).toMatchObject({
       format: "pe",
       architecture: "x86_64",
@@ -354,7 +428,10 @@ describe("binary target I/O: explicit kinds and executable headers", () => {
     const directory = await createTestTempDirectory("rea-target-");
     const path = join(directory, "truncated");
     await writeFile(path, thinMach(0xcffaedfe, 0x0100000c).subarray(0, 12));
-    const result = await parseBinaryTarget(path, directory, "arm64");
+    const result = await parseBinaryTarget(path, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok).toBe(false);
     expect(result.ok ? undefined : result.error).toMatchObject({
       path,
@@ -369,7 +446,10 @@ describe("binary target I/O: explicit kinds and executable headers", () => {
     const header = thinMach(0xcffaedfe, 0x0100000c);
     header.writeUInt32LE(8192, 20);
     await writeFile(path, Buffer.concat([header, Buffer.alloc(8192)]));
-    const result = await parseBinaryTarget(path, directory, "arm64");
+    const result = await parseBinaryTarget(path, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok && result.value).toMatchObject({
       format: "mach-o",
       architecture: "arm64",
@@ -391,7 +471,10 @@ describe("app executable filename fidelity", () => {
         `<plist><dict><key>CFBundleExecutable</key><string>${name}</string></dict></plist>`,
       );
       await writeFile(executable, thinMach(0xfeedfacf, 0x0100000c));
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       expect(result.ok && result.value).toMatchObject({
         path: await realpath(executable),
         format: "mach-o",
@@ -416,7 +499,10 @@ describe("app executable filename fidelity", () => {
         `<plist><dict><key>CFBundleExecutable</key><string>${encoded}</string></dict></plist>`,
       );
       await writeFile(executable, thinMach(0xfeedfacf, 0x0100000c));
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       expect(result.ok && result.value).toMatchObject({
         path: await realpath(executable),
         format: "mach-o",
@@ -449,7 +535,10 @@ describe("app executable filename fidelity", () => {
       join(contents, "MacOS", "Inner"),
       thinMach(0xfeedfacf, 0x0100000c),
     );
-    const result = await parseBinaryTarget(app, directory, "arm64");
+    const result = await parseBinaryTarget(app, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok && result.value).toMatchObject({
       path: await realpath(executable),
     });
@@ -469,7 +558,10 @@ describe("app executable filename fidelity", () => {
       `<plist><dict>${entry}<key>CFBundleExecutable</key><string>App</string></dict></plist>`,
     );
     await writeFile(executable, thinMach(0xfeedfacf, 0x0100000c));
-    const result = await parseBinaryTarget(app, directory, "arm64");
+    const result = await parseBinaryTarget(app, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok && result.value).toMatchObject({
       path: await realpath(executable),
     });
@@ -495,7 +587,10 @@ describe("app executable filename fidelity", () => {
           plist,
         ]);
         await writeFile(executable, thinMach(0xfeedfacf, 0x0100000c));
-        const result = await parseBinaryTarget(app, directory, "arm64");
+        const result = await parseBinaryTarget(app, {
+          cwd: directory,
+          hostArchitecture: "arm64",
+        });
         expect(result.ok && result.value).toMatchObject({
           path: await realpath(executable),
           format: "mach-o",
@@ -515,7 +610,10 @@ describe("iOS-style app bundle targets", () => {
     await mkdir(app);
     await writeFile(join(app, "Info.plist"), plist("Flat"));
     await writeFile(join(app, "Flat"), thinMach(0xfeedfacf, 0x0100000c));
-    const result = await parseBinaryTarget(app, directory, "arm64");
+    const result = await parseBinaryTarget(app, {
+      cwd: directory,
+      hostArchitecture: "arm64",
+    });
     expect(result.ok && result.value).toMatchObject({
       path: await realpath(join(app, "Flat")),
       bundleInfoPlist: join(await realpath(app), "Info.plist"),
@@ -535,7 +633,10 @@ describe("iOS-style app bundle targets", () => {
         thinMach(0xfeedfacf, 0x0100000c),
       );
       await symlink("bin/real", join(app, "Linked"));
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       expect(result.ok && result.value).toMatchObject({
         path: await realpath(join(app, "bin", "real")),
         bundleInfoPlist: join(await realpath(app), "Info.plist"),
@@ -556,7 +657,10 @@ describe("iOS-style app bundle targets", () => {
         join(contents, "MacOS", "Linked"),
         thinMach(0xfeedfacf, 0x0100000c),
       );
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       expect(result.ok && result.value).toMatchObject({
         path: await realpath(join(contents, "MacOS", "Linked")),
       });
@@ -572,7 +676,10 @@ describe("iOS-style app bundle targets", () => {
       await mkdir(join(wrapper, "Locked.app"), { recursive: true });
       await chmod(wrapper, 0o000);
       try {
-        const result = await parseBinaryTarget(app, directory, "arm64");
+        const result = await parseBinaryTarget(app, {
+          cwd: directory,
+          hostArchitecture: "arm64",
+        });
         if (result.ok) throw new Error("Expected a permission denial");
         expect(result.error.message).toContain("permission denied");
       } finally {
@@ -591,14 +698,24 @@ describe("iOS-style app bundle targets", () => {
       await writeFile(join(wrapped, "Info.plist"), plist("Phone"));
       await writeFile(join(wrapped, "Phone"), thinMach(0xfeedfacf, 0x0100000c));
       await symlink("Wrapper/Phone.app", join(app, "WrappedBundle"));
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       expect(result.ok && result.value).toMatchObject({
         path: await realpath(join(wrapped, "Phone")),
         format: "mach-o",
       });
 
       await mkdir(join(app, "Wrapper", "Second.app"));
-      expect((await parseBinaryTarget(app, directory, "arm64")).ok).toBe(false);
+      expect(
+        (
+          await parseBinaryTarget(app, {
+            cwd: directory,
+            hostArchitecture: "arm64",
+          })
+        ).ok,
+      ).toBe(false);
     },
   );
 
@@ -612,14 +729,108 @@ describe("iOS-style app bundle targets", () => {
       await writeFile(outside, thinMach(0xfeedfacf, 0x0100000c));
       await writeFile(join(app, "Info.plist"), plist("Escaping"));
       await symlink(outside, join(app, "Escaping"));
-      const result = await parseBinaryTarget(app, directory, "arm64");
+      const result = await parseBinaryTarget(app, {
+        cwd: directory,
+        hostArchitecture: "arm64",
+      });
       if (result.ok) throw new Error("Expected an escaping program file");
       expect(result.error.message).toContain("leaves the bundle root");
     },
   );
 });
 
+describe("binary Info.plist app bundle targets", () => {
+  it.each([
+    ["Mac.app", ["Contents", "MacOS"], ["Contents", "Info.plist"]],
+    ["Phone.app", [], ["Info.plist"]],
+  ])(
+    "resolves %s from a binary Info.plist on every host",
+    async (bundle, programs, plist) => {
+      const directory = await createTestTempDirectory("rea-app-bplist-");
+      // Windows file names cannot hold a tab or end in a space.
+      const names =
+        process.platform === "win32"
+          ? ["Ordinary"]
+          : ["Ordinary", " App ", "Tab\t"];
+      for (const name of names) {
+        const app = join(directory, name, bundle);
+        const executable = join(app, ...programs, name);
+        await mkdir(join(app, ...programs), { recursive: true });
+        await mkdir(join(app, ...plist.slice(0, -1)), { recursive: true });
+        await writeFile(
+          join(app, ...plist),
+          buildBinary({ CFBundleExecutable: name, CFBundleVersion: "1" }),
+        );
+        await writeFile(executable, thinMach(0xfeedfacf, 0x0100000c));
+        const result = await parseBinaryTarget(app, {
+          cwd: directory,
+          hostArchitecture: "arm64",
+        });
+        expect(result.ok && result.value).toMatchObject({
+          path: await realpath(executable),
+          format: "mach-o",
+        });
+      }
+    },
+  );
+
+  it.each([
+    [
+      "XML",
+      "<plist><dict><key>__proto__</key><dict><key>CFBundleExecutable</key><string>Forged</string></dict></dict></plist>",
+    ],
+    [
+      "binary",
+      buildBinary(JSON.parse('{"__proto__":{"CFBundleExecutable":"Forged"}}')),
+    ],
+  ])(
+    "ignores CFBundleExecutable nested under __proto__ in %s Info.plist files",
+    async (_encoding, contents) => {
+      const directory = await createTestTempDirectory("rea-app-proto-only-");
+      const app = join(directory, "Proto.app");
+      await mkdir(join(app, "Contents", "MacOS"), { recursive: true });
+      await writeFile(join(app, "Contents", "Info.plist"), contents);
+      await writeFile(
+        join(app, "Contents", "MacOS", "Forged"),
+        thinMach(0xfeedfacf, 0x0100000c),
+      );
+      expect(await resolveAppBundleExecutable(app)).toMatchObject({
+        ok: false,
+        error: {
+          reason: expect.stringContaining("CFBundleExecutable is missing"),
+        },
+      });
+    },
+  );
+});
+
 describe("DOS binary target I/O", () => {
+  it("resolves a short-header PE signature beyond the bounded prefix", async () => {
+    const directory = await createTestTempDirectory(
+      "rea-short-stub-pe-target-",
+    );
+    const path = join(directory, "short-stub.dll");
+    const offset = 8192;
+    const stub = dosMz(64);
+    stub.writeUInt32LE(offset, 60);
+    const peRecord = pe(0x8664, offset, 0x2002).subarray(offset);
+    const bytes = Buffer.concat([
+      stub,
+      Buffer.alloc(offset - stub.length),
+      peRecord,
+    ]);
+    await writeFile(path, bytes);
+
+    expect(await parseBinaryTarget(path)).toMatchObject({
+      ok: true,
+      value: {
+        format: "pe",
+        architecture: "x86_64",
+        executableRole: "shared-library",
+      },
+    });
+  });
+
   it("validates a complete DOS file beyond the initial metadata probe", async () => {
     const directory = await createTestTempDirectory("rea-dos-target-");
     const path = join(directory, "legacy.exe");
@@ -636,3 +847,40 @@ describe("DOS binary target I/O", () => {
     });
   });
 });
+
+it.each([
+  [
+    "EI_VERSION",
+    (bytes: Buffer) => {
+      bytes[6] = 0;
+    },
+  ],
+  [
+    "e_version",
+    (bytes: Buffer) => {
+      bytes.writeUInt32LE(0, 20);
+    },
+  ],
+  [
+    "e_ehsize",
+    (bytes: Buffer) => {
+      bytes.writeUInt16LE(51, 40);
+    },
+  ],
+])(
+  "rejects an ELF with malformed %s during public target opening",
+  async (_name, corrupt) => {
+    const directory = await createTestTempDirectory("rea-invalid-elf-header-");
+    const path = join(directory, "invalid.elf");
+    const bytes = elf(1, 1, 3);
+    corrupt(bytes);
+    await writeFile(path, bytes);
+    expect(await parseBinaryTarget(path)).toMatchObject({
+      ok: false,
+      error: {
+        _tag: "BinaryTargetError",
+        constraint: "file_format_rejected",
+      },
+    });
+  },
+);

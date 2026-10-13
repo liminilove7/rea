@@ -3,9 +3,11 @@ import type {
   MachoImageFacts,
   MachoSlice,
 } from "../../domain/apple/dylibResolution.js";
+import { machoCpuSubtypeBase } from "../../domain/apple/machoCpuIdentity.js";
 import {
-  readFatSliceDeclarations,
-  validateFatSlice,
+  classifyFatContainerIdentity,
+  readFatContainerHeader,
+  validateFatSliceIdentity,
   type FatSliceDeclaration,
 } from "../../domain/apple/machoContainer.js";
 
@@ -14,13 +16,6 @@ export type ReadAt = (offset: number, length: number) => Promise<Uint8Array>;
 
 /** Load commands larger than this are refused instead of buffered. */
 export const MAX_LOAD_COMMAND_BYTES = 16 * 1024 * 1024;
-/** Target opening accepts up to 128 FAT records; Java class files share the FAT magic. */
-const MAX_FAT_ARCHITECTURES = 128;
-/** CPU types of real Mach-O slices (x86, x86_64, arm, arm64, arm64_32, ppc, ppc64). */
-const KNOWN_CPU_TYPES: readonly number[] = [
-  7, 0x01000007, 12, 0x0100000c, 0x0200000c, 18, 0x01000012,
-];
-
 const MH_MAGIC = 0xfeedface;
 const MH_MAGIC_64 = 0xfeedfacf;
 const MH_CIGAM = 0xcefaedfe;
@@ -44,6 +39,47 @@ const LC_VERSION_MIN_IPHONEOS = 0x25;
 const LC_VERSION_MIN_TVOS = 0x2f;
 const LC_VERSION_MIN_WATCHOS = 0x30;
 const LC_BUILD_VERSION = 0x32;
+
+// `mach-o/loader.h` `PLATFORM_*` numbers observed via Apple linker output.
+const PLATFORM_MACOS = 1;
+const PLATFORM_IOS = 2;
+const PLATFORM_TVOS = 3;
+const PLATFORM_WATCHOS = 4;
+const PLATFORM_IOSSIMULATOR = 7;
+const PLATFORM_TVOSSIMULATOR = 8;
+const PLATFORM_WATCHOSSIMULATOR = 9;
+
+const CPU_TYPE_I386 = 7;
+const CPU_TYPE_X86_64 = 0x01000007;
+
+/**
+ * Legacy `LC_VERSION_MIN_*` commands predate explicit simulator platform
+ * IDs. Per Apple's dyld rules the image CPU type distinguishes simulator
+ * from device: Intel images are simulator, ARM images are device
+ * (tvOS simulator applies to x86_64 only). `LC_BUILD_VERSION` platform
+ * numbers are preserved verbatim; unknown future numbers stay unknown
+ * downstream, never mapped to nearest.
+ */
+const legacyVersionMinPlatform = (
+  command: number,
+  cpuType: number,
+): number | undefined => {
+  const isIntel = cpuType === CPU_TYPE_I386 || cpuType === CPU_TYPE_X86_64;
+  switch (command) {
+    case LC_VERSION_MIN_MACOSX:
+      return PLATFORM_MACOS;
+    case LC_VERSION_MIN_IPHONEOS:
+      return isIntel ? PLATFORM_IOSSIMULATOR : PLATFORM_IOS;
+    case LC_VERSION_MIN_TVOS:
+      return cpuType === CPU_TYPE_X86_64
+        ? PLATFORM_TVOSSIMULATOR
+        : PLATFORM_TVOS;
+    case LC_VERSION_MIN_WATCHOS:
+      return isIntel ? PLATFORM_WATCHOSSIMULATOR : PLATFORM_WATCHOS;
+    default:
+      return undefined;
+  }
+};
 
 /** `mach-o/loader.h` `dylib_use_command`: `nameoff == 28` and this marker. */
 const DYLIB_USE_MARKER = 0x1a741800;
@@ -105,69 +141,41 @@ export const readMachoImage = async (
         : { status: "not-mach-o" };
     const view = viewOf(head);
     const magic = view.getUint32(0, false);
-    if ([FAT_MAGIC, FAT_MAGIC_64, FAT_CIGAM, FAT_CIGAM_64].includes(magic)) {
-      // FAT headers are big-endian; the swapped magics store them little-endian.
-      const littleEndian = magic === FAT_CIGAM || magic === FAT_CIGAM_64;
-      const count = view.getUint32(4, littleEndian);
-      const wide = magic === FAT_MAGIC_64 || magic === FAT_CIGAM_64;
-      // A Java class file's nonzero major version reads as the count, so an
-      // empty architecture table can only be a malformed universal header.
-      if (count === 0)
-        return {
-          status: "malformed",
-          reason: "FAT header declares no architectures",
-        };
-      if (count > MAX_FAT_ARCHITECTURES || 8 + count * (wide ? 32 : 20) > size)
-        return { status: "not-mach-o" };
-      const tableBytes = await readExact(
-        readAt,
-        8,
-        count * (wide ? 32 : 20),
-        "FAT table",
-      );
-      const declarations = readFatSliceDeclarations(tableBytes, {
-        count,
-        wide,
-        littleEndian,
-      });
-      if (declarations.status !== "parsed")
-        throw new MachoFormatIssue("malformed", declarations.reason);
-      // A Java class file's version fields read as a FAT count; its "table" names no CPU.
-      if (
-        !declarations.slices.some(({ cpuType }) =>
-          KNOWN_CPU_TYPES.includes(cpuType),
-        )
-      ) {
-        let hasMachOSliceHeader = false;
-        for (const declaration of declarations.slices) {
-          if (
-            validateFatSlice(
-              declaration,
-              size,
-              8 + count * (wide ? 32 : 20),
-            ) !== null
-          )
-            continue;
-          const bytes = await readAt(declaration.offset, 4);
-          if (bytes.byteLength < 4) continue;
-          const sliceMagic = viewOf(bytes).getUint32(0, false);
-          if (
-            [MH_MAGIC, MH_MAGIC_64, MH_CIGAM, MH_CIGAM_64].includes(sliceMagic)
-          ) {
-            hasMachOSliceHeader = true;
-            break;
-          }
-        }
-        if (!hasMachOSliceHeader) return { status: "not-mach-o" };
+    let header = readFatContainerHeader(head, size);
+    if (header.state !== "not-fat") {
+      if (header.state === "needs-data") {
+        header = readFatContainerHeader(
+          await readAt(0, header.requiredBytes),
+          size,
+        );
       }
+      if (header.state === "not-fat") return { status: "not-mach-o" };
+      if (header.state === "needs-data")
+        throw new MachoFormatIssue("malformed", "FAT table is truncated");
+      if (header.state === "malformed")
+        throw new MachoFormatIssue("malformed", header.reason);
+      let identity = classifyFatContainerIdentity(header, () => undefined);
+      if (identity.state === "needs-slice-header") {
+        const sliceHeaders = new Map<number, number | null>();
+        for (const offset of identity.offsets) {
+          const bytes = await readAt(offset, 4);
+          sliceHeaders.set(
+            offset,
+            bytes.byteLength < 4 ? null : viewOf(bytes).getUint32(0, false),
+          );
+        }
+        identity = classifyFatContainerIdentity(header, (offset) =>
+          sliceHeaders.get(offset),
+        );
+      }
+      if (identity.state === "not-mach-o") return { status: "not-mach-o" };
+      if (identity.state === "malformed")
+        throw new MachoFormatIssue(identity.category, identity.reason);
+      if (identity.state === "needs-slice-header")
+        return { status: "not-mach-o" };
       return {
         status: "parsed",
-        slices: await readFatSlices(
-          readAt,
-          size,
-          8 + count * (wide ? 32 : 20),
-          declarations.slices,
-        ),
+        slices: await readFatSlices(readAt, header.slices),
       };
     }
     if (magic === MH_CIGAM || magic === MH_CIGAM_64)
@@ -187,25 +195,17 @@ export const readMachoImage = async (
 
 const readFatSlices = async (
   readAt: ReadAt,
-  size: number,
-  tableEnd: number,
   declarations: readonly FatSliceDeclaration[],
 ): Promise<MachoSlice[]> => {
   const slices: MachoSlice[] = [];
   for (const declaration of declarations) {
-    const { index, offset, size: length, cpuType, cpuSubtype } = declaration;
-    const rangeIssue = validateFatSlice(declaration, size, tableEnd);
-    if (rangeIssue !== null)
-      throw new MachoFormatIssue(
-        rangeIssue.includes("unsupported") ? "unsupported" : "malformed",
-        rangeIssue,
-      );
+    const { offset, size: length, cpuType, cpuSubtype } = declaration;
     const slice = await readSlice(readAt, offset, length, {
       fatCpuType: cpuType,
       fatCpuSubtype: cpuSubtype,
       alignmentExponent: declaration.alignmentExponent,
     });
-    const identityIssue = validateFatSlice(declaration, size, tableEnd, {
+    const identityIssue = validateFatSliceIdentity(declaration, {
       cpuType: slice.cpu_type,
       cpuSubtype: slice.cpu_subtype,
     });
@@ -373,16 +373,18 @@ const decodeCommand = (
         "malformed",
         `load command ${index} is too short for LC_BUILD_VERSION`,
       );
-    const platform = viewOf(body).getUint32(8, true);
+    const view = viewOf(body);
+    const toolCount = view.getUint32(20, true);
+    if (toolCount > Math.floor((body.byteLength - 24) / 8))
+      throw new MachoFormatIssue(
+        "malformed",
+        `load command ${index} LC_BUILD_VERSION tool records exceed cmdsize`,
+      );
+    const platform = view.getUint32(8, true);
     slice.platforms.push(platform);
     return;
   }
-  const legacyPlatform = new Map<number, number>([
-    [LC_VERSION_MIN_MACOSX, 1],
-    [LC_VERSION_MIN_IPHONEOS, 2],
-    [LC_VERSION_MIN_TVOS, 3],
-    [LC_VERSION_MIN_WATCHOS, 4],
-  ]).get(command);
+  const legacyPlatform = legacyVersionMinPlatform(command, slice.cpu_type);
   if (legacyPlatform !== undefined) {
     if (body.byteLength < 16)
       throw new MachoFormatIssue(
@@ -481,14 +483,17 @@ const CPU_ARCH_ABI64 = 0x01000000;
 const CPU_ARCH_ABI64_32 = 0x02000000;
 const CPU_TYPE_X86 = 7;
 const CPU_TYPE_ARM = 12;
-const CPU_SUBTYPE_MASK = 0xff000000;
 const CPU_SUBTYPE_ARM64E = 2;
+const CPU_SUBTYPE_ARM64E_X1 = 12;
 const CPU_SUBTYPE_X86_64_H = 8;
 
 const architectureName = (cpuType: number, cpuSubtype: number): string => {
-  const subtype = cpuSubtype & ~CPU_SUBTYPE_MASK;
+  const subtype = machoCpuSubtypeBase(cpuSubtype);
   if (cpuType === (CPU_TYPE_ARM | CPU_ARCH_ABI64))
-    return subtype === CPU_SUBTYPE_ARM64E ? "arm64e" : "arm64";
+    // Both pointer-authentication subtypes belong to the arm64e family.
+    return subtype === CPU_SUBTYPE_ARM64E || subtype === CPU_SUBTYPE_ARM64E_X1
+      ? "arm64e"
+      : "arm64";
   if (cpuType === (CPU_TYPE_ARM | CPU_ARCH_ABI64_32)) return "arm64_32";
   if (cpuType === (CPU_TYPE_X86 | CPU_ARCH_ABI64))
     return subtype === CPU_SUBTYPE_X86_64_H ? "x86_64h" : "x86_64";

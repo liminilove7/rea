@@ -1,8 +1,12 @@
+import { snapshotEnvironment } from "../process/snapshotEnvironment.js";
 import {
   Client,
   StreamableHTTPClientTransport,
 } from "@modelcontextprotocol/client";
-import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
+import {
+  DEFAULT_INHERITED_ENV_VARS,
+  StdioClientTransport,
+} from "@modelcontextprotocol/client/stdio";
 import { z } from "zod";
 import type { IdaConfiguration } from "./IdaConfiguration.js";
 import { jsonValueSchema, type JsonValue } from "../domain/jsonValue.js";
@@ -15,6 +19,7 @@ export interface IdaMcpConnection {
     name: string,
     args: Readonly<Record<string, JsonValue>>,
   ): Promise<JsonValue>;
+  readResource?(uri: string): Promise<JsonValue>;
   serverInfo(): JsonValue;
   close(): Promise<void>;
 }
@@ -39,8 +44,23 @@ const toolResultSchema = z.object({
     .optional(),
 });
 
+const parseIdaJsonText = (text: string): JsonValue => {
+  let value: unknown;
+  try {
+    value = JSON.parse(text);
+  } catch (cause: unknown) {
+    throw new AnalysisProtocolError("IDA MCP returned malformed JSON text.", {
+      cause,
+    });
+  }
+  return jsonValueSchema.parse(value);
+};
+
 /** Decode Python FastMCP's scalar wrapper without dropping structured dictionaries. */
-export const decodeIdaToolResult = (input: unknown): JsonValue => {
+export const decodeIdaToolResult = (
+  input: unknown,
+  protocol?: "native",
+): JsonValue => {
   const result = toolResultSchema.parse(input);
   const blocks = result.content.flatMap((block) =>
     block.type === "text" && block.text !== undefined ? [block.text] : [],
@@ -53,6 +73,15 @@ export const decodeIdaToolResult = (input: unknown): JsonValue => {
     throw new AnalysisProtocolError(
       `IDA MCP truncated its output; the preview cannot establish a complete observation. ${result._meta.ida_mcp.download_hint ?? "Use the upstream output download workflow to retrieve the full result."}`,
     );
+  // Native MCP retains the complete JSON text while structuredContent may
+  // contain a shortened preview. Parse that producer-owned representation once.
+  if (protocol === "native") {
+    if (blocks.length !== 1)
+      throw new AnalysisProtocolError(
+        "Native IDA MCP omitted its complete JSON text result.",
+      );
+    return parseIdaJsonText(blocks[0] ?? "");
+  }
   if (result.structuredContent !== undefined) {
     const value = result.structuredContent;
     return jsonValueSchema.parse(
@@ -102,6 +131,7 @@ export const redactIdaTransportFailure = (
 /** Create a standard SDK connection to an existing upstream registration. */
 export const createIdaMcpConnection = (
   config: IdaConfiguration,
+  environment: Readonly<NodeJS.ProcessEnv>,
 ): IdaMcpConnection => {
   const client = new Client({ name: "rea-ida-provider", version: "1" });
   const transportFailure = (cause: unknown): never => {
@@ -113,13 +143,18 @@ export const createIdaMcpConnection = (
           command: config.command,
           args: config.args,
           env: {
+            // The SDK always merges ambient defaults. Its string-only environment
+            // API requires empty values to suppress omitted caller-selected keys.
             ...Object.fromEntries(
-              Object.entries(process.env).filter(
+              DEFAULT_INHERITED_ENV_VARS.map((key) => [key, ""]),
+            ),
+            ...Object.fromEntries(
+              Object.entries(snapshotEnvironment(environment)).filter(
                 (entry): entry is [string, string] => entry[1] !== undefined,
               ),
             ),
             IDA_MCP_MAX_WORKERS: "1",
-            ...config.env,
+            ...snapshotEnvironment(config.env),
           },
           stderr: "pipe",
         })
@@ -146,7 +181,27 @@ export const createIdaMcpConnection = (
         await client
           .callTool({ name, arguments: args }, { timeout: config.timeoutMs })
           .catch(transportFailure),
+        config.protocol,
       );
+    },
+    async readResource(uri) {
+      const response = await client
+        .readResource({ uri }, { timeout: config.timeoutMs })
+        .catch(transportFailure);
+      const resource = z
+        .object({
+          contents: z
+            .array(
+              z.object({
+                uri: z.literal(uri),
+                mimeType: z.literal("application/json"),
+                text: z.string(),
+              }),
+            )
+            .length(1),
+        })
+        .parse(response);
+      return parseIdaJsonText(resource.contents[0]?.text ?? "");
     },
     serverInfo: () => jsonValueSchema.parse(client.getServerVersion() ?? null),
     close: () => client.close().catch(transportFailure),

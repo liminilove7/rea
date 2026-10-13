@@ -2,15 +2,26 @@ import { describe, expect, it } from "vitest";
 
 import { FUNCTION_COMPARISON_EXAMPLE } from "../contracts/functionComparisonExample.js";
 import { enhancedInputSchemas } from "../contracts/enhancedInputs.js";
-import {
-  compareFunctions,
-  functionComparisonResultSchema,
-} from "./functionComparison.js";
+import { functionComparisonResultSchema } from "./functionComparisonSchemas.js";
 import { createEvidence, type Evidence } from "./evidence.js";
 import { functionDossierSchema } from "./hopperValues.js";
-import { canonicalDigest, canonicalJson } from "./comparisonSemantics.js";
+import { canonicalJson } from "./comparisonSemantics.js";
+import { digestCanonicalValue } from "./canonicalDigest.js";
+import { compareUnicodeCodePoints } from "./unicodeCodePointOrder.js";
 import { jsonValueSchema } from "./jsonValue.js";
 
+import { compareFunctions } from "./functionComparison.js";
+import type { RelationshipCoverage } from "./relationshipCoverage.js";
+const procedure = (address: string, name: string) => ({
+  address,
+  name,
+  classification: null,
+  body: {
+    available: false as const,
+    reason:
+      "Hopper's public Python API does not expose complete function body ranges",
+  },
+});
 const dossier = (
   text: string,
   base: "0x1000" | "0x2000",
@@ -18,8 +29,7 @@ const dossier = (
 ) =>
   functionDossierSchema.parse({
     procedure: {
-      address: base,
-      name: "main",
+      ...procedure(base, "main"),
       signature: "int main(void)",
       locals: [],
     },
@@ -32,6 +42,8 @@ const dossier = (
     outgoing_references: [],
     referenced_strings: [],
     referenced_names: [],
+    native_api: null,
+    native_value_flow: null,
     basic_blocks: [
       {
         start: base,
@@ -39,6 +51,7 @@ const dossier = (
         successors,
       },
     ],
+    limitations: [],
   });
 
 const dossierWithReference = (
@@ -52,8 +65,8 @@ const dossierWithReference = (
       {
         source_address: base,
         target_address: target,
-        source_procedure: { address: base, name: "main" },
-        target_procedure: { address: target, name: "helper" },
+        source_procedure: procedure(base, "main"),
+        target_procedure: procedure(target, "helper"),
         kind:
           kind === "unavailable"
             ? { available: false, reason: "provider has no kind authority" }
@@ -84,6 +97,7 @@ const observe = (
   digit: string,
   value: ReturnType<typeof dossier>,
   providerId = "rea-workflow",
+  relationshipCoverage: RelationshipCoverage | null = { status: "complete" },
 ): Evidence =>
   createEvidence(
     {
@@ -100,10 +114,39 @@ const observe = (
       result: jsonValueSchema.parse(value),
       confidence: "derived",
       authority: "shipped-artifact",
+      ...(relationshipCoverage === null ? {} : { relationshipCoverage }),
     },
   );
 
 describe("function comparison normalized identity", () => {
+  it("keeps differing generated names ambiguous and stable names mismatched", () => {
+    const named = (base: "0x1000" | "0x2000", name: string) =>
+      functionDossierSchema.parse({
+        ...dossier("return 0;", base),
+        procedure: {
+          ...procedure(base, name),
+          signature: "int helper(void)",
+          locals: [],
+        },
+      });
+    const generated = compareFunctions(
+      observe("1", named("0x1000", "sub_1000")),
+      observe("2", named("0x2000", "sub_2000")),
+    );
+    expect(generated.function_match.status).toBe("ambiguous");
+    expect(generated.status).toBe("unknown");
+    expect(
+      generated.dimensions.find(({ dimension }) => dimension === "identity"),
+    ).toMatchObject({ status: "unknown" });
+
+    const stable = compareFunctions(
+      observe("3", named("0x1000", "firstFunction")),
+      observe("4", named("0x2000", "secondFunction")),
+    );
+    expect(stable.function_match.status).toBe("mismatched");
+    expect(stable.status).toBe("changed");
+  });
+
   it.each(["sub_deallocate", "sub_deadbeef_handler", "fcn.dispatch"])(
     "recognizes the explicit symbol %s without a generated-name prefix false positive",
     (name) => {
@@ -111,7 +154,7 @@ describe("function comparison normalized identity", () => {
         functionDossierSchema.parse({
           ...dossier("return 0;", base),
           procedure: {
-            address: base,
+            ...procedure(base, name),
             name,
             signature: "int helper(void)",
             locals: [],
@@ -131,14 +174,14 @@ describe("function comparison normalized identity", () => {
     },
   );
 
-  it.each(["sub_deadbeef", "fcn.00401000"])(
+  it.each(["sub_deadbeef", "fcn.00401000", "FUN_deadBEEF"])(
     "keeps %s as an address-derived name",
     (name) => {
       const generated = (base: "0x1000" | "0x2000") =>
         functionDossierSchema.parse({
           ...dossier("return 0;", base),
           procedure: {
-            address: base,
+            ...procedure(base, name),
             name,
             signature: "int helper(void)",
             locals: [],
@@ -157,11 +200,13 @@ describe("function comparison normalized identity", () => {
   it.each([
     { name: "sub_deallocate", status: "unchanged" },
     { name: "sub_deadbeef", status: "unknown" },
+    { name: "FUN_00401000", status: "unknown" },
+    { name: "FUN_initialize", status: "unchanged" },
   ])("preserves the calls dimension for callee $name", ({ name, status }) => {
     const calling = (base: "0x1000" | "0x2000") =>
       functionDossierSchema.parse({
         ...dossier("return helper();", base),
-        callees: [{ address: base === "0x1000" ? "0x1010" : "0x2010", name }],
+        callees: [procedure(base === "0x1000" ? "0x1010" : "0x2010", name)],
       });
     const result = compareFunctions(
       observe("6", calling("0x1000")),
@@ -173,12 +218,104 @@ describe("function comparison normalized identity", () => {
   });
 });
 
+describe("function call relationship coverage", () => {
+  const coverageCases: {
+    readonly label: string;
+    readonly coverage: RelationshipCoverage | null;
+    readonly limitation: string;
+  }[] = [
+    {
+      label: "missing",
+      coverage: null,
+      limitation: "Provider did not report relationship coverage.",
+    },
+    {
+      label: "partial",
+      coverage: {
+        status: "partial",
+        limitations: ["Call graph stopped at the read limit."],
+      },
+      limitation: "Call graph stopped at the read limit.",
+    },
+  ];
+  it.each(coverageCases)(
+    "keeps equal empty calls unknown for $label coverage",
+    ({ coverage, limitation }) => {
+      const left = observe("a", dossier("return 0;", "0x1000"));
+      const right = observe(
+        "b",
+        dossier("return 0;", "0x2000"),
+        "rea-workflow",
+        coverage,
+      );
+      const result = compareFunctions(left, right);
+      const calls = result.dimensions.find(
+        ({ dimension }) => dimension === "calls",
+      );
+      expect(calls).toMatchObject({
+        status: "unknown",
+        conclusion_kind: "unresolved_branch",
+        left_count: 0,
+        right_count: 0,
+        limitations: [`Right: ${limitation}`],
+      });
+      expect(result.status).toBe("unknown");
+    },
+  );
+
+  it("retains complete observations with execution diagnostics as comparable", () => {
+    const coverage = {
+      status: "complete" as const,
+      diagnostics: ["Provider reported a non-call xref warning."],
+    };
+    const left = observe(
+      "c",
+      dossier("return 0;", "0x1000"),
+      "rea-workflow",
+      coverage,
+    );
+    const right = observe(
+      "d",
+      dossier("return 0;", "0x2000"),
+      "rea-workflow",
+      coverage,
+    );
+    expect(
+      compareFunctions(left, right).dimensions.find(
+        ({ dimension }) => dimension === "calls",
+      ),
+    ).toMatchObject({ status: "unchanged", left_count: 0, right_count: 0 });
+  });
+
+  it("keeps unresolved call sites unknown despite complete resolved-set coverage", () => {
+    const left = observe("e", dossier("return 0;", "0x1000"));
+    const rightDossier = functionDossierSchema.parse({
+      ...dossier("return 0;", "0x2000"),
+      unresolved_calls: [
+        {
+          address: "0x2010",
+          reason: "Indirect dispatch target could not be resolved.",
+        },
+      ],
+    });
+    const right = observe("f", rightDossier);
+    expect(
+      compareFunctions(left, right).dimensions.find(
+        ({ dimension }) => dimension === "calls",
+      ),
+    ).toMatchObject({
+      status: "unknown",
+      limitations: [
+        "Right: Unresolved call at 0x2010: Indirect dispatch target could not be resolved.",
+      ],
+    });
+  });
+});
+
 describe("function collection collation ties", () => {
-  const composed = { address: "0x2000", name: "caf\u00e9" };
-  const decomposed = { address: "0x3000", name: "cafe\u0301" };
-  const calling = (
-    callees: readonly { readonly address: string; readonly name: string }[],
-  ) =>
+  const composed = procedure("0x2000", "caf\u00e9");
+  const decomposed = procedure("0x3000", "cafe\u0301");
+  const calling = (callees: readonly ReturnType<typeof procedure>[]) =>
     functionDossierSchema.parse({
       ...dossier("return 0;", "0x1000"),
       callees,
@@ -219,17 +356,14 @@ describe("function collection collation ties", () => {
     expect(calls?.left_digest).not.toBe(calls?.right_digest);
   });
 
-  it("preserves existing digests when canonical records do not collate equally", () => {
+  it("uses canonical code-point ordering for collection digests", () => {
     const callees = ["zeta", "Alpha", "alpha", "_helper", "beta"].map(
-      (name, index) => ({
-        address: `0x${(0x2000 + index).toString(16)}`,
-        name,
-      }),
+      (name, index) => procedure(`0x${(0x2000 + index).toString(16)}`, name),
     );
-    const legacyProjection = callees
+    const canonicalProjection = callees
       .map(({ name }) => ({ direction: "out", name }))
       .sort((left, right) =>
-        canonicalJson(left).localeCompare(canonicalJson(right)),
+        compareUnicodeCodePoints(canonicalJson(left), canonicalJson(right)),
       );
     const result = compareFunctions(
       observe("b", calling(callees)),
@@ -240,15 +374,15 @@ describe("function collection collation ties", () => {
     );
     expect(calls).toMatchObject({
       status: "unchanged",
-      left_digest: canonicalDigest(legacyProjection),
-      right_digest: canonicalDigest(legacyProjection),
+      left_digest: digestCanonicalValue(canonicalProjection),
+      right_digest: digestCanonicalValue(canonicalProjection),
     });
   });
 });
 
 describe("function comparison ordering controls", () => {
-  const composed = { address: "0x2000", name: "caf\u00e9" };
-  const decomposed = { address: "0x3000", name: "cafe\u0301" };
+  const composed = procedure("0x2000", "caf\u00e9");
+  const decomposed = procedure("0x3000", "cafe\u0301");
 
   it("preserves duplicate Unicode collections and nullable endpoints", () => {
     const controlled = (base: "0x1000" | "0x2000", reverse: boolean) => {
@@ -258,7 +392,7 @@ describe("function comparison ordering controls", () => {
           source_address: base,
           target_address: endpoint,
           source_procedure: null,
-          target_procedure: { address: endpoint, name: "caf\u00e9" },
+          target_procedure: procedure(endpoint, "caf\u00e9"),
           kind: {
             available: true,
             provenance: "provider-reference-manager",
@@ -281,7 +415,7 @@ describe("function comparison ordering controls", () => {
         {
           source_address: base,
           target_address: endpoint,
-          source_procedure: { address: base, name: "dispatch" },
+          source_procedure: procedure(base, "dispatch"),
           target_procedure: null,
           kind: {
             available: true,
@@ -333,11 +467,12 @@ describe("function comparison ordering controls", () => {
           result: jsonValueSchema.parse(result),
           confidence: "derived",
           authority: "shipped-artifact",
+          relationshipCoverage: { status: "complete" },
         },
       );
     const left = controlled("0x1000", false);
     const right = controlled("0x2000", true);
-    const { native_api: _nativeApi, ...rightWithoutNativeApi } = right;
+    const rightWithoutNativeApi = { ...right, native_api: null };
 
     const comparison = compareFunctions(
       makeEvidence("d", left),
@@ -392,6 +527,28 @@ describe("function comparison CFG address normalization", () => {
         observe("e", duplicate),
       ).dimensions.find(({ dimension }) => dimension === "cfg"),
     ).toMatchObject({ status: "unknown" });
+  });
+});
+
+describe("function comparison unresolved text", () => {
+  it("counts Unicode text consistently for unresolved provider comparisons", () => {
+    const left = observe("b", dossier("return '😀';", "0x1000"), "provider-a");
+    const right = observe("c", dossier("return '😀';", "0x2000"), "provider-b");
+    const comparison = compareFunctions(left, right);
+    expect(
+      comparison.dimensions.find(({ dimension }) => dimension === "pseudocode"),
+    ).toMatchObject({ status: "unknown", left_count: 11, right_count: 11 });
+    expect(comparison.summary).toEqual({
+      unchanged: 6,
+      changed: 0,
+      unknown: 2,
+    });
+    expect(
+      functionComparisonResultSchema.safeParse({
+        ...comparison,
+        status: "truncated",
+      }).success,
+    ).toBe(false);
   });
 });
 
@@ -494,13 +651,15 @@ describe("function comparison", () => {
       limitations: [expect.stringContaining("did not expose reference kinds")],
     });
   });
+});
 
+describe("function comparison identity and malformed CFG", () => {
   it("does not promote address-derived names through equal signatures", () => {
     const autoDossier = (base: "0x1000" | "0x2000") =>
       functionDossierSchema.parse({
         ...dossier("return 0;", base),
         procedure: {
-          address: base,
+          ...procedure(base, "sub_1000"),
           name: "sub_1000",
           signature: "int helper(void)",
           locals: [],
@@ -515,6 +674,22 @@ describe("function comparison", () => {
       comparison.dimensions.find(({ dimension }) => dimension === "identity"),
     ).toMatchObject({ status: "unknown" });
     expect(comparison.status).toBe("unknown");
+    const changedText = compareFunctions(
+      observe("b", autoDossier("0x1000")),
+      observe(
+        "c",
+        functionDossierSchema.parse({
+          ...autoDossier("0x2000"),
+          pseudocode: "return 1;",
+        }),
+      ),
+    );
+    expect(changedText.dimensions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ dimension: "pseudocode", status: "changed" }),
+      ]),
+    );
+    expect(changedText.status).toBe("unknown");
   });
 
   it("rejects invalid CFG normalization and preserves newline differences", () => {

@@ -1,10 +1,14 @@
-import { AnalysisError } from "../../domain/analysisErrorBase.js";
+import { DarwinProcessOwnershipInspectionError } from "../DarwinProcessRunTokenReader.js";
+import {
+  AnalysisError,
+  type AnalysisErrorOptions,
+} from "../../domain/analysisErrorBase.js";
 import type {
   PartialProcessCaptureObservation,
   ProcessCaptureCleanupReport,
 } from "../../domain/process/processCapture.js";
 
-interface ProcessCaptureErrorOptions extends ErrorOptions {
+interface ProcessCaptureErrorOptions extends AnalysisErrorOptions {
   readonly userMessage?: string;
   readonly userCategory?: "cancelled";
   readonly reason?: "capture_failed" | "cleanup_incomplete" | "cancelled";
@@ -61,3 +65,40 @@ export const processCaptureCancelled = (): ProcessCaptureError =>
     reason: "cancelled",
     userMessage: "Process capture was cancelled. Start it again when ready.",
   });
+
+/** Preserve typed process-inspection preflight failures at the capture boundary. */
+export const normalizeCaptureFailure = (
+  cause: unknown,
+  signal: AbortSignal | undefined,
+): unknown => {
+  if (cause instanceof ProcessCaptureError) return cause;
+  if (cause instanceof DarwinProcessOwnershipInspectionError) {
+    const compiler = cause.compilerOutcome;
+    return new ProcessCaptureError(cause.message, {
+      cause,
+      ...(compiler === undefined
+        ? {}
+        : {
+            capturedOutput: {
+              stdout: "",
+              stderr: compiler.stderr,
+              truncated: compiler.stderrTruncated || compiler.outputTruncated,
+              stderr_bytes: compiler.stderrBytes,
+              exit_code:
+                compiler.outcome === "exited" &&
+                typeof compiler.code === "number"
+                  ? compiler.code
+                  : null,
+              signal: compiler.signal,
+            },
+          }),
+    });
+  }
+  if (
+    signal?.aborted === true &&
+    (cause === signal.reason ||
+      (cause instanceof Error && cause.name === "AbortError"))
+  )
+    return processCaptureCancelled();
+  return cause;
+};

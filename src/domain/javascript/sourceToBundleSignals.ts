@@ -1,6 +1,9 @@
 import { posix } from "node:path";
 
-import { compareCodePoints } from "../canonicalOrdering.js";
+import {
+  compareUnicodeCodePoints,
+  compositeKey,
+} from "../unicodeCodePointOrder.js";
 import type { ApplicationNode } from "./javascriptApplicationGraphSchemas.js";
 import type { HistoricalSourceGraph } from "../referenceSourceGraph.js";
 import {
@@ -23,6 +26,8 @@ type CurrentPathKind =
 interface CurrentPath {
   readonly kind: CurrentPathKind;
   readonly value: string;
+  /** Artifact-relative map resolution identifies one path, not its suffixes. */
+  readonly allowSuffix: boolean;
 }
 
 interface CurrentProjection {
@@ -68,7 +73,9 @@ export const sourceBearingNodes = (
 ): ApplicationNode[] =>
   nodes
     .filter(({ kind }) => RELEVANT_NODE_KINDS.has(kind))
-    .sort((left, right) => compareCodePoints(left.node_id, right.node_id));
+    .sort((left, right) =>
+      compareUnicodeCodePoints(left.node_id, right.node_id),
+    );
 
 /** Keep historical source files in stable path order. */
 export const historicalSourceFiles = (
@@ -79,7 +86,7 @@ export const historicalSourceFiles = (
       (entry): entry is SourceFile =>
         entry.kind === "file" && entry.classifications.includes("source"),
     )
-    .sort((left, right) => compareCodePoints(left.path, right.path));
+    .sort((left, right) => compareUnicodeCodePoints(left.path, right.path));
 
 /** Build deterministic candidate indices without assigning fuzzy matches. */
 export const buildSourceToBundleCandidateIndex = (
@@ -93,8 +100,14 @@ export const buildSourceToBundleCandidateIndex = (
     for (const digest of projection.digests)
       addIndexValue(byDigest, digest, projection.node.node_id);
     for (const path of projection.paths) {
-      for (const suffix of pathSuffixes(path.value))
+      for (const suffix of path.allowSuffix
+        ? pathSuffixes(path.value)
+        : [path.value]) {
         addIndexValue(byPathSuffix, suffix, projection.node.node_id);
+        const canonical = suffix.normalize("NFC");
+        if (canonical !== suffix)
+          addIndexValue(byPathSuffix, canonical, projection.node.node_id);
+      }
       addIndexValue(
         byBasename,
         posix.basename(path.value),
@@ -117,16 +130,20 @@ export const candidateIdsForSource = (
   source: SourceFile,
   index: SourceToBundleCandidateIndex,
 ): string[] => {
+  const canonicalPath = source.path.normalize("NFC");
   const groups = [
     source.sha256 === null ? undefined : index.byDigest.get(source.sha256),
     index.byPathSuffix.get(source.path),
+    canonicalPath === source.path
+      ? undefined
+      : index.byPathSuffix.get(canonicalPath),
     index.byBasename.get(posix.basename(source.path)),
   ];
   const seen = new Set<string>();
   const output: string[] = [];
   for (const group of groups) {
     if (group === undefined) continue;
-    for (const nodeId of [...group].sort(compareCodePoints)) {
+    for (const nodeId of [...group].sort(compareUnicodeCodePoints)) {
       if (seen.has(nodeId)) continue;
       seen.add(nodeId);
       output.push(nodeId);
@@ -169,16 +186,25 @@ const projectCurrentNode = (node: ApplicationNode): CurrentProjection => {
   if (node.identity.strategy === "source-map-original") {
     if (node.identity.source_sha256 !== null)
       digests.add(node.identity.source_sha256);
-    addPath(paths, "source-map-original", node.identity.original_source);
   }
   if (node.identity.strategy === "canonical-path")
     addPath(paths, "canonical-path", node.identity.path);
   for (const observation of node.observations) {
-    const sourceDigest = observation.properties.source_sha256;
-    if (typeof sourceDigest === "string" && isDigest(sourceDigest))
-      digests.add(sourceDigest);
-    for (const key of PATH_PROPERTIES)
-      addJsonPath(paths, observation.properties[key]);
+    if (node.identity.strategy === "source-map-original") {
+      const resolution = observation.source_map_reference?.resolution;
+      if (resolution !== undefined && resolution.kind !== "unresolved")
+        paths.push({
+          kind: "source-map-original",
+          value: resolution.path,
+          allowSuffix: resolution.kind === "suffix",
+        });
+    } else {
+      const sourceDigest = observation.properties.source_sha256;
+      if (typeof sourceDigest === "string" && isDigest(sourceDigest))
+        digests.add(sourceDigest);
+      for (const key of PATH_PROPERTIES)
+        addJsonPath(paths, observation.properties[key]);
+    }
   }
   return {
     node,
@@ -202,6 +228,14 @@ const candidateSignals = (
     signals.push(
       signal("source-map-original-path", source.path, sourceMapPaths),
     );
+  const unicodeEquivalentPaths = matchingUnicodePaths(
+    source.path,
+    current.paths,
+  );
+  if (unicodeEquivalentPaths.length > 0)
+    signals.push(
+      signal("unicode-equivalent-path", source.path, unicodeEquivalentPaths),
+    );
   const otherPaths = current.paths.filter(
     ({ kind }) => kind !== "source-map-original",
   );
@@ -212,7 +246,10 @@ const candidateSignals = (
     signals.push(signal("current-path-exact", source.path, exactPaths));
   const suffixPaths = otherPaths
     .filter(
-      ({ value }) => value !== source.path && value.endsWith(`/${source.path}`),
+      ({ value, allowSuffix }) =>
+        allowSuffix &&
+        value !== source.path &&
+        value.endsWith(`/${source.path}`),
     )
     .map(({ value }) => value);
   if (suffixPaths.length > 0)
@@ -240,7 +277,7 @@ const signal = (
   kind,
   weight: signalWeight(kind),
   source_value: sourceValue,
-  current_values: [...new Set(currentValues)].sort(compareCodePoints),
+  current_values: [...new Set(currentValues)].sort(compareUnicodeCodePoints),
 });
 
 const candidateConfidence = (
@@ -259,9 +296,32 @@ const matchingPaths = (
 ): string[] =>
   currentPaths
     .filter(
-      ({ value }) => value === sourcePath || value.endsWith(`/${sourcePath}`),
+      ({ value, allowSuffix }) =>
+        value === sourcePath ||
+        (allowSuffix && value.endsWith(`/${sourcePath}`)),
     )
     .map(({ value }) => value);
+
+const matchingUnicodePaths = (
+  sourcePath: string,
+  currentPaths: readonly CurrentPath[],
+): string[] => {
+  const canonicalSource = sourcePath.normalize("NFC");
+  return currentPaths
+    .filter(({ value, allowSuffix }) => {
+      if (
+        value === sourcePath ||
+        (allowSuffix && value.endsWith(`/${sourcePath}`))
+      )
+        return false;
+      const canonicalValue = value.normalize("NFC");
+      return (
+        canonicalValue === canonicalSource ||
+        (allowSuffix && canonicalValue.endsWith(`/${canonicalSource}`))
+      );
+    })
+    .map(({ value }) => value);
+};
 
 const addJsonPath = (paths: CurrentPath[], value: unknown): void => {
   if (typeof value === "string") addPath(paths, "observation-path", value);
@@ -273,36 +333,43 @@ const addPath = (
   raw: string,
 ): void => {
   const value = normalizeCurrentPath(raw);
-  if (value !== null) paths.push({ kind, value });
+  if (value !== null) paths.push({ kind, value, allowSuffix: true });
 };
 
-/** Matches a `scheme://...` URL prefix; bare filesystem paths keep `?`/`#`. */
 const SCHEME_URL = /^[a-z][a-z0-9+.-]*:\/\//iu;
-/** Matches a `scheme://...` URL prefix with any run of slashes, for stripping. */
 const SCHEME_URL_PREFIX = /^[a-z][a-z0-9+.-]*:\/\/+/iu;
 
 const normalizeCurrentPath = (raw: string): string | null => {
   const withoutQuery = SCHEME_URL.test(raw)
     ? (raw.split(/[?#]/u, 1)[0] ?? "")
     : raw;
-  const withoutScheme = withoutQuery.replace(SCHEME_URL_PREFIX, "");
-  const parts = withoutScheme
-    .replaceAll("\\", "/")
-    .split("/")
-    .filter((part) => part !== "" && part !== ".");
-  if (parts.length === 0 || parts.includes("..")) return null;
+  const portable = withoutQuery
+    .replace(SCHEME_URL_PREFIX, "")
+    .replaceAll("\\", "/");
+  const parts: string[] = [];
+  for (const part of portable.split("/")) {
+    if (part === "" || part === ".") continue;
+    if (part === "..") {
+      if (parts.length === 0) return null;
+      parts.pop();
+    } else parts.push(part);
+  }
+  if (parts.length === 0) return null;
   return parts.join("/");
 };
 
 const uniquePaths = (paths: readonly CurrentPath[]): CurrentPath[] =>
   [
     ...new Map(
-      paths.map((path) => [`${path.kind}\0${path.value}`, path]),
+      paths.map((path) => [
+        compositeKey([path.kind, path.value, String(path.allowSuffix)]),
+        path,
+      ]),
     ).values(),
   ].sort((left, right) =>
-    compareCodePoints(
-      `${left.kind}\0${left.value}`,
-      `${right.kind}\0${right.value}`,
+    compareUnicodeCodePoints(
+      compositeKey([left.kind, left.value]),
+      compositeKey([right.kind, right.value]),
     ),
   );
 

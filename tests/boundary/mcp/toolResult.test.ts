@@ -1,24 +1,42 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
-import { McpServer } from "@modelcontextprotocol/server";
+import {
+  McpServer,
+  STDIO_DEFAULT_MAX_BUFFER_SIZE,
+} from "@modelcontextprotocol/server";
 
 import { ProcessCaptureError } from "../../../src/process/capture/ProcessCaptureError.js";
 import { resolveProcessResult } from "../../../src/process/capture/ProcessCaptureLifecycle.js";
-import {
-  toolContract,
-  type ToolContract,
-} from "../../../src/contracts/toolContracts.js";
-import { err, ok } from "../../../src/domain/result.js";
+import { toolContract } from "../../../src/contracts/toolContracts.js";
+import type { ToolContract } from "../../../src/contracts/toolContractTypes.js";
+import { err } from "../../../src/domain/result.js";
 import { HopperProcessError } from "../../../src/domain/hopperErrors.js";
-import type { IncompleteProcessCaptureObservations } from "../../../src/domain/process/processCapture.js";
 import { processScenarioSchema } from "../../../src/domain/process/processScenario.js";
-import { toCallToolResult } from "../../../src/server/toolResult.js";
+import { ToolResultDelivery } from "../../../src/server/toolResult.js";
 import { createEvidence, parseEvidence } from "../../../src/domain/evidence.js";
-import { emptyProcessCapture } from "../../../src/domain/process/processCapture.fixture.js";
+import {
+  accountFullyObservedProcessCapture,
+  emptyProcessCapture,
+} from "../../../src/domain/process/processCapture.fixture.js";
 import type { JsonValue } from "../../../src/domain/jsonValue.js";
-import { evidenceResultOf } from "../../../src/contracts/toolOutputSchemas.js";
+import { evidenceResultOf } from "../../../src/contracts/toolOutputSchemaPrimitives.js";
 import { toolRegistrationOptions } from "../../../src/server/toolRegistrationOptions.js";
+
+import type { IncompleteProcessCaptureObservations } from "../../../src/domain/process/processCapture.js";
+const delivery = new ToolResultDelivery(STDIO_DEFAULT_MAX_BUFFER_SIZE);
+const UNTRUSTED_TARGET_CONTENT = {
+  provenance: { untrusted_content: true, source: "analysis_target" },
+};
+const emptyFilesystemCoverage =
+  emptyProcessCapture().truncation_details.filesystem_before;
+
+const captureWithObservedOutput = () =>
+  accountFullyObservedProcessCapture({
+    ...emptyProcessCapture(),
+    frames: [{ sequence: 0, at_ms: 0, data: "observed output" }],
+    event_journal: [],
+  });
 
 const contract: ToolContract = {
   name: "provider_neutral_fixture",
@@ -35,6 +53,8 @@ const contract: ToolContract = {
     accessesNetwork: false,
     changesUiState: false,
     mayDiscardData: false,
+    executesForeignCode: false,
+    mutatesDevice: false,
     idempotent: true,
   },
   annotations: {
@@ -43,6 +63,7 @@ const contract: ToolContract = {
     idempotentHint: true,
     openWorldHint: false,
   },
+  returnsTargetContent: false,
   examples: [{ title: "Example fixture request", input: {} }],
 };
 
@@ -53,11 +74,7 @@ describe("completed partial process capture MCP projection", () => {
       terminal_renderer: { state: "cleaned" as const, reason: null },
       temporary_root: { state: "cleaned" as const, reason: null },
     };
-    const capture = {
-      ...emptyProcessCapture(),
-      frames: [{ sequence: 0, at_ms: 0, data: "observed output" }],
-      event_journal: [],
-    };
+    const capture = captureWithObservedOutput();
     let failure: ProcessCaptureError | undefined;
     try {
       resolveProcessResult(
@@ -72,7 +89,7 @@ describe("completed partial process capture MCP projection", () => {
     if (failure === undefined)
       throw new Error("expected process capture failure");
 
-    const result = toCallToolResult(
+    const result = delivery.toCallToolResult(
       err(failure),
       toolContract("capture_process_scenario"),
     );
@@ -93,6 +110,8 @@ describe("completed partial process capture MCP projection", () => {
         },
       },
     });
+    // The partial observation carries terminal output from the target.
+    expect(result._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
   });
 
   it("preserves partial capture details over the MCP SDK transport", async () => {
@@ -105,11 +124,7 @@ describe("completed partial process capture MCP projection", () => {
       terminal_renderer: { state: "cleaned" as const, reason: null },
       temporary_root: { state: "cleaned" as const, reason: null },
     };
-    const capture = {
-      ...emptyProcessCapture(),
-      frames: [{ sequence: 0, at_ms: 0, data: "observed output" }],
-      event_journal: [],
-    };
+    const capture = captureWithObservedOutput();
 
     let failure: ProcessCaptureError | undefined;
     try {
@@ -130,7 +145,7 @@ describe("completed partial process capture MCP projection", () => {
     server.registerTool(
       captureContract.name,
       toolRegistrationOptions(captureContract),
-      async () => toCallToolResult(err(failure), captureContract),
+      async () => delivery.toCallToolResult(err(failure), captureContract),
     );
     const client = new Client({
       name: "process-partial-error-client",
@@ -167,6 +182,7 @@ describe("completed partial process capture MCP projection", () => {
       expect(textContent?.type === "text" ? textContent.text : undefined).toBe(
         JSON.stringify(result.structuredContent),
       );
+      expect(result._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
     } finally {
       await Promise.all([client.close(), server.close()]);
     }
@@ -225,7 +241,15 @@ describe("incomplete partial process observations MCP projection", () => {
         ],
       },
       filesystem_snapshots: {
-        before: { state: "available", value: { files: [], truncated: false } },
+        before: {
+          state: "available",
+          value: {
+            files: [],
+            truncated: false,
+            completeRoots: [],
+            coverage: emptyFilesystemCoverage,
+          },
+        },
         after: {
           state: "unavailable",
           reason: "fixture final snapshot unavailable",
@@ -261,7 +285,7 @@ describe("incomplete partial process observations MCP projection", () => {
     server.registerTool(
       captureContract.name,
       toolRegistrationOptions(captureContract),
-      async () => toCallToolResult(err(failure), captureContract),
+      async () => delivery.toCallToolResult(err(failure), captureContract),
     );
     const client = new Client({
       name: "process-partial-observations-client",
@@ -305,7 +329,10 @@ describe("incomplete partial process observations MCP projection", () => {
 
 describe("tool result projection", () => {
   it("exposes an actionable adapter code to MCP callers", () => {
-    const result = toCallToolResult(err(new HopperProcessError(76)), contract);
+    const result = delivery.toCallToolResult(
+      err(new HopperProcessError(76)),
+      contract,
+    );
     expect(result.structuredContent).toMatchObject({
       error: {
         code: "provider_unavailable",
@@ -315,23 +342,25 @@ describe("tool result projection", () => {
     });
   });
   it("projects bounded private-display coordinates without raw stderr", () => {
-    const result = toCallToolResult(
+    const result = delivery.toCallToolResult(
       err(
         new HopperProcessError(80, {
-          component: "hopper_private_display",
-          operation: "launch",
-          status: "error",
-          failure_code: "x11_socket_directory_unusable",
-          reason: "socket_directory_read_only",
-          socket_directory: "/tmp/.X11-unix",
-          socket_directory_mode: "0777",
-          mount_read_only: true,
-          effective_socket_directory_mode: "1777",
-          effective_mount_read_only: false,
-          wsl: true,
-          strategy: "user-mount-namespace",
-          fallback_reason: null,
-          xvfb_stderr_bytes: 512,
+          diagnostic: {
+            component: "hopper_private_display",
+            operation: "launch",
+            status: "error",
+            failure_code: "x11_socket_directory_unusable",
+            reason: "socket_directory_read_only",
+            socket_directory: "/tmp/.X11-unix",
+            socket_directory_mode: "0777",
+            mount_read_only: true,
+            effective_socket_directory_mode: "1777",
+            effective_mount_read_only: false,
+            wsl: true,
+            strategy: "user-mount-namespace",
+            fallback_reason: null,
+            xvfb_stderr_bytes: 512,
+          },
         }),
       ),
       contract,
@@ -350,7 +379,7 @@ describe("tool result projection", () => {
       },
     });
   });
-  it("returns result and complete Evidence context in one call", () => {
+  it("returns one complete Evidence record with its typed normalized result", () => {
     const evidence = createEvidence(
       undefined,
       { id: "fixture", name: "Fixture", version: "1" },
@@ -365,25 +394,14 @@ describe("tool result projection", () => {
       outputSchema: evidenceResultOf(z.object({ value: z.string() })),
     };
 
-    const result = toCallToolResult(ok(evidence), evidenceContract);
-    expect(result.structuredContent).toMatchObject({
-      result: { value: "observed" },
-      evidence_id: evidence.evidence_id,
-      evidence: {
-        normalized_result: { value: "observed" },
-        provider: { id: "fixture", name: "Fixture", version: "1" },
-        operation: "fixture",
-        predicate_type: "rea.analysis",
-        parameters: {},
-        raw_result: null,
-        confidence: "observed",
-        authority: "shipped-artifact",
-        environment: null,
-        limitations: evidence.limitations,
-        locations: [],
-        evidence_links: [],
-      },
-    });
+    const result = delivery.toEvidenceToolResult(
+      evidence,
+      evidenceContract,
+      undefined,
+    );
+    expect(result.structuredContent).toEqual(evidence);
+    expect(result.structuredContent).not.toHaveProperty("result");
+    expect(result.structuredContent).not.toHaveProperty("evidence");
     expect(result.content[0]).toMatchObject({
       type: "text",
       text: expect.stringContaining('"value":"observed"'),
@@ -391,7 +409,7 @@ describe("tool result projection", () => {
     const parsed = evidenceContract.outputSchema.parse(
       result.structuredContent,
     );
-    expect(parseEvidence(parsed.evidence)).toEqual(evidence);
+    expect(parseEvidence(parsed)).toEqual(evidence);
   });
 
   it.each<JsonValue>([null, false, 0, "", [], { nested: [false, null, 7] }])(
@@ -406,22 +424,87 @@ describe("tool result projection", () => {
         ...contract,
         outputSchema: evidenceResultOf(z.json()),
       };
-      const result = toCallToolResult(ok(evidence), evidenceContract);
+      const result = delivery.toEvidenceToolResult(
+        evidence,
+        evidenceContract,
+        undefined,
+      );
       const parsed = evidenceContract.outputSchema.parse(
         result.structuredContent,
       );
-      expect(parsed.result).toEqual(value);
-      expect(parseEvidence(parsed.evidence)).toEqual(evidence);
+      expect(parsed.normalized_result).toEqual(value);
+      expect(parseEvidence(parsed)).toEqual(evidence);
       expect(result.content).toEqual([
         { type: "text", text: JSON.stringify(parsed) },
       ]);
       const { normalized_result: _missingResult, ...incomplete } = evidence;
-      expect(
-        evidenceContract.outputSchema.safeParse({
-          ...parsed,
-          evidence: incomplete,
-        }).success,
-      ).toBe(false);
+      expect(evidenceContract.outputSchema.safeParse(incomplete).success).toBe(
+        false,
+      );
     },
   );
+});
+
+describe("untrusted provenance on failed tool results", () => {
+  const failure = () => new HopperProcessError(76);
+
+  it("marks an error from a target-content tool", () => {
+    const targetContract = toolContract("procedure_pseudo_code");
+    expect(targetContract.returnsTargetContent).toBe(true);
+    const result = delivery.toCallToolResult(err(failure()), targetContract);
+    expect(result.isError).toBe(true);
+    expect(result._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
+    expect(delivery.toErrorToolResult(failure(), true)._meta).toEqual(
+      UNTRUSTED_TARGET_CONTENT,
+    );
+  });
+
+  it("leaves an error from a content-free tool unmarked", () => {
+    const recordContract = toolContract("record_unknown");
+    expect(recordContract.returnsTargetContent).toBe(false);
+    const result = delivery.toCallToolResult(err(failure()), recordContract);
+    expect(result.isError).toBe(true);
+    expect(result._meta).toBeUndefined();
+    expect(delivery.toErrorToolResult(failure(), false)._meta).toBeUndefined();
+  });
+
+  it("marks a recorded partial-observation error and its retention fallback", () => {
+    const recorded = delivery.toRecordedPartialErrorToolResult(
+      failure(),
+      "evidence-1",
+      { ok: true, value: "added" },
+      true,
+    );
+    expect(recorded.structuredContent).toMatchObject({
+      error: {
+        details: {
+          partial_observation: {
+            kind: "retained-evidence",
+            evidence_id: "evidence-1",
+          },
+        },
+      },
+    });
+    expect(recorded._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
+    const unrecorded = delivery.toRecordedPartialErrorToolResult(
+      failure(),
+      "evidence-1",
+      err(failure()),
+      true,
+    );
+    expect(unrecorded._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
+  });
+
+  it("marks the response-budget error that replaces an oversized target-content result", () => {
+    const small = new ToolResultDelivery(4096);
+    const result = small.toCallToolResult(
+      { ok: true, value: { text: "x".repeat(8192) } },
+      toolContract("procedure_pseudo_code"),
+    );
+    expect(result.isError).toBe(true);
+    expect(result.structuredContent).toMatchObject({
+      error: { code: "resource_constraint" },
+    });
+    expect(result._meta).toEqual(UNTRUSTED_TARGET_CONTENT);
+  });
 });

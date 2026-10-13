@@ -1,11 +1,13 @@
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { Formatter, Help, z } from "incur";
+import { performance } from "node:perf_hooks";
 import { resolve } from "node:path";
 
 import { CATALOG_IDENTITY } from "./catalogIdentity.js";
 import { PROMPT_CONTRACTS } from "./contracts/promptContracts.js";
 import { TOOL_CONTRACTS } from "./contracts/toolContracts.js";
+import { err, ok } from "./domain/result.js";
 import { PRODUCT_IDENTITY } from "./identity.js";
 import { MCP_STARTUP_POLICY } from "./mcpStartupPolicy.js";
 
@@ -73,14 +75,15 @@ interface McpDoctorCheck {
 /** Diagnose the actual production stdio adapter with one startup-bounded SDK session. */
 export const runProductionMcpDoctor = async (options: McpDoctorOptions) => {
   const deadline =
-    Date.now() + (options.deadlineMs ?? MCP_STARTUP_POLICY.doctorDeadlineMs);
+    performance.now() +
+    (options.deadlineMs ?? MCP_STARTUP_POLICY.doctorDeadlineMs);
   const controller = new AbortController();
   const timer = setTimeout(
     () => controller.abort(new Error("Production MCP doctor deadline expired")),
-    Math.max(1, deadline - Date.now()),
+    Math.max(1, Math.ceil(deadline - performance.now())),
   );
   const stderr = captureStderr();
-  const transport = new TrackedStdioClientTransport({
+  const transport = new OwnedStdioClientTransport({
     command: options.command,
     args: [...options.args],
     cwd: options.cwd,
@@ -89,21 +92,20 @@ export const runProductionMcpDoctor = async (options: McpDoctorOptions) => {
   });
   transport.stderr?.on("data", stderr.append);
   const client = new Client({ name: "rea-mcp-doctor", version: "1" });
+  let result: ProductionMcpDoctorResult;
+  let cleanupFailure: { readonly cause: unknown } | undefined;
   try {
     await client.connect(
       transport,
       requestOptions(deadline, controller.signal),
     );
-    return {
-      ...(await inspectProductionMcpSession(
-        client,
-        deadline,
-        controller.signal,
-      )),
-      diagnostics: stderr.value(),
-    };
+    result = await inspectProductionMcpSession(
+      client,
+      deadline,
+      controller.signal,
+    );
   } catch (cause: unknown) {
-    return {
+    result = {
       healthy: false,
       adapter: "production-stdio" as const,
       server: null,
@@ -117,13 +119,70 @@ export const runProductionMcpDoctor = async (options: McpDoctorOptions) => {
           detail: errorMessage(cause),
         },
       ],
-      diagnostics: stderr.value(),
     };
   } finally {
     clearTimeout(timer);
-    await closeMcpChild(client, transport);
+    try {
+      await client.close();
+    } catch (cause: unknown) {
+      cleanupFailure = { cause };
+    }
+    try {
+      // An interrupted connect can clear the client's transport reference
+      // before its startup child is closed. The transport retains that child.
+      await transport.close();
+    } catch (cause: unknown) {
+      cleanupFailure = {
+        cause:
+          cleanupFailure === undefined || cleanupFailure.cause === cause
+            ? cause
+            : new AggregateError(
+                [cleanupFailure.cause, cause],
+                `MCP client and transport cleanup failed: ${errorMessage(cleanupFailure.cause)}; ${errorMessage(cause)}`,
+              ),
+      };
+    }
   }
+  if (cleanupFailure !== undefined)
+    result = {
+      ...result,
+      healthy: false,
+      checks: [
+        ...result.checks,
+        {
+          name: "cleanup",
+          ok: false,
+          detail: `MCP stdio cleanup failed: ${errorMessage(cleanupFailure.cause)}`,
+        },
+      ],
+    };
+  return { ...result, diagnostics: stderr.value() };
 };
+
+type ProductionMcpDoctorResult =
+  | Awaited<ReturnType<typeof inspectProductionMcpSession>>
+  | {
+      readonly healthy: false;
+      readonly adapter: "production-stdio";
+      readonly server: null;
+      readonly inventory: null;
+      readonly identity: null;
+      readonly request_flow: {
+        readonly tool: "binary_session";
+        readonly ok: false;
+      };
+      readonly checks: readonly McpDoctorCheck[];
+    };
+
+/** Join SDK-triggered and caller-triggered close calls for the same child. */
+class OwnedStdioClientTransport extends StdioClientTransport {
+  #closePromise: Promise<void> | undefined;
+
+  override close(): Promise<void> {
+    this.#closePromise ??= super.close();
+    return this.#closePromise;
+  }
+}
 
 const inspectProductionMcpSession = async (
   client: Client,
@@ -131,11 +190,22 @@ const inspectProductionMcpSession = async (
   signal: AbortSignal,
 ) => {
   const request = requestOptions(deadline, signal);
-  const [tools, prompts, requestFlow] = await Promise.all([
+  const [tools, prompts] = await Promise.all([
     client.listTools(undefined, request),
     client.listPrompts(undefined, request),
-    client.callTool({ name: "binary_session", arguments: {} }, request),
   ]);
+  const sessionTool = tools.tools.find(({ name }) => name === "binary_session");
+  const requestFlow = await client
+    .callTool(
+      { name: "binary_session", arguments: {} },
+      {
+        ...requestOptions(deadline, signal),
+        ...(sessionTool === undefined ? {} : { toolDefinition: sessionTool }),
+      },
+    )
+    .then(ok, (cause: unknown) =>
+      err({ kind: "request-flow" as const, detail: errorMessage(cause) }),
+    );
   const inventory = {
     tools: compareInventory(
       TOOL_CONTRACTS.map(({ name }) => name),
@@ -147,7 +217,7 @@ const inspectProductionMcpSession = async (
     ),
   };
   const observedIdentity = parseIdentityToolResult(
-    requestFlow.structuredContent,
+    requestFlow.ok ? requestFlow.value.structuredContent : undefined,
   );
   const serverVersion = client.getServerVersion();
   const protocolVersion = client.getNegotiatedProtocolVersion();
@@ -173,8 +243,10 @@ const inspectProductionMcpSession = async (
     },
     {
       name: "request-flow",
-      ok: requestFlow.isError !== true,
-      detail: "binary_session target-free request",
+      ok: requestFlow.ok && requestFlow.value.isError !== true,
+      detail: requestFlow.ok
+        ? "binary_session target-free request"
+        : requestFlow.error.detail,
     },
   ];
   return {
@@ -194,7 +266,7 @@ const inspectProductionMcpSession = async (
     },
     request_flow: {
       tool: "binary_session",
-      ok: requestFlow.isError !== true,
+      ok: requestFlow.ok && requestFlow.value.isError !== true,
     },
     checks,
   };
@@ -371,7 +443,7 @@ const isOutputFormat = (value: string | undefined): value is OutputFormat =>
 
 const requestOptions = (deadline: number, signal: AbortSignal) => ({
   signal,
-  timeout: Math.max(1, deadline - Date.now()),
+  timeout: Math.max(1, Math.ceil(deadline - performance.now())),
 });
 
 const targetFreeEnvironment = (
@@ -414,61 +486,3 @@ const isRecord = (value: unknown): value is Readonly<Record<string, unknown>> =>
 
 const errorMessage = (cause: unknown): string =>
   cause instanceof Error ? cause.message : String(cause);
-
-class TrackedStdioClientTransport extends StdioClientTransport {
-  spawnedPid: number | null = null;
-
-  override async start(): Promise<void> {
-    await super.start();
-    this.spawnedPid = this.pid;
-  }
-}
-
-const closeMcpChild = async (
-  client: Client,
-  transport: TrackedStdioClientTransport,
-): Promise<void> => {
-  const pid = transport.spawnedPid ?? transport.pid;
-  await Promise.allSettled([client.close()]);
-  await Promise.allSettled([transport.close()]);
-  if (pid === null || !(await processExists(pid))) return;
-  await terminateProcess(pid, "SIGTERM");
-  if (await waitForProcessExit(pid, 1_000)) return;
-  await terminateProcess(pid, "SIGKILL");
-  await waitForProcessExit(pid, 1_000);
-};
-
-const terminateProcess = async (
-  pid: number,
-  signal: NodeJS.Signals,
-): Promise<void> => {
-  try {
-    process.kill(pid, signal);
-  } catch (cause: unknown) {
-    if (!(cause instanceof Error && "code" in cause && cause.code === "ESRCH"))
-      throw cause;
-  }
-};
-
-const waitForProcessExit = async (
-  pid: number,
-  timeoutMs: number,
-): Promise<boolean> => {
-  const deadline = Date.now() + timeoutMs;
-  do {
-    if (!(await processExists(pid))) return true;
-    await new Promise<void>((resolve) => setTimeout(resolve, 20));
-  } while (Date.now() < deadline);
-  return !(await processExists(pid));
-};
-
-const processExists = async (pid: number): Promise<boolean> => {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (cause: unknown) {
-    if (cause instanceof Error && "code" in cause && cause.code === "ESRCH")
-      return false;
-    throw cause;
-  }
-};

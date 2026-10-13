@@ -1,43 +1,37 @@
 import { realpath } from "node:fs/promises";
 
 import {
-  artifactInventoryResultSchema,
-  type ArtifactInventoryResult,
+  artifactInventoryOutputSchema,
+  type ArtifactInventoryOutput,
 } from "../../domain/artifactGraph.js";
 import { abortIfNeeded } from "../ArtifactHash.js";
-import { scanCanonicalArtifactInventory } from "./scanCanonical.js";
-import type {
-  ArtifactIntegrityPolicy,
-  ArtifactInventoryOptions,
-  ArtifactInventorySnapshot,
-} from "./types.js";
-
-export { scanCanonicalArtifactInventory } from "./scanCanonical.js";
-
-export type {
-  ArtifactIntegrityPolicy,
-  ArtifactInventoryOptions,
-  ArtifactInventorySnapshot,
-} from "./types.js";
+import { scanCanonicalArtifactInventoryInScope } from "./scanCanonical.js";
+import type { ArtifactInventoryOptions } from "./types.js";
+import type { ArtifactInventorySnapshot } from "../../domain/artifactInventorySnapshot.js";
 
 /** Inventory one local artifact and return every graph collection inline. */
 export const inventoryArtifact = async (
   inputPath: string,
-  options: {
-    readonly signal?: AbortSignal;
-    readonly integrity?: ArtifactIntegrityPolicy;
-  } = {},
-): Promise<ArtifactInventoryResult> => {
+  options: ArtifactInventoryOptions,
+): Promise<ArtifactInventoryOutput> => {
   const snapshot = await scanArtifactInventory(inputPath, options);
-  return artifactInventoryResultSchema.parse(snapshot);
+  return artifactInventoryOutputSchema.parse(snapshot);
 };
 
 /** Scan an artifact once and retain the complete immutable graph for projection. */
 export const scanArtifactInventory = async (
   inputPath: string,
-  options: ArtifactInventoryOptions = {},
+  options: ArtifactInventoryOptions,
+): Promise<ArtifactInventorySnapshot> =>
+  options.resourceScope.run(() =>
+    scanArtifactInventoryInScope(inputPath, options),
+  );
+
+export const scanArtifactInventoryInScope = async (
+  inputPath: string,
+  options: ArtifactInventoryOptions,
 ): Promise<ArtifactInventorySnapshot> => {
   abortIfNeeded(options.signal);
   const path = await realpath(inputPath);
-  return scanCanonicalArtifactInventory(path, options);
+  return scanCanonicalArtifactInventoryInScope(path, options);
 };

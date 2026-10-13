@@ -1,5 +1,17 @@
 import assert from "node:assert/strict";
-import { requireFunctionDossierOracle } from "../../dist/application/RealHopperAssertions.js";
+
+/**
+ * `requireFunctionDossierOracle` is only used inside `verifyRealHopperFixture`,
+ * which runs against the real Hopper bridge after `build:cached`. Loading it
+ * lazily keeps this module importable from `test:fast` (which docs promise to
+ * run "without build" — see docs/testing.md § test scripts) so that mock-only
+ * callers such as `requireCurrentDocument` and `resolveFixtureProcedure` do
+ * not require `dist/`.
+ */
+const loadFunctionDossierOracle = () =>
+  import("../../dist/application/RealHopperAssertions.js").then(
+    (module) => module.requireFunctionDossierOracle,
+  );
 
 /** Require truthful tri-state permissions from real Hopper memory regions. */
 export const requireTruthfulMemoryRegions = (segments) => {
@@ -11,15 +23,28 @@ export const requireTruthfulMemoryRegions = (segments) => {
     ...(Array.isArray(segment.sections) ? segment.sections : []),
   ]);
   for (const region of regions) {
+    if (
+      typeof region?.name !== "string" ||
+      region.name.length === 0 ||
+      typeof region.start !== "string" ||
+      typeof region.end !== "string"
+    ) {
+      throw new Error(
+        "list_segments omitted observed region identity or bounds",
+      );
+    }
     for (const permission of ["readable", "writable", "executable"]) {
-      if (![true, false, null].includes(region?.[permission])) {
-        throw new Error(`list_segments omitted tri-state ${permission}`);
+      if (region[permission] !== null) {
+        throw new Error(
+          `list_segments invented or omitted unknown ${permission}`,
+        );
       }
     }
     if (
       region.provenance !== "hopper-public-python-api" ||
       region.permissions?.available !== false ||
-      typeof region.permissions.reason !== "string"
+      typeof region.permissions.reason !== "string" ||
+      region.permissions.reason.length === 0
     ) {
       throw new Error("list_segments omitted permission provenance");
     }
@@ -74,6 +99,7 @@ export async function verifyRealHopperFixture({
   oracle,
   normalizedResult,
 }) {
+  const requireFunctionDossierOracle = await loadFunctionDossierOracle();
   const main = await resolveFixtureProcedure(
     client,
     options,
@@ -107,7 +133,7 @@ export async function verifyRealHopperFixture({
       },
       options,
     ),
-    "set_comment fixture marker",
+    "set_comment",
   );
   if (commentSet !== true)
     throw new Error("Hopper did not read back the fixture comment marker");
@@ -138,9 +164,18 @@ export async function verifyRealHopperFixture({
       },
       options,
     ),
-    "procedure_references native calls",
+    "procedure_references",
   );
   assert.deepEqual(entryDossier.unresolved_calls, observed.unresolved_calls);
+  assert.equal(
+    observed.reference_kinds_available,
+    false,
+    "Hopper's partial CallReference observations do not expose detailed reference kinds",
+  );
+  assert.ok(
+    Array.isArray(observed.unresolved_calls),
+    "procedure_references omitted its observed unresolved CallReference results",
+  );
   for (const call of calls) {
     assert.equal(call.call.provider_type, 2);
     assert.equal(
@@ -266,7 +301,7 @@ export async function resolveFixtureProcedure(
       },
       options,
     ),
-    `search_procedures ${expectedName}`,
+    "search_procedures",
   );
   const exactMatches = Array.isArray(matches)
     ? matches.filter(
@@ -301,5 +336,5 @@ export const analyzeFixtureProcedure = async (
       },
       options,
     ),
-    `analyze_function ${procedure.name}`,
+    "analyze_function",
   );

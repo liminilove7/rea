@@ -10,7 +10,7 @@ import { thinMach } from "../../../../src/domain/binaryTarget.fixture.js";
 import { createTestTempDirectory } from "../../../fixtures/temporaryDirectory.js";
 
 describe("artifact directory diagnostics", () => {
-  it.skipIf(process.platform === "win32")(
+  it.skipIf(process.platform === "win32" || process.getuid?.() === 0)(
     "preserves the inaccessible member path and errno through provider projection",
     async () => {
       const root = await createTestTempDirectory("rea-directory-eacces-");
@@ -29,7 +29,7 @@ describe("artifact directory diagnostics", () => {
       try {
         const target = await parseBinaryTarget(appPath);
         if (!target.ok) throw target.error;
-        const result = await new ArtifactProvider()
+        const result = await new ArtifactProvider(process.env)
           .createClient(target.value)
           .execute("inventory_artifact", {});
         expect(result.ok).toBe(false);

@@ -8,6 +8,7 @@ import {
   parseNames,
   parseProcedures,
   parseRelatedAddresses,
+  parseSegmentImageBase,
   parseSegments,
 } from "./hopperValues.js";
 
@@ -65,6 +66,19 @@ describe("Hopper boundary values", () => {
       ok: true,
       value: ["fixture"],
     });
+    expect(
+      parseSegmentImageBase([
+        { image_base: "0x100000" },
+        { image_base: "0x100000" },
+      ]),
+    ).toBe("0x100000");
+    expect(
+      parseSegmentImageBase([
+        { image_base: "0x100000" },
+        { image_base: "0x200000" },
+      ]),
+    ).toBeUndefined();
+    expect(parseSegmentImageBase([{ name: "__TEXT" }])).toBeUndefined();
   });
 
   it.each([
@@ -96,13 +110,27 @@ describe("provider-neutral inclusive function body evidence", () => {
     non_contiguous: true,
     contains_entry: true,
   });
-  it("represents missing Hopper extent explicitly as unknown", () => {
+  it("rejects missing provider body metadata", () => {
     expect(
-      procedureIdentitySchema.parse({ address: "0x1000", name: "main" }).body,
-    ).toEqual({
-      available: false,
-      reason: "The provider did not report complete function body ranges.",
-    });
+      procedureIdentitySchema.safeParse({ address: "0x1000", name: "main" })
+        .success,
+    ).toBe(false);
+  });
+  it("rejects segments when required coordinates or unknown permissions are omitted", () => {
+    expect(
+      parseSegments([
+        {
+          name: "__TEXT",
+          start: "0x1",
+          end: "0x2",
+          readable: null,
+          writable: null,
+        },
+      ]).ok,
+    ).toBe(false);
+    expect(
+      parseSegments([{ name: "__TEXT", start: "0x1", end: "0x2" }]).ok,
+    ).toBe(false);
   });
   it("counts inclusive one-byte ranges without assuming an enclosing continuous body", () => {
     expect(
@@ -143,6 +171,7 @@ describe("provider-neutral inclusive function body evidence", () => {
       procedureIdentitySchema.safeParse({
         address: "0x1000",
         name: "external",
+        classification: null,
         body: {
           ...observed(),
           ranges: [],
@@ -159,6 +188,7 @@ describe("provider-neutral inclusive function body evidence", () => {
       procedureIdentitySchema.safeParse({
         address: "0x1002",
         name: "last",
+        classification: null,
         body: observed(),
       }).success,
     ).toBe(true);
@@ -166,6 +196,7 @@ describe("provider-neutral inclusive function body evidence", () => {
       procedureIdentitySchema.safeParse({
         address: "0x1003",
         name: "gap",
+        classification: null,
         body: observed(),
       }).success,
     ).toBe(false);
@@ -173,6 +204,7 @@ describe("provider-neutral inclusive function body evidence", () => {
       procedureIdentitySchema.safeParse({
         address: "other:0x1000",
         name: "other",
+        classification: null,
         body: observed(),
       }).success,
     ).toBe(false);

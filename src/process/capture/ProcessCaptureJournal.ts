@@ -1,11 +1,6 @@
 import type { IPty } from "@lydell/node-pty";
 
-import type {
-  InteractionEvent,
-  ProcessCaptureEventJournalEntry,
-  ProcessScenario,
-  RecordProcessCaptureEvent,
-} from "../../domain/process/processCapture.js";
+import type { ProcessScenario } from "../../domain/process/processScenario.js";
 import {
   normalizeProcessElapsedTime,
   normalizeProcessText,
@@ -13,6 +8,12 @@ import {
 import type { TerminalRenderer } from "./TerminalRenderer.js";
 import { scheduleProcessDelay, type ProcessTimer } from "./ProcessTimer.js";
 
+import type {
+  InteractionEvent,
+  ProcessCaptureEventJournalEntry,
+  RecordProcessCaptureEvent,
+} from "../../domain/process/processCapture.js";
+import { monotonicProcessCaptureClock } from "./ProcessCaptureClock.js";
 /** Mutable observation-order ledger whose writer is shared by capture producers. */
 export interface ProcessCaptureJournal {
   readonly entries: readonly ProcessCaptureEventJournalEntry[];
@@ -55,7 +56,10 @@ export const scheduleScenarioInteractions = (
     const timer = scheduleProcessDelay(event.at_ms, () => {
       options.dispatchedEventIndexes.add(eventIndex);
       const terminal = getTerminal();
-      const dispatchedAt = Math.max(0, Date.now() - started);
+      const dispatchedAt = Math.max(
+        0,
+        monotonicProcessCaptureClock() - started,
+      );
       let outcome: InteractionEvent["outcome"] = "dispatched";
       if (terminal === undefined) outcome = "target_exited";
       else {

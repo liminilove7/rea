@@ -1,14 +1,13 @@
 import { z } from "zod";
+
+import { localPathStringSchema } from "../localPath.js";
+import { CANONICAL_BASE64_PATTERN } from "../stringPatterns.js";
 import { recordedNoteCoverageIssues } from "./recordedCrashNoteCoverage.js";
 
 const hex = z.string().regex(/^0x(?:0|[1-9a-f][0-9a-f]{0,15})$/);
 const index = z.number().int().nonnegative();
 const signed32 = z.number().int().min(-2147483648).max(2147483647);
-const base64 = z
-  .string()
-  .regex(
-    /^(?:[A-Za-z0-9+\x2f]{4})*(?:[A-Za-z0-9+\x2f][AQgw]==|[A-Za-z0-9+\x2f]{2}[AEIMQUYcgkosw048]=)?$/,
-  );
+const base64 = z.string().regex(CANONICAL_BASE64_PATTERN);
 const range = z.strictObject({ offset: hex, bytes: hex });
 const diagnostics = z.strictObject({
   stdout: z.string(),
@@ -52,10 +51,9 @@ const supportedRegisters = new Set(RECORDED_LINUX_AMD64_REGISTERS);
 
 /** Select an explicit recording and optionally request debugger-derived mapping context. */
 export const inspectRecordedCrashInputSchema = z.strictObject({
-  path: z
-    .string()
-    .min(1)
-    .describe("Absolute filesystem path to a supplied Linux ELF core"),
+  path: localPathStringSchema.describe(
+    "Absolute filesystem path to a supplied Linux ELF core",
+  ),
   include_debugger_context: z
     .boolean()
     .default(false)
@@ -360,3 +358,14 @@ export type InspectRecordedCrashInput = z.output<
   typeof inspectRecordedCrashInputSchema
 >;
 export type RecordedCrash = z.output<typeof recordedCrashSchema>;
+
+/** Validated basic core evidence retained when requested debugger enrichment fails. */
+export type RecordedCrashPartialObservation = Omit<
+  RecordedCrash,
+  "debugger"
+> & {
+  readonly debugger: {
+    readonly status: "unavailable";
+    readonly requested: true;
+  };
+};

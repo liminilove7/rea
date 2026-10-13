@@ -1,75 +1,151 @@
+import { parseMcpToolError } from "../../fixtures/mcpToolError.js";
 import type { Client } from "@modelcontextprotocol/client";
 import { describe, expect, it } from "vitest";
+import { Ajv2020 } from "ajv/dist/2020.js";
+import type { AnySchema } from "ajv";
 
 import type { BinarySession } from "../../../src/application/binary/BinarySession.js";
 import {
-  JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE,
   JAVASCRIPT_FEATURE_TRACE_EXAMPLE,
-  JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE,
+  JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE,
   SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE,
 } from "../../../src/contracts/javascript/javascriptApplicationWorkflowExamples.js";
 import { createEvidence } from "../../../src/domain/evidence.js";
+import { javascriptApplicationAnalysisResultSchema } from "../../../src/domain/javascript/javascriptApplicationAnalysis.js";
+import {
+  createJavaScriptApplicationGraph,
+  createJavaScriptApplicationNode,
+} from "../../../src/domain/javascript/javascriptApplicationGraph.js";
+import { createJavaScriptSemanticGraph } from "../../../src/domain/javascript/javascriptSemanticGraph.js";
+import {
+  artifactEvidence,
+  sourceMapReference,
+} from "../../../src/domain/javascript/javascriptApplicationGraph.fixture.js";
 import {
   createApplicationMcpHarness,
   type ApplicationMcpHarness,
 } from "../../fixtures/applicationMcpHarness.js";
+import { createHistoricalSourceGraph } from "../../../src/domain/referenceSourceGraph.js";
 
-async function runInlineEvidenceScenarios(
-  client: Client,
-  session: BinarySession,
+async function runUnicodeSourceMapComparison(
+  harness: ApplicationMcpHarness,
 ): Promise<void> {
-  const traced = await client.callTool({
-    name: "trace_application_feature",
-    arguments: JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE,
-  });
-  expect(traced.isError).not.toBe(true);
-  expect(traced.structuredContent).toMatchObject({
-    result: {
-      seed: { kind: "module", value: "renderer.js", match: "exact" },
-      summary: { matched_seeds: 1, traced_nodes: 1, unknown_facts: 0 },
-      coverage: {
-        status: "complete-within-source",
-        source_graph_status: "complete",
-        total_seed_matches: 1,
+  const baseApplication = SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.application;
+  const subject = baseApplication.subject;
+  if (subject === null) throw new Error("Application Evidence has no subject");
+  const baseResult = javascriptApplicationAnalysisResultSchema.parse(
+    baseApplication.normalized_result,
+  );
+  const baseGraph = baseResult.graph;
+  const decomposedSource = "cafe\u0301.ts";
+  const unicodeSourceNode = createJavaScriptApplicationNode({
+    kind: "source-module",
+    identity: {
+      strategy: "source-map-original",
+      source_root: "../src/",
+      stability: "source-map-exact",
+      source_map_sha256: "1".repeat(64),
+      original_source: decomposedSource,
+      source_sha256: "3".repeat(64),
+    },
+    observations: [
+      {
+        label: "decomposed source-map spelling",
+        source_map_reference: sourceMapReference(
+          decomposedSource,
+          "../src/",
+          "dist/main.js.map",
+        ),
+        properties: { content_available: true, content_sha256: "3".repeat(64) },
+        evidence: artifactEvidence("1".repeat(64), "dist/main.js.map"),
       },
-    },
+    ],
   });
-
-  const compared = await client.callTool({
-    name: "compare_application_versions",
-    arguments: {
-      ...JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE,
-    },
+  const applicationGraph = createJavaScriptApplicationGraph({
+    schema: "JavaScriptApplicationGraph",
+    root_node_ids: [...baseGraph.root_node_ids, unicodeSourceNode.node_id],
+    nodes: [...baseGraph.nodes, unicodeSourceNode],
+    edges: baseGraph.edges,
+    coverage: baseGraph.coverage,
+    limitations: baseGraph.limitations,
   });
-  expect(compared.isError).not.toBe(true);
-  expect(compared.structuredContent).toMatchObject({
-    result: {
-      summary: { unchanged: 0, added: 2, removed: 0, changed: 1, unknown: 0 },
-      coverage: {
-        left_graph_status: "complete",
-        right_graph_status: "complete",
-        status: "complete-within-inputs",
+  const semantic = baseResult.semantic_graph;
+  const { graph_id: _semanticGraphId, ...semanticInput } = semantic;
+  const semanticGraph = createJavaScriptSemanticGraph({
+    ...semanticInput,
+    application_graph_id: applicationGraph.graph_id,
+  });
+  const unicodeApplication = createEvidence(
+    {
+      path: baseResult.input_path,
+      sha256: subject.digest.sha256,
+      format: subject.format,
+    },
+    baseApplication.provider,
+    {
+      predicateType: baseApplication.predicate_type,
+      operation: baseApplication.operation,
+      parameters: baseApplication.parameters,
+      result: {
+        ...baseResult,
+        graph: applicationGraph,
+        semantic_graph: semanticGraph,
       },
+      confidence: baseApplication.confidence,
+      authority: baseApplication.authority,
+      limitations: baseApplication.limitations,
+      evidenceLinks: baseApplication.evidence_links,
     },
+  );
+  const historicalUnicodePath = "src/caf\u00e9.ts";
+  const unicodeReference = createHistoricalSourceGraph({
+    ...SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference,
+    root_sha256: undefined,
+    entries: SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference.entries.map(
+      (entry) =>
+        entry.path === "src/main.ts"
+          ? { ...entry, path: historicalUnicodePath }
+          : entry,
+    ),
   });
-
-  const sourceCompared = await client.callTool({
+  const reply = await harness.client.callTool({
     name: "compare_source_to_bundle",
-    arguments: {
-      reference: SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference,
-      application: JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE.application,
+    arguments: { reference: unicodeReference, application: unicodeApplication },
+  });
+  expect(reply.isError).not.toBe(true);
+  expect(reply.structuredContent).toMatchObject({
+    normalized_result: {
+      items: [
+        {
+          source_path: historicalUnicodePath,
+          status: "unknown",
+          current_node_ids: [],
+          candidates: [
+            expect.objectContaining({
+              confidence: "low",
+              signals: expect.arrayContaining([
+                expect.objectContaining({
+                  kind: "unicode-equivalent-path",
+                  source_value: historicalUnicodePath,
+                  current_values: ["src/cafe\u0301.ts"],
+                }),
+              ]),
+            }),
+          ],
+        },
+      ],
     },
   });
-  expect(sourceCompared.isError).not.toBe(true);
-  expect(sourceCompared.structuredContent).toMatchObject({
-    result: {
-      reference: {
-        root_sha256: SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference.root_sha256,
-      },
-      scoring: { algorithm: "rea-source-to-bundle-signals" },
-    },
-  });
-  expect(session.exportEvidenceBundle().records.length).toBeGreaterThan(2);
+  const advertised = (await harness.client.listTools()).tools.find(
+    ({ name }) => name === "compare_source_to_bundle",
+  );
+  if (advertised?.outputSchema === undefined)
+    throw new Error("Comparison tool output schema is missing");
+  const ajv = new Ajv2020({ strict: false, validateFormats: false });
+  const outputSchema = advertised.outputSchema as AnySchema;
+  expect(ajv.validateSchema(outputSchema)).toBe(true);
+  const validateOutput = ajv.compile(outputSchema);
+  expect(validateOutput(reply.structuredContent)).toBe(true);
 }
 
 async function runInlineWorkflowScenarios(
@@ -83,7 +159,7 @@ async function runInlineWorkflowScenarios(
   });
   expect(tracedInline.isError).not.toBe(true);
   expect(tracedInline.structuredContent).toMatchObject({
-    result: {
+    normalized_result: {
       seed: { kind: "module", value: "renderer.js", match: "exact" },
       summary: { matched_seeds: 1, traced_nodes: 1, unknown_facts: 0 },
       coverage: {
@@ -97,15 +173,15 @@ async function runInlineWorkflowScenarios(
   const comparedInline = await harness.client.callTool({
     name: "compare_application_versions",
     arguments: {
-      ...JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE,
+      ...JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE,
     },
   });
   expect(comparedInline).toMatchObject({
     structuredContent: {
-      result: {
+      normalized_result: {
         evidence_links: expect.arrayContaining([
-          JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE.left.evidence_id,
-          JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE.right.evidence_id,
+          JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE.left.evidence_id,
+          JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE.right.evidence_id,
         ]),
       },
     },
@@ -115,22 +191,22 @@ async function runInlineWorkflowScenarios(
     name: "compare_application_versions",
     arguments: {
       left_evidence_id:
-        JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE.left.evidence_id,
+        JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE.left.evidence_id,
       right_evidence_id:
-        JAVASCRIPT_VERSION_COMPARISON_FULL_EVIDENCE_EXAMPLE.right.evidence_id,
+        JAVASCRIPT_APPLICATION_VERSION_COMPARISON_EXAMPLE.right.evidence_id,
     },
   });
   expect(idsRejected.isError).toBe(true);
 
-  const sourceComparedById = await harness.client.callTool({
+  const sourceCompared = await harness.client.callTool({
     name: "compare_source_to_bundle",
     arguments: {
       ...SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE,
     },
   });
-  expect(sourceComparedById.isError).not.toBe(true);
-  expect(sourceComparedById.structuredContent).toMatchObject({
-    result: {
+  expect(sourceCompared.isError).not.toBe(true);
+  expect(sourceCompared.structuredContent).toMatchObject({
+    normalized_result: {
       reference: {
         root_sha256: SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference.root_sha256,
         inventory_state: "complete",
@@ -147,6 +223,62 @@ async function runInlineWorkflowScenarios(
       ],
     },
   });
+
+  await runUnicodeSourceMapComparison(harness);
+
+  const referenceWithExclusion = createHistoricalSourceGraph({
+    ...SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE.reference,
+    root_sha256: undefined,
+    inventory_state: "partial",
+    exclusions: [
+      {
+        path: "vendor/removed.ts",
+        reason: "project-ignored",
+        pattern: "vendor/",
+      },
+    ],
+  });
+  const argumentsWithExclusion = {
+    ...SOURCE_TO_BUNDLE_COMPARISON_EXAMPLE,
+    reference: referenceWithExclusion,
+  };
+  const advertised = (await harness.client.listTools()).tools.find(
+    ({ name }) => name === "compare_source_to_bundle",
+  );
+  if (advertised === undefined) throw new Error("Comparison tool is missing");
+  const ajv = new Ajv2020({ strict: false, validateFormats: false });
+  expect(ajv.validateSchema(advertised.inputSchema)).toBe(true);
+  const validate = ajv.compile(advertised.inputSchema);
+  expect(validate(argumentsWithExclusion)).toBe(true);
+  const missingPattern = {
+    ...argumentsWithExclusion,
+    reference: {
+      ...referenceWithExclusion,
+      exclusions: [{ path: "vendor/removed.ts", reason: "project-ignored" }],
+    },
+  };
+  expect(validate(missingPattern)).toBe(false);
+  const rejectedExclusion = await harness.client.callTool({
+    name: "compare_source_to_bundle",
+    arguments: missingPattern,
+  });
+  expect(rejectedExclusion.isError).toBe(true);
+  const sourceComparedWithExclusion = await harness.client.callTool({
+    name: "compare_source_to_bundle",
+    arguments: argumentsWithExclusion,
+  });
+  expect(sourceComparedWithExclusion.isError).not.toBe(true);
+  expect(sourceComparedWithExclusion.structuredContent).toMatchObject({
+    normalized_result: {
+      reference: {
+        root_sha256: referenceWithExclusion.root_sha256,
+        inventory_state: "partial",
+      },
+    },
+  });
+  expect(harness.session.exportEvidenceBundle().records.length).toBeGreaterThan(
+    2,
+  );
 }
 
 async function assertRejectedEvidenceReferences(
@@ -178,16 +310,13 @@ async function assertRejectedEvidenceReferences(
         application: record,
       },
     });
-    expect(rejected).toMatchObject({
-      isError: true,
-      structuredContent: {
-        // A recorded Evidence with the wrong operation or predicate is an
-        // invalid caller input, not a provider failure.
-        error: {
-          code: "invalid_request",
-          category: "invalid_input",
-          retryable: true,
-        },
+    expect(parseMcpToolError(rejected)).toMatchObject({
+      // A recorded Evidence with the wrong operation or predicate is an
+      // invalid caller input, not a provider failure.
+      error: {
+        code: "invalid_request",
+        category: "invalid_input",
+        retryable: true,
       },
     });
   }
@@ -197,10 +326,10 @@ async function assertRejectedInlineEvidence(client: Client): Promise<void> {
   const duplicateNative = await client.callTool({
     name: "trace_application_feature",
     arguments: {
-      ...JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE,
+      ...JAVASCRIPT_FEATURE_TRACE_EXAMPLE,
       native_observations: [
-        JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE.application,
-        JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE.application,
+        JAVASCRIPT_FEATURE_TRACE_EXAMPLE.application,
+        JAVASCRIPT_FEATURE_TRACE_EXAMPLE.application,
       ],
     },
   });
@@ -209,9 +338,9 @@ async function assertRejectedInlineEvidence(client: Client): Promise<void> {
   const spoofed = await client.callTool({
     name: "trace_application_feature",
     arguments: {
-      ...JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE,
+      ...JAVASCRIPT_FEATURE_TRACE_EXAMPLE,
       application: {
-        ...JAVASCRIPT_FEATURE_TRACE_FULL_EVIDENCE_EXAMPLE.application,
+        ...JAVASCRIPT_FEATURE_TRACE_EXAMPLE.application,
         provider: { id: "spoofed", name: "spoofed", version: "1" },
       },
     },
@@ -223,7 +352,6 @@ describe("application workflow MCP parity", () => {
   it("traces and compares authenticated graph Evidence in the session", async () => {
     const harness = await createApplicationMcpHarness();
     try {
-      await runInlineEvidenceScenarios(harness.client, harness.session);
       await runInlineWorkflowScenarios(harness);
       await assertRejectedEvidenceReferences(harness.client, harness.session);
       await assertRejectedInlineEvidence(harness.client);

@@ -1,12 +1,18 @@
 import { constants } from "node:fs";
-import { access, readFile, readdir } from "node:fs/promises";
-import { homedir } from "node:os";
-import { delimiter, join } from "node:path";
+import { access, readdir, stat } from "node:fs/promises";
+import { ArtifactResourceScope } from "../artifacts/ArtifactResourceScope.js";
+import { homeDirectoryFromEnvironment } from "../config/homeDirectory.js";
+import { join } from "node:path";
 
 import { analysisErrorRemediationAction } from "../domain/analysisErrorPresentation.js";
+import { BinaryTargetError } from "../domain/configurationErrors.js";
 import { parseBinaryTarget } from "./BinaryTargetResolver.js";
 import { execFileOutput } from "../process/ExecFileOutput.js";
 import type { JsonValue } from "../domain/jsonValue.js";
+import {
+  javaScriptRuntime,
+  type JavaScriptRuntime,
+} from "../domain/runtimeVersion.js";
 import { installedCaskAppdir, probeHomebrew } from "./homebrew.js";
 import {
   linuxHopperBinarySupported,
@@ -14,7 +20,10 @@ import {
   readLinuxDistribution,
   type LinuxDistribution,
 } from "./LinuxHopper.js";
-import { canonicalSkillNeedsInstall } from "./SetupSkill.js";
+import {
+  readInstalledSkillIdentity,
+  type InstalledSkillIdentity,
+} from "./SetupSkill.js";
 import { CATALOG_IDENTITY } from "../catalogIdentity.js";
 import { PRODUCT_IDENTITY, SDK_IDENTITY } from "../identity.js";
 import {
@@ -32,8 +41,6 @@ import {
   type DoctorScopeReport,
 } from "./DoctorScope.js";
 
-/** Deep provider IDs whose readiness can be selected explicitly by doctor. */
-export const DOCTOR_PROVIDER_IDS = ["hopper", "ghidra", "ida"] as const;
 /** One actionable environment diagnostic. */
 export interface DoctorCheck {
   readonly name: string;
@@ -75,8 +82,8 @@ export interface DoctorProviderInspection {
 export interface DoctorHost {
   readonly platform: NodeJS.Platform;
   readonly architecture: NodeJS.Architecture;
-  readonly nodeVersion: string;
-  readonly homeDirectory?: string;
+  readonly runtime: JavaScriptRuntime;
+  readonly homeDirectory: string;
   readonly configuredHopperPath?: string;
   readonly configuredIlspyCmdPath?: string;
   macosVersion(): Promise<string | undefined>;
@@ -91,18 +98,12 @@ export interface DoctorHost {
   manualHopperPaths(): Promise<readonly string[]>;
   providerInspections?(): Promise<readonly DoctorProviderInspection[]>;
   installationPaths?(): Promise<readonly string[]>;
-  installedSkillIdentity?(): Promise<InstalledSkillIdentity | undefined>;
+  installedSkillIdentity?(
+    clientIds: readonly string[],
+  ): Promise<InstalledSkillIdentity | undefined>;
+  close?(): Promise<string | undefined>;
   clientRegistrations?(): Promise<readonly ClientRegistrationStatus[]>;
   ilspyCmdVersion?(path: string): Promise<string | undefined>;
-}
-
-/** Observed skill metadata and comparison with the packaged instruction bundle. */
-interface InstalledSkillIdentity {
-  readonly version: string | null;
-  readonly toolCount: number | null;
-  readonly catalogDigest: string | null;
-  /** Whether all managed instruction and reference files match this package. */
-  readonly canonical: boolean;
 }
 
 /** Structured result returned by the read-only doctor workflow. */
@@ -121,6 +122,7 @@ export interface DoctorReport {
 /** Caller-selected readiness boundary; omitted values retain audit semantics. */
 export interface DoctorScope {
   readonly clients?: readonly string[];
+  readonly skillClients?: readonly string[];
   readonly providers?: readonly string[];
   readonly skill?: boolean;
 }
@@ -142,8 +144,6 @@ interface DoctorIdentity {
   readonly skill: {
     readonly installed_version: string | null;
     readonly installed_tool_count: number | null;
-    /** Legacy catalog digest observed in older bundles; current bundles omit it. */
-    readonly installed_catalog_digest: string | null;
     readonly state: "aligned" | "stale" | "missing";
     readonly remediation: string | null;
   };
@@ -157,15 +157,50 @@ interface DoctorIdentity {
  */
 export const runDoctor = async (
   target?: string,
-  host: DoctorHost = systemDoctorHost(),
+  selectedHost?: DoctorHost,
+  requestedScope?: DoctorScope,
+): Promise<DoctorReport> =>
+  selectedHost === undefined
+    ? runDoctorOwned(target, systemDoctorHost(), requestedScope)
+    : inspectDoctor(target, selectedHost, requestedScope);
+
+/** Inspect with a host whose lifetime belongs to this operation. */
+export const runDoctorOwned = async (
+  target: string | undefined,
+  host: DoctorHost,
   requestedScope?: DoctorScope,
 ): Promise<DoctorReport> => {
+  let report: DoctorReport;
+  try {
+    report = await inspectDoctor(target, host, requestedScope);
+  } catch (cause: unknown) {
+    const cleanup = await closeDoctorHost(host);
+    if (cleanup !== undefined)
+      throw new AggregateError(
+        [cause, new Error(cleanup)],
+        "Doctor failed and its resource cleanup remains incomplete.",
+        { cause },
+      );
+    throw cause;
+  }
+  const cleanup = await closeDoctorHost(host);
+  return cleanup === undefined
+    ? report
+    : doctorReportWithCleanup(report, cleanup);
+};
+
+const inspectDoctor = async (
+  target: string | undefined,
+  host: DoctorHost,
+  requestedScope?: DoctorScope,
+): Promise<DoctorReport> => {
+  const scope = normalizeDoctorScope(requestedScope, target);
   const {
     checks: diagnosticChecks,
     hopperPath,
     providerInspections,
   } = await collectDoctorDiagnostics(target, host);
-  const identity = await collectDoctorIdentity(host);
+  const identity = await collectDoctorIdentity(host, scope);
   const checks = [...diagnosticChecks, ...identity.checks];
   const providers = {
     hopperAvailable:
@@ -177,7 +212,6 @@ export const runDoctor = async (
     providerInspections,
   };
   const environmentHealthy = doctorHealthy(checks, providers);
-  const scope = normalizeDoctorScope(requestedScope, target);
   const scoped = scopeDoctorChecks({
     checks,
     registrations: identity.value.registrations,
@@ -199,16 +233,53 @@ export const runDoctor = async (
   };
 };
 
+const closeDoctorHost = async (
+  host: DoctorHost,
+): Promise<string | undefined> => {
+  try {
+    return await host.close?.();
+  } catch (cause: unknown) {
+    return `Doctor host cleanup failed: ${cause instanceof Error ? cause.message : String(cause)}`;
+  }
+};
+
+const doctorReportWithCleanup = (
+  report: DoctorReport,
+  detail: string,
+): DoctorReport => {
+  const check: DoctorCheck = {
+    name: "doctor-resource-cleanup",
+    ok: false,
+    classification: "config_drift",
+    detail,
+    remediation: "Resolve the reported cleanup failure, then rerun rea doctor.",
+  };
+  return {
+    ...report,
+    healthy: false,
+    environment_healthy: false,
+    checks: [...report.checks, check],
+    scope_checks: [...report.scope_checks, check],
+  };
+};
+
 const collectDoctorIdentity = async (
   host: DoctorHost,
+  scope: DoctorScopeReport,
 ): Promise<{
   readonly checks: readonly DoctorCheck[];
   readonly value: DoctorIdentity;
 }> => {
   const installationPaths = (await host.installationPaths?.()) ?? [];
-  const installedSkillIdentity = await host.installedSkillIdentity?.();
-  const skillAligned = skillIdentityAligned(installedSkillIdentity);
   const registrations = (await host.clientRegistrations?.()) ?? [];
+  const skillClientIds =
+    scope.skill_clients ??
+    (scope.mode === "audit-wide"
+      ? registrations.map(({ client }) => client)
+      : scope.clients);
+  const installedSkillIdentity =
+    await host.installedSkillIdentity?.(skillClientIds);
+  const skillAligned = skillIdentityAligned(installedSkillIdentity);
   return {
     checks: [
       ...(skillAligned ? [] : [skillIdentityCheck(installedSkillIdentity)]),
@@ -236,7 +307,6 @@ const collectDoctorIdentity = async (
       skill: {
         installed_version: installedSkillIdentity?.version ?? null,
         installed_tool_count: installedSkillIdentity?.toolCount ?? null,
-        installed_catalog_digest: installedSkillIdentity?.catalogDigest ?? null,
         state:
           installedSkillIdentity === undefined
             ? "missing"
@@ -287,21 +357,6 @@ const installationState = (
 ): DoctorIdentity["installations"]["state"] =>
   paths.length === 0 ? "unknown" : paths.length === 1 ? "single" : "multiple";
 
-const homeFromEnvironment = (
-  environment: NodeJS.ProcessEnv,
-  platform: NodeJS.Platform,
-): string => {
-  const selected =
-    platform === "win32"
-      ? (environment.USERPROFILE ??
-        (environment.HOMEDRIVE !== undefined &&
-        environment.HOMEPATH !== undefined
-          ? `${environment.HOMEDRIVE}${environment.HOMEPATH}`
-          : environment.HOME))
-      : (environment.HOME ?? environment.USERPROFILE);
-  return selected ?? homedir();
-};
-
 /** Optional outer-adapter diagnostics composed without reversing dependencies. */
 export interface SystemDoctorHostOptions {
   readonly platform?: NodeJS.Platform;
@@ -318,16 +373,17 @@ export interface SystemDoctorHostOptions {
 export const systemDoctorHost = (
   options: SystemDoctorHostOptions = {},
 ): DoctorHost => {
+  const resources = new ArtifactResourceScope();
   const platform = options.platform ?? process.platform;
   const architecture = options.architecture ?? process.arch;
   const environment = options.environment ?? process.env;
   const hostExecFileOutput = options.execFileOutput ?? execFileOutput;
-  const homeDirectory = homeFromEnvironment(environment, platform);
+  const homeDirectory = homeDirectoryFromEnvironment(environment, platform);
   const commandEnvironment = { env: environment };
   return {
     platform,
     architecture,
-    nodeVersion: process.versions.node,
+    runtime: javaScriptRuntime(process.versions),
     homeDirectory,
     ...(environment.HOPPER_LAUNCHER_PATH === undefined
       ? {}
@@ -339,10 +395,18 @@ export const systemDoctorHost = (
       readMacosVersion(hostExecFileOutput, commandEnvironment),
     linuxDistribution: readLinuxDistribution,
     async validTarget(path) {
-      return (await parseBinaryTarget(path, process.cwd(), architecture)).ok;
+      return (
+        await parseBinaryTarget(path, {
+          cwd: process.cwd(),
+          hostArchitecture: architecture,
+        })
+      ).ok;
     },
     async inspectTarget(path) {
-      const result = await parseBinaryTarget(path, process.cwd(), architecture);
+      const result = await parseBinaryTarget(path, {
+        cwd: process.cwd(),
+        hostArchitecture: architecture,
+      });
       if (result.ok)
         return {
           name: "target",
@@ -351,19 +415,21 @@ export const systemDoctorHost = (
           detail: path,
         };
       const error = result.error;
+      const targetError =
+        error instanceof BinaryTargetError ? error : undefined;
       return {
         name: "target",
         ok: false,
         classification:
-          error.constraint === "directory_requires_file"
+          targetError?.constraint !== undefined
             ? "unsupported_target"
             : "config_drift",
         detail: path,
         details: {
-          reason: error.reason,
-          ...(error.constraint === undefined
+          reason: targetError?.reason ?? error.message,
+          ...(targetError?.constraint === undefined
             ? {}
-            : { constraint: error.constraint }),
+            : { constraint: targetError.constraint }),
         },
         remediation: analysisErrorRemediationAction(error),
       };
@@ -441,18 +507,34 @@ export const systemDoctorHost = (
         return [];
       }
     },
-    installedSkillIdentity: () => installedSkillIdentity(homeDirectory),
+    installedSkillIdentity: (clientIds) =>
+      readInstalledSkillIdentity(
+        homeDirectory,
+        clientIds,
+        environment,
+        platform,
+        resources,
+      ),
+    close: async () => {
+      try {
+        await resources.close();
+        return undefined;
+      } catch (cause: unknown) {
+        return `Doctor resource cleanup failed: ${cause instanceof Error ? cause.message : String(cause)}`;
+      }
+    },
     clientRegistrations: () =>
       readClientRegistrationStatuses(homeDirectory, undefined, {
         platform,
         environment,
+        resources,
       }),
   };
 };
 
 const readMacosVersion = async (
-  run: typeof execFileOutput = execFileOutput,
-  options: { readonly env: NodeJS.ProcessEnv } = { env: process.env },
+  run: typeof execFileOutput,
+  options: { readonly env: NodeJS.ProcessEnv },
 ): Promise<string | undefined> => {
   try {
     return (await run("sw_vers", ["-productVersion"], options)).stdout.trim();
@@ -465,12 +547,13 @@ const readMacosVersion = async (
 
 const executableAvailable = async (
   path: string,
-  platform: NodeJS.Platform = process.platform,
-  run: typeof execFileOutput = execFileOutput,
-  options: { readonly env: NodeJS.ProcessEnv } = { env: process.env },
+  platform: NodeJS.Platform,
+  run: typeof execFileOutput,
+  options: { readonly env: NodeJS.ProcessEnv },
 ): Promise<boolean> => {
   try {
     await access(path, constants.X_OK);
+    if (!(await stat(path)).isFile()) return false;
     if (platform !== "linux") return true;
     const linked = await run("ldd", [path], options);
     return linuxSharedLibrariesAvailable(`${linked.stdout}\n${linked.stderr}`);
@@ -490,9 +573,7 @@ const uncomposedLinuxDemoRuntimeCheck = (): Promise<DoctorCheck> =>
     remediation: "Run rea doctor through the production CLI adapter.",
   });
 
-const manualHopperPaths = async (
-  home: string = homedir(),
-): Promise<readonly string[]> => {
+const manualHopperPaths = async (home: string): Promise<readonly string[]> => {
   const paths: string[] = [];
   for (const root of ["/Applications", join(home, "Applications")]) {
     try {
@@ -506,34 +587,6 @@ const manualHopperPaths = async (
     }
   }
   return paths;
-};
-
-const readInstalledSkill = (home: string): Promise<string> =>
-  readFile(
-    join(home, ".agents/skills", PRODUCT_IDENTITY.skillName, "SKILL.md"),
-    "utf8",
-  );
-
-const installedSkillIdentity = async (
-  home: string,
-): Promise<InstalledSkillIdentity | undefined> => {
-  try {
-    const content = await readInstalledSkill(home);
-    const countText = /^\s{2}tool_count:\s*(\d+)\s*$/mu.exec(content)?.[1];
-    return {
-      canonical: !(await canonicalSkillNeedsInstall(home)),
-      version: /^\s{2}version:\s*"([^"]+)"\s*$/mu.exec(content)?.[1] ?? null,
-      toolCount:
-        countText === undefined ? null : Number.parseInt(countText, 10),
-      catalogDigest:
-        /^\s{2}catalog_digest:\s*"([a-f0-9]{64})"\s*$/mu.exec(content)?.[1] ??
-        null,
-    };
-  } catch (cause: unknown) {
-    // best-effort cleanup: optional skill probing; failure means unknown.
-    void cause;
-    return undefined;
-  }
 };
 
 const uniqueLines = (value: string): string[] => [

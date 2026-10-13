@@ -2,13 +2,8 @@ import { fc, it } from "@fast-check/vitest";
 import { describe, expect } from "vitest";
 
 import { createAnalysisProfile } from "./analysisProfile.js";
-import type { BinaryTarget } from "./binaryTarget.js";
-import {
-  createEvidence,
-  evidenceRecordSchema,
-  evidenceSchema,
-  parseEvidence,
-} from "./evidence.js";
+import type { BinaryTarget } from "./binaryTargetTypes.js";
+import { createEvidence, evidenceSchema, parseEvidence } from "./evidence.js";
 import { MAX_JSON_DEPTH, type JsonValue } from "./jsonValue.js";
 import { createEvidenceBundle } from "./evidenceBundle.js";
 import { freezeJsonSnapshot } from "./immutableJson.js";
@@ -23,6 +18,63 @@ const TARGET: BinaryTarget = {
 };
 const PROVIDER = { id: "fixture", name: "Fixture provider", version: "1" };
 const PROFILE = createAnalysisProfile(PROVIDER, { loader: "default" });
+
+it("preserves omitted relationship diagnostics and authenticates reported diagnostics", () => {
+  const observation = {
+    operation: "procedure_callees",
+    parameters: { procedure: "0x1000" },
+    result: ["0x2000"],
+  };
+  const historical = createEvidence(TARGET, PROVIDER, {
+    ...observation,
+    relationshipCoverage: { status: "complete" },
+  });
+  expect(historical.relationship_coverage).toEqual({ status: "complete" });
+  expect(parseEvidence(JSON.parse(JSON.stringify(historical)))).toEqual(
+    historical,
+  );
+  const diagnosed = createEvidence(TARGET, PROVIDER, {
+    ...observation,
+    relationshipCoverage: {
+      status: "complete",
+      diagnostics: ["Only resolved direct call references are observed."],
+    },
+  });
+  expect(parseEvidence(JSON.parse(JSON.stringify(diagnosed)))).toEqual(
+    diagnosed,
+  );
+  expect(diagnosed.evidence_id).not.toBe(historical.evidence_id);
+  expect(() =>
+    parseEvidence({
+      ...historical,
+      relationship_coverage: diagnosed.relationship_coverage,
+    }),
+  ).toThrow("semantic identifier");
+});
+
+it("projects known provider fields and preserves open JSON payloads", () => {
+  const liveProvider = { ...PROVIDER, transient_status: "starting" };
+  const evidence = createEvidence(TARGET, liveProvider, {
+    operation: "inspect",
+    parameters: { caller_metadata: { note: "kept" } },
+    result: { producer_extension: { value: "kept" } },
+    analysisProfile: PROFILE,
+    environment: {
+      id: "fixture",
+      platform: "linux",
+      architecture: "x86_64",
+      isolation: "process",
+    },
+    locations: [{ kind: "address", address: "0x1000" }],
+  });
+
+  expect(evidence.provider).toEqual(PROVIDER);
+  expect(evidence.parameters).toEqual({ caller_metadata: { note: "kept" } });
+  expect(evidence.normalized_result).toEqual({
+    producer_extension: { value: "kept" },
+  });
+  expect(parseEvidence(evidence)).toEqual(evidence);
+});
 
 it("preserves identity and bytes when reusing an owned immutable result", () => {
   const value = { nested: { values: ["observed", 1] } };
@@ -78,7 +130,7 @@ it("preserves prototype-named own members when reusing an owned result", () => {
 });
 
 it("preserves producer envelope admission and profile validation", () => {
-  const legacy = createEvidence(TARGET, PROVIDER, {
+  const unprofiled = createEvidence(TARGET, PROVIDER, {
     operation: "inspect",
     parameters: {},
     result: { observed: [1, 2, 3] },
@@ -89,19 +141,28 @@ it("preserves producer envelope admission and profile validation", () => {
     result: { observed: [1, 2, 3] },
     analysisProfile: PROFILE,
   });
+  const { analysis_profile: _missingProfile, ...missingProfile } = unprofiled;
+  expect(evidenceSchema.safeParse(missingProfile).success).toBe(false);
+  expect(
+    evidenceSchema.safeParse({
+      ...unprofiled,
+      analysis_profile: undefined,
+    }).success,
+  ).toBe(false);
   const candidates: unknown[] = [
-    legacy,
+    missingProfile,
+    unprofiled,
     profiled,
-    { ...legacy, analysis_profile: undefined },
-    { ...legacy, analysis_profile: null },
+    { ...unprofiled, analysis_profile: undefined },
+    { ...unprofiled, analysis_profile: null },
     {
       ...profiled,
       analysis_profile: { ...PROFILE, provider: { ...PROVIDER, id: "other" } },
     },
-    { ...legacy, unexpected: true },
+    { ...unprofiled, unexpected: true },
   ];
   for (const candidate of candidates) {
-    const canonical = evidenceRecordSchema.safeParse(candidate);
+    const canonical = evidenceSchema.safeParse(candidate);
     if (canonical.success)
       expect(parseEvidence(candidate)).toEqual(canonical.data);
     else expect(() => parseEvidence(candidate)).toThrow();
@@ -222,13 +283,14 @@ describe("analysis evidence identity", () => {
     expect(createEvidence(TARGET, PROVIDER, observation)).toEqual(evidence);
   });
 
-  it("preserves legacy records while binding profiled Evidence to its profile", () => {
-    const legacy = createEvidence(TARGET, PROVIDER, {
+  it("records absent profiles as null and binds reported profiles into identity", () => {
+    const unprofiled = createEvidence(TARGET, PROVIDER, {
       operation: "procedure_info",
       parameters: { procedure: "main" },
       result: { name: "main" },
     });
-    expect(parseEvidence(legacy)).toEqual(legacy);
+    expect(unprofiled.analysis_profile).toBeNull();
+    expect(parseEvidence(unprofiled)).toEqual(unprofiled);
 
     const profiled = createEvidence(TARGET, PROVIDER, {
       operation: "procedure_info",
@@ -237,7 +299,7 @@ describe("analysis evidence identity", () => {
       analysisProfile: PROFILE,
     });
     expect(profiled).toMatchObject({ analysis_profile: PROFILE });
-    expect(profiled.evidence_id).not.toBe(legacy.evidence_id);
+    expect(profiled.evidence_id).not.toBe(unprofiled.evidence_id);
     expect(() =>
       createEvidence(
         TARGET,
@@ -284,6 +346,22 @@ describe("analysis evidence identity", () => {
       parseEvidence({ ...evidence, normalized_result: false }),
     ).toThrow("semantic identifier");
   });
+});
+
+it("rejects a subject local path containing NUL while admitting an empty path", () => {
+  const evidence = createEvidence(TARGET, PROVIDER, {
+    operation: "health",
+    parameters: {},
+    result: true,
+  });
+  expect(evidence.subject).not.toBeNull();
+  const withPath = (path: string) => ({
+    ...evidence,
+    subject: { ...evidence.subject, local_path: path },
+  });
+  expect(evidenceSchema.safeParse(withPath("/tmp/fixture")).success).toBe(true);
+  expect(evidenceSchema.safeParse(withPath("")).success).toBe(true);
+  expect(evidenceSchema.safeParse(withPath("a\u0000b")).success).toBe(false);
 });
 
 it("binds an explicit unknown-subject reason into the semantic Evidence identity", () => {

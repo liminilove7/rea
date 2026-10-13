@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { isSafeNumber, LosslessNumber } from "lossless-json";
-import { parseHarJson } from "./HarJson.js";
+import { parseCaptureJson } from "./CaptureJson.js";
 import type { JsonValue } from "../../domain/jsonValue.js";
 import {
   WEB_NETWORK_CAPTURE_LIMITS,
@@ -30,7 +30,7 @@ export const decodeHarCapture = (
   text: string,
   sensitiveValues: readonly string[],
 ): DecodedCapture => {
-  const raw = parseHarJson(text);
+  const raw = parseCaptureJson(text, "HAR");
   const validation = projectHar(raw, [], false);
   createHarValidator()(validation.reported);
   if (
@@ -144,7 +144,8 @@ const projectHar = (
             (literal) =>
               item.includes(literal) ||
               contentBase64.includes(literal) ||
-              sha256.includes(literal),
+              sha256.includes(literal) ||
+              String(bytes.length).includes(literal),
           );
         binary_fields.push(
           hidden

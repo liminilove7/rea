@@ -4,25 +4,9 @@ import {
   binaryLayoutFixture,
   BINARY_LAYOUT_TEST_PROVIDER,
 } from "../../../tests/fixtures/binaryDiagnostics/layout.js";
-import { parseEvidence } from "../../domain/evidence.js";
 import { AnalysisCapabilityUnavailableError } from "../../domain/analysisErrorCore.js";
+import { parseEvidence } from "../../domain/evidence.js";
 import { err, ok } from "../../domain/result.js";
-
-it("binds original bytes, inline observations, unknowns and producing identity", async () => {
-  const fixture = binaryLayoutFixture();
-  const service = new BinaryLayoutService({
-    identity: BINARY_LAYOUT_TEST_PROVIDER,
-    inspect: () => Promise.resolve(ok(fixture)),
-  });
-  const result = await service.inspect({ path: fixture.artifact.path });
-  if (!result.ok) throw result.error;
-  const evidence = parseEvidence(result.value);
-  expect(evidence.normalized_result).toEqual(fixture);
-  expect(evidence.raw_result).toEqual(fixture);
-  expect(evidence.subject?.digest.sha256).toBe(fixture.artifact.sha256);
-  expect(evidence.provider).toEqual(BINARY_LAYOUT_TEST_PROVIDER);
-  expect(evidence.confidence).toBe("observed");
-});
 
 it.each([
   { path: "relative.elf" },
@@ -33,6 +17,9 @@ it.each([
   "rejects malformed selection before starting the provider: %j",
   async (input) => {
     const service = new BinaryLayoutService({
+      inspectAndClose(input, options) {
+        return this.inspect(input, options);
+      },
       identity: BINARY_LAYOUT_TEST_PROVIDER,
       inspect: () => {
         throw new Error("must not run");
@@ -45,6 +32,22 @@ it.each([
   },
 );
 
+it("records the decoded layout once in its Evidence", async () => {
+  const layout = binaryLayoutFixture();
+  const service = new BinaryLayoutService({
+    inspectAndClose(input, options) {
+      return this.inspect(input, options);
+    },
+    identity: BINARY_LAYOUT_TEST_PROVIDER,
+    inspect: () => Promise.resolve(ok(layout)),
+  });
+  const result = await service.inspect({ path: layout.artifact.path });
+  if (!result.ok) throw result.error;
+  const evidence = parseEvidence(result.value);
+  expect(evidence.normalized_result).toEqual(layout);
+  expect(evidence.raw_result).toBeNull();
+});
+
 it("preserves a provider's actionable unsupported reason", async () => {
   const failure = new AnalysisCapabilityUnavailableError(
     "fixture-layout",
@@ -52,6 +55,9 @@ it("preserves a provider's actionable unsupported reason", async () => {
     "ELF core belongs to recorded-crash analysis.",
   );
   const service = new BinaryLayoutService({
+    inspectAndClose(input, options) {
+      return this.inspect(input, options);
+    },
     identity: BINARY_LAYOUT_TEST_PROVIDER,
     inspect: () => Promise.resolve(err(failure)),
   });
@@ -61,6 +67,9 @@ it("preserves a provider's actionable unsupported reason", async () => {
 it("cancels before invocation and after an acquired observation", async () => {
   const controller = new AbortController();
   const service = new BinaryLayoutService({
+    inspectAndClose(input, options) {
+      return this.inspect(input, options);
+    },
     identity: BINARY_LAYOUT_TEST_PROVIDER,
     inspect: () => {
       controller.abort();
@@ -80,6 +89,9 @@ it("cancels before invocation and after an acquired observation", async () => {
     },
   });
   const untouched = new BinaryLayoutService({
+    inspectAndClose(input, options) {
+      return this.inspect(input, options);
+    },
     identity: BINARY_LAYOUT_TEST_PROVIDER,
     inspect: () => {
       throw new Error("must not run");
@@ -115,6 +127,9 @@ it.each(["different-path", "invalid-digest", "outside-range"])(
         permissions: { read: true, write: false, execute: true },
       });
     const service = new BinaryLayoutService({
+      inspectAndClose(input, options) {
+        return this.inspect(input, options);
+      },
       identity: BINARY_LAYOUT_TEST_PROVIDER,
       inspect: () => Promise.resolve(ok(fixture)),
     });

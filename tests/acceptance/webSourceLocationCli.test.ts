@@ -40,7 +40,7 @@ cliTest(
       },
       timeoutMs: 45000,
     });
-    expect(response.exitCode).toBe(0);
+    expect(response.exitCode, response.stdout + response.stderr).toBe(0);
     expect(response.json).toMatchObject({
       normalized_result: {
         source: { script_index: 0 },
@@ -48,7 +48,9 @@ cliTest(
         generated_offset: 0,
         execution: "unknown",
         matches: [{ content: { text: "original" } }],
-        runtime: { id: "node-v8" },
+        runtime: {
+          id: process.versions.bun === undefined ? "node-v8" : "bun",
+        },
       },
     });
     const transport = new StdioClientTransport({
@@ -86,9 +88,7 @@ cliTest(
       },
     });
     expect(mcpResponse.isError, JSON.stringify(mcpResponse)).not.toBe(true);
-    expect(mcpResponse.structuredContent).toMatchObject({
-      evidence: response.json,
-    });
+    expect(mcpResponse.structuredContent).toEqual(response.json);
     const invalid = await cli.run({
       arguments: [
         "trace-web-source-location",

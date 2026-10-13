@@ -52,13 +52,16 @@ const addressedNamesSchema = z.array(
 );
 const addressedNameMapSchema = z.record(z.string(), z.string());
 const segmentSchema = z.object({
-  name: z.string().default(""),
-  start: z.string().default(""),
-  end: z.string().default(""),
-  readable: z.boolean().nullable().default(null),
-  writable: z.boolean().nullable().default(null),
-  executable: z.boolean().nullable().default(null),
+  name: z.string(),
+  start: z.string(),
+  end: z.string(),
+  readable: z.boolean().nullable(),
+  writable: z.boolean().nullable(),
+  executable: z.boolean().nullable(),
 });
+const segmentImageBaseSchema = z
+  .object({ image_base: z.string().min(1) })
+  .passthrough();
 const unavailableAnalysisFactSchema = z
   .object({ available: z.literal(false), reason: z.string() })
   .strict();
@@ -186,12 +189,6 @@ export const functionBodySchema = z.discriminatedUnion("available", [
     }),
 ]);
 
-const unknownFunctionBody = () =>
-  functionBodySchema.default({
-    available: false,
-    reason: "The provider did not report complete function body ranges.",
-  });
-
 /** Check the declared entry membership against complete, inclusive body ranges. */
 export const functionBodyEntryAgrees = (
   body: z.infer<typeof functionBodySchema>,
@@ -226,8 +223,8 @@ export const procedureIdentitySchema = z
   .object({
     address: z.string(),
     name: z.string(),
-    classification: procedureClassificationSchema.nullable().default(null),
-    body: unknownFunctionBody(),
+    classification: procedureClassificationSchema.nullable(),
+    body: functionBodySchema,
   })
   .strict()
   .superRefine((identity, context) => {
@@ -352,9 +349,9 @@ export const functionDossierSchema = z
         })
         .strict(),
     ),
-    native_api: nativeApiBoundarySchema.nullable().default(null),
-    native_value_flow: nativeValueFlowSchema.nullable().default(null),
-    limitations: z.array(z.string()).default([]),
+    native_api: nativeApiBoundarySchema.nullable(),
+    native_value_flow: nativeValueFlowSchema.nullable(),
+    limitations: z.array(z.string()),
   })
   .strict();
 
@@ -428,6 +425,16 @@ export const parseSegments = (
   return parsed.success
     ? ok(parsed.data)
     : invalid("segment list", parsed.error);
+};
+
+/** Return a provider-reported image base only when every segment agrees on it. */
+export const parseSegmentImageBase = (value: JsonValue): string | undefined => {
+  const parsed = z
+    .array(segmentImageBaseSchema)
+    .safeParse(unwrapProperty(value, "segments"));
+  if (!parsed.success) return undefined;
+  const bases = new Set(parsed.data.map(({ image_base }) => image_base));
+  return bases.size === 1 ? parsed.data[0]?.image_base : undefined;
 };
 
 /** Parse direct or wrapped Hopper document names. */

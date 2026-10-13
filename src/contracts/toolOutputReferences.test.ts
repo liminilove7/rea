@@ -1,11 +1,68 @@
 import { Ajv } from "ajv";
 import { Ajv2020 } from "ajv/dist/2020.js";
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/client/validators/ajv";
 import { expect, it } from "vitest";
 import { z } from "zod";
 
-import { inlineLocalJsonSchemaReferences } from "../../tests/fixtures/localJsonSchemaReferences.js";
 import { toolContract } from "./toolContracts.js";
 import { toolOutputSchemaWithMetadata } from "./toolSchemaMetadata.js";
+
+it("keeps dialect-specific validators distinct after JSON schema serialization", () => {
+  const contract = {
+    ...toolContract("binary_session"),
+    outputSchema: z.strictObject({ value: z.number().int().min(1).max(8) }),
+  };
+  const output = toolOutputSchemaWithMetadata(contract);
+  const provider = new AjvJsonSchemaValidator();
+  for (const target of ["draft-2020-12", "draft-07"] as const) {
+    const projected = output["~standard"].jsonSchema.output({ target });
+    const parsed = z
+      .record(z.string(), z.unknown())
+      .parse(JSON.parse(JSON.stringify(projected)));
+    const validate = provider.getValidator(parsed);
+    expect(validate({ value: 8 }).valid).toBe(true);
+    expect(validate({ value: 9 }).valid).toBe(false);
+    expect(validate({ value: 1.5 }).valid).toBe(false);
+  }
+});
+
+it("preserves explicit schema identity and relative reference resolution", () => {
+  const value = z.string();
+  const canonical = z.strictObject({ value });
+  const contract = {
+    ...toolContract("binary_session"),
+    outputSchema: canonical,
+  };
+  const projected = toolOutputSchemaWithMetadata(contract)[
+    "~standard"
+  ].jsonSchema.output({
+    target: "draft-2020-12",
+    libraryOptions: {
+      override: (context: {
+        readonly zodSchema: unknown;
+        readonly jsonSchema: Record<string, unknown>;
+      }) => {
+        if (context.zodSchema !== value) return;
+        delete context.jsonSchema.type;
+        context.jsonSchema.$ref = "child.json";
+      },
+    },
+  });
+  const ajv = new Ajv2020({ strict: false });
+  ajv.addSchema({ $id: "child.json", type: "string", minLength: 3 });
+  const validate = ajv.compile(projected);
+  expect(validate({ value: "abc" })).toBe(true);
+  expect(validate({ value: "ab" })).toBe(false);
+
+  const identified = toolOutputSchemaWithMetadata({
+    ...contract,
+    outputSchema: canonical.meta({ $id: "https://example.test/result" }),
+  })["~standard"].jsonSchema.output({ target: "draft-2020-12" });
+  expect(identified.$id).toBe("https://example.test/result");
+  const explicit = ajv.compile(identified);
+  expect(explicit({ value: "abc" })).toBe(true);
+  expect(explicit({ value: 1 })).toBe(false);
+});
 
 it.each(["draft-2020-12", "draft-07"] as const)(
   "preserves refined numeric bounds and strict repeated objects through %s references",
@@ -52,34 +109,8 @@ it.each(["draft-2020-12", "draft-07"] as const)(
     expect(canonical.safeParse(valid).success).toBe(true);
     for (const sample of samples)
       expect(validate(sample)).toBe(canonical.safeParse(sample).success);
-    expect(inlineLocalJsonSchemaReferences(advertised)).toEqual(
-      inlineLocalJsonSchemaReferences(
-        canonical["~standard"].jsonSchema.output({ target }),
-      ),
-    );
   },
 );
-
-it("keeps schema data containing reference-shaped objects untouched", () => {
-  const literal = { $ref: "https://example.invalid/value" };
-  const expanded = inlineLocalJsonSchemaReferences({
-    $defs: {
-      "a/b": {
-        type: "object",
-        properties: { $defs: { const: literal } },
-        examples: [literal],
-      },
-    },
-    $ref: "#/$defs/a~1b",
-    description: "Keep the caller-facing annotation",
-  });
-  expect(expanded).toEqual({
-    type: "object",
-    properties: { $defs: { const: literal } },
-    examples: [literal],
-    description: "Keep the caller-facing annotation",
-  });
-});
 
 it.each(["draft-2020-12", "draft-07"] as const)(
   "preserves layered native-selector string patterns through %s references",
@@ -110,68 +141,5 @@ it.each(["draft-2020-12", "draft-07"] as const)(
       const sample = { before: value, after: "setFoo:" };
       expect(validate(sample)).toBe(canonical.safeParse(sample).success);
     }
-    expect(inlineLocalJsonSchemaReferences(advertised)).toEqual(
-      inlineLocalJsonSchemaReferences(
-        canonical["~standard"].jsonSchema.output({ target }),
-      ),
-    );
   },
 );
-
-it("rejects unresolved and cyclic references rather than concealing schema drift", () => {
-  expect(() =>
-    inlineLocalJsonSchemaReferences({ $ref: "#/$defs/missing" }),
-  ).toThrow("Missing schema reference");
-  expect(() =>
-    inlineLocalJsonSchemaReferences({
-      $defs: { loop: { $ref: "#/$defs/loop" } },
-      $ref: "#/$defs/loop",
-    }),
-  ).toThrow("Recursive schema reference");
-});
-
-it("intersects referenced numeric bounds and rejects conflicting validation keywords", () => {
-  expect(
-    inlineLocalJsonSchemaReferences({
-      $defs: { bounded: { type: "number", minimum: 1, maximum: 10 } },
-      $ref: "#/$defs/bounded",
-      minimum: 0,
-      maximum: 9,
-    }),
-  ).toEqual({ type: "number", minimum: 1, maximum: 9 });
-  expect(() =>
-    inlineLocalJsonSchemaReferences({
-      $defs: { strict: { type: "object" } },
-      $ref: "#/$defs/strict",
-      type: "string",
-    }),
-  ).toThrow("Conflicting schema reference sibling: type");
-});
-
-it("preserves strict-object evaluation scope across references and singleton intersections", () => {
-  const strict = {
-    type: "object",
-    properties: { value: { type: "string" } },
-    additionalProperties: false,
-  };
-  const schemas = [
-    {
-      $defs: { strict },
-      $ref: "#/$defs/strict",
-      additionalProperties: false,
-    },
-    { allOf: [strict], additionalProperties: false },
-  ];
-  for (const schema of schemas) {
-    const expanded = z
-      .record(z.string(), z.unknown())
-      .parse(inlineLocalJsonSchemaReferences(schema));
-    const ajv = new Ajv2020({ strict: false });
-    const original = ajv.compile(schema);
-    const normalized = ajv.compile(expanded);
-    expect(original({})).toBe(true);
-    expect(original({ value: "kept" })).toBe(false);
-    for (const sample of [{}, { value: "kept" }, { unexpected: true }, null])
-      expect(normalized(sample)).toBe(original(sample));
-  }
-});

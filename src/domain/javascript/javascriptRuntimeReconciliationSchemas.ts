@@ -1,11 +1,12 @@
 import { z } from "zod";
 
-import { compareCodePoints } from "../canonicalOrdering.js";
+import { compareUnicodeCodePoints } from "../unicodeCodePointOrder.js";
 import { evidenceSchema } from "../evidence.js";
 import { javascriptRuntimeUnresolvedLocationSchema } from "./javascriptRuntimeObservation.js";
 import { javascriptApplicationGraphSchema } from "./javascriptApplicationGraph.js";
 import { digestSchema } from "../digests.js";
 import { prefixedDigestSchema } from "../digests.js";
+import { urlDeclaresQueryOrFragment } from "../urlComponents.js";
 
 const evidenceIdSchema = prefixedDigestSchema("ev");
 const nodeIdSchema = prefixedDigestSchema("jag_node");
@@ -53,8 +54,7 @@ const normalizeRuntimeUrlPrefix = (value: string): string | null => {
     !["http:", "https:"].includes(url.protocol) ||
     url.username !== "" ||
     url.password !== "" ||
-    url.search !== "" ||
-    url.hash !== ""
+    urlDeclaresQueryOrFragment(url)
   )
     return null;
   if (!url.pathname.endsWith("/")) url.pathname += "/";
@@ -85,7 +85,7 @@ function normalizeRuntimeMappings(
       mappings.map((mapping) => [runtimeMappingKey(mapping), mapping]),
     ).values(),
   ].sort((left, right) =>
-    compareCodePoints(runtimeMappingKey(left), runtimeMappingKey(right)),
+    compareUnicodeCodePoints(runtimeMappingKey(left), runtimeMappingKey(right)),
   );
 }
 

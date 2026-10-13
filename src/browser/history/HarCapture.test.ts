@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { expect, it } from "vitest";
 import { historicalHar } from "../../../tests/fixtures/historicalHar.js";
+import { decodeCaptureText } from "./CaptureJson.js";
 import { decodeHarCapture } from "./HarCapture.js";
 
 it.each([
@@ -558,3 +559,26 @@ it.each([
     });
   },
 );
+
+it("ignores one leading byte-order mark, as HAR 1.2 requires of readers", () => {
+  const text = JSON.stringify(historicalHar());
+  const body = Buffer.from(text, "utf8");
+  const marked = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), body]);
+  expect(decodeCaptureText(marked, "HAR")).toBe(text);
+  expect(decodeHarCapture(decodeCaptureText(marked, "HAR"), [])).toEqual(
+    decodeHarCapture(decodeCaptureText(body, "HAR"), []),
+  );
+  // A second mark is content, not an encoding signature.
+  expect(() =>
+    decodeHarCapture(
+      decodeCaptureText(
+        Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), marked]),
+        "HAR",
+      ),
+      [],
+    ),
+  ).toThrow("HAR is malformed JSON.");
+  expect(() =>
+    decodeCaptureText(Buffer.from([0x7b, 0xff, 0x7d]), "HAR"),
+  ).toThrow("HAR is not valid UTF-8 JSON.");
+});

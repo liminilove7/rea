@@ -1,3 +1,8 @@
+import {
+  requireMcpToolError,
+  mcpTextValue,
+  requireMcpOperationResult,
+} from "./mcp-verifier-results.mjs";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
@@ -7,14 +12,15 @@ import { setTimeout as delay } from "node:timers/promises";
 import { promisify } from "node:util";
 import Ajv from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { analysisErrorProjectionSchema } from "../../dist/contracts/errorSchemas.js";
-import { mcpTextValue, requireMcpResult } from "./mcp-verifier-results.mjs";
+
 import { verifyLegacyGhidraReferenceSnapshot } from "./ghidra-reference-snapshot-e2e.mjs";
 import { verifyGhidraSnapshotLifecycle } from "./real-ghidra-snapshot-lifecycle.mjs";
 import { verifyGhidraTargetAdmission } from "./real-ghidra-target-admission.mjs";
 import { verifyGhidraLargeResults } from "./real-ghidra-large-results.mjs";
 import { verifyGhidraEntryAliases } from "./real-ghidra-entry-aliases.mjs";
 import { verifyGhidraNamespaceAnnotations } from "./real-ghidra-namespace-annotations.mjs";
+import { verifyGhidraBatchIdentity } from "./real-ghidra-batch-identity.mjs";
+import { verifyGhidraInstructionFlow } from "./real-ghidra-instruction-flow.mjs";
 
 /** Probe real Ghidra location, annotation and error contracts through public adapters. */
 export async function verifyGhidraBoundaries(
@@ -32,13 +38,17 @@ export async function verifyGhidraBoundaries(
         ajv.validateSchema(tool[key]),
         `${tool.name} ${key}: ${JSON.stringify(ajv.errors)}`,
       );
-    validators.set(tool.name, ajv.compile(tool.outputSchema));
+    validators.set(
+      tool.name,
+      (tool.outputSchema?.$id && ajv.getSchema(tool.outputSchema.$id)) ||
+        ajv.compile(tool.outputSchema),
+    );
   }
   let successfulCalls = 0;
   let rejectedCalls = 0;
   const call = async (name, args = {}) => {
     const reply = await client.callTool({ name, arguments: args }, options);
-    const result = requireMcpResult(reply, name);
+    const result = requireMcpOperationResult(reply, name);
     const validate = validators.get(name);
     assert.ok(validate, `${name} missing from catalog`);
     assert.ok(
@@ -46,6 +56,15 @@ export async function verifyGhidraBoundaries(
       `${name}: ${JSON.stringify(validate.errors)}`,
     );
     assert.deepEqual(reply.structuredContent, JSON.parse(mcpTextValue(reply)));
+    if (name === "list_strings" || name === "search_strings")
+      assert.ok(
+        reply.structuredContent.limitations.some((limitation) =>
+          /Only Ghidra-defined string Data.*empty search does not establish/u.test(
+            limitation,
+          ),
+        ),
+        `${name} omitted defined-string coverage`,
+      );
     successfulCalls++;
     return result;
   };
@@ -56,23 +75,19 @@ export async function verifyGhidraBoundaries(
       true,
       `${name} accepted ${JSON.stringify(args)}`,
     );
-    // SDK input-schema rejections are text-only; application errors use the
-    // canonical structured error projection, separately from success schemas.
-    if (reply.structuredContent !== undefined) {
-      analysisErrorProjectionSchema.parse(reply.structuredContent.error);
-      assert.deepEqual(
-        reply.structuredContent,
-        JSON.parse(mcpTextValue(reply)),
-      );
-    }
+    // SDK input rejections are prose; application errors carry canonical JSON
+    // text without publishing data outside the advertised success schema.
+    const error = mcpTextValue(reply).startsWith("{")
+      ? requireMcpToolError(reply)
+      : undefined;
+    assert.equal(reply.structuredContent, undefined);
     if (diagnostic !== undefined) {
-      const error = reply.structuredContent?.error;
       assert.equal(error?.code, "invalid_request");
       assert.equal(error?.details?.operation, name);
       assert.match(JSON.stringify(error.details.issues), diagnostic);
     }
     rejectedCalls++;
-    return reply.structuredContent?.error;
+    return error;
   };
   const cli = async (command, value, flags = []) => {
     const { stdout } = await promisify(execFile)(
@@ -157,6 +172,8 @@ export async function verifyGhidraBoundaries(
     /Annotations require a local function entry/u,
   );
   const names = await call("list_names");
+  const batchIdentity = await verifyGhidraBatchIdentity(call, names);
+  const instructionFlow = await verifyGhidraInstructionFlow(call, names, cli);
   const leaf = names.find((item) =>
     item.value.endsWith("rea_ghidra_inventory_leaf"),
   );
@@ -368,6 +385,12 @@ export async function verifyGhidraBoundaries(
     ).some((item) => item.address === marker.address),
     false,
   );
+  assert.deepEqual(
+    await call("search_strings", {
+      pattern: `REA_GHIDRA_ABSENT_${randomUUID()}`,
+    }),
+    [],
+  );
   assert.equal(
     (await call("inspect_native_instruction", { address: strings[0].address }))
       .status,
@@ -474,7 +497,7 @@ export async function verifyGhidraBoundaries(
     options,
   );
   assert.equal(regexFailure.isError, true);
-  const regexError = regexFailure.structuredContent.error;
+  const regexError = requireMcpToolError(regexFailure);
   assert.equal(regexError.code, "resource_constraint");
   assert.equal(regexError.details.operation, "search_strings");
   assert.equal(regexError.details.resource, "memory");
@@ -496,7 +519,7 @@ export async function verifyGhidraBoundaries(
     options,
   );
   assert.equal(compileFailure.isError, true);
-  const compileError = compileFailure.structuredContent.error;
+  const compileError = requireMcpToolError(compileFailure);
   assert.equal(compileError.code, "resource_constraint");
   assert.equal(compileError.details.operation, "search_procedures");
   assert.match(compileError.details.reason, /stack while compiling pattern/u);
@@ -766,6 +789,8 @@ export async function verifyGhidraBoundaries(
     missing_and_nonregular_source_rejected: true,
     imported_source_identity_retained: true,
     equivalent_instruction_address_spellings: true,
+    batch_procedure_identity: batchIdentity,
+    instruction_flow: instructionFlow,
     qualified_annotation_name_roundtrip: true,
     imported_entry_alias_selection: true,
     oversized_result_retention_and_complete_export: true,

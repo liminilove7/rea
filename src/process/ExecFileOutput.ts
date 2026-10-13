@@ -1,10 +1,10 @@
 import {
   execFile,
-  type ExecFileOptionsWithStringEncoding,
+  type ExecFileOptionsWithBufferEncoding,
 } from "node:child_process";
 
 type ExecFileOutputOptions = Omit<
-  ExecFileOptionsWithStringEncoding,
+  ExecFileOptionsWithBufferEncoding,
   "encoding" | "maxBuffer"
 > & {
   readonly maxBuffer?: number;
@@ -53,6 +53,21 @@ const timeoutError = (
   return error;
 };
 
+/**
+ * The `timeout` contract for both modes, checked before spawning. A stoppable
+ * command keeps its own deadline, so execFile never validates it. Node 26's
+ * execFile also caps it at Number.MAX_SAFE_INTEGER; Node 22 and 24 accept
+ * larger integers, which their timers then clamp to 1 ms.
+ */
+const invalidTimeout = (timeout: number): RangeError | undefined => {
+  if (Number.isSafeInteger(timeout) && timeout >= 0) return undefined;
+  const error = new RangeError(
+    `The value of "timeout" is out of range. It must be an unsigned integer. Received ${String(timeout)}`,
+  );
+  Reflect.set(error, "code", "ERR_OUT_OF_RANGE");
+  return error;
+};
+
 /** Captured subprocess output read from an execFileOutput rejection. */
 export interface ExecFileOutputFailure {
   readonly stdout: string;
@@ -85,14 +100,19 @@ export const execFileOutputFailure = (
   };
 };
 
-/** Run a shell-free command while capturing its complete UTF-8 output. */
-export const execFileOutput = (
+/** Run a shell-free command while capturing its complete output bytes. */
+export const execFileBytes = (
   command: string,
   arguments_: readonly string[],
   options: ExecFileOutputOptions = {},
-): Promise<{ readonly stdout: string; readonly stderr: string }> =>
+): Promise<{ readonly stdout: Buffer; readonly stderr: Buffer }> =>
   new Promise((resolve, reject) => {
     const { stopSignal, signal, timeout, ...execOptions } = options;
+    const invalid = timeout === undefined ? undefined : invalidTimeout(timeout);
+    if (invalid !== undefined) {
+      reject(invalid);
+      return;
+    }
     if (stopSignal !== undefined && signal?.aborted === true) {
       reject(abortError(signal));
       return;
@@ -114,7 +134,7 @@ export const execFileOutput = (
               ...(timeout === undefined ? {} : { timeout }),
             }
           : { killSignal: stopSignal }),
-        encoding: "utf8",
+        encoding: "buffer",
         maxBuffer: options.maxBuffer ?? Number.POSITIVE_INFINITY,
       },
       (error, stdout, stderr) => {
@@ -128,8 +148,8 @@ export const execFileOutput = (
               ? timeoutError(command, timeout, error)
               : error;
         if (failure !== null) {
-          Reflect.set(failure, "stdout", stdout);
-          Reflect.set(failure, "stderr", stderr);
+          Reflect.set(failure, "stdout", stdout.toString("utf8"));
+          Reflect.set(failure, "stderr", stderr.toString("utf8"));
           reject(failure);
           return;
         }
@@ -153,3 +173,14 @@ export const execFileOutput = (
         stop("timeout");
       }, timeout);
   });
+
+/** Run a shell-free command while capturing its complete UTF-8 output. */
+export const execFileOutput = (
+  command: string,
+  arguments_: readonly string[],
+  options: ExecFileOutputOptions = {},
+): Promise<{ readonly stdout: string; readonly stderr: string }> =>
+  execFileBytes(command, arguments_, options).then(({ stdout, stderr }) => ({
+    stdout: stdout.toString("utf8"),
+    stderr: stderr.toString("utf8"),
+  }));

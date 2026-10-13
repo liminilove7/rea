@@ -119,6 +119,21 @@ export const browserStepArtifactsSchema = z.strictObject({
 });
 export type BrowserStepArtifacts = z.infer<typeof browserStepArtifactsSchema>;
 
+/** Event families a scenario can select for capture. */
+export const browserScenarioEventFamilySchema = z.enum([
+  "console",
+  "page-errors",
+  "network",
+  "websockets",
+  "frames",
+  "workers",
+  "popups",
+  "downloads",
+]);
+export type BrowserScenarioEventFamily = z.infer<
+  typeof browserScenarioEventFamilySchema
+>;
+
 const eventBase = {
   sequence: z.number().int().min(1),
   step_index: z.number().int().min(0),
@@ -127,8 +142,8 @@ const eventBase = {
 const eventUrl = sanitizedBrowserUrlSchema.nullable();
 const networkEventShape = {
   ...eventBase,
-  transaction_id: z.string().min(1).optional(),
-  redirected_from_transaction_id: z.string().min(1).nullable().optional(),
+  transaction_id: z.string().min(1),
+  redirected_from_transaction_id: z.string().min(1).nullable(),
   method: z.string().min(1),
   url: sanitizedBrowserUrlSchema,
   resource_type: z.string().min(1),

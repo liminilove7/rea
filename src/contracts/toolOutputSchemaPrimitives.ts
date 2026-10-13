@@ -8,7 +8,10 @@ import {
   functionBodySchema,
 } from "../domain/hopperValues.js";
 import { analysisProfileSchema } from "../domain/analysisProfile.js";
-import { evidenceEnvelopeSchema } from "../domain/evidence.js";
+import {
+  evidenceSchema,
+  validateAnalysisProfileProvider,
+} from "../domain/evidence.js";
 import { jsonValueSchema } from "../domain/jsonValue.js";
 import {
   PROVIDER_REJECTION_CODES,
@@ -20,20 +23,15 @@ import {
   PROVIDER_RETRY_ACTIONS,
 } from "../domain/providerOperationHealth.js";
 import { analysisErrorProjectionSchema } from "./errorSchemas.js";
-import { prefixedDigestSchema } from "./../domain/digests.js";
+import { relationshipCoverageSchema } from "../domain/relationshipCoverage.js";
+import { ZIP_PACKAGE_FORMATS } from "../domain/zipPackageFormat.js";
 
-/** Inline result with its complete Evidence record. */
-export const inlineEvidenceRecordSchema = evidenceEnvelopeSchema;
-
-/** Wrap a result and its Evidence while preserving the result schema type. */
+/** Specialize the single normalized result inside a complete Evidence record. */
 export const evidenceResultOf = <Schema extends z.ZodType>(schema: Schema) =>
-  z.strictObject({
-    result: schema,
-    evidence_id: prefixedDigestSchema("ev"),
-    evidence: inlineEvidenceRecordSchema,
-  });
+  z
+    .strictObject({ ...evidenceSchema.shape, normalized_result: schema })
+    .superRefine(validateAnalysisProfileProvider);
 
-const resultOf = evidenceResultOf;
 /** Wrap a lifecycle result while preserving its exact schema type. */
 export const lifecycleResultOf = <Schema extends z.ZodType>(schema: Schema) =>
   z.object({ result: schema });
@@ -56,15 +54,13 @@ export const targetFormatSchema = z.enum([
   "hopper",
   "analysis-database",
   "mach-o",
+  "mach-o-universal",
   "elf",
   "pe",
   "dos-mz",
   "dos-com",
-  "zip",
-  "ipa",
-  "apk",
-  "msix",
-  "appx",
+  "raw-binary",
+  ...ZIP_PACKAGE_FORMATS,
   "asar",
   "dmg",
   "pkg",
@@ -110,11 +106,72 @@ export const providerCapability = z.discriminatedUnion("available", [
 ]);
 export type ProviderCapability = z.output<typeof providerCapability>;
 
+/** Listed effects are true; all other members of this closed vocabulary are false. */
+export const PROVIDER_EFFECT_NAMES = Object.keys(
+  providerCapabilityFacts.effects.shape,
+) as (keyof z.output<typeof providerCapabilityFacts.effects>)[];
+
 export const providerIdentity = z.object({
   id: z.string(),
   name: z.string(),
   version: z.string().nullable(),
 });
+
+const providerCapabilityGroupFacts = {
+  operations: z.array(z.string().min(1)).min(1),
+  effects: z.array(providerCapabilityFacts.effects.keyof()),
+  limitations: z.array(z.string()),
+};
+
+const providerCapabilityGroup = z.discriminatedUnion("available", [
+  z.strictObject({
+    ...providerCapabilityGroupFacts,
+    available: z.literal(true),
+    reason: z.null(),
+    availability_code: z.null(),
+  }),
+  z.strictObject({
+    ...providerCapabilityGroupFacts,
+    available: z.literal(false),
+    reason: z.string().nullable(),
+    availability_code: z.enum(PROVIDER_REJECTION_CODES).nullable(),
+  }),
+]);
+
+/** Shared limitations precede each group's suffix, preserving exact source order. */
+export const providerCapabilitySet = z.strictObject({
+  provider: providerIdentity,
+  shared_limitations: z.array(z.string()),
+  groups: z.array(providerCapabilityGroup),
+});
+export type ProviderCapabilitySet = z.output<typeof providerCapabilitySet>;
+
+/** Decode one status scope without losing provider identity or limitation order. */
+export const expandProviderCapabilities = (
+  sets: readonly ProviderCapabilitySet[],
+): readonly (ProviderCapability & {
+  readonly provider: z.output<typeof providerIdentity>;
+})[] =>
+  sets.flatMap((set) =>
+    set.groups.flatMap((group) =>
+      group.operations.map((operation) => ({
+        ...providerCapability.parse({
+          operation,
+          available: group.available,
+          reason: group.reason,
+          availability_code: group.availability_code,
+          effects: Object.fromEntries(
+            PROVIDER_EFFECT_NAMES.map((name) => [
+              name,
+              group.effects.includes(name),
+            ]),
+          ),
+          limitations: [...set.shared_limitations, ...group.limitations],
+        }),
+        provider: set.provider,
+      })),
+    ),
+  );
 
 const processCoordinates = {
   launcher_pid: z.number().int().min(1),
@@ -296,6 +353,8 @@ const toolAvailabilityFacts = {
     accessesNetwork: z.boolean(),
     changesUiState: z.boolean(),
     mayDiscardData: z.boolean(),
+    executesForeignCode: z.boolean(),
+    mutatesDevice: z.boolean(),
     idempotent: z.boolean(),
   }),
   annotations: z.object({
@@ -334,11 +393,77 @@ export type ToolUnavailabilityReason = z.output<
   typeof toolUnavailabilityReason
 >;
 
+export const TOOL_EFFECT_NAMES = Object.keys(
+  toolAvailabilityFacts.effects.shape,
+) as (keyof z.output<typeof toolAvailabilityFacts.effects>)[];
+export const TOOL_ANNOTATION_NAMES = Object.keys(
+  toolAvailabilityFacts.annotations.shape,
+) as (keyof z.output<typeof toolAvailabilityFacts.annotations>)[];
+
+const toolAvailabilityGroupFacts = {
+  names: z.array(z.string().min(1)).min(1),
+  surface: toolAvailabilityFacts.surface,
+  default_mode_available: toolAvailabilityFacts.default_mode_available,
+  modes: toolAvailabilityFacts.modes,
+  client_requirements: toolAvailabilityFacts.client_requirements.optional(),
+  effects: z.array(toolAvailabilityFacts.effects.keyof()),
+  annotations: z.array(toolAvailabilityFacts.annotations.keyof()),
+};
+
+const toolAvailabilityGroup = z.discriminatedUnion("available", [
+  z.strictObject({
+    ...toolAvailabilityGroupFacts,
+    available: z.literal(true),
+    reason: z.literal("available"),
+    remediation: z.null(),
+  }),
+  z.strictObject({
+    ...toolAvailabilityGroupFacts,
+    available: z.literal(false),
+    reason: toolUnavailabilityReason,
+    remediation: z.string().nullable(),
+  }),
+]);
+
+/** Complete inventory with explicit inherited client requirements and enabled flags. */
+export const toolAvailabilityInventory = z.strictObject({
+  client_requirements: toolAvailabilityFacts.client_requirements,
+  groups: z.array(toolAvailabilityGroup),
+});
+export type ToolAvailabilityInventory = z.output<
+  typeof toolAvailabilityInventory
+>;
+
+/** Expand the wire representation once at the consuming boundary. */
+export const expandToolAvailability = (
+  inventory: ToolAvailabilityInventory,
+): readonly ToolAvailability[] =>
+  inventory.groups.flatMap((group) =>
+    group.names.map((name) =>
+      toolAvailability.parse({
+        ...group,
+        name,
+        client_requirements:
+          group.client_requirements ?? inventory.client_requirements,
+        effects: Object.fromEntries(
+          TOOL_EFFECT_NAMES.map((effect) => [
+            effect,
+            group.effects.includes(effect),
+          ]),
+        ),
+        annotations: Object.fromEntries(
+          TOOL_ANNOTATION_NAMES.map((annotation) => [
+            annotation,
+            group.annotations.includes(annotation),
+          ]),
+        ),
+      }),
+    ),
+  );
+
 export const sessionProvider = z
   .object({
-    provider: providerIdentity,
-    providers: z.array(providerIdentity),
-    capabilities: z.array(providerCapability),
+    capabilities: z.array(providerCapabilitySet),
     analysis_run: analysisRun,
     analysis_activity: analysisActivity,
     provider_operation_health: providerOperationHealth,
@@ -359,10 +484,10 @@ export const sessionProvider = z
         availability: providerAvailability,
         target_support: providerTargetSupport,
         selected: z.boolean(),
-        capabilities: z.array(providerCapability),
+        capabilities: z.array(providerCapabilitySet),
       }),
     ),
-    tool_availability: z.array(toolAvailability),
+    tool_availability: toolAvailabilityInventory,
     client_features: z.object({
       elicitation_form: z.boolean(),
       elicitation_url: z.boolean(),
@@ -390,7 +515,18 @@ export const sessionProvider = z
       negotiated_protocol_version: z.string().nullable(),
       client: z.object({ name: z.string(), version: z.string() }).nullable(),
       skill: z.object({ name: z.string(), expected_version: z.string() }),
-      catalog: z.record(z.string(), jsonValueSchema),
+      catalog: z.strictObject({
+        counts: z.strictObject({
+          cli_commands: z.number().int().min(0),
+          mcp_tools: z.number().int().min(0),
+          mcp_prompts: z.number().int().min(0),
+        }),
+        digests: z.strictObject({
+          tools_sha256: z.string().regex(/^[a-f0-9]{64}$/u),
+          prompts_sha256: z.string().regex(/^[a-f0-9]{64}$/u),
+          combined_sha256: z.string().regex(/^[a-f0-9]{64}$/u),
+        }),
+      }),
       protocol_features: z.object({
         progress: z.boolean(),
         cancellation: z.boolean(),
@@ -411,14 +547,11 @@ export const addressedEntry = z.object({
   address: z.string(),
   name: z.string(),
 });
-export const procedureIdentity = procedureIdentitySchema;
-const localVariable = localVariableSchema;
-
 export const containingProcedureResolution = z.discriminatedUnion("found", [
   z.object({
     query_address: z.string(),
     found: z.literal(true),
-    procedure: procedureIdentity,
+    procedure: procedureIdentitySchema,
   }),
   z.object({
     query_address: z.string(),
@@ -481,28 +614,25 @@ const memoryRegionOutput = z.object({
   overlay: z.boolean().optional(),
 });
 
-export const segmentOutput = resultOf(
+export const segmentOutput = evidenceResultOf(
   z.array(memoryRegionOutput.extend({ sections: z.array(memoryRegionOutput) })),
 );
 
-export const procedureInfoOutput = resultOf(
+export const procedureInfoOutput = evidenceResultOf(
   z.object({
     name: z.string(),
     entrypoint: z.string(),
     basicblock_count: z.number().int().min(0),
     length: z.number().min(0),
     signature: nullableText,
-    locals: z.array(localVariable),
-    classification: procedureClassificationSchema.nullable().default(null),
-    body: functionBodySchema.default({
-      available: false,
-      reason: "The provider did not report complete function body ranges.",
-    }),
+    locals: z.array(localVariableSchema),
+    classification: procedureClassificationSchema.nullable(),
+    body: functionBodySchema,
   }),
 );
 
 export const symbolDiscoveryOutput = (property: "classes" | "protocols") =>
-  resultOf(
+  evidenceResultOf(
     z.object({
       count: z.number().int().min(0),
       [property]: z.array(addressedEntry),
@@ -514,6 +644,8 @@ export const graphNode = z.discriminatedUnion("status", [
     address: z.string(),
     status: z.literal("ok"),
     calls: z.array(z.string()),
+    relationship_coverage: relationshipCoverageSchema,
+    limitations: z.array(z.string()).optional(),
   }),
   z.object({
     address: z.string(),
@@ -522,4 +654,4 @@ export const graphNode = z.discriminatedUnion("status", [
   }),
 ]);
 
-export const functionDossierOutput = resultOf(functionDossierSchema);
+export const functionDossierOutput = evidenceResultOf(functionDossierSchema);

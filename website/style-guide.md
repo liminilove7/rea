@@ -9,8 +9,10 @@ evidence the reader can inspect, and a useful next step. A clean, refined
 appearance comes from precise wording, readable figures, consistent typography
 and deliberate spacing.
 
-Use this guide for new pages and revisions. Start from an existing page and
-reuse `public/assets/styles.css` and `public/assets/main.js`. Local preview and
+Use this guide for new pages and revisions. Create the common page structure
+with `python3 scripts/website.py new-page`, then reuse the relevant components
+from an existing page, `public/assets/styles.css` and `public/assets/main.js`.
+Keep shared regions in sync with `templates/`. Contribution, preview and
 publication commands are in [README.md](README.md).
 
 ## What a reader should understand
@@ -23,6 +25,13 @@ These are reading goals, not a requirement to fit every investigation above the
 fold. Keep the main path short and let readers open the supporting details.
 
 ## Write the task directly
+
+Write the English source first. Keep translated wording just as concrete: a
+reader should understand the question, the evidence and the next action without
+decoding a literal translation. Preserve commands, code and recorded values.
+Read a whole example together when reviewing its translation. Check headings,
+figures and interactive labels at phone widths, including right-to-left editions.
+The [translation guide](locales/README.md) explains the catalogs and update process.
 
 Name the software, behavior or action in headings. Give the opening paragraph
 one job: explain what the page covers. Use concrete verbs such as install, trace,
@@ -54,6 +63,13 @@ Use captions for useful context: which values are illustrative, where an excerpt
 comes from, or what a check covers. Scope a claim positively and precisely:
 “The compiled function matches 63 bytes” is more useful than a broad claim
 followed by several qualifications.
+
+Search titles and sharing previews follow this standard too. Name the software
+or task so someone can understand the page before opening it. Keep titles and
+descriptions accurate and concise; use technical terms when they identify the
+actual topic. Preserve a clear visible headline rather than repeating search
+terms throughout the page. See [README.md](README.md#search-and-sharing-metadata)
+for canonical URLs, automatic sitemap generation and sharing assets.
 
 ## Build a page around one question
 
@@ -137,19 +153,50 @@ Keep the explanation on the website. Repository links provide source,
 reproduction instructions and further evidence. Use specific links for those
 purposes, and immutable commit links for checkpoint-dependent facts.
 
+### Method articles in the Blog
+
+Use longer articles to explain methods, choices and ideas through project
+experience. Open with a clear takeaway. A personal essay can follow how the
+author's understanding changed, using concrete episodes to develop a deeper
+argument. Keep the reasoning easy to follow; a Blog article does not need to
+become a tutorial. Figures are optional. Add one when it explains something
+useful rather than repeating a familiar opening flow.
+
+Choose cases that teach different decisions. For example, TH08 illustrates
+continuing existing work, TH095 illustrates reusing an established method in a
+new project, and TH04 illustrates adapting checks to an older platform. Close
+each case with the lesson the reader can apply. Put dates and progress figures
+beside the milestone they measure, with pinned evidence links in supporting
+details. Calendar time, source presence, exact comparison, build success and
+runtime checks each describe a different result.
+
+Make an analogy concrete. The industrial analogy can connect agent execution,
+quality checks, durable knowledge and a change in how work is organized. Explain
+what changes and support the argument with experience. Keep necessary terms
+plain and leave engine inventories in references. A method guide can finish with
+a first task; an essay can finish with the implications of its argument.
+
+When discussing another project's approach, preserve its credit and contribution
+history. Attribute quotations, link their context and distinguish the author's
+interpretation from the other project's stated position. Describe the technical
+or contribution-model disagreement without assigning motives to its authors.
+Working outlines should be visibly labeled and marked `noindex` until they
+become finished articles.
+
 ## Make figures explain a relationship
 
 Each figure should answer a question that a reader can name. Choose the visual
 form that fits it:
 
-| Relationship                              | Existing example                         | Useful form                                             |
-| ----------------------------------------- | ---------------------------------------- | ------------------------------------------------------- |
-| Analysis and verification steps           | DX-Ball sound pan                        | Flow with separate verification branches                |
-| Code across process boundaries            | Electron CSV export and Notion clipboard | HTML flow with APIs and channel names                   |
-| A mathematical transformation             | TH04's fixed and aimed rings             | SVG drawn from the angle formula                        |
-| Original instructions and readable source | DX-Ball and TH04                         | Selectable HTML code with matching step highlights      |
-| A request caused by an action             | Notes browser export                     | Flow, observed result table and script excerpt          |
-| Recovered behavior and a new experiment   | Dinosaur speed reconstruction            | Inspected code, playable demo and original-result check |
+| Relationship                              | Existing example                         | Useful form                                                      |
+| ----------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- |
+| Analysis and verification steps           | DX-Ball sound pan                        | Flow with separate verification branches                         |
+| Code across process boundaries            | Electron CSV export and Notion clipboard | HTML flow with APIs and channel names                            |
+| A mathematical transformation             | TH04's fixed and aimed rings             | SVG drawn from the angle formula                                 |
+| Original instructions and readable source | DX-Ball and TH04                         | Selectable HTML code with matching step highlights               |
+| A request caused by an action             | Notes browser export                     | Flow, observed result table and script excerpt                   |
+| Recovered behavior and a new experiment   | Dinosaur speed reconstruction            | Inspected code, playable demo and original-result check          |
+| Time blocks and changing output           | Aegis login-code reconstruction          | Adjustable clock, block number and code beside recovered methods |
 
 Use SVG or semantic HTML for diagrams with exact text, numbers and arrows.
 Generated illustrations can help explore a layout, but the published labels,
@@ -172,14 +219,28 @@ display size; scaling small labels down is not a mobile layout.
 
 The shared stylesheet defines the site. Its core colors are:
 
-| Token      | Value     | Use                              |
-| ---------- | --------- | -------------------------------- |
-| `--page`   | `#ffffff` | Page background                  |
-| `--ink`    | `#20252b` | Main text                        |
-| `--muted`  | `#5b6570` | Secondary text                   |
-| `--line`   | `#e0e5e9` | Section and component boundaries |
-| `--soft`   | `#f4f6f8` | Code and supporting surfaces     |
-| `--accent` | `#294f82` | Links and meaningful highlights  |
+| Token      | Light     | Dark      | Use                              |
+| ---------- | --------- | --------- | -------------------------------- |
+| `--page`   | `#ffffff` | `#1e1e2e` | Page background                  |
+| `--ink`    | `#20252b` | `#cdd6f4` | Main text                        |
+| `--muted`  | `#5b6570` | `#a6adc8` | Secondary text                   |
+| `--line`   | `#e0e5e9` | `#45475a` | Section and component boundaries |
+| `--soft`   | `#f4f6f8` | `#181825` | Code and supporting surfaces     |
+| `--accent` | `#294f82` | `#89b4fa` | Links and meaningful highlights  |
+
+The header's sun/moon button switches between light and dark. On the first visit,
+the site follows the system preference; a manual choice is saved for later visits
+and shared across pages and languages on that host. Without JavaScript, the site
+uses the light palette and hides the switch.
+
+`assets/theme.js` applies the choice before styles load and owns theme changes.
+The stylesheet scopes the dark palette to `data-theme="dark"` on the root,
+using [Catppuccin Mocha](https://github.com/catppuccin/palette) colors (MIT).
+Any new fixed color needs a dark counterpart in that section. Keep selector
+specificity unchanged with `:where()` when scoping component rules.
+Embedded SVGs inherit the page's `color-scheme`; canvas demos listen for
+`website-theme-change` to redraw. Check both themes, including a manual choice
+that differs from the system preference.
 
 Use the system sans-serif stack for prose and the shared monospace stack for
 code. The current container is at most 1080px wide, with article text limited to

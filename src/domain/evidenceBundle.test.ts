@@ -1,20 +1,41 @@
 import { describe, expect, it } from "vitest";
 
 import { createEvidence } from "./evidence.js";
+import { ANALYSIS_SNAPSHOT_TARGET } from "./analysisSnapshot.fixture.js";
 import {
   createEvidenceBundle,
   createImmutableEvidenceBundle,
+  describeEvidenceBundleFailure,
   evidenceBundleForTarget,
   parseEvidenceBundle,
 } from "./evidenceBundle.js";
 import {
   createResidualUnknown,
   recordUnknownInputSchema,
+  updateResidualUnknown,
 } from "./residualUnknown.js";
 
 const provider = { id: "fixture", name: "Fixture", version: "1" };
 const targetDigest = "a".repeat(64);
 const foreignDigest = "b".repeat(64);
+
+describe("evidence bundle failure classification", () => {
+  it("treats only authenticated standalone Evidence as the wrong input kind", () => {
+    const record = createEvidence(undefined, provider, {
+      operation: "observe",
+      parameters: {},
+      result: { observed: true },
+    });
+    const single = describeEvidenceBundleFailure(record, new Error("bundle"));
+    expect(single).toMatchObject({ kind: "single-record" });
+
+    const tampered = describeEvidenceBundleFailure(
+      { ...record, normalized_result: { observed: false } },
+      new Error("bundle"),
+    );
+    expect(tampered).toMatchObject({ kind: "invalid-bundle" });
+  });
+});
 
 const makeUnknown = (
   question: string,
@@ -46,12 +67,140 @@ const makeUnknown = (
     },
   });
   return {
+    input,
     evidence: mutation,
     unknown: createResidualUnknown(input, mutation.evidence_id, scopeDigest),
   };
 };
 
 describe("evidenceBundleForTarget", () => {
+  it("retains mutation evidence from other targets for complete revision histories", () => {
+    const first = makeUnknown(
+      "Target question updated elsewhere",
+      targetDigest,
+    );
+    const update = createEvidence(
+      { ...ANALYSIS_SNAPSHOT_TARGET, sha256: foreignDigest },
+      provider,
+      {
+        predicateType: "rea.residual-unknown-mutation",
+        operation: "update_unknown",
+        parameters: {
+          unknown_id: first.unknown.unknown_id,
+          expected_revision: 1,
+        },
+        result: { status: "resolved" },
+      },
+    );
+    const resolved = updateResidualUnknown(
+      first.unknown,
+      {
+        ...first.input,
+        unknown_id: first.unknown.unknown_id,
+        expected_revision: 1,
+        status: "resolved",
+        resolution: {
+          disposition: "withdrawn",
+          rationale: "Withdrawn by the analyst",
+          evidence_ids: [],
+        },
+      },
+      update.evidence_id,
+    );
+    const unrelated = makeUnknown("Unrelated foreign question", foreignDigest);
+    const bundle = parseEvidenceBundle(
+      createEvidenceBundle(
+        [first.evidence, update, unrelated.evidence],
+        [first.unknown, resolved, unrelated.unknown],
+      ),
+    );
+    const projected = evidenceBundleForTarget(bundle, targetDigest);
+    expect(parseEvidenceBundle(projected)).toEqual(
+      createEvidenceBundle([first.evidence, update], [first.unknown, resolved]),
+    );
+    expect(evidenceBundleForTarget(projected, targetDigest)).toEqual(projected);
+  });
+
+  it.each(["evidence", "relationship"])(
+    "removes whole histories and their dependents when a revision requires foreign %s",
+    (excluded) => {
+      const first = makeUnknown(
+        "Target history with an excluded revision",
+        targetDigest,
+      );
+      const foreign = makeUnknown("Excluded foreign context", foreignDigest);
+      const evidence = createEvidence(
+        { ...ANALYSIS_SNAPSHOT_TARGET, sha256: foreignDigest },
+        provider,
+        { operation: "foreign_observation", parameters: {}, result: true },
+      );
+      const updated = updateResidualUnknown(
+        first.unknown,
+        {
+          ...first.input,
+          unknown_id: first.unknown.unknown_id,
+          expected_revision: 1,
+          status: "investigating",
+          supporting_evidence_ids:
+            excluded === "evidence" ? [evidence.evidence_id] : [],
+          relationships:
+            excluded === "relationship"
+              ? [{ type: "related-to", unknown_id: foreign.unknown.unknown_id }]
+              : [],
+          resolution: null,
+        },
+        first.evidence.evidence_id,
+      );
+      const resolved = updateResidualUnknown(
+        updated,
+        {
+          ...first.input,
+          unknown_id: first.unknown.unknown_id,
+          expected_revision: 2,
+          status: "resolved",
+          resolution: {
+            disposition: "withdrawn",
+            rationale: "Foreign context removed from the latest revision",
+            evidence_ids: [],
+          },
+        },
+        first.evidence.evidence_id,
+      );
+      const child = makeUnknown(
+        "Dependent target history",
+        targetDigest,
+        first.unknown.unknown_id,
+      );
+      const unrelated = makeUnknown("Independent target history", targetDigest);
+      const bundle = parseEvidenceBundle(
+        createEvidenceBundle(
+          [
+            first.evidence,
+            foreign.evidence,
+            evidence,
+            child.evidence,
+            unrelated.evidence,
+          ],
+          [
+            first.unknown,
+            updated,
+            resolved,
+            foreign.unknown,
+            child.unknown,
+            unrelated.unknown,
+          ],
+        ),
+      );
+      expect(
+        parseEvidenceBundle(evidenceBundleForTarget(bundle, targetDigest)),
+      ).toEqual(
+        createEvidenceBundle([unrelated.evidence], [unrelated.unknown]),
+      );
+    },
+  );
+});
+
+describe("evidenceBundleForTarget relationship pruning", () => {
   it("removes dependent unknowns when their foreign-scope root is excluded", () => {
     const foreignRoot = makeUnknown("Foreign root", foreignDigest);
     const child = makeUnknown(

@@ -3,7 +3,7 @@ import { once } from "node:events";
 import { describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { HopperProcessError } from "../../../../src/domain/hopperErrors.js";
-import { HOPPER_OPERATIONS } from "../../../../src/hopper/HopperProvider.js";
+import { HOPPER_OPERATIONS } from "../../../../src/hopper/HopperProviderCapabilities.js";
 import { HopperClient } from "../../../../src/hopper/HopperClient.js";
 import type { HopperDiagnostic } from "../../../../src/hopper/HopperDiagnostics.js";
 import { providerCleanupFailure } from "../../../../src/hopper/HopperDiagnostics.js";
@@ -15,6 +15,26 @@ import {
 } from "./hopperClient.fixture.js";
 
 describe("HopperClient protocol", () => {
+  it("does not start cold and preserves normal dispatch once ready", async () => {
+    const launcher = new FixtureLauncher();
+    const client = new HopperClient({ launcher, startupTimeoutMs: 1_000 });
+    onTestFinished(async () => {
+      await client.close();
+    });
+
+    await expect(
+      client.callToolIfReady("echo", { label: "cold" }),
+    ).resolves.toBe(undefined);
+    expect(launcher.processes).toEqual([]);
+
+    const started = await client.start();
+    if (!started.ok) throw started.error;
+    await expect(
+      client.callToolIfReady("echo", { label: "warm" }),
+    ).resolves.toEqual({ ok: true, value: { label: "warm" } });
+    expect(launcher.processes).toHaveLength(1);
+  });
+
   it("sanitizes unexpected owned-cleanup exceptions", () => {
     expect(
       providerCleanupFailure(
@@ -33,7 +53,9 @@ describe("HopperClient protocol", () => {
       runId: "11111111-1111-4111-8111-111111111111",
       startupTimeoutMs: 1_000,
     });
-    onTestFinished(() => client.close());
+    onTestFinished(async () => {
+      await client.close();
+    });
 
     expect((await client.start()).ok).toBe(true);
     expect(launcher.runIds).toEqual(["11111111-1111-4111-8111-111111111111"]);
@@ -42,7 +64,9 @@ describe("HopperClient protocol", () => {
   it("keeps the native socket path below macOS sockaddr_un limits", async () => {
     const launcher = new FixtureLauncher();
     const client = new HopperClient({ launcher, startupTimeoutMs: 1_000 });
-    onTestFinished(() => client.close());
+    onTestFinished(async () => {
+      await client.close();
+    });
     const started = await client.start();
     expect(started.ok).toBe(true);
     expect(Buffer.byteLength(launcher.socketPaths[0] ?? "")).toBeLessThan(104);
@@ -131,7 +155,9 @@ describe("HopperClient response lifecycle", () => {
       launcher: new FixtureLauncher("wrong-token"),
       startupTimeoutMs: 1_000,
     });
-    onTestFinished(() => client.close());
+    onTestFinished(async () => {
+      await client.close();
+    });
     const result = await client.start();
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error._tag).toBe("HopperRemoteError");
@@ -178,7 +204,9 @@ describe("HopperClient response lifecycle", () => {
       startupTimeoutMs: 1_000,
       onDiagnostic: (event) => diagnostics.push(event),
     });
-    onTestFinished(() => client.close());
+    onTestFinished(async () => {
+      await client.close();
+    });
     await expect(client.start()).resolves.toMatchObject({ ok: true });
     const result = await client.callTool("remote_error");
     expect(result.ok).toBe(false);

@@ -1,11 +1,5 @@
 import { Cli, z } from "incur";
 
-import {
-  inspectElectronPage,
-  listElectronTargets,
-} from "../application/javascript/ElectronObservationService.js";
-import { captureElectronScenario } from "../application/javascript/ElectronActiveObservationService.js";
-import { reconcileJavaScriptRuntimeEvidence } from "../application/javascript/JavaScriptRuntimeReconciliationService.js";
 import { logCliCommand } from "../cliLogging.js";
 import {
   inspectElectronPageInputSchema,
@@ -16,7 +10,7 @@ import { AnalysisInputError } from "../domain/analysisErrorCore.js";
 import { projectAnalysisError } from "../domain/analysisErrorProjection.js";
 import { projectInputIssues } from "../domain/inputIssueProjection.js";
 import type { JsonValue } from "../domain/jsonValue.js";
-import type { Logger } from "../logger.js";
+import type { Logger } from "pino";
 import { CLI_COMMANDS } from "../cliCommandNames.js";
 import { parseCliJsonInput, resolveCliJsonPaths } from "../cliJsonInput.js";
 import {
@@ -24,24 +18,24 @@ import {
   javascriptApplicationOptions,
 } from "../cliObservationOptions.js";
 import { runCliJavaScriptApplicationAnalysis } from "./javascriptApplicationAnalysis.js";
-import type { CliResultOutput } from "./streamedJsonOutput.js";
 import { withCommandCancellation } from "./commandCancellation.js";
 
 /** Register CLI equivalents of the Electron MCP tools. */
 export const registerElectronCommands = (
   cli: ReturnType<typeof Cli.create>,
   logger: Logger,
-  resultOutput?: CliResultOutput,
+  environment: Readonly<Record<string, string | undefined>>,
 ): void => {
   registerElectronObservationCommands(cli, logger);
-  registerElectronActiveCommand(cli, logger);
-  registerJavaScriptApplicationCommand(cli, logger, resultOutput);
+  registerElectronActiveCommand(cli, logger, environment);
+  registerJavaScriptApplicationCommand(cli, logger);
   registerJavaScriptRuntimeReconciliationCommand(cli, logger);
 };
 
 const registerElectronActiveCommand = (
   cli: ReturnType<typeof Cli.create>,
   logger: Logger,
+  environment: Readonly<Record<string, string | undefined>>,
 ): void => {
   cli.command(CLI_COMMANDS.captureElectronScenario, {
     description: "Run one owned Electron scenario with cancellable actions",
@@ -76,10 +70,12 @@ const registerElectronActiveCommand = (
                 parsed.error.issues,
                 input.value,
               );
+            const { captureElectronScenario } =
+              await import("../application/javascript/ElectronActiveObservationService.js");
             const { createElectronScenarioProvider } =
               await import("../composition/electronScenario.js");
             const result = await captureElectronScenario(
-              createElectronScenarioProvider(),
+              createElectronScenarioProvider(environment),
               parsed.data,
               { signal },
             );
@@ -114,6 +110,8 @@ const registerJavaScriptRuntimeReconciliationCommand = (
             "reconcile_javascript_runtime",
           );
           if (!input.ok) return input.error;
+          const { reconcileJavaScriptRuntimeEvidence } =
+            await import("../application/javascript/JavaScriptRuntimeReconciliationService.js");
           const result = reconcileJavaScriptRuntimeEvidence(input.value);
           return result.ok ? result.value : cliError(result.error);
         },
@@ -146,6 +144,8 @@ const registerElectronTargetList = (
           cdp_endpoint: args.endpoint,
         });
         if (!parsed.success) return inputError("list_electron_targets");
+        const { listElectronTargets } =
+          await import("../application/javascript/ElectronObservationService.js");
         const result = await listElectronTargets(context.provider, parsed.data);
         return result.ok ? result.value : cliError(result.error);
       }),
@@ -173,6 +173,8 @@ const registerElectronPageInspection = (
           include_script_sources: options.includeScriptSources,
         });
         if (!parsed.success) return inputError("inspect_electron_page");
+        const { inspectElectronPage } =
+          await import("../application/javascript/ElectronObservationService.js");
         const result = await inspectElectronPage(context.provider, parsed.data);
         return result.ok ? result.value : cliError(result.error);
       }),
@@ -182,7 +184,6 @@ const registerElectronPageInspection = (
 const registerJavaScriptApplicationCommand = (
   cli: ReturnType<typeof Cli.create>,
   logger: Logger,
-  resultOutput?: CliResultOutput,
 ): void => {
   cli.command(CLI_COMMANDS.analyzeJavaScriptApplication, {
     description:
@@ -191,18 +192,33 @@ const registerJavaScriptApplicationCommand = (
       path: z.string().describe("ASAR or extracted application path"),
     }),
     options: javascriptApplicationOptions,
-    run: ({ args, options, format }) =>
+    run: ({ args, options }) =>
       withCommandCancellation((signal) =>
         logCliCommand(logger, CLI_COMMANDS.analyzeJavaScriptApplication, () =>
           runCliJavaScriptApplicationAnalysis(
-            { input_path: args.path, format: options.artifactFormat },
-            resultOutput === undefined
-              ? undefined
-              : {
-                  output: resultOutput,
-                  command: CLI_COMMANDS.analyzeJavaScriptApplication,
-                  format,
-                },
+            {
+              input_path: args.path,
+              format: options.artifactFormat,
+              integrity_policy: options.integrityPolicy,
+              ...(options.maxSemanticNodes === undefined
+                ? {}
+                : { max_semantic_nodes: options.maxSemanticNodes }),
+              ...(options.maxSemanticNodesPerFile === undefined
+                ? {}
+                : {
+                    max_semantic_nodes_per_file:
+                      options.maxSemanticNodesPerFile,
+                  }),
+              ...(options.sourcePath === undefined
+                ? {}
+                : { source_paths: options.sourcePath }),
+              ...(options.maxHeapMb === undefined
+                ? {}
+                : { max_heap_mb: options.maxHeapMb }),
+              ...(options.analysisTimeoutMs === undefined
+                ? {}
+                : { analysis_timeout_ms: options.analysisTimeoutMs }),
+            },
             signal,
           ),
         ),
