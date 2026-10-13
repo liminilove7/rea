@@ -1,0 +1,139 @@
+{
+  "source": "Bounded original Game.dll local comparison after synthetic uint16 cache edits",
+  "sourcePath": "samples/Game.dll",
+  "targetSha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786",
+  "afterSha256": "834300c2a85b6427de2d4a4be2931ff2ea59fd70f48f31754f5c2181753bd786",
+  "nativeGameExecuted": false,
+  "syntheticCpuInstructionsExecuted": true,
+  "versions": {
+    "unicorn": "2.1.4",
+    "capstone": "5.0.7"
+  },
+  "trials": [
+    {
+      "label": "baseline",
+      "syntheticNow": 1150,
+      "previousAcceptedTime": 1000,
+      "cacheWord": 200,
+      "thresholdLow32": 1200,
+      "result": "rejected-local-comparison",
+      "trace": [
+        {
+          "rva": "0x6a15e",
+          "bytes": "0fb7057b7ad000",
+          "instruction": "movzx eax, word ptr [rip + 0xd07a7b]"
+        },
+        {
+          "rva": "0x6a165",
+          "bytes": "0386881c0000",
+          "instruction": "add eax, dword ptr [rsi + 0x1c88]"
+        },
+        {
+          "rva": "0x6a16b",
+          "bytes": "3be8",
+          "instruction": "cmp ebp, eax"
+        },
+        {
+          "rva": "0x6a16d",
+          "bytes": "0f86e5010000",
+          "instruction": "jbe 0x18006a358"
+        }
+      ]
+    },
+    {
+      "label": "same-clock-reduced-cache-word",
+      "syntheticNow": 1150,
+      "previousAcceptedTime": 1000,
+      "cacheWord": 100,
+      "thresholdLow32": 1100,
+      "result": "passed-local-comparison",
+      "trace": [
+        {
+          "rva": "0x6a15e",
+          "bytes": "0fb7057b7ad000",
+          "instruction": "movzx eax, word ptr [rip + 0xd07a7b]"
+        },
+        {
+          "rva": "0x6a165",
+          "bytes": "0386881c0000",
+          "instruction": "add eax, dword ptr [rsi + 0x1c88]"
+        },
+        {
+          "rva": "0x6a16b",
+          "bytes": "3be8",
+          "instruction": "cmp ebp, eax"
+        },
+        {
+          "rva": "0x6a16d",
+          "bytes": "0f86e5010000",
+          "instruction": "jbe 0x18006a358"
+        }
+      ]
+    },
+    {
+      "label": "after-a-hypothetical-successful-request",
+      "syntheticNow": 1200,
+      "previousAcceptedTime": 1150,
+      "cacheWord": 100,
+      "thresholdLow32": 1250,
+      "result": "rejected-local-comparison",
+      "trace": [
+        {
+          "rva": "0x6a15e",
+          "bytes": "0fb7057b7ad000",
+          "instruction": "movzx eax, word ptr [rip + 0xd07a7b]"
+        },
+        {
+          "rva": "0x6a165",
+          "bytes": "0386881c0000",
+          "instruction": "add eax, dword ptr [rsi + 0x1c88]"
+        },
+        {
+          "rva": "0x6a16b",
+          "bytes": "3be8",
+          "instruction": "cmp ebp, eax"
+        },
+        {
+          "rva": "0x6a16d",
+          "bytes": "0f86e5010000",
+          "instruction": "jbe 0x18006a358"
+        }
+      ]
+    },
+    {
+      "label": "after-enough-time",
+      "syntheticNow": 1251,
+      "previousAcceptedTime": 1150,
+      "cacheWord": 100,
+      "thresholdLow32": 1250,
+      "result": "passed-local-comparison",
+      "trace": [
+        {
+          "rva": "0x6a15e",
+          "bytes": "0fb7057b7ad000",
+          "instruction": "movzx eax, word ptr [rip + 0xd07a7b]"
+        },
+        {
+          "rva": "0x6a165",
+          "bytes": "0386881c0000",
+          "instruction": "add eax, dword ptr [rsi + 0x1c88]"
+        },
+        {
+          "rva": "0x6a16b",
+          "bytes": "3be8",
+          "instruction": "cmp ebp, eax"
+        },
+        {
+          "rva": "0x6a16d",
+          "bytes": "0f86e5010000",
+          "instruction": "jbe 0x18006a358"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Fragment starts after protected clock and 05D140 adjustment with constructed registers.",
+    "The hypothetical previous accepted time is a constructed next trial, not a completed native request.",
+    "Target checks, animation events, request transmission and server acceptance are outside this experiment."
+  ]
+}

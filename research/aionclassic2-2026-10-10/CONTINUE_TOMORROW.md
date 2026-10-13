@@ -2,8 +2,8 @@
 
 ## 从这里继续
 
-- 用户指定当前重点为[移速动作与攻击速度修改研究](reports/AION移速动作与攻速修改研究.md)。先追 `460440` 的同步速度及 `+6C8/+6CC/+6D0` 派生关系、`4BC390` 的动画比值和 `061C20→042860→06A0B0` 的攻击调度；原始指令软件CPU实验已保存，不与原生游戏修改混算。实体接口调用前接收对象来自组件 `+8`，不能用 Player 自身相同虚槽代替。
-- GitHub Release的bin64包已本地还原到 `client/programs/aion-bin64/bin64`，有52个文件，不能因为原F盘目录消失就把静态分析限制在samples四模块。已实际分析CryEntitySystem与CryPhysics，并核对CEntity主虚表物理getter和CLivingEntity状态/运动输入槽。模式3输入片段写物理对象 `+178/+17C/+180`；三组Game向量限制及Physics字段写入实验已保存。继续沿物理积分、动画执行和实际对象类型查证；这些包不等于完整可启动的客户端。
+- 用户指定当前重点为[移速动作与攻击速度修改研究](reports/AION移速动作与攻速修改研究.md)。已追 `460440` 的速度及 `+6C8/+6CC/+6D0` 派生关系、`4BC390` 的动画比值、`061C20→042860→06A0B0` 的攻击调度，以及 `493940→CEntity→CryCharInstance` 动画层倍率写入。`D71BE0` 同输入前后离线实验可改变本地门槛判断，不代表攻击完成。原始指令软件CPU实验不与原生游戏修改混算。实体接口调用前接收对象来自组件 `+8`，不能用 Player 自身相同虚槽代替。
+- GitHub Release的bin64包已本地还原到 `client/programs/aion-bin64/bin64`，有52个文件，不能因为原F盘目录消失就把静态分析限制在samples四模块。已实际分析CryEntitySystem、CryPhysics与CryAnimation。CEntity 的动画子接口 `+20` 返回角色动画对象；CryCharInstance主虚表 `+360` 把倍率写入实例及有效层。CLivingEntity 模式3输入片段写物理对象 `+178/+17C/+180`。继续沿物理积分、实际对象/动作层、客户端请求和测试服接受情况查证；这些包不等于完整可启动的客户端。
 
 - 当前工作改为持续逆向，不再按轮次交付，主记录为 [AION条件技能与施放机制分析](reports/AION持续分析.md)，新增原始结果见 `evidence/continuous/`。
 - 已连接 `S_ATTACK` 收到标志→受击对象→`476770→4BC8D0` 资格设置→`61EE50` 操作检查→施放和 Socket 发送。Block 对应角色 `0x80/+0x2F8`，`4BCA40` 到期清除；成功通知的 `0x20` 标志决定前置连招保存，`3B2500` 按 delay_id 更新同组冷却。选项已追到提交与本地 opt 文件流，CrySystem 的计时器已取得实际 REA 指令。全局使用消耗、保护桩 API 和官方判定仍未知。
