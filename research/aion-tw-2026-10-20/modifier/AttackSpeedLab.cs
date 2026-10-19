@@ -329,9 +329,7 @@ namespace AttackSpeedLab {
     private void Append(string text) { output.AppendText(DateTime.Now.ToString("HH:mm:ss")+" "+text+Environment.NewLine); }
     private void RefreshTargets() {
       targets.Items.Clear();
-      foreach(Process p in Process.GetProcessesByName("aion")) using(p) {
-        try { if(String.Equals(p.MainModule.FileName,Profile.GamePath,StringComparison.OrdinalIgnoreCase)) targets.Items.Add(p.Id); } catch(Win32Exception) { } catch(InvalidOperationException) { }
-      }
+      foreach(int pid in Program.DiscoverTargets()) targets.Items.Add(pid);
       if(targets.Items.Count>0) targets.SelectedIndex=0;
       Append("找到 "+targets.Items.Count+" 个指定路径的 aion.bin；刷新不访问目标内存。");
     }
@@ -361,6 +359,18 @@ namespace AttackSpeedLab {
   }
 
   internal static class Program {
+    internal static bool CandidateName(string name) {
+      // Windows preserves the .bin extension in ProcessName; it is not always aion.
+      return name.Equals("aion.bin",StringComparison.OrdinalIgnoreCase) || name.Equals("aion",StringComparison.OrdinalIgnoreCase);
+    }
+    internal static List<int> DiscoverTargets() {
+      var result=new List<int>();
+      foreach(Process p in Process.GetProcesses()) using(p) {
+        try { if(CandidateName(p.ProcessName) && String.Equals(p.MainModule.FileName,Profile.GamePath,StringComparison.OrdinalIgnoreCase)) result.Add(p.Id); }
+        catch(Win32Exception) { } catch(InvalidOperationException) { }
+      }
+      return result;
+    }
     internal static string Inspect(int pid) {
       Target target=Target.Capture(pid);
       using(var m=new NativeMemory(pid,target.Path,target.Birth,false)) {
@@ -372,6 +382,7 @@ namespace AttackSpeedLab {
     private static int Main(string[] args) {
       try {
         if(args.Length==2 && args[0]=="--self-test") { SelfTest.Run(args[1]); return 0; }
+        if(args.Length==2 && args[0]=="--discover") { File.WriteAllText(args[1],new JavaScriptSerializer().Serialize(new { targets=DiscoverTargets(),memoryWritten=false }),new UTF8Encoding(false)); return 0; }
         if(args.Length==2 && args[0]=="--ui-preview") {
           Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
           using(var form=new LabForm(false)) form.RenderPreview(args[1]); return 0;
@@ -404,6 +415,7 @@ namespace AttackSpeedLab {
     internal static void Run(string output) {
       var checks=new List<string>();
       Action<bool,string> check=delegate(bool ok,string name) { if(!ok) throw new Exception(name); checks.Add(name); };
+      check(Program.CandidateName("Aion.bin") && Program.CandidateName("aion") && !Program.CandidateName("aioncefprocess"),"Windows observed Aion.bin process name is discoverable; CEF excluded");
       IntPtr scratch=Marshal.AllocHGlobal(0x1A00000);
       try {
         byte[] zero=new byte[0x1A00000]; Marshal.Copy(zero,0,scratch,zero.Length);
