@@ -1,0 +1,157 @@
+{
+  "title": "AION TW 客户端：攻击速度与移动速度第一轮逆向",
+  "client_root": "D:/Workspace/AION_TW/DeuLuncher",
+  "runtime_directory": "bin56",
+  "launcher": "Aion(賽季beta1.0).exe",
+  "sample_sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+  "preferred_imagebase": "0x180000000",
+  "method": "REA 6.1.0 MCP → IDA 8.3 offline copied database; auxiliary filesystem/PAK/PE facts labeled separately",
+  "fields": [
+    {
+      "name": "攻击间隔同步值",
+      "location": "B + 0x142DB40",
+      "type": "uint16",
+      "observed": "状态同步缓存；属性面板按此值÷1000显示；攻击请求路径用作时间门槛。",
+      "writer": "S_STATUS(1) → RVA 0x7E7180",
+      "reader": "RVA 0x16D600；0x6D6F90 → 0x530650",
+      "limit": "不是已验证的服务器攻击间隔；新状态同步会再次写入。",
+      "evidence": [
+        "status-handler-insns.evidence.json",
+        "attack-interval-access-insns.evidence.json",
+        "stats-assembler-insns.evidence.json",
+        "seed-6-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "攻击间隔镜像",
+      "location": "B + 0x142DC10",
+      "type": "uint32",
+      "observed": "S_STATUS把同一收到间隔的低16位扩展到32位；请求路径比较镜像与当前同步值。",
+      "writer": "RVA 0x7E7568",
+      "reader": "RVA 0x16D706 起",
+      "limit": "并非独立服务器概率或一项已确认可绕过的保护开关。",
+      "evidence": [
+        "status-handler-insns.evidence.json",
+        "attack-interval-access-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "攻击相关计时状态",
+      "location": "A + 0x1E90",
+      "type": "uint32",
+      "observed": "与当前计时值T、同步间隔I共同参与严格大于比较；后续请求路径把T写回。",
+      "writer": "RVA 0x16D8A0",
+      "reader": "RVA 0x16D6AE–0x16D6BD",
+      "limit": "A是该控制函数的对象参数，尚未与C或本地玩家固定指针链作等同验证。T的来源和物理单位未闭合。",
+      "evidence": [
+        "attack-interval-access-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "动画间隔U",
+      "location": "C + 0x530",
+      "type": "uint16",
+      "observed": "S_ACTION子类型0x23写入；cattack前缀分支读出后作为U/V的分子。",
+      "writer": "RVA 0x7E9784；初始化路径0x8BDD60",
+      "reader": "RVA 0x89AFA0",
+      "limit": "U的独立业务名称尚未确认；不要直接命名为基础攻速。",
+      "evidence": [
+        "action-consumer-insns.evidence.json",
+        "field-candidate-7-insns.evidence.json",
+        "seed-4-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "动画间隔V",
+      "location": "C + 0x532",
+      "type": "uint16",
+      "observed": "S_ACTION子类型0x23写入；U、V均非零时该cattack分支计算U/V，再乘C+0x51C。",
+      "writer": "RVA 0x7E978C；初始化路径0x8BDD60",
+      "reader": "RVA 0x89B4D5–0x89B689",
+      "limit": "这个分支的动画倍率不代表服务器接受的出手频率；其他动作分支另有逻辑。",
+      "evidence": [
+        "action-consumer-insns.evidence.json",
+        "seed-4-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移动速度",
+      "location": "C + 0x38；C + 0x70C",
+      "type": "float32",
+      "observed": "同一写入器把S写到两处；后者存在移动/动画消费者，前者被属性快照读取。",
+      "writer": "RVA 0x89ADB0，虚表槽+0x260",
+      "reader": "0x6D6F90；0x861B00附近、0x879D50、0x88C210、0x89A060等保留输出",
+      "limit": "C来自实体组件查询，不是Game.dll基址；某条件分支会先把传入值改为6.0，条件含义未知。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "speed-dispatch-insns.evidence.json",
+        "stats-assembler-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移速平方缓存",
+      "location": "C + 0x710",
+      "type": "float32",
+      "observed": "同一写入器计算float32(S×S)后写入。",
+      "writer": "RVA 0x89AE0B–0x89AE1C",
+      "reader": "本轮未审完该字段的消费者",
+      "limit": "只改S而不更新派生状态，不能等同于现有写入器的效果。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移速倒数缓存",
+      "location": "C + 0x714",
+      "type": "float32",
+      "observed": "常规有限值分支写入float32(1/S)；严格落在±epsilon之间时写1，epsilon≈0.0001。",
+      "writer": "RVA 0x89AE24–0x89AE4B",
+      "reader": "0x8A2F21 maxss读取路径已记录",
+      "limit": "负值、非有限值和物理移动效果没有实测；演算台只演示有限非负值。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "move-consumer-7-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "本地速度镜像",
+      "location": "B + 0x142DC14",
+      "type": "float32",
+      "observed": "对象关联实体的16位句柄与本地句柄相等时，写入同一S。",
+      "writer": "RVA 0x89AF4C–0x89AF5E",
+      "reader": "本轮xref返回写入点，未证明它本身驱动运动",
+      "limit": "不能把镜像地址当完整移动速度修改方案。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "speed-cache-xrefs.evidence.json"
+      ]
+    }
+  ],
+  "verification": {
+    "all_passed": true,
+    "check_count": 281,
+    "saved_request_records": 238,
+    "saved_failed_request_records": 11,
+    "evidence_files": 225,
+    "unique_evidence_ids": 217,
+    "identified_procedures": 44646,
+    "instruction_entrypoints_observed": 57,
+    "browser_checks": 21,
+    "browser_all_passed": true
+  },
+  "scope": {
+    "target_executed": false,
+    "attached_to_game": false,
+    "original_client_modified": false,
+    "server_source_available": false,
+    "whole_client_semantics_complete": false,
+    "runtime_modifier_verified": false
+  },
+  "unknowns": [
+    "游戏机制正式版本号；bin56与启动器beta标签不构成版本证明。",
+    "本地角色C的稳定基址/指针链及运行中地址，A/C/分类2的P是否同址。",
+    "计时函数0x1819EDEA2的最终来源和物理单位；保护链已追到0x1819FF314调用0x181A03A83。",
+    "服务器是否校验、如何修正、速度上限与真实伤害/出手次数。",
+    "所有其他DLL、启动器完整语义、完整脱壳和全部函数语义。"
+  ]
+}

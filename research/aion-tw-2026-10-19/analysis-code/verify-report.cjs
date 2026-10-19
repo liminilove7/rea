@@ -1,0 +1,59 @@
+const fs=require('node:fs');
+const assert=require('node:assert/strict');
+const {pathToFileURL}=require('node:url');
+const path=require('node:path');
+const {chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const root='D:/RVE/.codex/local/aion-tw-20261019';
+const checks=[];
+function check(name,value){assert.ok(value,name);checks.push({name,passed:true});}
+(async()=>{
+ const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});
+ const errors=[],network=[];
+ try{
+  const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true});
+  page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>{if(/^https?:/.test(r.url()))network.push(r.url());});
+  await page.goto(pathToFileURL(root+'/AION_TW速度分析报告.html').href);
+  await page.waitForFunction(()=>window.studyAPI);
+  check('Seven sections rendered',await page.locator('section').count()===7);
+  check('Nine typed field descriptions rendered',await page.locator('#fields tbody tr').count()===9);
+  check('Flow diagram rendered',await page.locator('svg').count()===1);
+  check('Exact module hash visible',(await page.locator('header').textContent()).includes('b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7'));
+  check('Whole client completion is explicitly unknown',(await page.locator('#boundaries').textContent()).includes('未完成所有语义审计'));
+  const links=await page.locator('a[href]').evaluateAll(xs=>xs.map(a=>a.getAttribute('href')));
+  check('All relative evidence links exist',links.every(h=>fs.existsSync(path.join(root,h))));
+  check('Desktop has no horizontal overflow',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:root+'/preview-desktop.png'});
+  await page.locator('#lab').scrollIntoViewIfNeeded();
+  check('Equal threshold stays closed',(await page.locator('#result').textContent()).includes('尚未通过'));
+  await page.locator('#now').fill('2801');
+  check('One tick later opens gate',(await page.locator('#result').textContent()).includes('允许后续路径'));
+  await page.locator('#speed').fill('9');
+  check('Changed speed updates square',(await page.locator('#result').textContent()).includes('S² = 81'));
+  const examples=await page.evaluate(()=>{
+    const p={speed:6,u:2000,v:1500,scale:1,interval:1800,last:1000,now:2800};
+    return {normal:studyAPI.calculate(p),zero:studyAPI.calculate({...p,speed:0,u:0}),wrap:studyAPI.calculate({...p,now:4294967285,last:4294967280,interval:40})};
+  });
+  check('Zero speed uses reciprocal fallback one',examples.zero.inverse===1);
+  check('Zero animation interval uses one multiplier',examples.zero.cattack_factor===1);
+  check('32-bit addition order preserved',examples.wrap.threshold===24&&examples.wrap.gate_open);
+  await page.locator('#v').fill('65536');
+  check('Invalid uint16 rejected',(await page.locator('#result').textContent()).includes('uint16'));
+  await page.locator('#restore').click();
+  check('Restore resets example',await page.locator('#speed').inputValue()==='6'&&await page.locator('#now').inputValue()==='2800');
+  const download=page.waitForEvent('download');await page.locator('#export').click();
+  await(await download).saveAs(root+'/example-speed-scenario.json');
+  const scenario=JSON.parse(fs.readFileSync(root+'/example-speed-scenario.json','utf8'));
+  check('Export is explicitly offline and hash bound',scenario.scope.includes('no game process access')&&scenario.sample_sha256=== 'b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7');
+  await page.screenshot({path:root+'/preview-learning.png'});
+  await page.setViewportSize({width:390,height:844});await page.evaluate(()=>scrollTo(0,0));
+  check('Mobile has no horizontal overflow',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:root+'/preview-mobile.png'});
+  await page.locator('#fields').scrollIntoViewIfNeeded();
+  check('Mobile field table stays within viewport',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.emulateMedia({media:'print'});
+  check('Print retains evidence table',await page.locator('#fields tbody tr').count()===9);
+  check('No external network requests',network.length===0);check('No JavaScript errors',errors.length===0);
+  fs.writeFileSync(root+'/browser-verification.json',JSON.stringify({allPassed:true,checks,errors,network},null,2));
+  console.log(JSON.stringify({allPassed:true,checks:checks.length,externalRequests:network.length}));
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});
