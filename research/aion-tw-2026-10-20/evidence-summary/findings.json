@@ -1,0 +1,858 @@
+{
+  "title": "AION TW 客户端：攻击速度与移动速度第一轮逆向",
+  "client_root": "D:/Workspace/AION_TW/DeuLuncher",
+  "runtime_directory": "bin56",
+  "launcher": "Aion(賽季beta1.0).exe",
+  "sample_sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+  "preferred_imagebase": "0x180000000",
+  "method": "REA 6.1.0 MCP → IDA 8.3 offline copied database; auxiliary filesystem/PAK/PE facts labeled separately",
+  "fields": [
+    {
+      "name": "攻击间隔同步值",
+      "location": "B + 0x142DB40",
+      "type": "uint16",
+      "observed": "状态同步缓存；属性面板按此值÷1000显示；攻击请求路径用作时间门槛。",
+      "writer": "S_STATUS(1) → RVA 0x7E7180",
+      "reader": "RVA 0x16D600；0x6D6F90 → 0x530650",
+      "limit": "不是已验证的服务器攻击间隔；新状态同步会再次写入。",
+      "evidence": [
+        "status-handler-insns.evidence.json",
+        "attack-interval-access-insns.evidence.json",
+        "stats-assembler-insns.evidence.json",
+        "seed-6-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "攻击间隔镜像",
+      "location": "B + 0x142DC10",
+      "type": "uint32",
+      "observed": "S_STATUS把同一收到间隔的低16位扩展到32位；请求路径比较镜像与当前同步值。",
+      "writer": "RVA 0x7E7568",
+      "reader": "RVA 0x16D706 起",
+      "limit": "并非独立服务器概率或一项已确认可绕过的保护开关。",
+      "evidence": [
+        "status-handler-insns.evidence.json",
+        "attack-interval-access-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "攻击相关计时状态",
+      "location": "A + 0x1E90",
+      "type": "uint32",
+      "observed": "与当前计时值T、同步间隔I共同参与严格大于比较；后续请求路径把T写回。",
+      "writer": "RVA 0x16D8A0",
+      "reader": "RVA 0x16D6AE–0x16D6BD",
+      "limit": "A是该控制函数的对象参数，尚未与C或本地玩家固定指针链作等同验证。T的来源和物理单位未闭合。",
+      "evidence": [
+        "attack-interval-access-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "动画间隔U",
+      "location": "C + 0x530",
+      "type": "uint16",
+      "observed": "S_ACTION子类型0x23写入；cattack前缀分支读出后作为U/V的分子。",
+      "writer": "RVA 0x7E9784；初始化路径0x8BDD60",
+      "reader": "RVA 0x89AFA0",
+      "limit": "U的独立业务名称尚未确认；不要直接命名为基础攻速。",
+      "evidence": [
+        "action-consumer-insns.evidence.json",
+        "field-candidate-7-insns.evidence.json",
+        "seed-4-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "动画间隔V",
+      "location": "C + 0x532",
+      "type": "uint16",
+      "observed": "S_ACTION子类型0x23写入；U、V均非零时该cattack分支计算U/V，再乘C+0x51C。",
+      "writer": "RVA 0x7E978C；初始化路径0x8BDD60",
+      "reader": "RVA 0x89B4D5–0x89B689",
+      "limit": "这个分支的动画倍率不代表服务器接受的出手频率；其他动作分支另有逻辑。",
+      "evidence": [
+        "action-consumer-insns.evidence.json",
+        "seed-4-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移动速度",
+      "location": "C + 0x38；C + 0x70C",
+      "type": "float32",
+      "observed": "同一写入器把S写到两处；后者存在移动/动画消费者，前者被属性快照读取。",
+      "writer": "RVA 0x89ADB0，虚表槽+0x260",
+      "reader": "0x6D6F90；0x861B00附近、0x879D50、0x88C210、0x89A060等保留输出",
+      "limit": "C来自实体组件查询，不是Game.dll基址；某条件分支会先把传入值改为6.0，条件含义未知。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "speed-dispatch-insns.evidence.json",
+        "stats-assembler-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移速平方缓存",
+      "location": "C + 0x710",
+      "type": "float32",
+      "observed": "同一写入器计算float32(S×S)后写入。",
+      "writer": "RVA 0x89AE0B–0x89AE1C",
+      "reader": "本轮未审完该字段的消费者",
+      "limit": "只改S而不更新派生状态，不能等同于现有写入器的效果。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "移速倒数缓存",
+      "location": "C + 0x714",
+      "type": "float32",
+      "observed": "常规有限值分支写入float32(1/S)；严格落在±epsilon之间时写1，epsilon≈0.0001。",
+      "writer": "RVA 0x89AE24–0x89AE4B",
+      "reader": "0x8A2F21 maxss读取路径已记录",
+      "limit": "负值、非有限值和物理移动效果没有实测；演算台只演示有限非负值。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "move-consumer-7-insns.evidence.json"
+      ]
+    },
+    {
+      "name": "本地速度镜像",
+      "location": "B + 0x142DC14",
+      "type": "float32",
+      "observed": "对象关联实体的16位句柄与本地句柄相等时，写入同一S。",
+      "writer": "RVA 0x89AF4C–0x89AF5E",
+      "reader": "本轮xref返回写入点，未证明它本身驱动运动",
+      "limit": "不能把镜像地址当完整移动速度修改方案。",
+      "evidence": [
+        "animation-wrapper-insns.evidence.json",
+        "speed-cache-xrefs.evidence.json"
+      ]
+    }
+  ],
+  "verification": {
+    "all_passed": true,
+    "check_count": 281,
+    "saved_request_records": 238,
+    "saved_failed_request_records": 11,
+    "evidence_files": 225,
+    "unique_evidence_ids": 217,
+    "identified_procedures": 44646,
+    "instruction_entrypoints_observed": 57,
+    "browser_checks": 23,
+    "browser_all_passed": true
+  },
+  "scope": {
+    "target_executed": false,
+    "attached_to_game": false,
+    "original_client_modified": false,
+    "server_source_available": false,
+    "whole_client_semantics_complete": false,
+    "runtime_modifier_verified": false,
+    "phase": "Original offline static phase only; runtime observations are separately scoped below"
+  },
+  "unknowns": [
+    "游戏机制正式版本号；bin56与启动器beta标签不构成版本证明。",
+    "当前玩家A/C/P同址已验证，C曾在同PID变为0x73956000；每次沿实体表重定位。700往返只有出刀主观证据，服务器接受命中频率仍未知。",
+    "计时函数0x1819EDEA2的最终来源和物理单位；保护链已追到0x1819FF314调用0x181A03A83。",
+    "服务器是否校验、如何修正、速度上限与真实伤害/出手次数。",
+    "所有其他DLL、启动器完整语义、完整脱壳和全部函数语义。"
+  ],
+  "runtime_observation": {
+    "method": "REA static instructions plus auxiliary Win32 read-only observations, not an REA runtime memory provider",
+    "pid": 44576,
+    "process_started_utc": "2026-10-19T14:23:05.3513363Z",
+    "captured_utc": "2026-10-19T14:44:31.4601510Z",
+    "module_base": "0x3760000",
+    "character": {
+      "Entity": "0xc442b000",
+      "C": "0xc3b14000",
+      "P": "0xc3b14000",
+      "Category1And2SamePointer": true,
+      "EqualityScope": "This observed local entity and current getter; not a universal claim for every entity type",
+      "Vtable": "0x44b3940",
+      "VtableRVA": "0xd53940",
+      "SpeedSetter": "0x3ffadb0",
+      "SpeedSetterRVA": "0x89adb0",
+      "PanelSpeed": 6.0,
+      "Speed": 6.0,
+      "Square": 36.0,
+      "Inverse": 0.16666667,
+      "U": 1200,
+      "V": 1200,
+      "AnimationScale": 1.0
+    },
+    "received_interval": 1200,
+    "memory_written": false,
+    "remote_functions_invoked": false,
+    "atomic_snapshot": false,
+    "unknowns": [
+      "Pointers after relog/relaunch or entity recreation",
+      "Control context A identity and protected clock source/unit",
+      "Accepted server attack/movement rate and limits",
+      "Effects of local changes; no modification experiment performed"
+    ],
+    "verification": {
+      "passed": true,
+      "checks": 37
+    }
+  },
+  "runtime_field_trial": {
+    "method": "Auxiliary explicit single-field Win32 write and independent read-only restoration check; REA provides preceding static evidence",
+    "field_write_verified": true,
+    "test_interval": 1100,
+    "original_interval": 1200,
+    "restored_and_independently_verified": true,
+    "samples": [
+      {
+        "ElapsedSeconds": 0.078,
+        "AtUtc": "2026-10-19T14:57:47.4246001Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      },
+      {
+        "ElapsedSeconds": 5.12,
+        "AtUtc": "2026-10-19T14:57:52.4643618Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      },
+      {
+        "ElapsedSeconds": 15.158,
+        "AtUtc": "2026-10-19T14:58:02.5025322Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      },
+      {
+        "ElapsedSeconds": 30.176,
+        "AtUtc": "2026-10-19T14:58:17.5210223Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      },
+      {
+        "ElapsedSeconds": 45.208,
+        "AtUtc": "2026-10-19T14:58:32.5528275Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      },
+      {
+        "ElapsedSeconds": 60.278,
+        "AtUtc": "2026-10-19T14:58:47.6229600Z",
+        "Interval": 1100,
+        "Mirror": 1200
+      }
+    ],
+    "user_panel_interval_seconds": 1.2,
+    "ui_change_observed": false,
+    "snapshot_alignment": "User screenshot file timestamp falls in the trial interval; exact capture-to-memory synchronization unverified",
+    "attack_effect": "Unknown; no combat experiment requested in this trial",
+    "automatic_reapplication": false,
+    "changed_fields": [
+      "B+0x142DB40 uint16 only, followed by original-value restoration"
+    ],
+    "unchanged_by_writer": [
+      "interval mirror",
+      "animation U/V",
+      "movement speed",
+      "packet flags",
+      "protection code/state"
+    ],
+    "limitations": [
+      "Sequential reads do not prove uninterrupted persistence between sample points.",
+      "Unchanged panel does not prove an unchanged attack request interval, a wrong address, or server protection.",
+      "UI snapshot/refresh path is a candidate explanation, not established cause.",
+      "RVA0x16D72E..0x16D74C conditionally sets outgoing argument bit7 on interval/mirror difference; its business meaning remains unknown."
+    ],
+    "next": "Trace active panel snapshot ownership and refresh/invalidation; do not change additional fields to hide the discrepancy.",
+    "apply_utc": "2026-10-19T14:57:47.3393276Z",
+    "completed_utc": "2026-10-19T14:58:47.7007803Z",
+    "handles_closed": true
+  },
+  "runtime_animation_trial": {
+    "scope": "Current client Player and audited cattack prefix branch only; gameplay animation feedback is subjective",
+    "game_sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+    "process_birth_utc": "2026-10-19T14:23:05.3513363Z",
+    "character_base": "0xc3b14000",
+    "field_offset": "0x530",
+    "field_address": "0xc3b14530",
+    "type": "uint16",
+    "values": [
+      1200,
+      1500,
+      1200
+    ],
+    "other_animation_field_offset": "0x532",
+    "other_animation_value": 1200,
+    "scale": 1,
+    "predicted_audited_branch_multipliers": [
+      1,
+      1.25,
+      1
+    ],
+    "user_feedback": {
+      "source": "Direct user replies during this conversation",
+      "level_reported": 5,
+      "during_trial": "出手动画明显更快",
+      "after_restoration": "已恢复原来的节奏",
+      "observation_type": "Subjective gameplay feedback; no frame timing or server hit-count measurement",
+      "sequence": [
+        "baseline original U1200",
+        "trial U1500",
+        "restored U1200"
+      ]
+    },
+    "client_animation_effect_observed": true,
+    "exact_visual_speed_ratio_measured": false,
+    "server_accepted_attack_rate_verified": false,
+    "damage_rate_verified": false,
+    "current_player_A_C_P_same_pointer_verified": true,
+    "attack_timing_offset": "0x1E90",
+    "baseline": {
+      "samples": 412,
+      "timing_state_changes": 25,
+      "negative_raw_delta_present": true,
+      "not_equivalent_to_attack_count": true,
+      "possible_level_transition_uncontrolled": true
+    },
+    "modified_window": {
+      "samples": 548,
+      "timing_state_changes": 4,
+      "first_observed_state_change_seconds": 41.310098,
+      "exposure_not_comparable_to_baseline": true
+    },
+    "restored_and_independently_verified": true,
+    "handles_closed": true,
+    "checks": [
+      {
+        "name": "Bounded trial completed and closed",
+        "passed": true
+      },
+      {
+        "name": "Single-field write and restoration readbacks",
+        "passed": true
+      },
+      {
+        "name": "Helper scratch-memory boundary checks",
+        "passed": true
+      },
+      {
+        "name": "Role identity independently rechecked",
+        "passed": true
+      },
+      {
+        "name": "Original U/V independently verified after restoration",
+        "passed": true
+      },
+      {
+        "name": "Global interval and mirror restored/unchanged",
+        "passed": true
+      },
+      {
+        "name": "Retained trial observations kept U1500 V1200 and matching gate/mirror",
+        "passed": true
+      },
+      {
+        "name": "User reported animation speedup then normal restoration",
+        "passed": true
+      },
+      {
+        "name": "All eight runtime code/table checks matched",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x1801652c4: mov rdi, rcx",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x1801656fe: mov rcx, rdi",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x180165701: call sub_180144F10",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x180144f1f: mov rdi, rcx",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x1801455f3: mov rcx, rdi",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x1801455f6: call sub_18016D600",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18016d61f: mov rsi, rcx",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18016d6b5: add eax, [rsi+1E90h]",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18016d8a0: mov [rsi+1E90h], ebp",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18052a29c: test sil, 2",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18052a2a0: jz loc_18052A2B8",
+        "passed": true
+      },
+      {
+        "name": "REA instruction 0x18052a2b3: call sub_180530650",
+        "passed": true
+      },
+      {
+        "name": "Baseline completed with handle closed",
+        "passed": true
+      }
+    ],
+    "limitations": [
+      "The absolute character address is valid only for the selected process and current entity.",
+      "U/V business names remain unproved independently of their ratio in the audited branch.",
+      "Do not infer damage rate or server-accepted attack frequency from subjective animation feedback.",
+      "Timing state has additional initialization writes and observed backward/short deltas; no attack-count or complete timer-source proof.",
+      "Panel rendering is gated by update-mask bit 0x2 in an existing caller, but the flag seen during the prior UI trial was not captured."
+    ]
+  },
+  "runtime_normal_scroll_and_local_trials": {
+    "scope": "Selected current-client state; user-observed melee swing cadence and client timing-state changes, not proven server damage frequency",
+    "primary_static_provider": "REA MCP to offline IDA; runtime read/write helpers are auxiliary Win32, not REA live memory tools",
+    "current_character_base": "0x73956000",
+    "loaded_game_base": "0x3760000",
+    "stale_previous_character_base": "0xc3b14000",
+    "current_fields": [
+      {
+        "name": "同步攻击间隔",
+        "relative": "Game.dll+0x142DB40",
+        "address": "0x4b8db40",
+        "type": "uint16",
+        "normal_scroll": 1092,
+        "local_melee_trial": 700,
+        "restored": 1200
+      },
+      {
+        "name": "间隔镜像",
+        "relative": "Game.dll+0x142DC10",
+        "address": "0x4b8dc10",
+        "type": "uint32",
+        "normal_scroll": 1092,
+        "local_melee_trial": 700,
+        "restored": 1200
+      },
+      {
+        "name": "动画分母V",
+        "relative": "C+0x532",
+        "address": "0x73956532",
+        "type": "uint16",
+        "normal_scroll": 1092,
+        "local_melee_trial": 700,
+        "restored": 1200
+      },
+      {
+        "name": "动画分子U（本组保持不变）",
+        "relative": "C+0x530",
+        "address": "0x73956530",
+        "type": "uint16",
+        "normal_scroll": 1200,
+        "local_melee_trial": 1200,
+        "restored": 1200
+      }
+    ],
+    "normal_scroll": {
+      "user_reported_percent": 9,
+      "duration_minutes": 5,
+      "cancellable": true,
+      "before": 1200,
+      "after": 1092,
+      "expired": 1200,
+      "U_unchanged": true,
+      "complete_stacking_formula_verified": false
+    },
+    "trials": [
+      {
+        "tag": "local1092",
+        "record": "scroll-state-trial-state.json",
+        "target_tuple": [
+          1092,
+          1092,
+          1092
+        ],
+        "samples": 548,
+        "timing_state_changes": 9,
+        "raw_timing_delta_frequencies": [
+          {
+            "delta": 1094,
+            "count": 2
+          },
+          {
+            "delta": 1105922,
+            "count": 1
+          },
+          {
+            "delta": 2297,
+            "count": 1
+          },
+          {
+            "delta": 3765,
+            "count": 1
+          },
+          {
+            "delta": 1469,
+            "count": 1
+          },
+          {
+            "delta": 112,
+            "count": 1
+          },
+          {
+            "delta": 4294967232,
+            "count": 1
+          },
+          {
+            "delta": 1155,
+            "count": 1
+          }
+        ],
+        "early_exit": null,
+        "final_before_restoration": {
+          "ElapsedSeconds": 60.08224,
+          "AtUtc": "2026-10-19T15:36:09.4844622Z",
+          "TimingValue": 12332406,
+          "Interval": 1092,
+          "Mirror": 1092,
+          "U": 1200,
+          "V": 1092
+        },
+        "restore_status": "RestoredOriginalTupleAndReadBack",
+        "applied_utc": "2026-10-19T15:35:09.3990747Z",
+        "completed_utc": "2026-10-19T15:36:09.5611967Z"
+      },
+      {
+        "tag": "first900",
+        "record": "fast-scroll-state-trial-state.json",
+        "target_tuple": [
+          900,
+          900,
+          900
+        ],
+        "samples": 23,
+        "timing_state_changes": 0,
+        "raw_timing_delta_frequencies": [],
+        "early_exit": "Tuple changed externally; no reapplication",
+        "final_before_restoration": {
+          "ElapsedSeconds": 2.412552,
+          "AtUtc": "2026-10-19T15:39:00.9494879Z",
+          "TimingValue": 12498234,
+          "Interval": 1200,
+          "Mirror": 1200,
+          "U": 1200,
+          "V": 900
+        },
+        "restore_status": "RestoredOriginalTupleAndReadBack",
+        "applied_utc": "2026-10-19T15:38:58.5339360Z",
+        "completed_utc": "2026-10-19T15:39:01.0281030Z"
+      },
+      {
+        "tag": "retry900",
+        "record": "fast-scroll-state-retry-trial.json",
+        "target_tuple": [
+          900,
+          900,
+          900
+        ],
+        "samples": 549,
+        "timing_state_changes": 0,
+        "raw_timing_delta_frequencies": [],
+        "early_exit": null,
+        "final_before_restoration": {
+          "ElapsedSeconds": 60.089753,
+          "AtUtc": "2026-10-19T15:42:00.1125002Z",
+          "TimingValue": 12524828,
+          "Interval": 900,
+          "Mirror": 900,
+          "U": 1200,
+          "V": 900
+        },
+        "restore_status": "RestoredOriginalTupleAndReadBack",
+        "applied_utc": "2026-10-19T15:41:00.0191004Z",
+        "completed_utc": "2026-10-19T15:42:00.1948112Z"
+      },
+      {
+        "tag": "local800",
+        "record": "visible-scroll-state-trial-state.json",
+        "target_tuple": [
+          800,
+          800,
+          800
+        ],
+        "samples": 548,
+        "timing_state_changes": 18,
+        "raw_timing_delta_frequencies": [
+          {
+            "delta": 812,
+            "count": 4
+          },
+          {
+            "delta": 813,
+            "count": 3
+          },
+          {
+            "delta": 250218,
+            "count": 1
+          },
+          {
+            "delta": 1782,
+            "count": 1
+          },
+          {
+            "delta": 1000,
+            "count": 1
+          },
+          {
+            "delta": 938,
+            "count": 1
+          },
+          {
+            "delta": 2015,
+            "count": 1
+          },
+          {
+            "delta": 907,
+            "count": 1
+          },
+          {
+            "delta": 875,
+            "count": 1
+          },
+          {
+            "delta": 1297,
+            "count": 1
+          },
+          {
+            "delta": 8469,
+            "count": 1
+          },
+          {
+            "delta": 2156,
+            "count": 1
+          },
+          {
+            "delta": 1328,
+            "count": 1
+          }
+        ],
+        "early_exit": null,
+        "final_before_restoration": {
+          "ElapsedSeconds": 60.039803,
+          "AtUtc": "2026-10-19T15:43:49.7788905Z",
+          "TimingValue": 12801500,
+          "Interval": 800,
+          "Mirror": 800,
+          "U": 1200,
+          "V": 800
+        },
+        "restore_status": "RestoredOriginalTupleAndReadBack",
+        "applied_utc": "2026-10-19T15:42:49.7360705Z",
+        "completed_utc": "2026-10-19T15:43:49.8566137Z"
+      },
+      {
+        "tag": "melee700",
+        "record": "melee-scroll-state-trial-state.json",
+        "target_tuple": [
+          700,
+          700,
+          700
+        ],
+        "samples": 549,
+        "timing_state_changes": 8,
+        "raw_timing_delta_frequencies": [
+          {
+            "delta": 703,
+            "count": 5
+          },
+          {
+            "delta": 356141,
+            "count": 1
+          },
+          {
+            "delta": 1203,
+            "count": 1
+          },
+          {
+            "delta": 704,
+            "count": 1
+          }
+        ],
+        "early_exit": null,
+        "final_before_restoration": {
+          "ElapsedSeconds": 60.108797,
+          "AtUtc": "2026-10-19T15:50:13.4751419Z",
+          "TimingValue": 13185781,
+          "Interval": 700,
+          "Mirror": 700,
+          "U": 1200,
+          "V": 700
+        },
+        "restore_status": "RestoredOriginalTupleAndReadBack",
+        "applied_utc": "2026-10-19T15:49:13.3631919Z",
+        "completed_utc": "2026-10-19T15:50:13.5533111Z"
+      }
+    ],
+    "feedback700": {
+      "source": "Direct user statement",
+      "trial": "melee-scroll-state-trial-state.json",
+      "during_trial": "出刀速度明显变快了",
+      "measurement": "Unaided visual observation of normal attack animation/cadence; no frame timing or server hit counter",
+      "damage_frequency_verified": false,
+      "user_reported_buff_cancelled_and_target_ready": true,
+      "after_restoration": "已恢复原来的较慢节奏",
+      "latest_interpretation": "User confirmed faster ordinary melee swing cadence and slower cadence after restoration; no measured hit/HP-loss rate."
+    },
+    "feedback800": {
+      "trial": "visible-scroll-state-trial-state.json",
+      "initial_reply": "命中、掉血节奏也明显更快，还原后恢复",
+      "later_user_clarification": [
+        "动作明显快了 但是掉血节奏这个区别不出来吧 动作快了 技能释放速度快了",
+        "我觉得可以测试平砍出刀速度？"
+      ],
+      "adopted_interpretation": "Client animations noticeably faster and user perceived faster skill release; actual HP-loss/hit cadence could not be distinguished. Later clarification supersedes the initial stronger radio-option reply.",
+      "server_damage_frequency_verified": false,
+      "next_user_requested_trial": 700,
+      "measurement_mode": "User chose unaided visual observation, no video or timestamped combat log available"
+    },
+    "server_accepted_hit_rate_verified": false,
+    "damage_rate_verified": false,
+    "actual_skill_cooldown_verified": false,
+    "client_request_cadence_inference": "Normal baseline contains repeated raw timing increments around1203, local800 around812/813, melee700 around703/704. Together with the REA gate/writer chain this supports changed client request bookkeeping cadence, not complete request counts or accepted server hits.",
+    "limitations": [
+      "Only unaided visual feedback; no synchronized video or timestamped combat damage log supplied.",
+      "Timing state has other writes, short/reversed deltas and idle/target-switch gaps; its updates cannot be counted as attacks.",
+      "Normal scroll changes and three matching local fields do not establish identical server buff state.",
+      "First900 was overwritten in interval/mirror after about2.4s while V remained900; source unobserved, no anti-cheat conclusion.",
+      "Local1092 was confounded by user scroll use during or after the window; timing unknown.",
+      "900retry showed no timing-state activity and no valid subjective comparison, not proof of no effect.",
+      "Object addresses change across scene/entity recreation even within one PID. Re-resolve before access."
+    ],
+    "restored_and_independently_verified": true,
+    "all_trial_handles_closed": true,
+    "verification": {
+      "allPassed": true,
+      "checks": [
+        {
+          "name": "Normal 9% scroll received_attack_interval",
+          "passed": true
+        },
+        {
+          "name": "Normal 9% scroll attack_interval_mirror",
+          "passed": true
+        },
+        {
+          "name": "Normal 9% scroll V",
+          "passed": true
+        },
+        {
+          "name": "Normal scroll kept U and scale",
+          "passed": true
+        },
+        {
+          "name": "One-point 9% arithmetic",
+          "passed": true
+        },
+        {
+          "name": "Natural expiry returns all selected interval values",
+          "passed": true
+        },
+        {
+          "name": "local1092 completed/closed",
+          "passed": true
+        },
+        {
+          "name": "local1092 three typed fields applied",
+          "passed": true
+        },
+        {
+          "name": "local1092 all returned restoration writes succeeded",
+          "passed": true
+        },
+        {
+          "name": "first900 completed/closed",
+          "passed": true
+        },
+        {
+          "name": "first900 three typed fields applied",
+          "passed": true
+        },
+        {
+          "name": "first900 all returned restoration writes succeeded",
+          "passed": true
+        },
+        {
+          "name": "retry900 completed/closed",
+          "passed": true
+        },
+        {
+          "name": "retry900 three typed fields applied",
+          "passed": true
+        },
+        {
+          "name": "retry900 all returned restoration writes succeeded",
+          "passed": true
+        },
+        {
+          "name": "local800 completed/closed",
+          "passed": true
+        },
+        {
+          "name": "local800 three typed fields applied",
+          "passed": true
+        },
+        {
+          "name": "local800 all returned restoration writes succeeded",
+          "passed": true
+        },
+        {
+          "name": "melee700 completed/closed",
+          "passed": true
+        },
+        {
+          "name": "melee700 three typed fields applied",
+          "passed": true
+        },
+        {
+          "name": "melee700 all returned restoration writes succeeded",
+          "passed": true
+        },
+        {
+          "name": "Latest context independently verified",
+          "passed": true
+        },
+        {
+          "name": "Latest globals independently restored",
+          "passed": true
+        },
+        {
+          "name": "Latest U/V independently restored",
+          "passed": true
+        },
+        {
+          "name": "700 unaided swing feedback is positive and reversed",
+          "passed": true
+        },
+        {
+          "name": "800 stronger initial answer qualified by later correction",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "attack_speed_lab": {
+    "directory": "attack-speed-lab",
+    "design": "attack-speed-lab/攻速修改方案与后续计划.html",
+    "method": "REA-derived profile, auxiliary Win32 GUI",
+    "new_gui_game_write_tested": false,
+    "movement_deferred": true,
+    "stealth_or_anti_cheat_bypass": false
+  }
+}
