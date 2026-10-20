@@ -1,3 +1,3 @@
 @echo off
 cd /d "%~dp0"
-start "" "%~dp0AionLab.exe"
+start "" "%~dp0SpeedLab.exe"

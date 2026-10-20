@@ -13,7 +13,15 @@ internal sealed class JsonCompatibility
 
 internal enum Availability { Unavailable, Ready, Stale }
 internal record Evidence(string Source, DateTimeOffset CapturedAt, string BuildIdentity);
-internal record MovementSnapshot(float? Speed, string Unit, Evidence Evidence);
+internal record MovementField(string Name, string Relative, string Address, float? Value, string Bits, string Error);
+internal record MovementSnapshot(float? Speed, string Unit, Evidence Evidence)
+{
+    public int Pid { get; init; }
+    public string ModuleBase { get; init; }
+    public string Character { get; init; }
+    public MovementField[] Fields { get; init; } = [];
+    public bool IdentityReadbackMatched { get; init; }
+}
 internal record MonsterSnapshot(string Id, string Name, string Classification,
     Vector3? Position, float? Distance, float? HealthFraction, Evidence Evidence);
 internal record Observation<T>(Availability State, string Reason, T Value);
@@ -25,7 +33,7 @@ internal interface IMonsterSource { Observation<IReadOnlyList<MonsterSnapshot>> 
 internal sealed class PendingMovement : IMovementSource
 {
     public Observation<MovementSnapshot> Read() => new(Availability.Unavailable,
-        "尚未验证地址、字段类型、单位和还原条件。", null);
+        "尚未采样；正常模式可点击只读采集移速，离线模式不连接游戏。", null);
 }
 internal sealed class PendingMonsters : IMonsterSource
 {
@@ -38,14 +46,14 @@ internal interface ITrial : IDisposable
     double Seconds { get; }
     string LogPath { get; }
     void Poll();
-    string[] Stop();
+    string[] Stop(string reason);
 }
 internal sealed class ExistingTrial(Session session) : ITrial
 {
     public double Seconds => session.Elapsed.Elapsed.TotalSeconds;
     public string LogPath => session.LogPath;
     public void Poll() => session.Poll();
-    public string[] Stop() => session.Stop();
+    public string[] Stop(string reason) => session.Stop();
     public void Dispose() => session.Dispose();
 }
 
@@ -53,16 +61,19 @@ internal sealed class ExistingTrial(Session session) : ITrial
 internal sealed class LabController : IDisposable
 {
     private readonly Func<int, uint, ITrial> begin;
+    private readonly Func<int, float, ITrial> beginMovement;
     private ITrial active;
     private readonly Queue<string> messages = new();
     public IReadOnlyCollection<string> Messages => messages;
     public bool Active => active != null;
     public double Remaining => active == null ? 0 : Math.Max(0, 60 - active.Seconds);
     public string Status { get; private set; } = "未连接 · 尚未读写游戏";
-    public LabController(Func<int, uint, ITrial> factory = null)
+    public LabController(Func<int, uint, ITrial> factory = null, Func<int, float, ITrial> movementFactory = null)
     {
         begin = factory ?? ((pid, desired) => new ExistingTrial(Session.Begin(pid, desired,
             Path.Combine(AppContext.BaseDirectory, "logs"))));
+        beginMovement = movementFactory ?? ((pid, desired) => MovementTrial.Begin(pid, desired,
+            Path.Combine(AppContext.BaseDirectory, "logs")));
     }
     public void Log(string text)
     {
@@ -77,6 +88,15 @@ internal sealed class LabController : IDisposable
         active = begin(pid, (uint)desired);
         Status = "实验中 · 最长 60 秒";
         Log($"已应用间隔 {desired}；日志：{active.LogPath}");
+    }
+    public void StartMovement(int pid, float desired)
+    {
+        if (Active) return;
+        if (pid <= 0 || !float.IsFinite(desired) || desired <= 6f || desired > 7.8f)
+            throw new ArgumentOutOfRangeException(nameof(desired), "移速实验需目标进程及大于6、至7.8的有限值。");
+        active = beginMovement(pid, desired);
+        Status = "移速实验中 · 最长 60 秒";
+        Log($"已应用客户端移速元组 {desired:R}；日志：{active.LogPath}");
     }
     public void Tick()
     {
@@ -94,7 +114,7 @@ internal sealed class LabController : IDisposable
         active = null;
         if (owned == null) return;
         var issues = new List<string>();
-        try { issues.AddRange(owned.Stop()); }
+        try { issues.AddRange(owned.Stop(reason)); }
         catch (Exception e) { issues.Add(e.Message); }
         finally
         {

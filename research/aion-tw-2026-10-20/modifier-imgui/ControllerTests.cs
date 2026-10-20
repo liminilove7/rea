@@ -9,9 +9,10 @@ internal static class ControllerTests
         public double Seconds { get; set; }
         public string LogPath => "synthetic";
         public int Polls, Stops, Disposals;
+        public string StopReason;
         public bool FailPoll, FailStop;
         public void Poll() { Polls++; if (FailPoll) throw new IOException("fixture poll failure"); }
-        public string[] Stop() { Stops++; if (FailStop) throw new IOException("fixture restore failure"); return []; }
+        public string[] Stop(string reason) { Stops++; StopReason = reason; if (FailStop) throw new IOException("fixture restore failure"); return []; }
         public void Dispose() { Disposals++; }
     }
     public static void Run(string path)
@@ -45,6 +46,15 @@ internal static class ControllerTests
         fake = new FakeTrial();
         var closing = new LabController((_, _) => fake); closing.Start(1, 700); closing.Dispose();
         Check(fake.Stops == 1 && fake.Disposals == 1, "Window/render exit restores active trial");
+        fake = new FakeTrial();
+        using (var c = new LabController(movementFactory: (_, _) => fake))
+        {
+            bool rejected = false;
+            try { c.StartMovement(1, float.NaN); } catch (ArgumentOutOfRangeException) { rejected = true; }
+            Check(rejected && !c.Active, "Nonfinite movement value cannot start a session");
+            c.StartMovement(1, 7.8f); fake.Seconds = 60; c.Tick();
+            Check(!c.Active && fake.Stops == 1 && fake.Disposals == 1 && fake.StopReason == "60 秒已到", "Movement timeout passes exact termination cause through lifecycle");
+        }
         using (var c = new LabController())
         {
             for (int i = 0; i < 250; i++) c.Log(i.ToString());

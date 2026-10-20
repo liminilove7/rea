@@ -19,6 +19,9 @@ internal static class Desktop
             {
                 AttackSpeedLab.SelfTest.Run(args[1] + ".core.json");
                 ControllerTests.Run(args[1]);
+                MovementTests.Run(args[1] + ".movement.json");
+                SpeedLockTests.Run(args[1] + ".locks.json");
+                AttackBaselineTests.Run(args[1] + ".weapon.json");
                 return 0;
             }
             if (args.Length == 2 && args[0] == "--discover")
@@ -31,12 +34,25 @@ internal static class Desktop
                 File.WriteAllText(args[2], Legacy.Inspect(int.Parse(args[1])));
                 return 0;
             }
+            if (args.Length == 3 && args[0] == "--inspect-movement")
+            {
+                File.WriteAllText(args[2], JsonSerializer.Serialize(MovementReader.Capture(int.Parse(args[1])),
+                    new JsonSerializerOptions { WriteIndented = true }));
+                return 0;
+            }
+            if (args.Length == 3 && args[0] == "--inspect-attack-baseline")
+            {
+                File.WriteAllText(args[2], JsonSerializer.Serialize(AttackReader.Capture(int.Parse(args[1])),
+                    new JsonSerializerOptions { WriteIndented = true }));
+                return 0;
+            }
             bool offline = args.SequenceEqual(new[] { "--offline" });
-            string renderTest = args.Length == 2 && args[0] == "--render-test" ? Path.GetFullPath(args[1]) : null;
+            bool renderControls = args.Length == 2 && args[0] == "--render-lock-test";
+            string renderTest = args.Length == 2 && (args[0] == "--render-test" || renderControls) ? Path.GetFullPath(args[1]) : null;
             if (args.Length != 0 && !offline && renderTest == null) return 2;
             using var mutex = new Mutex(true, @"Local\REA-AionTW-AttackSpeedLab-Visible", out bool created);
             if (!created) return 1;
-            try { Run(offline || renderTest != null, renderTest); }
+            try { Run(offline || renderTest != null, renderTest, renderControls); }
             finally { mutex.ReleaseMutex(); }
             return 0;
         }
@@ -47,10 +63,10 @@ internal static class Desktop
         }
     }
 
-    private static unsafe void Run(bool offline, string renderTest)
+    private static unsafe void Run(bool offline, string renderTest, bool renderControls)
     {
         var window = VeldridStartup.CreateWindow(new WindowCreateInfo(100, 100, 1180, 800,
-            WindowState.Normal, "AION Research Lab | ImGui"));
+            WindowState.Normal, "属性实验台 | ImGui"));
         try
         {
             using var device = VeldridStartup.CreateGraphicsDevice(window,
@@ -79,8 +95,9 @@ internal static class Desktop
                 renderer.WindowResized(window.Width, window.Height);
             };
             using var controller = new LabController();
-            var ui = new LabView(controller, offline);
-            var probe = renderTest == null ? null : new RenderProbe(renderTest);
+            var probe = renderTest == null ? null : new RenderProbe(renderTest, renderControls);
+            using var locks = new SpeedLocks(controller.Log, renderControls ? probe.BeginFixture : null);
+            var ui = new LabView(controller, locks, offline && !renderControls, renderControls ? 1 : null);
             var clock = Stopwatch.StartNew();
             double previous = clock.Elapsed.TotalSeconds, nextPoll = 0;
             while (window.Exists)
@@ -89,7 +106,7 @@ internal static class Desktop
                 if (!window.Exists) break;
                 if (probe != null) input = probe.Input(ui);
                 double now = clock.Elapsed.TotalSeconds;
-                if (now >= nextPoll) { controller.Tick(); nextPoll = now + .5; }
+                if (now >= nextPoll) { controller.Tick(); locks.Tick(); nextPoll = now + .5; }
                 renderer.Update((float)Math.Clamp(now - previous, .001, .1), input);
                 previous = now;
                 ui.Draw(window.Width, window.Height);
@@ -131,20 +148,34 @@ internal static class Desktop
     }
 }
 
-internal sealed class LabView(LabController controller, bool offline)
+internal sealed class LabView(LabController controller, SpeedLocks locks, bool offline, int? fixturePid = null)
 {
-    private readonly IMovementSource movement = new PendingMovement();
+    private Observation<AttackSnapshot> attack = AttackReader.Pending();
+    private Observation<MovementSnapshot> movement = new PendingMovement().Read();
     private readonly IMonsterSource monsters = new PendingMonsters();
     private readonly string[] pages = ["攻速实验", "移动速度", "怪物识别", "证据与接入"];
     private List<int> targets = [];
     private int selected = -1, desired = 700, page;
-    private float movementDraft = 1;
+    private float movementDraft = 7.8f;
+    private int intervalReduction = 25;
+    private bool percentMode = true, previousAttackActive;
     private string filter = "";
     private bool initialized;
     internal int SelectedPage => page;
+    internal bool HasActiveSpeedSession => locks.Any;
+    internal bool IsSpeedLocked(SpeedKind kind) => locks.Locked(kind);
+    internal Vector2[] LockCenters { get; } = new Vector2[2];
     internal Vector2[] NavigationCenters { get; } = new Vector2[4];
     private static readonly Vector4 Accent = new(.27f, .81f, .85f, 1);
     private static readonly Vector4 Muted = new(.58f, .67f, .75f, 1);
+
+    // User text and percentages are data, never native printf format strings.
+    private static void Wrapped(string text)
+    {
+        ImGui.PushTextWrapPos(0);
+        ImGui.TextUnformatted(text);
+        ImGui.PopTextWrapPos();
+    }
 
     private void Guard(Action action)
     {
@@ -153,20 +184,28 @@ internal sealed class LabView(LabController controller, bool offline)
     }
     private void Refresh()
     {
-        targets = offline ? [] : Legacy.DiscoverTargets();
+        targets = fixturePid.HasValue ? [fixturePid.Value] : offline ? [] : Legacy.DiscoverTargets();
         selected = targets.Count > 0 ? 0 : -1;
+        movement = new PendingMovement().Read();
+        attack = fixturePid.HasValue ? AttackReader.Fixture(2400) : AttackReader.Pending();
         controller.Log(offline ? "离线预览：未枚举游戏进程。" : $"找到 {targets.Count} 个符合既有路径的目标。");
     }
     public void Draw(int width, int height)
     {
         if (!initialized) { Guard(Refresh); initialized = true; }
+        if (previousAttackActive && !locks.Active(SpeedKind.Attack)) InvalidateAttack();
         ImGui.SetNextWindowPos(Vector2.Zero);
         ImGui.SetNextWindowSize(new Vector2(width, height));
-        ImGui.Begin("AION Lab", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove |
+        ImGui.Begin("属性实验台", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove |
             ImGuiWindowFlags.NoSavedSettings);
-        ImGui.TextColored(Accent, "AION  /  RESEARCH LAB");
+        ImGui.TextColored(Accent, "属性实验台  /  SPEED LAB");
         ImGui.SameLine(); ImGui.TextDisabled("IMGUI · 2026.10");
-        ImGui.TextColored(Muted, offline ? "离线界面预览 · 未连接游戏" : controller.Status);
+        ImGui.TextColored(Muted, fixturePid.HasValue ? "离线交互夹具 · 仅模拟会话，不连接游戏" : offline ? "离线界面预览 · 未连接游戏" : "窗口内按需连接 · 操作与还原结果见下方记录");
+        if (locks.Any)
+        {
+            Wrapped(locks.Summary);
+            if (ImGui.Button("全部停止并还原")) { locks.StopAll("手动全部停止"); InvalidateAttack(); }
+        }
         if (controller.Active)
         {
             ImGui.ProgressBar((float)(controller.Remaining / 60), new Vector2(-1, 8), "");
@@ -175,7 +214,7 @@ internal sealed class LabView(LabController controller, bool offline)
             if (ImGui.Button("立即停止并还原")) controller.Stop("手动停止");
         }
         ImGui.Separator();
-        float bodyHeight = Math.Max(180, ImGui.GetContentRegionAvail().Y - 220);
+        float bodyHeight = Math.Max(180, ImGui.GetContentRegionAvail().Y - 180);
         ImGui.BeginChild("navigation", new Vector2(165, bodyHeight), true);
         ImGui.TextDisabled("工作区");
         for (int i = 0; i < pages.Length; i++)
@@ -183,7 +222,7 @@ internal sealed class LabView(LabController controller, bool offline)
             if (ImGui.Selectable(pages[i], page == i, ImGuiSelectableFlags.None, new Vector2(0, 38))) page = i;
             NavigationCenters[i] = (ImGui.GetItemRectMin() + ImGui.GetItemRectMax()) / 2;
         }
-        ImGui.Spacing(); ImGui.TextWrapped("攻速：已实现\n移速：预留\n怪物：预留");
+        ImGui.Spacing(); Wrapped("攻速 / 移速\n独立勾选维护\n怪物：预留");
         ImGui.EndChild();
         ImGui.SameLine();
         ImGui.BeginChild("content", new Vector2(0, bodyHeight), true);
@@ -198,64 +237,168 @@ internal sealed class LabView(LabController controller, bool offline)
         ImGui.TextColored(Accent, "操作记录");
         ImGui.SameLine(); ImGui.TextDisabled("保留最近 200 条 · 事务原始日志见 logs/");
         ImGui.BeginChild("log", new Vector2(0, 0), true);
-        foreach (var message in controller.Messages) ImGui.TextWrapped(message);
+        foreach (var message in controller.Messages) Wrapped(message);
         ImGui.EndChild();
         ImGui.End();
+        previousAttackActive = locks.Active(SpeedKind.Attack);
+    }
+    private void InvalidateAttack() => attack = new(Availability.Stale, "旧会话已结束；换武器或重新开启前，请采集当前基线。", attack.Value);
+    private bool AttackReady => attack.State == Availability.Ready && attack.Value?.State.Consistent == true;
+    private void StartAttack(bool maintain)
+    {
+        try { locks.Start(targets[selected], SpeedKind.Attack, desired, maintain, attack.Value.Binding); }
+        catch { InvalidateAttack(); throw; }
     }
     private void Attack()
     {
         ImGui.TextColored(Accent, "01  攻速实验");
-        ImGui.TextWrapped("沿用原工具的间隔实验。数值更小代表客户端间隔更短；服务器命中频率仍需实测。");
-        ImGui.Separator();
-        ImGui.BeginDisabled(controller.Active || offline);
+        Wrapped("按当前武器基线缩短间隔；换武器先停止并重新采集。不是已验证的服务器攻击频率。");
+        ImGui.BeginDisabled(locks.Any || offline);
         ImGui.SetNextItemWidth(270);
         if (ImGui.BeginCombo("目标进程", selected >= 0 ? $"aion.bin · PID {targets[selected]}" : "未选择目标"))
         {
             for (int i = 0; i < targets.Count; i++)
-                if (ImGui.Selectable($"aion.bin · PID {targets[i]}", selected == i)) selected = i;
+                if (ImGui.Selectable($"aion.bin · PID {targets[i]}", selected == i)) { selected = i; attack = AttackReader.Pending(); }
             ImGui.EndCombo();
         }
         if (ImGui.Button("刷新目标")) Guard(Refresh);
+        ImGui.EndDisabled();
         ImGui.SameLine();
-        ImGui.BeginDisabled(selected < 0);
-        if (ImGui.Button("只读检查")) Guard(() => controller.Log(Legacy.Inspect(targets[selected])));
+        ImGui.BeginDisabled(selected < 0 || fixturePid.HasValue || offline || locks.Active(SpeedKind.Attack));
+        if (ImGui.Button("采集当前武器基线")) Guard(() =>
+        {
+            attack = AttackReader.Capture(targets[selected]);
+            controller.Log(JsonSerializer.Serialize(attack));
+        });
         ImGui.EndDisabled();
-        ImGui.SetNextItemWidth(270);
-        ImGui.SliderInt("目标间隔", ref desired, 700, 1200);
-        ImGui.BeginDisabled(selected < 0 || desired < 700 || desired > 1200);
-        if (ImGui.Button("开始 60 秒实验", new Vector2(230, 44)))
-            Guard(() => controller.Start(targets[selected], desired));
+        uint baseline = attack.Value?.Binding.Interval ?? 0;
+        intervalReduction = Math.Clamp(intervalReduction, 0, 65);
+        if (AttackReady && percentMode && !locks.Active(SpeedKind.Attack)) desired = AttackRules.IntervalForPercent(baseline, intervalReduction);
+        if (AttackReady && !percentMode && !locks.Active(SpeedKind.Attack)) desired = Math.Clamp(desired, 400, (int)baseline);
+        if (attack.Value is { } sample)
+            Wrapped($"上次采样 I={sample.State.Interval} / 镜像={sample.State.Mirror} / U={sample.State.U} / V={sample.State.V} / 系数={sample.State.Scale}");
+        if (!AttackReady) Wrapped(attack.Reason);
+        Wrapped(AttackReady ? $"目标间隔 {desired}；相对采样基线缩短 {100d * (baseline - (double)desired) / baseline:0.##}%（工具下限400）" : "基线尚未确认；不计算目标比例，不允许开始攻速修改。");
+        LockControl(SpeedKind.Attack, desired, "勾选锁定攻速");
+        ImGui.SameLine();
+        ImGui.BeginDisabled(locks.Active(SpeedKind.Attack) || offline || selected < 0 || !AttackReady);
+        if (ImGui.Button("60秒实验")) Guard(() => StartAttack(false));
         ImGui.EndDisabled();
+        ImGui.Separator();
+        ImGui.BeginDisabled(locks.Active(SpeedKind.Attack) || offline || !AttackReady);
+        ImGui.Checkbox("按基线百分比设置", ref percentMode);
+        if (percentMode)
+        {
+            ImGui.SetNextItemWidth(270);
+            if (ImGui.BeginCombo("间隔缩短档位", intervalReduction + "%"))
+            {
+                foreach (int preset in SpeedSettings.AttackReductionPresets)
+                    if (ImGui.Selectable(preset + "%", intervalReduction == preset)) intervalReduction = preset;
+                ImGui.EndCombo();
+            }
+            ImGui.SetNextItemWidth(270);
+            ImGui.SliderInt("间隔缩短百分比", ref intervalReduction, 0, 65);
+        }
+        else
+        {
+            desired = Math.Clamp(desired, 400, (int)Math.Max(400, baseline));
+            ImGui.SetNextItemWidth(270);
+            ImGui.SliderInt("绝对目标间隔", ref desired, 400, (int)Math.Max(400, baseline));
+        }
         ImGui.EndDisabled();
         ImGui.Spacing();
-        ImGui.TextWrapped("准备条件：原武器、无攻速增益、1200 基线、动画系数 1。进程路径和模块哈希必须符合既有研究配置。");
-        ImGui.TextColored(Muted, "只应用一次 · 500 ms 校验 · 最长 60 秒 · 停止时尝试还原");
-        ImGui.TextWrapped("正常关闭会尝试还原。强制结束、断电或角色重建时，无法保证恢复旧对象。");
+        Wrapped("开始前停止攻击，取消攻速增益。需要I/镜像/U/V一致、系数1；一致不能证明没有增益。采集绑定进程和角色，开始时再次校验。更快档位尚待游戏验证。");
+        ImGui.TextColored(Muted, "限时：一次应用 / 60秒；勾选：持续检查维护 / 取消还原");
+        Wrapped("正常关闭会尝试还原。强制结束、断电或角色重建时，无法保证恢复旧对象。");
     }
     private void Movement()
     {
-        var snapshot = movement.Read();
         ImGui.TextColored(Accent, "02  移动速度");
-        ImGui.Text("状态：尚未接入");
-        ImGui.TextWrapped(snapshot.Reason);
-        ImGui.Separator();
-        ImGui.Text("当前速度：未知     单位：未确认");
+        Wrapped("正常30%卷轴已观察 6 -> 7.8 -> 6。采集五字段；本地修改的实际位移仍待验证。");
+        ImGui.BeginDisabled(locks.Any || offline);
         ImGui.SetNextItemWidth(270);
-        ImGui.SliderFloat("倍率草案", ref movementDraft, .5f, 2, "%.2f");
-        ImGui.TextDisabled("仅编辑本页草案；不保存、不写入、不自动应用。");
-        ImGui.BeginDisabled();
-        ImGui.Button("应用移动速度"); ImGui.SameLine(); ImGui.Button("还原移动速度");
+        if (ImGui.BeginCombo("移速目标", selected >= 0 ? $"aion.bin · PID {targets[selected]}" : "未选择目标"))
+        {
+            for (int i = 0; i < targets.Count; i++)
+                if (ImGui.Selectable($"aion.bin · PID {targets[i]}", selected == i)) { selected = i; movement = new PendingMovement().Read(); attack = AttackReader.Pending(); }
+            ImGui.EndCombo();
+        }
+        if (ImGui.Button("刷新移速目标")) Guard(Refresh);
+        ImGui.SameLine();
+        ImGui.BeginDisabled(selected < 0 || fixturePid.HasValue);
+        if (ImGui.Button("只读采集移速")) Guard(() =>
+        {
+            movement = MovementReader.Capture(targets[selected]);
+            controller.Log(JsonSerializer.Serialize(movement));
+        });
         ImGui.EndDisabled();
+        ImGui.EndDisabled();
+        Wrapped($"采样状态：{movement.State} · {movement.Reason}");
+        if (movement.Value is { } snapshot && ImGui.CollapsingHeader("上次移速快照（展开查看五字段）"))
+        {
+            Wrapped($"PID {snapshot.Pid} · B={snapshot.ModuleBase} · C={snapshot.Character}");
+            Wrapped($"采样时间 {snapshot.Evidence.CapturedAt:O}；{snapshot.Unit}。仅显示上次采样，不自动刷新。");
+            if (ImGui.BeginTable("movement-fields", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg))
+            {
+                foreach (var name in new[] { "字段", "地址", "值 / 错误", "float32位表示" }) ImGui.TableSetupColumn(name);
+                ImGui.TableHeadersRow();
+                foreach (var field in snapshot.Fields)
+                {
+                    ImGui.TableNextRow(); ImGui.TableSetColumnIndex(0); Wrapped(field.Relative);
+                    ImGui.TableSetColumnIndex(1); Wrapped(field.Address);
+                    ImGui.TableSetColumnIndex(2); Wrapped(field.Value?.ToString("R") ?? field.Error ?? "未知");
+                    ImGui.TableSetColumnIndex(3); Wrapped(field.Bits ?? "未知");
+                }
+                ImGui.EndTable();
+            }
+        }
+        ImGui.Separator();
+        ImGui.BeginDisabled(locks.Active(SpeedKind.Movement) || offline);
+        ImGui.SetNextItemWidth(270);
+        if (ImGui.BeginCombo("移速档位", movementDraft.ToString("0.##")))
+        {
+            foreach (float preset in SpeedSettings.MovementPresets)
+                if (ImGui.Selectable(preset.ToString("0.##"), movementDraft == preset)) movementDraft = preset;
+            ImGui.EndCombo();
+        }
+        ImGui.SetNextItemWidth(270);
+        ImGui.SliderFloat("目标移速标度", ref movementDraft, 6f, 15f, "%.2f");
+        ImGui.BeginDisabled(selected < 0);
+        if (ImGui.Button("开始60秒移速实验")) Guard(() => locks.Start(targets[selected], SpeedKind.Movement, movementDraft, false));
+        ImGui.EndDisabled();
+        ImGui.EndDisabled();
+        LockControl(SpeedKind.Movement, movementDraft, "勾选锁定移速");
         ImGui.Spacing();
-        ImGui.TextWrapped("待验证：字段含义与单位 → 写入者与覆盖周期 → 对象生命周期 → 原值读取和恢复 → 自控测试服的实际位移对比。");
-        ImGui.TextWrapped("接入点：IMovementSource 提供带版本、时间与来源的快照。修改事务需单独设计并验证，本版本没有移速写入适配器。");
+        Wrapped("准备：原装备、无增益、6.0基线、安全路面且静止。联动速度两处、平方、倒数和镜像；不调用通知函数，不等同服务器卷轴。");
+        Wrapped("限时模式遇外部覆盖即停止；勾选模式每500ms检查并补写。大于7.8的新档位未验证。维护时勿换装备/增益；取消后再调整档位。强制结束/断电不能保证还原。");
+    }
+    private void LockControl(SpeedKind kind, float value, string label)
+    {
+        bool locked = locks.Locked(kind);
+        ImGui.BeginDisabled(offline || selected < 0 || (locks.Active(kind) && !locked) || (kind == SpeedKind.Attack && !AttackReady && !locked));
+        if (ImGui.Checkbox(label, ref locked)) Guard(() =>
+        {
+            if (locked)
+            {
+                if (kind == SpeedKind.Attack) StartAttack(true);
+                else locks.Start(targets[selected], kind, value, true);
+            }
+            else { locks.Stop(kind, "取消勾选"); if (kind == SpeedKind.Attack) InvalidateAttack(); }
+        });
+        LockCenters[(int)kind] = (ImGui.GetItemRectMin() + ImGui.GetItemRectMax()) / 2;
+        ImGui.EndDisabled();
+        if (locks.Active(kind))
+        {
+            ImGui.SameLine();
+            if (ImGui.Button("停止此项##" + kind)) { locks.Stop(kind, "停止此项"); if (kind == SpeedKind.Attack) InvalidateAttack(); }
+        }
     }
     private void Monsters()
     {
         var snapshot = monsters.Read();
         ImGui.TextColored(Accent, "03  怪物识别");
         ImGui.Text("状态：尚未接入");
-        ImGui.TextWrapped(snapshot.Reason);
+        Wrapped(snapshot.Reason);
         ImGui.SetNextItemWidth(270);
         ImGui.InputText("名称筛选草案", ref filter, 128);
         if (ImGui.BeginTable("monsters", 5, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg))
@@ -266,19 +409,19 @@ internal sealed class LabView(LabController controller, bool offline)
             ImGui.EndTable();
         }
         ImGui.Spacing();
-        ImGui.TextWrapped("预留快照：实体 ID、名称、分类、位置、距离、生命比例、采集时间、版本身份与来源。缺失字段保留未知，不能默认填 0。");
-        ImGui.TextWrapped("接入点：IMonsterSource。后续应先用离线样本验证分类和生命周期，再验证自控测试环境中的只读快照。此页未实现实体扫描或自动操作。");
+        Wrapped("预留快照：实体 ID、名称、分类、位置、距离、生命比例、采集时间、版本身份与来源。缺失字段保留未知，不能默认填 0。");
+        Wrapped("接入点：IMonsterSource。后续应先用离线样本验证分类和生命周期，再验证自控测试环境中的只读快照。此页未实现实体扫描或自动操作。");
     }
     private static void EvidencePage()
     {
         ImGui.TextColored(Accent, "04  证据与接入");
-        ImGui.TextWrapped("攻速核心与原 WinForms 工具共用一份源代码。新界面只管理会话和呈现状态；REA 仍负责已有静态分析证据。");
+        Wrapped("沿用原工具的版本和动态角色定位；当前新增独立的攻速/移速事务与窗口内维护。REA 提供既有静态字段证据，新锁定档位未完成游戏验证。");
         ImGui.Separator();
-        ImGui.TextWrapped("当前配置路径：" + AttackSpeedLab.Profile.GamePath);
-        ImGui.TextWrapped("Game.dll SHA256：" + AttackSpeedLab.Profile.GameHash);
-        ImGui.TextWrapped("注意：该路径来自旧研究环境。本机找不到目标时显示空列表；本次不修改路径或放宽版本校验。");
+        Wrapped("当前配置路径：" + AttackSpeedLab.Profile.GamePath);
+        Wrapped("Game.dll SHA256：" + AttackSpeedLab.Profile.GameHash);
+        Wrapped("注意：该路径来自旧研究环境。本机找不到目标时显示空列表；本次不修改路径或放宽版本校验。");
         ImGui.Spacing();
-        ImGui.TextWrapped("验证层级：本机内存夹具通过 ≠ 游戏效果验证通过。回家后仍需验证角色动画、实际命中间隔、服务器判定和停止后的恢复情况。");
-        ImGui.TextWrapped("架构与验收：同目录 architecture.html。离线入口：AionLab.exe --offline。");
+        Wrapped("验证层级：本机内存夹具通过 ≠ 游戏效果验证通过。回家后仍需验证角色动画、实际命中间隔、服务器判定和停止后的恢复情况。");
+        Wrapped("架构与验收：同目录 architecture.html。离线入口：SpeedLab.exe --offline。工具保持可见，无自启、伪装或反检测。");
     }
 }

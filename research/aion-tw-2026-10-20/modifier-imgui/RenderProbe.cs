@@ -11,11 +11,33 @@ internal sealed class RenderProbe
 {
     private readonly string directory;
     private readonly List<string> checks = [];
+    private readonly bool controls;
+    private readonly List<FixtureTrial> trials = [];
     private int frame;
-    internal RenderProbe(string directory)
+    internal RenderProbe(string directory, bool controls = false)
     {
+        this.controls = controls;
         this.directory = directory;
         Directory.CreateDirectory(directory);
+    }
+    private sealed class FixtureTrial : ITrial
+    {
+        public double Seconds => 0;
+        public string LogPath => "offline synthetic fixture";
+        internal int Stops, Disposals;
+        public void Poll() { }
+        public string[] Stop(string reason) { Stops++; return []; }
+        public void Dispose() => Disposals++;
+    }
+    internal ITrial BeginFixture(int pid, SpeedKind kind, float value, bool maintain, AttackBinding binding)
+    {
+        if (kind == SpeedKind.Attack)
+        {
+            if (binding?.Interval != 2400 || binding.Pid != pid || value != 1800 || !maintain)
+                throw new InvalidOperationException("Actual UI did not bind the 2400 fixture with a 25-percent target of 1800.");
+            checks.Add("Actual UI passes sampled 2400 binding and relative 1800 target to injected session factory");
+        }
+        var trial = new FixtureTrial(); trials.Add(trial); return trial;
     }
     private sealed class Snapshot(Vector2 point, bool down) : InputSnapshot
     {
@@ -28,15 +50,47 @@ internal sealed class RenderProbe
     }
     internal InputSnapshot Input(LabView ui)
     {
+        if (controls)
+        {
+            var point = frame switch
+            {
+                1 or 2 or 22 or 23 => ui.LockCenters[0],
+                6 or 7 => ui.NavigationCenters[1],
+                9 or 10 or 14 or 15 => ui.LockCenters[1],
+                19 or 20 => ui.NavigationCenters[0],
+                _ => new Vector2(10, 10)
+            };
+            return new Snapshot(point, frame is 1 or 6 or 9 or 14 or 19 or 22);
+        }
         int page = frame / 5;
         return new Snapshot(ui.NavigationCenters[page], frame % 5 == 1);
     }
     internal unsafe bool AfterDraw(GraphicsDevice device, Texture rendered, LabView ui, LabController controller)
     {
+        if (controls)
+        {
+            bool attack = ui.IsSpeedLocked(SpeedKind.Attack), movement = ui.IsSpeedLocked(SpeedKind.Movement);
+            if (frame is 4 or 12 or 17 or 25)
+            {
+                bool expectedAttack = frame != 25, expectedMovement = frame == 12;
+                if (attack != expectedAttack || movement != expectedMovement || controller.Active)
+                    throw new InvalidOperationException($"Checkbox interaction failed frame {frame}: attack={attack}, movement={movement}");
+                SaveFramebuffer(device, rendered, Path.Combine(directory, $"controls-{frame}.bmp"));
+                checks.Add($"Frame {frame}: actual ImGui checkbox input => attack={attack}, movement={movement}");
+            }
+            if (++frame < 26) return false;
+            if (trials.Count != 2 || trials.Any(t => t.Stops != 1 || t.Disposals != 1))
+                throw new InvalidOperationException("Checkbox sessions did not release exactly once.");
+            checks.Add("Both UI checkbox sessions restore and dispose exactly once; factory has no native/game access");
+            File.WriteAllText(Path.Combine(directory, "render-verification.json"), JsonSerializer.Serialize(new { allPassed = true, checks,
+                method = "Production ImGui + D3D11 framebuffer and synthetic input; injected fake sessions; game discovery/read/write disabled" },
+                new JsonSerializerOptions { WriteIndented = true }));
+            return true;
+        }
         if (frame % 5 == 4)
         {
             int page = frame / 5;
-            if (ui.SelectedPage != page || controller.Active || ImGui.GetDrawData().TotalVtxCount == 0)
+            if (ui.SelectedPage != page || controller.Active || ui.HasActiveSpeedSession || ImGui.GetDrawData().TotalVtxCount == 0)
                 throw new InvalidOperationException("Rendered navigation or offline-session invariant failed.");
             foreach (char glyph in "攻速实验移动怪物识别证据未连接还原")
                 if (ImGui.GetIO().Fonts.Fonts[0].FindGlyphNoFallback(glyph).NativePtr == null)

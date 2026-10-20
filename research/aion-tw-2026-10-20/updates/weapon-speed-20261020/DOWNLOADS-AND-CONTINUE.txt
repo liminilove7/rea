@@ -1,0 +1,27 @@
+属性实验台更新 · 2026-10-20
+
+本轮内容：当前武器基线采集/身份绑定、相对间隔设置、攻速和移速独立勾选维护，以及条件还原。
+弓星截图攻速2.4，对应I/镜像/U/V均2400、系数1；当前新版仅作只读观察，没有写游戏验证。
+间隔缩短25%：1200→900，2400→1800；取消后恢复本次武器基线。不能据此推断服务器实际攻击频率。
+切换武器前先取消锁定，换好后重采；尚未解析装备ID，同基线换装可能识别不了。
+101项程序/原生夹具/ImGui交互渲染检查及15项报告检查通过。更快档位与服务器接受情况仍待验证。
+
+获取可运行程序和完整离线包：
+https://github.com/liminilove7/rea/releases/tag/aion-speedlab-weapon-20261020
+speedlab-win-x64-weapon-20261020.zip：SpeedLab.exe、start.cmd、preview.cmd、中文报告、测试与身份记录，自包含.NET8.0.25。
+speedlab-source-evidence-20261020.zip：源码、共享核心、编译脚本、完整报告与移速历史证据，保留源码相对目录即可构建。
+SHA256SUMS.txt：附件SHA256核对。
+
+离线入口：本文件相邻architecture.html（内嵌界面图片），以及modifier-imgui/README.txt和build.ps1。
+从Git检出时可运行build.ps1 -Publish生成完整程序、界面截图及验证记录。Git不存放EXE/DLL/数据库/商业工具安装包。
+本轮没有进程伪装、隐藏、驱动、注入或反检测；无自启、常驻服务或自动重连。
+
+明日继续：先阅读AttackBaseline.cs、SpeedLocks.cs和Desktop.cs；核对弓2400与原1200基线的比例及还原。
+沿此前REA证据追实际平砍命中/发射/伤害的消费者，不能把动画更快当作服务器频率证明。
+移速历史7.74试验约13.499秒结束，V1未记录终止原因；原始日志和完整历史包保留，不改写为稳定60秒。
+
+已有游戏静态文件无需重复上传：
+https://github.com/liminilove7/rea/releases/tag/aion-tw-offline-20261020
+以及原案例：
+https://github.com/liminilove7/rea/releases/tag/aion-tw-research-20261019
+本轮没有改变客户端程序文件或增加新的服务器源码；公开跨版本参考代码不等同当前私服后台。
