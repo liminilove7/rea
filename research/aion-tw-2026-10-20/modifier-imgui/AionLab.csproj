@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PlatformTarget>x64</PlatformTarget>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>$(DefineConstants);IMGUI_FRONTEND</DefineConstants>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>AionLab</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.89.2-ga121087cad" />
+    <!-- Veldrid's loader otherwise resolves Newtonsoft.Json 9.0.1. -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Compile Include="../modifier/AttackSpeedLab.cs" Link="ExistingAttackCore.cs" />
+  </ItemGroup>
+</Project>

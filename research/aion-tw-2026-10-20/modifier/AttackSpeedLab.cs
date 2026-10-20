@@ -2,14 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+#if !IMGUI_FRONTEND
 using System.Drawing;
+#endif
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+#if IMGUI_FRONTEND
+using JavaScriptSerializer = AionLab.JsonCompatibility;
+#else
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+#endif
 
 namespace AttackSpeedLab {
   // The game-specific layout is an analyst profile derived from saved REA evidence.
@@ -287,6 +293,7 @@ namespace AttackSpeedLab {
     public void Dispose() { memory.Dispose(); audit.Dispose(); }
   }
 
+#if !IMGUI_FRONTEND
   internal sealed class LabForm : Form {
     private readonly ComboBox targets=new ComboBox { DropDownStyle=ComboBoxStyle.DropDownList,Width=310 };
     private readonly NumericUpDown desired=new NumericUpDown { Minimum=700,Maximum=1200,Value=700,Increment=100,Width=100 };
@@ -358,6 +365,7 @@ namespace AttackSpeedLab {
     }
   }
 
+#endif
   internal static class Program {
     internal static bool CandidateName(string name) {
       // Windows preserves the .bin extension in ProcessName; it is not always aion.
@@ -378,6 +386,7 @@ namespace AttackSpeedLab {
         return new JavaScriptSerializer().Serialize(new { method="Auxiliary Win32 read only; REA-derived profile",memoryWritten=false,pid=pid,gameBase=Mem.Hex(target.Base),character=Mem.Hex(role.Character),I=Mem.U16(m,target.Base+Profile.Interval),mirror=Mem.Value(m,target.Base+Profile.Mirror,4),U=Mem.U16(m,role.Character+Profile.U),V=Mem.U16(m,role.Character+Profile.V),scale=BitConverter.ToSingle(m.Read(role.Character+Profile.Scale,4),0),gameHash=Profile.GameHash,atomicSnapshot=false });
       }
     }
+#if !IMGUI_FRONTEND
     [STAThread]
     private static int Main(string[] args) {
       try {
@@ -401,6 +410,7 @@ namespace AttackSpeedLab {
         MessageBox.Show(e.Message,"攻速实验工具",MessageBoxButtons.OK,MessageBoxIcon.Error); return 1;
       }
     }
+#endif
   }
 
   // Native scratch-memory tests are compiled in; this entry point never discovers a game.

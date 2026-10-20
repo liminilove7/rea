@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AION Lab · ImGui 界面与功能架构</title>
+<style>
+:root{color-scheme:dark;--bg:#0b111b;--panel:#121e2d;--line:#294158;--ink:#e6edf5;--muted:#a5b7ca;--cyan:#5bd7dd}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 "Microsoft YaHei",sans-serif}
+main{max-width:1160px;margin:auto;padding:48px 24px}h1{font-size:38px;line-height:1.3}h2{margin-top:46px;color:var(--cyan)}h3{margin-bottom:8px}p{max-width:1000px}
+small,.muted{color:var(--muted)}a{color:var(--cyan)}.tag{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:3px 14px;margin:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card,.notice{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.notice{border-left:4px solid var(--cyan)}table{border-collapse:collapse;width:100%;margin:20px 0}th,td{text-align:left;border:1px solid var(--line);padding:12px;vertical-align:top}th{background:var(--panel)}
+code,pre{font-family:Consolas,monospace}p,li,td,th{overflow-wrap:anywhere}table{table-layout:fixed}pre{padding:18px;background:#060d15;white-space:pre-wrap;overflow-wrap:anywhere}svg{display:block;width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+svg text{font-family:"Microsoft YaHei",sans-serif;fill:var(--ink)}.scroll{overflow-x:auto}footer{margin-top:48px;color:var(--muted)}@media(max-width:640px){h1{font-size:28px}main{padding:24px 14px}table{font-size:14px}}
+</style>
+<main>
+<small>REA RESEARCH / AION TW / 2026-10-20</small>
+<h1>ImGui 修改器<br>界面、功能架构与实现说明</h1>
+<p>把已有攻速实验工具迁移到独立的 ImGui 桌面窗口。保持原攻速事务与校验逻辑，共享原源码；移动速度和怪物识别建立界面与快照契约，等待后续验证的数据源。</p>
+<span class="tag">Windows x64</span><span class="tag">.NET 8</span><span class="tag">ImGui.NET 1.89.2</span><span class="tag">D3D11 / SDL2</span>
+<p class="notice"><strong>本版可用：</strong>原攻速实验入口、只读检查、会话监视、还原和日志。<br><strong>本版预留：</strong>移速倍率草案、怪物列表布局和数据接口；没有对应的实时读取或写入实现。<br><strong>本次未验证：</strong>游戏内实际动画、命中频率、移动效果和怪物识别。离线通过不能替代游戏验收。</p>
+
+<h2>01 / 界面布局</h2>
+<svg viewBox="0 0 1080 500" role="img" aria-label="界面示意：顶部会话状态，左侧四个导航页，右侧功能区，底部日志">
+<rect x="24" y="22" width="1032" height="68" rx="8" fill="#0b111b"/>
+<text x="44" y="52" font-size="21">AION / RESEARCH LAB</text><text x="44" y="77" font-size="15">会话状态 · 全局倒计时 · 活动期间始终可见的立即还原</text>
+<rect x="24" y="110" width="190" height="238" rx="8" fill="#203247"/>
+<text x="44" y="148">01 攻速实验</text><text x="44" y="197">02 移动速度</text><text x="44" y="246">03 怪物识别</text><text x="44" y="295">04 证据与接入</text>
+<rect x="234" y="110" width="822" height="238" rx="8" fill="#0b111b"/>
+<text x="258" y="150" font-size="22">功能区：根据导航显示操作或预留接口</text>
+<text x="258" y="196">攻速：选择目标 → 只读检查 → 设置间隔 → 60 秒实验</text>
+<text x="258" y="235">移速：当前值未知；倍率仅为草案；应用和还原禁用</text>
+<text x="258" y="274">怪物：名称 / 分类 / 距离 / 生命比例 / 证据时间</text>
+<text x="258" y="313">证据：旧环境路径、模块版本和验证边界</text>
+<rect x="24" y="370" width="1032" height="105" rx="8" fill="#0b111b"/>
+<text x="44" y="407" font-size="20">操作日志 · 最近 200 条</text>
+<text x="44" y="445">详细事务写入 logs/*.jsonl；页面切换不会改变会话所有权。</text>
+</svg>
+<p class="muted">上图为架构示意。发布包的 screenshots 目录包含生产渲染器生成的四个页面截图。测试采用离屏帧缓冲和模拟输入，不代表系统级鼠标验收。</p>
+<div class="cards">
+<section class="card"><h3>攻速页</h3><p>目标未选择时检查和开始禁用；活动期间参数、目标和刷新锁定。紧急还原位于全局顶部，切换页面也能停止。</p></section>
+<section class="card"><h3>移动页</h3><p>保留倍率编辑体验，但明确为不保存、不应用的草案。原值、单位与有效范围未知，不伪造数值。</p></section>
+<section class="card"><h3>怪物页</h3><p>展示列表表头、筛选草案和未接入原因。空快照为未知，不能表达为“附近怪物数量为零”。</p></section>
+</div>
+
+<h2>02 / 依赖与职责</h2>
+<svg viewBox="0 0 1080 365" role="img" aria-label="界面依赖会话控制器，控制器依赖原攻速核心；移动和怪物通过独立快照接口预留">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#5bd7dd"/></marker></defs>
+<g stroke="#294158" fill="#0b111b"><rect x="25" y="35" width="285" height="90" rx="8"/><rect x="395" y="35" width="285" height="90" rx="8"/><rect x="765" y="35" width="285" height="90" rx="8"/><rect x="395" y="215" width="285" height="100" rx="8"/><rect x="765" y="215" width="285" height="100" rx="8"/></g>
+<g font-size="19"><text x="45" y="72">Desktop / LabView</text><text x="415" y="72">LabController</text><text x="785" y="72">原 Session / Mutation</text><text x="415" y="252">IMovementSource</text><text x="785" y="252">IMonsterSource</text></g>
+<g font-size="15"><text x="45" y="102">渲染、输入、状态呈现</text><text x="415" y="102">唯一会话所有者、停止与释放</text><text x="785" y="102">原路径 / 哈希 / 对象 / 写入校验</text><text x="415" y="284">PendingMovement：Unavailable</text><text x="785" y="284">PendingMonsters：Unavailable</text></g>
+<g fill="none" stroke="#5bd7dd" stroke-width="2" marker-end="url(#arrow)"><path d="M310 80H390"/><path d="M680 80H760"/><path d="M170 125V265H390"/><path d="M170 170H905V210"/></g>
+</svg>
+<div class="scroll"><table>
+<thead><tr><th>源文件</th><th>所有权 / 实现</th><th>禁止混淆</th></tr></thead><tbody>
+<tr><td>Desktop.cs</td><td>SDL2 窗口、D3D11、ImGui、中文字体与四个页面。500 ms 调用会话检查，渲染最多约 60 FPS。</td><td>UI 不直接拼接或写入新地址。</td></tr>
+<tr><td>Features.cs</td><td>LabController 持有 ITrial；ExistingTrial 适配原 Session；快照声明可用性、来源、采集时间与构建身份。</td><td>换页不创建新事务；未知不等于零。</td></tr>
+<tr><td>../modifier/AttackSpeedLab.cs</td><td>原 Profile、NativeMemory、Role、Target、Audit、Mutation、Session 共用源码。仅条件编译排除旧界面与入口。</td><td>不复制第二份攻速核心；不更改已有偏移、基线与版本约束。</td></tr>
+<tr><td>JsonCompatibility</td><td>.NET 8 使用 System.Text.Json 输出相同的结构化日志字段。</td><td>转义和格式可能不同，不承诺日志字节一致。</td></tr>
+<tr><td>ControllerTests / RenderProbe</td><td>模拟会话测试；真实渲染器配合模拟输入进行页面测试与字形检查。</td><td>不证明真实游戏或系统输入行为。</td></tr>
+</tbody></table></div>
+
+<h2>03 / 保留的攻速行为</h2>
+<ol>
+<li>刷新仅发现指定路径的候选进程；只读检查不写入。</li>
+<li>开始时重新验证进程创建时间、实际路径、模块路径与 SHA256、角色对象和研究基线。</li>
+<li>范围仍为 700–1200；三个原字段按既有宽度仅应用一次，逐项回读并记录。</li>
+<li>活动期间每 500 ms 复核；外部更新或对象改变触发停止，不反复锁定。</li>
+<li>手动停止、60 秒到期、正常关闭、渲染异常退出均尝试通过原事务还原。仅恢复仍为本事务目标值的字段，保留外部值。</li>
+<li>释放过程异常也呈现在状态和记录中；强杀、断电与对象重建无法保证恢复。</li>
+</ol>
+<p>原 WinForms 构建仍保留；两个版本使用同一个单实例互斥体，避免并行实验。新版本的运行时从 .NET Framework 切换到 .NET 8，因此既验证原版，也验证同源核心在新运行时下的行为。</p>
+
+<h2>04 / 后续功能接入契约</h2>
+<table><thead><tr><th>模块</th><th>已定义数据</th><th>尚需研究与验证</th></tr></thead><tbody>
+<tr><td>移动速度</td><td>MovementSnapshot：可空速度、单位、Evidence。Observation 带 Unavailable / Ready / Stale 及原因。</td><td>字段语义、数据类型、覆盖写入者、对象生命周期、测量单位、原值恢复与服务器实际位移。没有预先开放写入接口。</td></tr>
+<tr><td>怪物识别</td><td>MonsterSnapshot：ID、名称、分类、可空位置/距离/生命比例、Evidence。IMonsterSource 只读。</td><td>实体分类证据、身份与复用规则、快照一致性、数量上限、过期与注销处理。先离线夹具再自控环境验证。</td></tr>
+<tr><td>来源与版本</td><td>Source、CapturedAt、BuildIdentity。</td><td>未来适配器必须校验版本适用性；过期数据明确标记 Stale；不能跨构建自动继承地址。</td></tr>
+</tbody></table>
+<p class="notice">本版不提供“填写任意地址后立即生效”的通用写内存入口。当前预留页的应用按钮禁用。后续实现必须先确定字段含义和恢复条件，不能只依据 CE 地址颜色或可写性认定修改有效。</p>
+
+<h2>05 / 构建与验证</h2>
+<pre>powershell -File build.ps1 -Publish
+powershell -File verify.ps1
+
+# 发布包中直接使用
+preview.cmd
+start.cmd
+
+# 可选的离线验证入口
+AionLab.exe --self-test result.json
+AionLab.exe --render-test render-output</pre>
+<p>构建脚本只使用已安装的 .NET 8 SDK，还原锁定的 NuGet 包，不安装开发环境。发布包附带 x64 运行时，必须完整解压；Windows 微软雅黑从系统加载，不随包分发。Veldrid.ImGui 固定为 5.89.2-ga121087cad，与 ImGui.NET 1.89.2 配套；没有无验证升级绑定与原生 ABI。Newtonsoft.Json 显式固定 13.0.3，避免旧加载器传递依赖解析到 9.0.1。</p>
+<table><thead><tr><th>验证</th><th>已完成范围</th><th>限制</th></tr></thead><tbody>
+<tr><td>旧核心 / 新运行时</td><td>两个构建各通过 18 项进程内原生内存夹具检查。</td><td>合成角色布局；未连接游戏。</td></tr>
+<tr><td>新会话控制</td><td>10 项检查：无目标、重复开始、超时、校验失败、还原异常、关闭释放、日志上限、预留数据与 JSON。</td><td>模拟会话不代表操作系统异常的全部情况。</td></tr>
+<tr><td>ImGui 渲染</td><td>四个页面通过模拟点击切换；D3D11 离屏画面可读；检查中文字形存在和非空画面。</td><td>系统捕获超时，之后用户按 Escape 停止桌面自动化；未完成系统鼠标、多 DPI 和显卡兼容性验收。</td></tr>
+</tbody></table>
+<p>结果位于 verification。历史原版 JSON 保持原样。截图为自身离屏渲染结果，不截取其他窗口。首次发现的问号问题来自默认字体没有替换，已改为清空默认字体集后加载微软雅黑，并加入中文字形验证。自包含发布包已成功构建；随后执行发布包复测的合并命令被自动审批拦截，未取得发布包独立运行复测结果。</p>
+
+<h2>06 / 回家后的验证顺序</h2>
+<ol>
+<li>先运行 preview.cmd，确认中文、四个页面与本机显示缩放；关闭后再启动常规模式。</li>
+<li>核对游戏根目录与版本。当前 Profile 仍为 <code>D:\Workspace\AION_TW\DeuLuncher\bin56\aion.bin</code>，路径不同会找不到目标；不能为了连接而移除模块版本校验。</li>
+<li>在自己可控制的测试环境先做只读检查，核实对象、基线与模块身份。失败时保留原因。</li>
+<li>对既有攻速功能记录修改前、实验中和还原后的动画周期、实际命中时间与服务端结果；不要把客户端字段变化直接写成攻速已生效。</li>
+<li>检查日志与还原回读，并验证正常停止与角色状态变化。出现未解决项后先恢复环境再重试。</li>
+<li>移动和怪物功能先整理版本身份、数据语义与离线样本，再实现对应适配器。本版预留界面不会自动启用。</li>
+</ol>
+<footer>参考：<a href="https://github.com/ImGuiNET/ImGui.NET">ImGui.NET 官方仓库</a> · <a href="https://github.com/veldrid/veldrid">Veldrid 官方仓库</a> · <a href="https://github.com/liminilove7/rea/blob/codex/aion-research-archive-20261011/research/aion-tw-2026-10-20/reports/攻速修改方案与后续计划.html">原攻速研究报告</a><br>此文档描述修改器研究应用，不新增 REA 核心的运行时修改能力。</footer>
+</main>
+</html>
