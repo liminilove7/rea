@@ -1,0 +1,204 @@
+{
+  "evidence_id": "ev_3ccdb160ebb338025fdd674987928557462735cd6601f5006f52ee0846739321",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x18040a240"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 269.531,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 269.874,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x18040a240"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x18040a240",
+            "fn": {
+              "addr": "0x18040a240",
+              "name": "sub_18040A240",
+              "size": "0x1f9"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x18040a240",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x18040a240",
+          "code": "__int64 __fastcall sub_18040A240(_QWORD *a1)\n{\n  __int64 v2; // rdi\n  __int64 v3; // rax\n  __int64 v4; // rax\n  __int64 v5; // rax\n  _QWORD v7[3]; // [rsp+20h] [rbp-18h]\n\n  sub_1809EA0E0(); /*0x18040a24d*/\n  v2 = 0; /*0x18040a259*/\n  v7[0] = aRadioTargetSlo; /*0x18040a25b*/\n  v7[1] = aRadioTargetSlo_0; /*0x18040a267*/\n  do /*0x18040a296*/\n  {\n    a1[v2 + 163] = (*(__int64 (__fastcall **)(_QWORD *, _QWORD, __int64))(*a1 + 864LL))(a1, a2: v7[v2], a3: 8193); /*0x18040a287*/\n    ++v2; /*0x18040a28f*/\n  }\n  while ( v2 < 2 ); /*0x18040a296*/\n  a1[165] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aDescTargetSlot, a3: 8229); /*0x18040a2b1*/\n  v3 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aAssistItemList, a3: 8218); /*0x18040a2cb*/\n  a1[166] = v3; /*0x18040a2d1*/\n  if ( v3 != 0 ) /*0x18040a2db*/\n    *(_DWORD *)(v3 + 996) = 1; /*0x18040a2dd*/\n  a1[160] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnTargetOptio, a3: 8200); /*0x18040a300*/\n  a1[161] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnTargetOptio_0, a3: 8200); /*0x18040a320*/\n  a1[162] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnMaterialOpt, a3: 8200); /*0x18040a340*/\n  a1[167] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aTargetDesc, a3: 8229); /*0x18040a360*/\n  v4 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aTargetItem, a3: 8211); /*0x18040a37a*/\n  a1[168] = v4; /*0x18040a380*/\n  if ( v4 != 0 ) /*0x18040a38a*/\n    *(_DWORD *)(v4 + 824) = 81; /*0x18040a38c*/\n  a1[169] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantToolDes, a3: 8229); /*0x18040a3af*/\n  v5 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantToolIte, a3: 8211); /*0x18040a3c9*/\n  a1[170] = v5; /*0x18040a3cf*/\n  if ( v5 != 0 ) /*0x18040a3d9*/\n    *(_DWORD *)(v5 + 824) = 81; /*0x18040a3db*/\n  a1[159] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aOk, a3: 8193); /*0x18040a3fe*/\n  a1[171] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantProb, a3: 8229); /*0x18040a41e*/\n  return (*(__int64 (__fastcall **)(_QWORD *))(*a1 + 32LL))(a1);\n}",
+          "line_count": 40,
+          "total_lines": 40,
+          "truncated": false,
+          "cursor": {
+            "done": true
+          },
+          "refs": [
+            {
+              "addr": "0x1809ea0e0",
+              "name": "sub_1809EA0E0"
+            },
+            {
+              "addr": "0x180cbcab0",
+              "name": "aRadioTargetSlo",
+              "string": "radio_target_slot_basic"
+            },
+            {
+              "addr": "0x180cbca68",
+              "name": "aRadioTargetSlo_0",
+              "string": "radio_target_slot_compounded"
+            },
+            {
+              "addr": "0x180cbca88",
+              "name": "aDescTargetSlot",
+              "string": "desc_target_slot_compounded"
+            },
+            {
+              "addr": "0x180cbcaf8",
+              "name": "aAssistItemList",
+              "string": "assist_item_list"
+            },
+            {
+              "addr": "0x180cbcb10",
+              "name": "aCtnTargetOptio",
+              "string": "ctn_target_option"
+            },
+            {
+              "addr": "0x180cbcac8",
+              "name": "aCtnTargetOptio_0",
+              "string": "ctn_target_option_none"
+            },
+            {
+              "addr": "0x180cbcae0",
+              "name": "aCtnMaterialOpt",
+              "string": "ctn_material_option"
+            },
+            {
+              "addr": "0x180c42c60",
+              "name": "aTargetDesc",
+              "string": "target_desc"
+            },
+            {
+              "addr": "0x180c41bf0",
+              "name": "aTargetItem",
+              "string": "target_item"
+            },
+            {
+              "addr": "0x180cbcb48",
+              "name": "aEnchantToolDes",
+              "string": "enchant_tool_desc"
+            },
+            {
+              "addr": "0x180cbcb60",
+              "name": "aEnchantToolIte",
+              "string": "enchant_tool_item"
+            },
+            {
+              "addr": "0x180c41b48",
+              "name": "aOk",
+              "string": "ok"
+            },
+            {
+              "addr": "0x180cbcb28",
+              "name": "aEnchantProb",
+              "string": "enchant_prob"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_18040A240(_QWORD *a1)\n{\n  __int64 v2; // rdi\n  __int64 v3; // rax\n  __int64 v4; // rax\n  __int64 v5; // rax\n  _QWORD v7[3]; // [rsp+20h] [rbp-18h]\n\n  sub_1809EA0E0(); /*0x18040a24d*/\n  v2 = 0; /*0x18040a259*/\n  v7[0] = aRadioTargetSlo; /*0x18040a25b*/\n  v7[1] = aRadioTargetSlo_0; /*0x18040a267*/\n  do /*0x18040a296*/\n  {\n    a1[v2 + 163] = (*(__int64 (__fastcall **)(_QWORD *, _QWORD, __int64))(*a1 + 864LL))(a1, a2: v7[v2], a3: 8193); /*0x18040a287*/\n    ++v2; /*0x18040a28f*/\n  }\n  while ( v2 < 2 ); /*0x18040a296*/\n  a1[165] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aDescTargetSlot, a3: 8229); /*0x18040a2b1*/\n  v3 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aAssistItemList, a3: 8218); /*0x18040a2cb*/\n  a1[166] = v3; /*0x18040a2d1*/\n  if ( v3 != 0 ) /*0x18040a2db*/\n    *(_DWORD *)(v3 + 996) = 1; /*0x18040a2dd*/\n  a1[160] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnTargetOptio, a3: 8200); /*0x18040a300*/\n  a1[161] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnTargetOptio_0, a3: 8200); /*0x18040a320*/\n  a1[162] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aCtnMaterialOpt, a3: 8200); /*0x18040a340*/\n  a1[167] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aTargetDesc, a3: 8229); /*0x18040a360*/\n  v4 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aTargetItem, a3: 8211); /*0x18040a37a*/\n  a1[168] = v4; /*0x18040a380*/\n  if ( v4 != 0 ) /*0x18040a38a*/\n    *(_DWORD *)(v4 + 824) = 81; /*0x18040a38c*/\n  a1[169] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantToolDes, a3: 8229); /*0x18040a3af*/\n  v5 = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantToolIte, a3: 8211); /*0x18040a3c9*/\n  a1[170] = v5; /*0x18040a3cf*/\n  if ( v5 != 0 ) /*0x18040a3d9*/\n    *(_DWORD *)(v5 + 824) = 81; /*0x18040a3db*/\n  a1[159] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aOk, a3: 8193); /*0x18040a3fe*/\n  a1[171] = (*(__int64 (__fastcall **)(_QWORD *, char *, __int64))(*a1 + 864LL))(a1, a2: aEnchantProb, a3: 8229); /*0x18040a41e*/\n  return (*(__int64 (__fastcall **)(_QWORD *))(*a1 + 32LL))(a1);\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x18040a240"
+    }
+  ],
+  "evidence_links": []
+}

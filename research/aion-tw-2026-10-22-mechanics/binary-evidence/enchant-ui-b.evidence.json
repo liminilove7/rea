@@ -1,0 +1,227 @@
+{
+  "evidence_id": "ev_5a3aa62901b850d0dd1a8967e4cabeaeb62a1e42d6acaf1933cf2544bf45657b",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x18040db40"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 270.093,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 270.419,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x18040db40"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x18040db40",
+            "fn": {
+              "addr": "0x18040db40",
+              "name": "sub_18040DB40",
+              "size": "0x25e"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x18040db40",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x18040db40",
+          "code": "void __fastcall sub_18040DB40(_QWORD *a1, __int64 a2)\n{\n  __int64 v4; // rax\n  __int64 v5; // rax\n  __int64 v6; // rax\n  __int64 v7; // rax\n  __int64 v8; // rax\n  __int64 v9; // rax\n  __int64 v10; // rax\n  __int64 v11; // rax\n  __int64 v12; // rax\n  __int64 v13; // rax\n  __int64 v14; // rax\n  __int64 v15; // rax\n\n  if ( a2 != 0 ) /*0x18040db43*/\n  {\n    v4 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040db71*/\n           a1: a2,\n           a2: aAssistItemList,\n           a3: 8218);\n    v5 = sub_180B1DBA1( /*0x18040db90*/\n           a1: v4,\n           a2: 0,\n           a3: &UIWidget `RTTI Type Descriptor',\n           a4: &UIListView `RTTI Type Descriptor',\n           a5: 0);\n    a1[3] = v5; /*0x18040db95*/\n    if ( v5 != 0 ) /*0x18040db9c*/\n      *(_DWORD *)(v5 + 996) = 1; /*0x18040db9e*/\n    v6 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dbbb*/\n           a1: a2,\n           a2: aCtnMaterialOpt,\n           a3: 8200);\n    a1[2] = sub_180B1DBA1( /*0x18040dbdd*/\n              a1: v6,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIContainer `RTTI Type Descriptor',\n              a5: 0);\n    v7 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dbf4*/\n           a1: a2,\n           a2: aTargetDesc,\n           a3: 8229);\n    a1[4] = sub_180B1DBA1( /*0x18040dc16*/\n              a1: v7,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v8 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dc2d*/\n           a1: a2,\n           a2: aTargetItem,\n           a3: 8211);\n    v9 = sub_180B1DBA1( /*0x18040dc4a*/\n           a1: v8,\n           a2: 0,\n           a3: &UIWidget `RTTI Type Descriptor',\n           a4: &UIItemView `RTTI Type Descriptor',\n           a5: 0);\n    a1[5] = v9; /*0x18040dc4f*/\n    if ( v9 != 0 ) /*0x18040dc56*/\n      *(_DWORD *)(v9 + 824) = 81; /*0x18040dc58*/\n    v10 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dc75*/\n            a1: a2,\n            a2: aEnchantToolDes,\n            a3: 8229);\n    a1[6] = sub_180B1DBA1( /*0x18040dc97*/\n              a1: v10,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v11 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dcae*/\n            a1: a2,\n            a2: aEnchantToolIte,\n            a3: 8211);\n    v12 = sub_180B1DBA1( /*0x18040dccb*/\n            a1: v11,\n            a2: 0,\n            a3: &UIWidget `RTTI Type Descriptor',\n            a4: &UIItemView `RTTI Type Descriptor',\n            a5: 0);\n    a1[7] = v12; /*0x18040dcd0*/\n    if ( v12 != 0 ) /*0x18040dcd7*/\n      *(_DWORD *)(v12 + 824) = 81; /*0x18040dcd9*/\n    v13 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))(a1: a2, a2: aOk, a3: 8193); /*0x18040dcf6*/\n    a1[1] = sub_180B1DBA1( /*0x18040dd18*/\n              a1: v13,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIButton `RTTI Type Descriptor',\n              a5: 0);\n    v14 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dd2f*/\n            a1: a2,\n            a2: aEnchantProb,\n            a3: 8229);\n    a1[9] = sub_180B1DBA1( /*0x18040dd51*/\n              a1: v14,\n              a2: 0,",
+          "line_count": 100,
+          "total_lines": 115,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x180cbcaf8",
+              "name": "aAssistItemList",
+              "string": "assist_item_list"
+            },
+            {
+              "addr": "0x180b1dba1",
+              "name": "sub_180B1DBA1"
+            },
+            {
+              "addr": "0x180f6eb90",
+              "name": "??_R0?AVUIWidget@@@8"
+            },
+            {
+              "addr": "0x180f6ee30",
+              "name": "??_R0?AVUIListView@@@8"
+            },
+            {
+              "addr": "0x180cbcae0",
+              "name": "aCtnMaterialOpt",
+              "string": "ctn_material_option"
+            },
+            {
+              "addr": "0x180f6ede0",
+              "name": "??_R0?AVUIContainer@@@8"
+            },
+            {
+              "addr": "0x180c42c60",
+              "name": "aTargetDesc",
+              "string": "target_desc"
+            },
+            {
+              "addr": "0x180f6ec50",
+              "name": "??_R0?AVUIStatic@@@8"
+            },
+            {
+              "addr": "0x180c41bf0",
+              "name": "aTargetItem",
+              "string": "target_item"
+            },
+            {
+              "addr": "0x180f6f780",
+              "name": "??_R0?AVUIItemView@@@8"
+            },
+            {
+              "addr": "0x180cbcb48",
+              "name": "aEnchantToolDes",
+              "string": "enchant_tool_desc"
+            },
+            {
+              "addr": "0x180cbcb60",
+              "name": "aEnchantToolIte",
+              "string": "enchant_tool_item"
+            },
+            {
+              "addr": "0x180c41b48",
+              "name": "aOk",
+              "string": "ok"
+            },
+            {
+              "addr": "0x180f6ec30",
+              "name": "??_R0?AVUIButton@@@8"
+            },
+            {
+              "addr": "0x180cbcb28",
+              "name": "aEnchantProb",
+              "string": "enchant_prob"
+            },
+            {
+              "addr": "0x180cbcb90",
+              "name": "aEnchantHelp",
+              "string": "enchant_help"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x18040db40",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x18040db40",
+          "code": "              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v15 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dd68*/\n            a1: a2,\n            a2: aEnchantHelp,\n            a3: 8193);\n    a1[8] = sub_180B1DBA1( /*0x18040dd94*/\n              a1: v15,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIButton `RTTI Type Descriptor',\n              a5: 0);\n  }\n}",
+          "line_count": 15,
+          "total_lines": 115,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "void __fastcall sub_18040DB40(_QWORD *a1, __int64 a2)\n{\n  __int64 v4; // rax\n  __int64 v5; // rax\n  __int64 v6; // rax\n  __int64 v7; // rax\n  __int64 v8; // rax\n  __int64 v9; // rax\n  __int64 v10; // rax\n  __int64 v11; // rax\n  __int64 v12; // rax\n  __int64 v13; // rax\n  __int64 v14; // rax\n  __int64 v15; // rax\n\n  if ( a2 != 0 ) /*0x18040db43*/\n  {\n    v4 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040db71*/\n           a1: a2,\n           a2: aAssistItemList,\n           a3: 8218);\n    v5 = sub_180B1DBA1( /*0x18040db90*/\n           a1: v4,\n           a2: 0,\n           a3: &UIWidget `RTTI Type Descriptor',\n           a4: &UIListView `RTTI Type Descriptor',\n           a5: 0);\n    a1[3] = v5; /*0x18040db95*/\n    if ( v5 != 0 ) /*0x18040db9c*/\n      *(_DWORD *)(v5 + 996) = 1; /*0x18040db9e*/\n    v6 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dbbb*/\n           a1: a2,\n           a2: aCtnMaterialOpt,\n           a3: 8200);\n    a1[2] = sub_180B1DBA1( /*0x18040dbdd*/\n              a1: v6,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIContainer `RTTI Type Descriptor',\n              a5: 0);\n    v7 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dbf4*/\n           a1: a2,\n           a2: aTargetDesc,\n           a3: 8229);\n    a1[4] = sub_180B1DBA1( /*0x18040dc16*/\n              a1: v7,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v8 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dc2d*/\n           a1: a2,\n           a2: aTargetItem,\n           a3: 8211);\n    v9 = sub_180B1DBA1( /*0x18040dc4a*/\n           a1: v8,\n           a2: 0,\n           a3: &UIWidget `RTTI Type Descriptor',\n           a4: &UIItemView `RTTI Type Descriptor',\n           a5: 0);\n    a1[5] = v9; /*0x18040dc4f*/\n    if ( v9 != 0 ) /*0x18040dc56*/\n      *(_DWORD *)(v9 + 824) = 81; /*0x18040dc58*/\n    v10 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dc75*/\n            a1: a2,\n            a2: aEnchantToolDes,\n            a3: 8229);\n    a1[6] = sub_180B1DBA1( /*0x18040dc97*/\n              a1: v10,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v11 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dcae*/\n            a1: a2,\n            a2: aEnchantToolIte,\n            a3: 8211);\n    v12 = sub_180B1DBA1( /*0x18040dccb*/\n            a1: v11,\n            a2: 0,\n            a3: &UIWidget `RTTI Type Descriptor',\n            a4: &UIItemView `RTTI Type Descriptor',\n            a5: 0);\n    a1[7] = v12; /*0x18040dcd0*/\n    if ( v12 != 0 ) /*0x18040dcd7*/\n      *(_DWORD *)(v12 + 824) = 81; /*0x18040dcd9*/\n    v13 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))(a1: a2, a2: aOk, a3: 8193); /*0x18040dcf6*/\n    a1[1] = sub_180B1DBA1( /*0x18040dd18*/\n              a1: v13,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIButton `RTTI Type Descriptor',\n              a5: 0);\n    v14 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dd2f*/\n            a1: a2,\n            a2: aEnchantProb,\n            a3: 8229);\n    a1[9] = sub_180B1DBA1( /*0x18040dd51*/\n              a1: v14,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIStatic `RTTI Type Descriptor',\n              a5: 0);\n    v15 = (*(__int64 (__fastcall **)(__int64, char *, __int64))(*(_QWORD *)a2 + 864LL))( /*0x18040dd68*/\n            a1: a2,\n            a2: aEnchantHelp,\n            a3: 8193);\n    a1[8] = sub_180B1DBA1( /*0x18040dd94*/\n              a1: v15,\n              a2: 0,\n              a3: &UIWidget `RTTI Type Descriptor',\n              a4: &UIButton `RTTI Type Descriptor',\n              a5: 0);\n  }\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x18040db40"
+    }
+  ],
+  "evidence_links": []
+}

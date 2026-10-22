@@ -1,0 +1,171 @@
+{
+  "evidence_id": "ev_0382e8a9fb337f7e90fb01bdc8af37449be61f560c94202f4ad7841de8a5a726",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x180725ea0"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 539.969,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 540.435,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x180725ea0"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x180725ea0",
+            "fn": {
+              "addr": "0x180725ea0",
+              "name": "sub_180725EA0",
+              "size": "0x8d3"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180725ea0",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180725ea0",
+          "code": "__int64 __fastcall sub_180725EA0(__int64 a1, __int64 a2)\n{\n  _OWORD *v3; // rcx\n\n  *(_DWORD *)a1 = *(_DWORD *)a2; /*0x180725ea5*/\n  *(_DWORD *)a1 = *(_DWORD *)a2; /*0x180725ea9*/\n  *(_DWORD *)(a1 + 4) = *(_DWORD *)(a2 + 4); /*0x180725eae*/\n  *(_DWORD *)(a1 + 8) = *(_DWORD *)(a2 + 8); /*0x180725eb4*/\n  *(_DWORD *)(a1 + 12) = *(_DWORD *)(a2 + 12); /*0x180725eba*/\n  *(_DWORD *)(a1 + 16) = *(_DWORD *)(a2 + 16); /*0x180725ec0*/\n  *(_DWORD *)(a1 + 20) = *(_DWORD *)(a2 + 20); /*0x180725ec6*/\n  *(_DWORD *)(a1 + 24) = *(_DWORD *)(a2 + 24); /*0x180725ecc*/\n  *(_DWORD *)(a1 + 28) = *(_DWORD *)(a2 + 28); /*0x180725ed2*/\n  *(_DWORD *)(a1 + 32) = *(_DWORD *)(a2 + 32); /*0x180725ed8*/\n  *(_DWORD *)(a1 + 36) = *(_DWORD *)(a2 + 36); /*0x180725ede*/\n  *(_DWORD *)(a1 + 40) = *(_DWORD *)(a2 + 40); /*0x180725ee4*/\n  *(_DWORD *)(a1 + 44) = *(_DWORD *)(a2 + 44); /*0x180725eea*/\n  *(_DWORD *)(a1 + 48) = *(_DWORD *)(a2 + 48); /*0x180725ef0*/\n  *(_DWORD *)(a1 + 52) = *(_DWORD *)(a2 + 52); /*0x180725ef6*/\n  *(_DWORD *)(a1 + 56) = *(_DWORD *)(a2 + 56); /*0x180725efc*/\n  *(_DWORD *)(a1 + 60) = *(_DWORD *)(a2 + 60); /*0x180725f02*/\n  *(_DWORD *)(a1 + 64) = *(_DWORD *)(a2 + 64); /*0x180725f08*/\n  *(_DWORD *)(a1 + 68) = *(_DWORD *)(a2 + 68); /*0x180725f0e*/\n  *(_DWORD *)(a1 + 72) = *(_DWORD *)(a2 + 72); /*0x180725f14*/\n  *(_DWORD *)(a1 + 76) = *(_DWORD *)(a2 + 76); /*0x180725f1a*/\n  *(_DWORD *)(a1 + 80) = *(_DWORD *)(a2 + 80); /*0x180725f20*/\n  *(_DWORD *)(a1 + 84) = *(_DWORD *)(a2 + 84); /*0x180725f26*/\n  *(_DWORD *)(a1 + 88) = *(_DWORD *)(a2 + 88); /*0x180725f2c*/\n  *(_DWORD *)(a1 + 92) = *(_DWORD *)(a2 + 92); /*0x180725f32*/\n  *(_DWORD *)(a1 + 96) = *(_DWORD *)(a2 + 96); /*0x180725f38*/\n  *(_DWORD *)(a1 + 100) = *(_DWORD *)(a2 + 100); /*0x180725f3e*/\n  *(_DWORD *)(a1 + 104) = *(_DWORD *)(a2 + 104); /*0x180725f44*/\n  *(_DWORD *)(a1 + 108) = *(_DWORD *)(a2 + 108); /*0x180725f4a*/\n  *(_OWORD *)(a1 + 112) = *(_OWORD *)(a2 + 112); /*0x180725f51*/\n  *(_DWORD *)(a1 + 128) = *(_DWORD *)(a2 + 128); /*0x180725f5b*/\n  *(_BYTE *)(a1 + 132) = *(_BYTE *)(a2 + 132); /*0x180725f68*/\n  *(_OWORD *)(a1 + 133) = *(_OWORD *)(a2 + 133); /*0x180725f75*/\n  *(_DWORD *)(a1 + 149) = *(_DWORD *)(a2 + 149); /*0x180725f82*/\n  *(_BYTE *)(a1 + 153) = *(_BYTE *)(a2 + 153); /*0x180725f8f*/\n  *(_DWORD *)(a1 + 156) = *(_DWORD *)(a2 + 156); /*0x180725f9b*/\n  *(_DWORD *)(a1 + 160) = *(_DWORD *)(a2 + 160); /*0x180725fa7*/\n  *(_BYTE *)(a1 + 164) = *(_BYTE *)(a2 + 164); /*0x180725fb4*/\n  *(_BYTE *)(a1 + 165) = *(_BYTE *)(a2 + 165); /*0x180725fc1*/\n  *(_BYTE *)(a1 + 166) = *(_BYTE *)(a2 + 166); /*0x180725fce*/\n  *(_BYTE *)(a1 + 167) = *(_BYTE *)(a2 + 167); /*0x180725fdb*/\n  *(_BYTE *)(a1 + 168) = *(_BYTE *)(a2 + 168); /*0x180725fe8*/\n  *(_BYTE *)(a1 + 169) = *(_BYTE *)(a2 + 169); /*0x180725ff5*/\n  *(_BYTE *)(a1 + 170) = *(_BYTE *)(a2 + 170); /*0x180726002*/\n  *(_BYTE *)(a1 + 171) = *(_BYTE *)(a2 + 171); /*0x18072600f*/\n  *(_BYTE *)(a1 + 172) = *(_BYTE *)(a2 + 172); /*0x18072601c*/\n  *(_BYTE *)(a1 + 173) = *(_BYTE *)(a2 + 173); /*0x180726029*/\n  *(_BYTE *)(a1 + 174) = *(_BYTE *)(a2 + 174); /*0x180726036*/\n  *(_BYTE *)(a1 + 175) = *(_BYTE *)(a2 + 175); /*0x180726043*/\n  *(_WORD *)(a1 + 176) = *(_WORD *)(a2 + 176); /*0x180726050*/\n  *(_WORD *)(a1 + 178) = *(_WORD *)(a2 + 178); /*0x18072605e*/\n  *(_WORD *)(a1 + 180) = *(_WORD *)(a2 + 180); /*0x18072606c*/\n  *(_WORD *)(a1 + 182) = *(_WORD *)(a2 + 182); /*0x18072607a*/\n  *(_WORD *)(a1 + 184) = *(_WORD *)(a2 + 184); /*0x180726088*/\n  *(_WORD *)(a1 + 186) = *(_WORD *)(a2 + 186); /*0x180726096*/\n  *(_WORD *)(a1 + 188) = *(_WORD *)(a2 + 188); /*0x1807260a4*/\n  *(_WORD *)(a1 + 190) = *(_WORD *)(a2 + 190); /*0x1807260b2*/\n  *(_WORD *)(a1 + 192) = *(_WORD *)(a2 + 192); /*0x1807260c0*/\n  *(_WORD *)(a1 + 194) = *(_WORD *)(a2 + 194); /*0x1807260ce*/\n  *(_WORD *)(a1 + 196) = *(_WORD *)(a2 + 196); /*0x1807260dc*/\n  *(_WORD *)(a1 + 198) = *(_WORD *)(a2 + 198); /*0x1807260ea*/\n  *(_DWORD *)(a1 + 200) = *(_DWORD *)(a2 + 200); /*0x1807260f7*/\n  *(_DWORD *)(a1 + 204) = *(_DWORD *)(a2 + 204); /*0x180726103*/\n  *(_DWORD *)(a1 + 208) = *(_DWORD *)(a2 + 208); /*0x18072610f*/\n  *(_DWORD *)(a1 + 212) = *(_DWORD *)(a2 + 212); /*0x18072611b*/\n  *(_DWORD *)(a1 + 216) = *(_DWORD *)(a2 + 216); /*0x180726127*/\n  *(_DWORD *)(a1 + 220) = *(_DWORD *)(a2 + 220); /*0x180726133*/\n  *(_DWORD *)(a1 + 224) = *(_DWORD *)(a2 + 224); /*0x18072613f*/\n  *(_DWORD *)(a1 + 228) = *(_DWORD *)(a2 + 228); /*0x18072614b*/\n  *(_DWORD *)(a1 + 232) = *(_DWORD *)(a2 + 232); /*0x180726157*/\n  *(_DWORD *)(a1 + 236) = *(_DWORD *)(a2 + 236); /*0x180726163*/\n  *(_DWORD *)(a1 + 240) = *(_DWORD *)(a2 + 240); /*0x18072616f*/\n  *(_DWORD *)(a1 + 244) = *(_DWORD *)(a2 + 244); /*0x18072617b*/\n  *(_DWORD *)(a1 + 248) = *(_DWORD *)(a2 + 248); /*0x180726187*/\n  *(_DWORD *)(a1 + 252) = *(_DWORD *)(a2 + 252); /*0x180726193*/\n  *(_DWORD *)(a1 + 256) = *(_DWORD *)(a2 + 256); /*0x18072619f*/\n  *(_BYTE *)(a1 + 260) = *(_BYTE *)(a2 + 260); /*0x1807261ac*/\n  *(_DWORD *)(a1 + 264) = *(_DWORD *)(a2 + 264); /*0x1807261b8*/\n  *(_DWORD *)(a1 + 268) = *(_DWORD *)(a2 + 268); /*0x1807261c4*/\n  *(_DWORD *)(a1 + 272) = *(_DWORD *)(a2 + 272); /*0x1807261d0*/\n  *(_DWORD *)(a1 + 276) = *(_DWORD *)(a2 + 276); /*0x1807261dc*/\n  *(_DWORD *)(a1 + 280) = *(_DWORD *)(a2 + 280); /*0x1807261e8*/\n  *(_DWORD *)(a1 + 284) = *(_DWORD *)(a2 + 284); /*0x1807261f4*/\n  *(_DWORD *)(a1 + 288) = *(_DWORD *)(a2 + 288); /*0x180726200*/\n  *(_DWORD *)(a1 + 292) = *(_DWORD *)(a2 + 292); /*0x18072620c*/\n  *(_DWORD *)(a1 + 296) = *(_DWORD *)(a2 + 296); /*0x180726218*/\n  *(_DWORD *)(a1 + 300) = *(_DWORD *)(a2 + 300); /*0x180726224*/\n  *(_DWORD *)(a1 + 304) = *(_DWORD *)(a2 + 304); /*0x180726230*/\n  *(_DWORD *)(a1 + 308) = *(_DWORD *)(a2 + 308); /*0x18072623c*/\n  *(_DWORD *)(a1 + 312) = *(_DWORD *)(a2 + 312); /*0x180726248*/\n  *(_DWORD *)(a1 + 316) = *(_DWORD *)(a2 + 316); /*0x180726254*/\n  *(_DWORD *)(a1 + 320) = *(_DWORD *)(a2 + 320); /*0x180726260*/\n  *(_DWORD *)(a1 + 324) = *(_DWORD *)(a2 + 324); /*0x18072626c*/\n  *(_DWORD *)(a1 + 328) = *(_DWORD *)(a2 + 328); /*0x180726278*/\n  *(_DWORD *)(a1 + 332) = *(_DWORD *)(a2 + 332); /*0x180726284*/\n  *(_DWORD *)(a1 + 336) = *(_DWORD *)(a2 + 336); /*0x180726290*/",
+          "line_count": 100,
+          "total_lines": 201,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180725ea0",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180725ea0",
+          "code": "  *(_DWORD *)(a1 + 340) = *(_DWORD *)(a2 + 340); /*0x18072629c*/\n  *(_DWORD *)(a1 + 344) = *(_DWORD *)(a2 + 344); /*0x1807262a8*/\n  *(_DWORD *)(a1 + 348) = *(_DWORD *)(a2 + 348); /*0x1807262b4*/\n  *(_DWORD *)(a1 + 352) = *(_DWORD *)(a2 + 352); /*0x1807262c0*/\n  *(_DWORD *)(a1 + 356) = *(_DWORD *)(a2 + 356); /*0x1807262cc*/\n  *(_DWORD *)(a1 + 360) = *(_DWORD *)(a2 + 360); /*0x1807262d8*/\n  *(_DWORD *)(a1 + 364) = *(_DWORD *)(a2 + 364); /*0x1807262e4*/\n  *(_DWORD *)(a1 + 368) = *(_DWORD *)(a2 + 368); /*0x1807262f0*/\n  *(_WORD *)(a1 + 372) = *(_WORD *)(a2 + 372); /*0x1807262fd*/\n  *(_WORD *)(a1 + 374) = *(_WORD *)(a2 + 374); /*0x18072630b*/\n  *(_WORD *)(a1 + 376) = *(_WORD *)(a2 + 376); /*0x180726319*/\n  *(_WORD *)(a1 + 378) = *(_WORD *)(a2 + 378); /*0x180726327*/\n  *(_WORD *)(a1 + 380) = *(_WORD *)(a2 + 380); /*0x180726335*/\n  *(_WORD *)(a1 + 382) = *(_WORD *)(a2 + 382); /*0x180726343*/\n  *(_WORD *)(a1 + 384) = *(_WORD *)(a2 + 384); /*0x180726351*/\n  *(_WORD *)(a1 + 386) = *(_WORD *)(a2 + 386); /*0x18072635f*/\n  *(_WORD *)(a1 + 388) = *(_WORD *)(a2 + 388); /*0x18072636d*/\n  *(_WORD *)(a1 + 390) = *(_WORD *)(a2 + 390); /*0x18072637b*/\n  *(_WORD *)(a1 + 392) = *(_WORD *)(a2 + 392); /*0x180726389*/\n  *(_WORD *)(a1 + 394) = *(_WORD *)(a2 + 394); /*0x180726397*/\n  *(_WORD *)(a1 + 396) = *(_WORD *)(a2 + 396); /*0x1807263a5*/\n  *(_WORD *)(a1 + 398) = *(_WORD *)(a2 + 398); /*0x1807263b3*/\n  *(_WORD *)(a1 + 400) = *(_WORD *)(a2 + 400); /*0x1807263c1*/\n  *(_WORD *)(a1 + 402) = *(_WORD *)(a2 + 402); /*0x1807263cf*/\n  *(_WORD *)(a1 + 404) = *(_WORD *)(a2 + 404); /*0x1807263dd*/\n  *(_WORD *)(a1 + 406) = *(_WORD *)(a2 + 406); /*0x1807263eb*/\n  *(_BYTE *)(a1 + 408) = *(_BYTE *)(a2 + 408); /*0x1807263f9*/\n  *(_WORD *)(a1 + 410) = *(_WORD *)(a2 + 410); /*0x180726406*/\n  *(_WORD *)(a1 + 410) = *(_WORD *)(a2 + 410); /*0x180726414*/\n  *(_BYTE *)(a1 + 412) = *(_BYTE *)(a2 + 412); /*0x180726422*/\n  *(_WORD *)(a1 + 414) = *(_WORD *)(a2 + 414); /*0x18072642f*/\n  *(_DWORD *)(a1 + 416) = *(_DWORD *)(a2 + 416); /*0x18072643c*/\n  *(_BYTE *)(a1 + 420) = *(_BYTE *)(a2 + 420); /*0x180726449*/\n  *(_BYTE *)(a1 + 421) = *(_BYTE *)(a2 + 421); /*0x180726456*/\n  *(_BYTE *)(a1 + 422) = *(_BYTE *)(a2 + 422); /*0x180726463*/\n  *(_BYTE *)(a1 + 423) = *(_BYTE *)(a2 + 423); /*0x180726470*/\n  *(_BYTE *)(a1 + 424) = *(_BYTE *)(a2 + 424); /*0x18072647d*/\n  *(_BYTE *)(a1 + 425) = *(_BYTE *)(a2 + 425); /*0x18072648a*/\n  *(_BYTE *)(a1 + 426) = *(_BYTE *)(a2 + 426); /*0x180726497*/\n  *(_BYTE *)(a1 + 427) = *(_BYTE *)(a2 + 427); /*0x1807264a4*/\n  *(_BYTE *)(a1 + 428) = *(_BYTE *)(a2 + 428); /*0x1807264b1*/\n  *(_BYTE *)(a1 + 429) = *(_BYTE *)(a2 + 429); /*0x1807264be*/\n  *(_BYTE *)(a1 + 430) = *(_BYTE *)(a2 + 430); /*0x1807264cb*/\n  *(_BYTE *)(a1 + 431) = *(_BYTE *)(a2 + 431); /*0x1807264d8*/\n  *(_BYTE *)(a1 + 432) = *(_BYTE *)(a2 + 432); /*0x1807264e5*/\n  *(_BYTE *)(a1 + 433) = *(_BYTE *)(a2 + 433); /*0x1807264f2*/\n  *(_BYTE *)(a1 + 434) = *(_BYTE *)(a2 + 434); /*0x1807264ff*/\n  *(_BYTE *)(a1 + 435) = *(_BYTE *)(a2 + 435); /*0x18072650c*/\n  *(_BYTE *)(a1 + 436) = *(_BYTE *)(a2 + 436); /*0x180726519*/\n  *(_BYTE *)(a1 + 437) = *(_BYTE *)(a2 + 437); /*0x180726526*/\n  *(_BYTE *)(a1 + 438) = *(_BYTE *)(a2 + 438); /*0x180726533*/\n  *(_BYTE *)(a1 + 439) = *(_BYTE *)(a2 + 439); /*0x180726540*/\n  *(_BYTE *)(a1 + 440) = *(_BYTE *)(a2 + 440); /*0x18072654d*/\n  *(_BYTE *)(a1 + 441) = *(_BYTE *)(a2 + 441); /*0x18072655a*/\n  *(_BYTE *)(a1 + 442) = *(_BYTE *)(a2 + 442); /*0x180726567*/\n  *(_BYTE *)(a1 + 443) = *(_BYTE *)(a2 + 443); /*0x180726574*/\n  *(_BYTE *)(a1 + 444) = *(_BYTE *)(a2 + 444); /*0x180726581*/\n  *(_BYTE *)(a1 + 445) = *(_BYTE *)(a2 + 445); /*0x18072658e*/\n  *(_BYTE *)(a1 + 446) = *(_BYTE *)(a2 + 446); /*0x18072659b*/\n  *(_BYTE *)(a1 + 447) = *(_BYTE *)(a2 + 447); /*0x1807265a8*/\n  *(_DWORD *)(a1 + 448) = *(_DWORD *)(a2 + 448); /*0x1807265b4*/\n  *(_BYTE *)(a1 + 452) = *(_BYTE *)(a2 + 452); /*0x1807265c1*/\n  *(_BYTE *)(a1 + 453) = *(_BYTE *)(a2 + 453); /*0x1807265ce*/\n  *(_BYTE *)(a1 + 454) = *(_BYTE *)(a2 + 454); /*0x1807265db*/\n  *(_WORD *)(a1 + 456) = *(_WORD *)(a2 + 456); /*0x1807265e8*/\n  *(_WORD *)(a1 + 458) = *(_WORD *)(a2 + 458); /*0x1807265f6*/\n  *(_BYTE *)(a1 + 460) = *(_BYTE *)(a2 + 460); /*0x180726604*/\n  *(_BYTE *)(a1 + 461) = *(_BYTE *)(a2 + 461); /*0x180726611*/\n  *(_BYTE *)(a1 + 462) = *(_BYTE *)(a2 + 462); /*0x18072661e*/\n  *(_BYTE *)(a1 + 463) = *(_BYTE *)(a2 + 463); /*0x18072662b*/\n  *(_DWORD *)(a1 + 464) = *(_DWORD *)(a2 + 464); /*0x180726637*/\n  *(_BYTE *)(a1 + 468) = *(_BYTE *)(a2 + 468); /*0x180726644*/\n  *(_BYTE *)(a1 + 469) = *(_BYTE *)(a2 + 469); /*0x180726651*/\n  *(_BYTE *)(a1 + 470) = *(_BYTE *)(a2 + 470); /*0x18072665e*/\n  *(_DWORD *)(a1 + 471) = *(_DWORD *)(a2 + 471); /*0x18072666a*/\n  v3 = (_OWORD *)(a1 + 476); /*0x18072667a*/\n  *v3 = *(_OWORD *)(a2 + 476); /*0x180726681*/\n  v3[1] = *(_OWORD *)(a2 + 492); /*0x180726688*/\n  v3[2] = *(_OWORD *)(a2 + 508); /*0x180726690*/\n  v3[3] = *(_OWORD *)(a2 + 524); /*0x180726698*/\n  v3[4] = *(_OWORD *)(a2 + 540); /*0x1807266a0*/\n  v3[5] = *(_OWORD *)(a2 + 556); /*0x1807266a8*/\n  v3[6] = *(_OWORD *)(a2 + 572); /*0x1807266b0*/\n  v3 += 8; /*0x1807266b4*/\n  *(v3 - 1) = *(_OWORD *)(a2 + 588); /*0x1807266bc*/\n  *v3 = *(_OWORD *)(a2 + 604); /*0x1807266c7*/\n  v3[1] = *(_OWORD *)(a2 + 620); /*0x1807266d1*/\n  v3[2] = *(_OWORD *)(a2 + 636); /*0x1807266dc*/\n  v3[3] = *(_OWORD *)(a2 + 652); /*0x1807266e7*/\n  *((_QWORD *)v3 + 8) = *(_QWORD *)(a2 + 668); /*0x1807266f2*/\n  *(_OWORD *)(a1 + 680) = *(_OWORD *)(a2 + 680); /*0x1807266fd*/\n  *(_DWORD *)(a1 + 696) = *(_DWORD *)(a2 + 696); /*0x18072670b*/\n  *(_DWORD *)(a1 + 700) = *(_DWORD *)(a2 + 700); /*0x180726718*/\n  *(_BYTE *)(a1 + 704) = *(_BYTE *)(a2 + 704); /*0x180726726*/\n  *(_DWORD *)(a1 + 708) = *(_DWORD *)(a2 + 708); /*0x180726733*/\n  *(_DWORD *)(a1 + 712) = *(_DWORD *)(a2 + 712); /*0x180726740*/\n  *(_BYTE *)(a1 + 716) = *(_BYTE *)(a2 + 716); /*0x18072674e*/\n  *(_DWORD *)(a1 + 720) = *(_DWORD *)(a2 + 720); /*0x18072675b*/\n  *(_DWORD *)(a1 + 724) = *(_DWORD *)(a2 + 724); /*0x180726768*/\n  return a1; /*0x180726772*/",
+          "line_count": 100,
+          "total_lines": 201,
+          "truncated": true,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180725ea0",
+          "offset": 200,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180725ea0",
+          "code": "}",
+          "line_count": 1,
+          "total_lines": 201,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_180725EA0(__int64 a1, __int64 a2)\n{\n  _OWORD *v3; // rcx\n\n  *(_DWORD *)a1 = *(_DWORD *)a2; /*0x180725ea5*/\n  *(_DWORD *)a1 = *(_DWORD *)a2; /*0x180725ea9*/\n  *(_DWORD *)(a1 + 4) = *(_DWORD *)(a2 + 4); /*0x180725eae*/\n  *(_DWORD *)(a1 + 8) = *(_DWORD *)(a2 + 8); /*0x180725eb4*/\n  *(_DWORD *)(a1 + 12) = *(_DWORD *)(a2 + 12); /*0x180725eba*/\n  *(_DWORD *)(a1 + 16) = *(_DWORD *)(a2 + 16); /*0x180725ec0*/\n  *(_DWORD *)(a1 + 20) = *(_DWORD *)(a2 + 20); /*0x180725ec6*/\n  *(_DWORD *)(a1 + 24) = *(_DWORD *)(a2 + 24); /*0x180725ecc*/\n  *(_DWORD *)(a1 + 28) = *(_DWORD *)(a2 + 28); /*0x180725ed2*/\n  *(_DWORD *)(a1 + 32) = *(_DWORD *)(a2 + 32); /*0x180725ed8*/\n  *(_DWORD *)(a1 + 36) = *(_DWORD *)(a2 + 36); /*0x180725ede*/\n  *(_DWORD *)(a1 + 40) = *(_DWORD *)(a2 + 40); /*0x180725ee4*/\n  *(_DWORD *)(a1 + 44) = *(_DWORD *)(a2 + 44); /*0x180725eea*/\n  *(_DWORD *)(a1 + 48) = *(_DWORD *)(a2 + 48); /*0x180725ef0*/\n  *(_DWORD *)(a1 + 52) = *(_DWORD *)(a2 + 52); /*0x180725ef6*/\n  *(_DWORD *)(a1 + 56) = *(_DWORD *)(a2 + 56); /*0x180725efc*/\n  *(_DWORD *)(a1 + 60) = *(_DWORD *)(a2 + 60); /*0x180725f02*/\n  *(_DWORD *)(a1 + 64) = *(_DWORD *)(a2 + 64); /*0x180725f08*/\n  *(_DWORD *)(a1 + 68) = *(_DWORD *)(a2 + 68); /*0x180725f0e*/\n  *(_DWORD *)(a1 + 72) = *(_DWORD *)(a2 + 72); /*0x180725f14*/\n  *(_DWORD *)(a1 + 76) = *(_DWORD *)(a2 + 76); /*0x180725f1a*/\n  *(_DWORD *)(a1 + 80) = *(_DWORD *)(a2 + 80); /*0x180725f20*/\n  *(_DWORD *)(a1 + 84) = *(_DWORD *)(a2 + 84); /*0x180725f26*/\n  *(_DWORD *)(a1 + 88) = *(_DWORD *)(a2 + 88); /*0x180725f2c*/\n  *(_DWORD *)(a1 + 92) = *(_DWORD *)(a2 + 92); /*0x180725f32*/\n  *(_DWORD *)(a1 + 96) = *(_DWORD *)(a2 + 96); /*0x180725f38*/\n  *(_DWORD *)(a1 + 100) = *(_DWORD *)(a2 + 100); /*0x180725f3e*/\n  *(_DWORD *)(a1 + 104) = *(_DWORD *)(a2 + 104); /*0x180725f44*/\n  *(_DWORD *)(a1 + 108) = *(_DWORD *)(a2 + 108); /*0x180725f4a*/\n  *(_OWORD *)(a1 + 112) = *(_OWORD *)(a2 + 112); /*0x180725f51*/\n  *(_DWORD *)(a1 + 128) = *(_DWORD *)(a2 + 128); /*0x180725f5b*/\n  *(_BYTE *)(a1 + 132) = *(_BYTE *)(a2 + 132); /*0x180725f68*/\n  *(_OWORD *)(a1 + 133) = *(_OWORD *)(a2 + 133); /*0x180725f75*/\n  *(_DWORD *)(a1 + 149) = *(_DWORD *)(a2 + 149); /*0x180725f82*/\n  *(_BYTE *)(a1 + 153) = *(_BYTE *)(a2 + 153); /*0x180725f8f*/\n  *(_DWORD *)(a1 + 156) = *(_DWORD *)(a2 + 156); /*0x180725f9b*/\n  *(_DWORD *)(a1 + 160) = *(_DWORD *)(a2 + 160); /*0x180725fa7*/\n  *(_BYTE *)(a1 + 164) = *(_BYTE *)(a2 + 164); /*0x180725fb4*/\n  *(_BYTE *)(a1 + 165) = *(_BYTE *)(a2 + 165); /*0x180725fc1*/\n  *(_BYTE *)(a1 + 166) = *(_BYTE *)(a2 + 166); /*0x180725fce*/\n  *(_BYTE *)(a1 + 167) = *(_BYTE *)(a2 + 167); /*0x180725fdb*/\n  *(_BYTE *)(a1 + 168) = *(_BYTE *)(a2 + 168); /*0x180725fe8*/\n  *(_BYTE *)(a1 + 169) = *(_BYTE *)(a2 + 169); /*0x180725ff5*/\n  *(_BYTE *)(a1 + 170) = *(_BYTE *)(a2 + 170); /*0x180726002*/\n  *(_BYTE *)(a1 + 171) = *(_BYTE *)(a2 + 171); /*0x18072600f*/\n  *(_BYTE *)(a1 + 172) = *(_BYTE *)(a2 + 172); /*0x18072601c*/\n  *(_BYTE *)(a1 + 173) = *(_BYTE *)(a2 + 173); /*0x180726029*/\n  *(_BYTE *)(a1 + 174) = *(_BYTE *)(a2 + 174); /*0x180726036*/\n  *(_BYTE *)(a1 + 175) = *(_BYTE *)(a2 + 175); /*0x180726043*/\n  *(_WORD *)(a1 + 176) = *(_WORD *)(a2 + 176); /*0x180726050*/\n  *(_WORD *)(a1 + 178) = *(_WORD *)(a2 + 178); /*0x18072605e*/\n  *(_WORD *)(a1 + 180) = *(_WORD *)(a2 + 180); /*0x18072606c*/\n  *(_WORD *)(a1 + 182) = *(_WORD *)(a2 + 182); /*0x18072607a*/\n  *(_WORD *)(a1 + 184) = *(_WORD *)(a2 + 184); /*0x180726088*/\n  *(_WORD *)(a1 + 186) = *(_WORD *)(a2 + 186); /*0x180726096*/\n  *(_WORD *)(a1 + 188) = *(_WORD *)(a2 + 188); /*0x1807260a4*/\n  *(_WORD *)(a1 + 190) = *(_WORD *)(a2 + 190); /*0x1807260b2*/\n  *(_WORD *)(a1 + 192) = *(_WORD *)(a2 + 192); /*0x1807260c0*/\n  *(_WORD *)(a1 + 194) = *(_WORD *)(a2 + 194); /*0x1807260ce*/\n  *(_WORD *)(a1 + 196) = *(_WORD *)(a2 + 196); /*0x1807260dc*/\n  *(_WORD *)(a1 + 198) = *(_WORD *)(a2 + 198); /*0x1807260ea*/\n  *(_DWORD *)(a1 + 200) = *(_DWORD *)(a2 + 200); /*0x1807260f7*/\n  *(_DWORD *)(a1 + 204) = *(_DWORD *)(a2 + 204); /*0x180726103*/\n  *(_DWORD *)(a1 + 208) = *(_DWORD *)(a2 + 208); /*0x18072610f*/\n  *(_DWORD *)(a1 + 212) = *(_DWORD *)(a2 + 212); /*0x18072611b*/\n  *(_DWORD *)(a1 + 216) = *(_DWORD *)(a2 + 216); /*0x180726127*/\n  *(_DWORD *)(a1 + 220) = *(_DWORD *)(a2 + 220); /*0x180726133*/\n  *(_DWORD *)(a1 + 224) = *(_DWORD *)(a2 + 224); /*0x18072613f*/\n  *(_DWORD *)(a1 + 228) = *(_DWORD *)(a2 + 228); /*0x18072614b*/\n  *(_DWORD *)(a1 + 232) = *(_DWORD *)(a2 + 232); /*0x180726157*/\n  *(_DWORD *)(a1 + 236) = *(_DWORD *)(a2 + 236); /*0x180726163*/\n  *(_DWORD *)(a1 + 240) = *(_DWORD *)(a2 + 240); /*0x18072616f*/\n  *(_DWORD *)(a1 + 244) = *(_DWORD *)(a2 + 244); /*0x18072617b*/\n  *(_DWORD *)(a1 + 248) = *(_DWORD *)(a2 + 248); /*0x180726187*/\n  *(_DWORD *)(a1 + 252) = *(_DWORD *)(a2 + 252); /*0x180726193*/\n  *(_DWORD *)(a1 + 256) = *(_DWORD *)(a2 + 256); /*0x18072619f*/\n  *(_BYTE *)(a1 + 260) = *(_BYTE *)(a2 + 260); /*0x1807261ac*/\n  *(_DWORD *)(a1 + 264) = *(_DWORD *)(a2 + 264); /*0x1807261b8*/\n  *(_DWORD *)(a1 + 268) = *(_DWORD *)(a2 + 268); /*0x1807261c4*/\n  *(_DWORD *)(a1 + 272) = *(_DWORD *)(a2 + 272); /*0x1807261d0*/\n  *(_DWORD *)(a1 + 276) = *(_DWORD *)(a2 + 276); /*0x1807261dc*/\n  *(_DWORD *)(a1 + 280) = *(_DWORD *)(a2 + 280); /*0x1807261e8*/\n  *(_DWORD *)(a1 + 284) = *(_DWORD *)(a2 + 284); /*0x1807261f4*/\n  *(_DWORD *)(a1 + 288) = *(_DWORD *)(a2 + 288); /*0x180726200*/\n  *(_DWORD *)(a1 + 292) = *(_DWORD *)(a2 + 292); /*0x18072620c*/\n  *(_DWORD *)(a1 + 296) = *(_DWORD *)(a2 + 296); /*0x180726218*/\n  *(_DWORD *)(a1 + 300) = *(_DWORD *)(a2 + 300); /*0x180726224*/\n  *(_DWORD *)(a1 + 304) = *(_DWORD *)(a2 + 304); /*0x180726230*/\n  *(_DWORD *)(a1 + 308) = *(_DWORD *)(a2 + 308); /*0x18072623c*/\n  *(_DWORD *)(a1 + 312) = *(_DWORD *)(a2 + 312); /*0x180726248*/\n  *(_DWORD *)(a1 + 316) = *(_DWORD *)(a2 + 316); /*0x180726254*/\n  *(_DWORD *)(a1 + 320) = *(_DWORD *)(a2 + 320); /*0x180726260*/\n  *(_DWORD *)(a1 + 324) = *(_DWORD *)(a2 + 324); /*0x18072626c*/\n  *(_DWORD *)(a1 + 328) = *(_DWORD *)(a2 + 328); /*0x180726278*/\n  *(_DWORD *)(a1 + 332) = *(_DWORD *)(a2 + 332); /*0x180726284*/\n  *(_DWORD *)(a1 + 336) = *(_DWORD *)(a2 + 336); /*0x180726290*/\n  *(_DWORD *)(a1 + 340) = *(_DWORD *)(a2 + 340); /*0x18072629c*/\n  *(_DWORD *)(a1 + 344) = *(_DWORD *)(a2 + 344); /*0x1807262a8*/\n  *(_DWORD *)(a1 + 348) = *(_DWORD *)(a2 + 348); /*0x1807262b4*/\n  *(_DWORD *)(a1 + 352) = *(_DWORD *)(a2 + 352); /*0x1807262c0*/\n  *(_DWORD *)(a1 + 356) = *(_DWORD *)(a2 + 356); /*0x1807262cc*/\n  *(_DWORD *)(a1 + 360) = *(_DWORD *)(a2 + 360); /*0x1807262d8*/\n  *(_DWORD *)(a1 + 364) = *(_DWORD *)(a2 + 364); /*0x1807262e4*/\n  *(_DWORD *)(a1 + 368) = *(_DWORD *)(a2 + 368); /*0x1807262f0*/\n  *(_WORD *)(a1 + 372) = *(_WORD *)(a2 + 372); /*0x1807262fd*/\n  *(_WORD *)(a1 + 374) = *(_WORD *)(a2 + 374); /*0x18072630b*/\n  *(_WORD *)(a1 + 376) = *(_WORD *)(a2 + 376); /*0x180726319*/\n  *(_WORD *)(a1 + 378) = *(_WORD *)(a2 + 378); /*0x180726327*/\n  *(_WORD *)(a1 + 380) = *(_WORD *)(a2 + 380); /*0x180726335*/\n  *(_WORD *)(a1 + 382) = *(_WORD *)(a2 + 382); /*0x180726343*/\n  *(_WORD *)(a1 + 384) = *(_WORD *)(a2 + 384); /*0x180726351*/\n  *(_WORD *)(a1 + 386) = *(_WORD *)(a2 + 386); /*0x18072635f*/\n  *(_WORD *)(a1 + 388) = *(_WORD *)(a2 + 388); /*0x18072636d*/\n  *(_WORD *)(a1 + 390) = *(_WORD *)(a2 + 390); /*0x18072637b*/\n  *(_WORD *)(a1 + 392) = *(_WORD *)(a2 + 392); /*0x180726389*/\n  *(_WORD *)(a1 + 394) = *(_WORD *)(a2 + 394); /*0x180726397*/\n  *(_WORD *)(a1 + 396) = *(_WORD *)(a2 + 396); /*0x1807263a5*/\n  *(_WORD *)(a1 + 398) = *(_WORD *)(a2 + 398); /*0x1807263b3*/\n  *(_WORD *)(a1 + 400) = *(_WORD *)(a2 + 400); /*0x1807263c1*/\n  *(_WORD *)(a1 + 402) = *(_WORD *)(a2 + 402); /*0x1807263cf*/\n  *(_WORD *)(a1 + 404) = *(_WORD *)(a2 + 404); /*0x1807263dd*/\n  *(_WORD *)(a1 + 406) = *(_WORD *)(a2 + 406); /*0x1807263eb*/\n  *(_BYTE *)(a1 + 408) = *(_BYTE *)(a2 + 408); /*0x1807263f9*/\n  *(_WORD *)(a1 + 410) = *(_WORD *)(a2 + 410); /*0x180726406*/\n  *(_WORD *)(a1 + 410) = *(_WORD *)(a2 + 410); /*0x180726414*/\n  *(_BYTE *)(a1 + 412) = *(_BYTE *)(a2 + 412); /*0x180726422*/\n  *(_WORD *)(a1 + 414) = *(_WORD *)(a2 + 414); /*0x18072642f*/\n  *(_DWORD *)(a1 + 416) = *(_DWORD *)(a2 + 416); /*0x18072643c*/\n  *(_BYTE *)(a1 + 420) = *(_BYTE *)(a2 + 420); /*0x180726449*/\n  *(_BYTE *)(a1 + 421) = *(_BYTE *)(a2 + 421); /*0x180726456*/\n  *(_BYTE *)(a1 + 422) = *(_BYTE *)(a2 + 422); /*0x180726463*/\n  *(_BYTE *)(a1 + 423) = *(_BYTE *)(a2 + 423); /*0x180726470*/\n  *(_BYTE *)(a1 + 424) = *(_BYTE *)(a2 + 424); /*0x18072647d*/\n  *(_BYTE *)(a1 + 425) = *(_BYTE *)(a2 + 425); /*0x18072648a*/\n  *(_BYTE *)(a1 + 426) = *(_BYTE *)(a2 + 426); /*0x180726497*/\n  *(_BYTE *)(a1 + 427) = *(_BYTE *)(a2 + 427); /*0x1807264a4*/\n  *(_BYTE *)(a1 + 428) = *(_BYTE *)(a2 + 428); /*0x1807264b1*/\n  *(_BYTE *)(a1 + 429) = *(_BYTE *)(a2 + 429); /*0x1807264be*/\n  *(_BYTE *)(a1 + 430) = *(_BYTE *)(a2 + 430); /*0x1807264cb*/\n  *(_BYTE *)(a1 + 431) = *(_BYTE *)(a2 + 431); /*0x1807264d8*/\n  *(_BYTE *)(a1 + 432) = *(_BYTE *)(a2 + 432); /*0x1807264e5*/\n  *(_BYTE *)(a1 + 433) = *(_BYTE *)(a2 + 433); /*0x1807264f2*/\n  *(_BYTE *)(a1 + 434) = *(_BYTE *)(a2 + 434); /*0x1807264ff*/\n  *(_BYTE *)(a1 + 435) = *(_BYTE *)(a2 + 435); /*0x18072650c*/\n  *(_BYTE *)(a1 + 436) = *(_BYTE *)(a2 + 436); /*0x180726519*/\n  *(_BYTE *)(a1 + 437) = *(_BYTE *)(a2 + 437); /*0x180726526*/\n  *(_BYTE *)(a1 + 438) = *(_BYTE *)(a2 + 438); /*0x180726533*/\n  *(_BYTE *)(a1 + 439) = *(_BYTE *)(a2 + 439); /*0x180726540*/\n  *(_BYTE *)(a1 + 440) = *(_BYTE *)(a2 + 440); /*0x18072654d*/\n  *(_BYTE *)(a1 + 441) = *(_BYTE *)(a2 + 441); /*0x18072655a*/\n  *(_BYTE *)(a1 + 442) = *(_BYTE *)(a2 + 442); /*0x180726567*/\n  *(_BYTE *)(a1 + 443) = *(_BYTE *)(a2 + 443); /*0x180726574*/\n  *(_BYTE *)(a1 + 444) = *(_BYTE *)(a2 + 444); /*0x180726581*/\n  *(_BYTE *)(a1 + 445) = *(_BYTE *)(a2 + 445); /*0x18072658e*/\n  *(_BYTE *)(a1 + 446) = *(_BYTE *)(a2 + 446); /*0x18072659b*/\n  *(_BYTE *)(a1 + 447) = *(_BYTE *)(a2 + 447); /*0x1807265a8*/\n  *(_DWORD *)(a1 + 448) = *(_DWORD *)(a2 + 448); /*0x1807265b4*/\n  *(_BYTE *)(a1 + 452) = *(_BYTE *)(a2 + 452); /*0x1807265c1*/\n  *(_BYTE *)(a1 + 453) = *(_BYTE *)(a2 + 453); /*0x1807265ce*/\n  *(_BYTE *)(a1 + 454) = *(_BYTE *)(a2 + 454); /*0x1807265db*/\n  *(_WORD *)(a1 + 456) = *(_WORD *)(a2 + 456); /*0x1807265e8*/\n  *(_WORD *)(a1 + 458) = *(_WORD *)(a2 + 458); /*0x1807265f6*/\n  *(_BYTE *)(a1 + 460) = *(_BYTE *)(a2 + 460); /*0x180726604*/\n  *(_BYTE *)(a1 + 461) = *(_BYTE *)(a2 + 461); /*0x180726611*/\n  *(_BYTE *)(a1 + 462) = *(_BYTE *)(a2 + 462); /*0x18072661e*/\n  *(_BYTE *)(a1 + 463) = *(_BYTE *)(a2 + 463); /*0x18072662b*/\n  *(_DWORD *)(a1 + 464) = *(_DWORD *)(a2 + 464); /*0x180726637*/\n  *(_BYTE *)(a1 + 468) = *(_BYTE *)(a2 + 468); /*0x180726644*/\n  *(_BYTE *)(a1 + 469) = *(_BYTE *)(a2 + 469); /*0x180726651*/\n  *(_BYTE *)(a1 + 470) = *(_BYTE *)(a2 + 470); /*0x18072665e*/\n  *(_DWORD *)(a1 + 471) = *(_DWORD *)(a2 + 471); /*0x18072666a*/\n  v3 = (_OWORD *)(a1 + 476); /*0x18072667a*/\n  *v3 = *(_OWORD *)(a2 + 476); /*0x180726681*/\n  v3[1] = *(_OWORD *)(a2 + 492); /*0x180726688*/\n  v3[2] = *(_OWORD *)(a2 + 508); /*0x180726690*/\n  v3[3] = *(_OWORD *)(a2 + 524); /*0x180726698*/\n  v3[4] = *(_OWORD *)(a2 + 540); /*0x1807266a0*/\n  v3[5] = *(_OWORD *)(a2 + 556); /*0x1807266a8*/\n  v3[6] = *(_OWORD *)(a2 + 572); /*0x1807266b0*/\n  v3 += 8; /*0x1807266b4*/\n  *(v3 - 1) = *(_OWORD *)(a2 + 588); /*0x1807266bc*/\n  *v3 = *(_OWORD *)(a2 + 604); /*0x1807266c7*/\n  v3[1] = *(_OWORD *)(a2 + 620); /*0x1807266d1*/\n  v3[2] = *(_OWORD *)(a2 + 636); /*0x1807266dc*/\n  v3[3] = *(_OWORD *)(a2 + 652); /*0x1807266e7*/\n  *((_QWORD *)v3 + 8) = *(_QWORD *)(a2 + 668); /*0x1807266f2*/\n  *(_OWORD *)(a1 + 680) = *(_OWORD *)(a2 + 680); /*0x1807266fd*/\n  *(_DWORD *)(a1 + 696) = *(_DWORD *)(a2 + 696); /*0x18072670b*/\n  *(_DWORD *)(a1 + 700) = *(_DWORD *)(a2 + 700); /*0x180726718*/\n  *(_BYTE *)(a1 + 704) = *(_BYTE *)(a2 + 704); /*0x180726726*/\n  *(_DWORD *)(a1 + 708) = *(_DWORD *)(a2 + 708); /*0x180726733*/\n  *(_DWORD *)(a1 + 712) = *(_DWORD *)(a2 + 712); /*0x180726740*/\n  *(_BYTE *)(a1 + 716) = *(_BYTE *)(a2 + 716); /*0x18072674e*/\n  *(_DWORD *)(a1 + 720) = *(_DWORD *)(a2 + 720); /*0x18072675b*/\n  *(_DWORD *)(a1 + 724) = *(_DWORD *)(a2 + 724); /*0x180726768*/\n  return a1; /*0x180726772*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x180725ea0"
+    }
+  ],
+  "evidence_links": []
+}

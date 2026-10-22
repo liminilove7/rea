@@ -1,0 +1,63 @@
+{
+  "scope": "current TW CLIENT option probability display; resource table plus current native parser/consumer/display evidence",
+  "target_sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+  "evidence": {
+    "enchant-option-parser": "ev_a5178451c04851642b4a27f81f89c2954a397e00851cedab22abea74f677d6ba",
+    "enchant-option-formula": "ev_597747bc3807f4dc91470020953f522f9a1ad849b2cc0bd88e25955ae4e29f2a",
+    "enchant-option-formula-insns": "ev_48cdb79b6bb63ffb6d6c613116530e03c6fa01f69baceefa20686a1d76d3aebb",
+    "enchant-option-display": "ev_df5df443346199b64eb3597c35842551d62c76401e3f1c9399615e64f2b12948",
+    "enchant-option-display-insns": "ev_40415e5d762e3ade859658a43dc8e1d7f91e364b9243a34cc2564974b128d9e7"
+  },
+  "formula": "lookup quality, then level == a3+1 among six entries; missing match gives base=0; result=clamp(base+uint16(supplementRecord+0x19A),0,1000); displayed percent=float32(float32(result)*float32(0.1))",
+  "format": "%g%%",
+  "matrix": [
+    {
+      "quality": "common",
+      "resource_levels": [1, 2, 3, 4, 5, 6],
+      "caller_a3_for_match": [0, 1, 2, 3, 4, 5],
+      "prob_raw": [1000, 800, 0, 0, 0, 0],
+      "display_percent_no_supplement": [100.0, 80.0, 0.0, 0.0, 0.0, 0.0],
+      "sub_matter_count_raw": ["1000", "1000", "1000", "1000", "1000", "1000"]
+    },
+    {
+      "quality": "rare",
+      "resource_levels": [1, 2, 3, 4, 5, 6],
+      "caller_a3_for_match": [0, 1, 2, 3, 4, 5],
+      "prob_raw": [900, 700, 600, 500, 0, 0],
+      "display_percent_no_supplement": [90.0, 70.0, 60.0, 50.0, 0.0, 0.0],
+      "sub_matter_count_raw": ["1000", "1000", "1000", "1000", "1000", "1000"]
+    },
+    {
+      "quality": "legend",
+      "resource_levels": [1, 2, 3, 4, 5, 6],
+      "caller_a3_for_match": [0, 1, 2, 3, 4, 5],
+      "prob_raw": [800, 600, 500, 400, 300, 0],
+      "display_percent_no_supplement": [80.0, 60.0, 50.0, 40.0, 30.0, 0.0],
+      "sub_matter_count_raw": ["1000", "1000", "1000", "1000", "1000", "1000"]
+    },
+    {
+      "quality": "unique",
+      "resource_levels": [1, 2, 3, 4, 5, 6],
+      "caller_a3_for_match": [0, 1, 2, 3, 4, 5],
+      "prob_raw": [700, 500, 400, 300, 200, 100],
+      "display_percent_no_supplement": [70.0, 50.0, 40.0, 30.0, 20.0, 10.0],
+      "sub_matter_count_raw": ["1000", "1000", "1000", "1000", "1000", "1000"]
+    },
+    {
+      "quality": "epic",
+      "resource_levels": [1, 2, 3, 4, 5, 6],
+      "caller_a3_for_match": [0, 1, 2, 3, 4, 5],
+      "prob_raw": [600, 400, 200, 100, 50, 50],
+      "display_percent_no_supplement": [60.0, 40.0, 20.0, 10.0, 5.0, 5.0],
+      "sub_matter_count_raw": ["1000", "1000", "1000", "1000", "1000", "1000"]
+    }
+  ],
+  "limitations": [
+    "Matrix assumes matching quality and a3=level-1, with supplement raw 0; not all cells are proven reachable.",
+    "a3 comes from caller-selected slot/count helper branches; ordinary +enhancement level is not established.",
+    "Zero cells are literal data; this helper adds supplement after a zero/missing match, but UI or server eligibility is separate.",
+    "sub_matter_count is parsed but not read by this probability function; count unit and payment logic remain separate.",
+    "Ordinary enhancer coefficient formula is separate and is not replaced by this matrix.",
+    "These are client display values; server probability, RNG and result checks remain unverified."
+  ]
+}

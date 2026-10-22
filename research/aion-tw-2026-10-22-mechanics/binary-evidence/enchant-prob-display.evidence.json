@@ -1,0 +1,244 @@
+{
+  "evidence_id": "ev_6380d58c2791556dfd74dd284a786c6656db8154893fd63fb2ab3a4b0a1b6624",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x18040cc10"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 440.314,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 440.581,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x18040cc10"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x18040cc10",
+            "fn": {
+              "addr": "0x18040cc10",
+              "name": "sub_18040CC10",
+              "size": "0x2e2"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x18040cc10",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x18040cc10",
+          "code": "void __fastcall sub_18040CC10(__int64 a1)\n{\n  unsigned int *v2; // rbx\n  __int64 v3; // rax\n  __int64 v4; // rdx\n  __int64 v5; // r8\n  unsigned int v6; // ebp\n  __int64 v7; // r9\n  char v8; // al\n  __int64 v9; // r9\n  __int64 v10; // rsi\n  unsigned int v11; // eax\n  unsigned int v12; // r10d\n  unsigned int v13; // eax\n  int v14; // eax\n  __int64 *v15; // rsi\n  __int64 v16; // rdx\n  __int64 v17; // rcx\n  __int64 v18; // r14\n  signed int *v19; // rbx\n  signed int *v20; // rcx\n  __int64 v21; // rax\n  __int64 v22; // rcx\n  __int64 v23; // rax\n  unsigned int v24; // r8d\n  _BYTE v25[512]; // [rsp+30h] [rbp-418h] BYREF\n  _BYTE v26[512]; // [rsp+230h] [rbp-218h] BYREF\n  signed int v27; // [rsp+450h] [rbp+8h] BYREF\n  signed int *v28; // [rsp+458h] [rbp+10h] BYREF\n\n  if ( *(_QWORD *)(a1 + 1368) != 0 && (unsigned __int8)sub_1806A12B0(a1: &qword_181415340, a2: 82) != 0 ) /*0x18040cc3d*/\n  {\n    v2 = (unsigned int *)sub_18040C600(a1); /*0x18040cc5e*/\n    v3 = sub_18040C680(a1); /*0x18040cc61*/\n    v6 = sub_18040C5A0(a1, a2: v4, a3: v5, a4: v3); /*0x18040cc71*/\n    if ( v2 != nullptr && v7 != 0 ) /*0x18040cc7f*/\n    {\n      v8 = sub_180408860(a1: *(unsigned int *)(v7 + 16)); /*0x18040cc89*/\n      if ( v8 != 0 ) /*0x18040cc90*/\n      {\n        if ( v8 == 1 ) /*0x18040cca4*/\n        {\n          if ( *(_QWORD *)(a1 + 1368) != 0 ) /*0x18040cd45*/\n          {\n            v14 = sub_180665B80(a1: v2[2], a2: *(_DWORD *)(v9 + 8), a3: v6); /*0x18040cd5d*/\n            sub_180193ED0(a1: v26, a2: 256, a3: aG, (float)((float)v14 * *(float *)&dword_180DB5A80)); /*0x18040cd8d*/\n            sub_180B1D5C0(a1: v25, a2: 0, a3: 512); /*0x18040cd9f*/\n            v15 = nullptr; /*0x18040cda4*/\n            v27 = 0; /*0x18040cda6*/\n            v18 = sub_180170C50(a1: v17, a2: v16); /*0x18040cdb9*/\n            v19 = *(signed int **)v18; /*0x18040cdbc*/\n            v20 = *(signed int **)(*(_QWORD *)v18 + 8LL); /*0x18040cdc2*/\n            while ( *((_BYTE *)v20 + 25) == 0 ) /*0x18040cdca*/\n            {\n              if ( v20[8] >= v27 ) /*0x18040cdd3*/\n              {\n                v19 = v20; /*0x18040cddb*/\n                v20 = *(signed int **)v20; /*0x18040cdde*/\n              }\n              else\n              {\n                v20 = *((signed int **)v20 + 2); /*0x18040cdd5*/\n              }\n            }\n            if ( v19 == *(signed int **)v18 || v27 < v19[8] ) /*0x18040cdef*/\n            {\n              v28 = &v27; /*0x18040ce04*/\n              v21 = sub_18027A4D0(a1: v18, a2: (unsigned int)v27, a3: &v28); /*0x18040ce0c*/\n              sub_1809B55A0(a1: v18, a2: (unsigned int)&v28, a3: (_DWORD)v19, a4: v21 + 32, a5: v21); /*0x18040ce28*/\n              v19 = v28; /*0x18040ce2d*/\n            }\n            v22 = *((_QWORD *)v19 + 5); /*0x18040ce35*/\n            LODWORD(v28) = 905484; /*0x18040ce41*/\n            v23 = sub_1809846C0(a1: v22, a2: &v28); /*0x18040ce4c*/\n            if ( v23 != 0 ) /*0x18040ce5c*/\n            {\n              v24 = *(_DWORD *)(v23 + 8); /*0x18040ce5e*/\n              if ( v24 != 0 ) /*0x18040ce65*/\n              {\n                if ( v24 >= 0x10000000 ) /*0x18040ce7d*/\n                  v15 = (__int64 *)(*(_QWORD *)(qword_1814C4F10 + 24LL * ((v24 >> 28) - 1)) + (v24 & 0xFFFFFFF)); /*0x18040ce95*/\n              }\n              else\n              {\n                v15 = &qword_18150A830; /*0x18040ce67*/\n              }\n            }\n            else\n            {\n              v15 = (__int64 *)asc_180C40918; /*0x18040ce9b*/\n            }\n            sub_180986520(a1: v25, a2: 256, a3: v15, a4: v26); /*0x18040ceb7*/\n            (*(void (__fastcall **)(_QWORD, _BYTE *))(**(_QWORD **)(a1 + 1368) + 640LL))( /*0x18040cecb*/\n              a1: *(_QWORD *)(a1 + 1368),\n              a2: v25);\n          }\n        }\n        else if ( v8 == 2 ) /*0x18040ccad*/\n        {\n          v10 = *(_QWORD *)(a1 + 1312); /*0x18040ccb3*/",
+          "line_count": 100,
+          "total_lines": 122,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x18040c600",
+              "name": "sub_18040C600"
+            },
+            {
+              "addr": "0x18040c680",
+              "name": "sub_18040C680"
+            },
+            {
+              "addr": "0x18040c5a0",
+              "name": "sub_18040C5A0"
+            },
+            {
+              "addr": "0x180408860",
+              "name": "sub_180408860"
+            },
+            {
+              "addr": "0x180665b80",
+              "name": "sub_180665B80"
+            },
+            {
+              "addr": "0x180193ed0",
+              "name": "sub_180193ED0"
+            },
+            {
+              "addr": "0x180c4ac50",
+              "name": "aG",
+              "string": "朥┥"
+            },
+            {
+              "addr": "0x180db5a80",
+              "name": "dword_180DB5A80"
+            },
+            {
+              "addr": "0x180b1d5c0",
+              "name": "sub_180B1D5C0"
+            },
+            {
+              "addr": "0x180170c50",
+              "name": "sub_180170C50"
+            },
+            {
+              "addr": "0x18027a4d0",
+              "name": "sub_18027A4D0"
+            },
+            {
+              "addr": "0x1809b55a0",
+              "name": "sub_1809B55A0"
+            },
+            {
+              "addr": "0x1809846c0",
+              "name": "sub_1809846C0"
+            },
+            {
+              "addr": "0x1814c4f10",
+              "name": "qword_1814C4F10"
+            },
+            {
+              "addr": "0x18150a830",
+              "name": "qword_18150A830"
+            },
+            {
+              "addr": "0x180c40918",
+              "name": "asc_180C40918",
+              "string": "㼿�"
+            },
+            {
+              "addr": "0x180986520",
+              "name": "sub_180986520"
+            },
+            {
+              "addr": "0x18073cd60",
+              "name": "sub_18073CD60"
+            },
+            {
+              "addr": "0x18073cd20",
+              "name": "sub_18073CD20"
+            },
+            {
+              "addr": "0x18040cf00",
+              "name": "sub_18040CF00"
+            },
+            {
+              "addr": "0x1806a12b0",
+              "name": "sub_1806A12B0"
+            },
+            {
+              "addr": "0x181415340",
+              "name": "qword_181415340"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x18040cc10",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x18040cc10",
+          "code": "          if ( v10 != 0 /*0x18040cce4*/\n            && (*(unsigned int (__fastcall **)(_QWORD, __int64))(*(_QWORD *)v10 + 240LL))(\n                 a1: *(_QWORD *)(a1 + 1312),\n                 a2: 2) == 1\n            && (*(unsigned int (__fastcall **)(__int64))(*(_QWORD *)v10 + 1560LL))(a1: v10) == 1 )\n          {\n            if ( v2[356] != 0 ) /*0x18040ccf1*/\n              v11 = sub_18073CD60(a1: v2); /*0x18040cd18*/\n            else\n              v11 = sub_18073CD20(a1: v2); /*0x18040ccfa*/\n            sub_18040CF00(a1, a2: v12, a3: v6, a4: v11); /*0x18040cd0b*/\n          }\n          else\n          {\n            v13 = sub_18073CD20(a1: v2); /*0x18040cd22*/\n            sub_18040CF00(a1, a2: v2[4], a3: v6, a4: v13); /*0x18040cd33*/\n          }\n        }\n      }\n    }\n  }\n}",
+          "line_count": 22,
+          "total_lines": 122,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "void __fastcall sub_18040CC10(__int64 a1)\n{\n  unsigned int *v2; // rbx\n  __int64 v3; // rax\n  __int64 v4; // rdx\n  __int64 v5; // r8\n  unsigned int v6; // ebp\n  __int64 v7; // r9\n  char v8; // al\n  __int64 v9; // r9\n  __int64 v10; // rsi\n  unsigned int v11; // eax\n  unsigned int v12; // r10d\n  unsigned int v13; // eax\n  int v14; // eax\n  __int64 *v15; // rsi\n  __int64 v16; // rdx\n  __int64 v17; // rcx\n  __int64 v18; // r14\n  signed int *v19; // rbx\n  signed int *v20; // rcx\n  __int64 v21; // rax\n  __int64 v22; // rcx\n  __int64 v23; // rax\n  unsigned int v24; // r8d\n  _BYTE v25[512]; // [rsp+30h] [rbp-418h] BYREF\n  _BYTE v26[512]; // [rsp+230h] [rbp-218h] BYREF\n  signed int v27; // [rsp+450h] [rbp+8h] BYREF\n  signed int *v28; // [rsp+458h] [rbp+10h] BYREF\n\n  if ( *(_QWORD *)(a1 + 1368) != 0 && (unsigned __int8)sub_1806A12B0(a1: &qword_181415340, a2: 82) != 0 ) /*0x18040cc3d*/\n  {\n    v2 = (unsigned int *)sub_18040C600(a1); /*0x18040cc5e*/\n    v3 = sub_18040C680(a1); /*0x18040cc61*/\n    v6 = sub_18040C5A0(a1, a2: v4, a3: v5, a4: v3); /*0x18040cc71*/\n    if ( v2 != nullptr && v7 != 0 ) /*0x18040cc7f*/\n    {\n      v8 = sub_180408860(a1: *(unsigned int *)(v7 + 16)); /*0x18040cc89*/\n      if ( v8 != 0 ) /*0x18040cc90*/\n      {\n        if ( v8 == 1 ) /*0x18040cca4*/\n        {\n          if ( *(_QWORD *)(a1 + 1368) != 0 ) /*0x18040cd45*/\n          {\n            v14 = sub_180665B80(a1: v2[2], a2: *(_DWORD *)(v9 + 8), a3: v6); /*0x18040cd5d*/\n            sub_180193ED0(a1: v26, a2: 256, a3: aG, (float)((float)v14 * *(float *)&dword_180DB5A80)); /*0x18040cd8d*/\n            sub_180B1D5C0(a1: v25, a2: 0, a3: 512); /*0x18040cd9f*/\n            v15 = nullptr; /*0x18040cda4*/\n            v27 = 0; /*0x18040cda6*/\n            v18 = sub_180170C50(a1: v17, a2: v16); /*0x18040cdb9*/\n            v19 = *(signed int **)v18; /*0x18040cdbc*/\n            v20 = *(signed int **)(*(_QWORD *)v18 + 8LL); /*0x18040cdc2*/\n            while ( *((_BYTE *)v20 + 25) == 0 ) /*0x18040cdca*/\n            {\n              if ( v20[8] >= v27 ) /*0x18040cdd3*/\n              {\n                v19 = v20; /*0x18040cddb*/\n                v20 = *(signed int **)v20; /*0x18040cdde*/\n              }\n              else\n              {\n                v20 = *((signed int **)v20 + 2); /*0x18040cdd5*/\n              }\n            }\n            if ( v19 == *(signed int **)v18 || v27 < v19[8] ) /*0x18040cdef*/\n            {\n              v28 = &v27; /*0x18040ce04*/\n              v21 = sub_18027A4D0(a1: v18, a2: (unsigned int)v27, a3: &v28); /*0x18040ce0c*/\n              sub_1809B55A0(a1: v18, a2: (unsigned int)&v28, a3: (_DWORD)v19, a4: v21 + 32, a5: v21); /*0x18040ce28*/\n              v19 = v28; /*0x18040ce2d*/\n            }\n            v22 = *((_QWORD *)v19 + 5); /*0x18040ce35*/\n            LODWORD(v28) = 905484; /*0x18040ce41*/\n            v23 = sub_1809846C0(a1: v22, a2: &v28); /*0x18040ce4c*/\n            if ( v23 != 0 ) /*0x18040ce5c*/\n            {\n              v24 = *(_DWORD *)(v23 + 8); /*0x18040ce5e*/\n              if ( v24 != 0 ) /*0x18040ce65*/\n              {\n                if ( v24 >= 0x10000000 ) /*0x18040ce7d*/\n                  v15 = (__int64 *)(*(_QWORD *)(qword_1814C4F10 + 24LL * ((v24 >> 28) - 1)) + (v24 & 0xFFFFFFF)); /*0x18040ce95*/\n              }\n              else\n              {\n                v15 = &qword_18150A830; /*0x18040ce67*/\n              }\n            }\n            else\n            {\n              v15 = (__int64 *)asc_180C40918; /*0x18040ce9b*/\n            }\n            sub_180986520(a1: v25, a2: 256, a3: v15, a4: v26); /*0x18040ceb7*/\n            (*(void (__fastcall **)(_QWORD, _BYTE *))(**(_QWORD **)(a1 + 1368) + 640LL))( /*0x18040cecb*/\n              a1: *(_QWORD *)(a1 + 1368),\n              a2: v25);\n          }\n        }\n        else if ( v8 == 2 ) /*0x18040ccad*/\n        {\n          v10 = *(_QWORD *)(a1 + 1312); /*0x18040ccb3*/\n          if ( v10 != 0 /*0x18040cce4*/\n            && (*(unsigned int (__fastcall **)(_QWORD, __int64))(*(_QWORD *)v10 + 240LL))(\n                 a1: *(_QWORD *)(a1 + 1312),\n                 a2: 2) == 1\n            && (*(unsigned int (__fastcall **)(__int64))(*(_QWORD *)v10 + 1560LL))(a1: v10) == 1 )\n          {\n            if ( v2[356] != 0 ) /*0x18040ccf1*/\n              v11 = sub_18073CD60(a1: v2); /*0x18040cd18*/\n            else\n              v11 = sub_18073CD20(a1: v2); /*0x18040ccfa*/\n            sub_18040CF00(a1, a2: v12, a3: v6, a4: v11); /*0x18040cd0b*/\n          }\n          else\n          {\n            v13 = sub_18073CD20(a1: v2); /*0x18040cd22*/\n            sub_18040CF00(a1, a2: v2[4], a3: v6, a4: v13); /*0x18040cd33*/\n          }\n        }\n      }\n    }\n  }\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x18040cc10"
+    }
+  ],
+  "evidence_links": []
+}

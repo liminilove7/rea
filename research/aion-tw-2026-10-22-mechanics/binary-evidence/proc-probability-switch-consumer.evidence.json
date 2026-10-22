@@ -1,0 +1,1019 @@
+{
+  "evidence_id": "ev_b6021e7eb8286733d7326598337eaecfd107140c848cff7e26d69c71461cf3e8",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x1803c0a20"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 667.283,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 668.5,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x1803c0a20"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x1803c0a20",
+            "fn": {
+              "addr": "0x1803c0a20",
+              "name": "sub_1803C0A20",
+              "size": "0xf51"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "__int64 __fastcall sub_1803C0A20(__int64 a1, __int64 **a2)\n{\n  int v2; // edi\n  __int128 v5; // xmm0\n  __int128 v6; // xmm0\n  __int128 v7; // xmm0\n  __int128 v8; // xmm0\n  __int128 v9; // xmm0\n  __int128 v10; // xmm0\n  __int128 v11; // xmm0\n  __int128 v12; // xmm0\n  __int128 v13; // xmm0\n  __int128 v14; // xmm0\n  __int128 v15; // xmm0\n  __int128 v16; // xmm0\n  __int128 v17; // xmm0\n  __int128 v18; // xmm0\n  __int128 v19; // xmm0\n  __int128 v20; // xmm0\n  __int128 v21; // xmm0\n  __int128 v22; // xmm0\n  __int128 v23; // xmm0\n  __int128 v24; // xmm0\n  __int128 v25; // xmm0\n  __int128 v26; // xmm0\n  __int128 v27; // xmm0\n  __int128 v28; // xmm0\n  __int128 v29; // xmm0\n  __int128 v30; // xmm0\n  __int128 v31; // xmm0\n  __int128 v32; // xmm0\n  __int128 v33; // xmm0\n  __int128 v34; // xmm0\n  __int128 v35; // xmm0\n  __int128 v36; // xmm0\n  __int128 v37; // xmm0\n  __int128 v38; // xmm0\n  __int128 v39; // xmm0\n  __int128 v40; // xmm0\n  __int128 v41; // xmm0\n  __int128 v42; // xmm0\n  __int128 v43; // xmm0\n  __int128 v44; // xmm0\n  __int128 v45; // xmm0\n  __int128 v46; // xmm0\n  __int128 v47; // xmm0\n  __int128 v48; // xmm0\n  __int128 v49; // xmm0\n  __int128 v50; // xmm0\n  __int128 v51; // xmm0\n  __int128 v52; // xmm0\n  __int128 v53; // xmm0\n  __int128 v54; // xmm0\n  __int128 v55; // xmm0\n  __int128 v56; // xmm0\n  __int128 v57; // xmm0\n  __int128 v58; // xmm0\n  __int64 *v59; // rcx\n  __int128 v60; // xmm0\n  __int128 v61; // xmm0\n  __int128 v62; // xmm0\n  __int128 v63; // xmm0\n  __int128 v64; // xmm0\n  __int128 v65; // xmm0\n  __int128 v66; // xmm0\n  __int128 v67; // xmm0\n  __int128 v68; // xmm0\n  __int64 v69; // rax\n  __int64 v70; // rax\n  __int64 v72; // rax\n  __int64 v73; // rax\n  _QWORD *v74; // rax\n  __int64 v75; // rcx\n  unsigned __int64 v76; // r8\n  _QWORD *v77; // rbx\n  _QWORD *v78; // r9\n  unsigned __int64 v79; // rdx\n  __int64 v80; // r14\n  __int128 *v81; // rsi\n  int v82; // r8d\n  __int64 v83; // rcx\n  __int64 v84; // r14\n  __int128 *v85; // rsi\n  __int64 v86; // rsi\n  __int64 v87; // rax\n  __int128 *v88; // rdx\n  __int64 v89; // rbx\n  __int64 v90; // rcx\n  unsigned __int64 v91; // rdx\n  __int64 v92; // rax\n  __int64 v93; // rax\n  __int64 v94; // rax\n  __int64 v95; // rax\n  __int64 v96; // rax\n  __int64 v97; // rax\n  __int64 v98; // rax\n  __int64 v99; // rax\n  char **i; // rsi\n  __int64 v101; // rax\n  __int128 v102; // [rsp+30h] [rbp-D0h] BYREF",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x180cad228",
+              "name": "aBasicAttrbonus",
+              "string": "basic_attrbonus"
+            },
+            {
+              "addr": "0x1803c2a80",
+              "name": "sub_1803C2A80"
+            },
+            {
+              "addr": "0x180cad210",
+              "name": "aBasicClearIndu",
+              "string": "basic_clear_indun_coolt"
+            },
+            {
+              "addr": "0x1803c2b00",
+              "name": "sub_1803C2B00"
+            },
+            {
+              "addr": "0x180cad1f0",
+              "name": "aBasicClearSyst",
+              "string": "basic_clear_system_bonus"
+            },
+            {
+              "addr": "0x1803c2b60",
+              "name": "sub_1803C2B60"
+            },
+            {
+              "addr": "0x180cad1e0",
+              "name": "aBasicResurrect",
+              "string": "basic_resurrect"
+            },
+            {
+              "addr": "0x1803c2b90",
+              "name": "sub_1803C2B90"
+            },
+            {
+              "addr": "0x180cad1d0",
+              "name": "aBasicRecall",
+              "string": "basic_recall"
+            },
+            {
+              "addr": "0x1803c2ba0",
+              "name": "sub_1803C2BA0"
+            },
+            {
+              "addr": "0x180cad1b8",
+              "name": "aBasicCooltimeO",
+              "string": "basic_cooltime_on"
+            },
+            {
+              "addr": "0x1803c2bb0",
+              "name": "sub_1803C2BB0"
+            },
+            {
+              "addr": "0x180cad1a0",
+              "name": "aBasicCooltimeO_0",
+              "string": "basic_cooltime_off"
+            },
+            {
+              "addr": "0x1803c2bf0",
+              "name": "sub_1803C2BF0"
+            },
+            {
+              "addr": "0x180cad190",
+              "name": "aBasicGaugeOn",
+              "string": "basic_gauge_on"
+            },
+            {
+              "addr": "0x1803c2c40",
+              "name": "sub_1803C2C40"
+            },
+            {
+              "addr": "0x180cad180",
+              "name": "aBasicGaugeOff",
+              "string": "basic_gauge_off"
+            },
+            {
+              "addr": "0x1803c2c50",
+              "name": "sub_1803C2C50"
+            },
+            {
+              "addr": "0x180cad168",
+              "name": "aBasicChatlogOn",
+              "string": "basic_chatlog_on"
+            },
+            {
+              "addr": "0x1803c2c60",
+              "name": "sub_1803C2C60"
+            },
+            {
+              "addr": "0x180cad150",
+              "name": "aBasicChatlogOf",
+              "string": "basic_chatlog_off"
+            },
+            {
+              "addr": "0x1803c2cb0",
+              "name": "sub_1803C2CB0"
+            },
+            {
+              "addr": "0x180cad140",
+              "name": "aBasicWarfogOn",
+              "string": "basic_warfog_on"
+            },
+            {
+              "addr": "0x1803c2d20",
+              "name": "sub_1803C2D20"
+            },
+            {
+              "addr": "0x180cad128",
+              "name": "aBasicWarfogOff",
+              "string": "basic_warfog_off"
+            },
+            {
+              "addr": "0x1803c2d70",
+              "name": "sub_1803C2D70"
+            },
+            {
+              "addr": "0x180cad3b8",
+              "name": "aBasicInvisible",
+              "string": "basic_invisible_on"
+            },
+            {
+              "addr": "0x1803c2d00",
+              "name": "sub_1803C2D00"
+            },
+            {
+              "addr": "0x180cad3a0",
+              "name": "aBasicInvisible_0",
+              "string": "basic_invisible_off"
+            },
+            {
+              "addr": "0x1803c2d10",
+              "name": "sub_1803C2D10"
+            },
+            {
+              "addr": "0x180cad390",
+              "name": "aBasicTeleport",
+              "string": "basic_teleport"
+            },
+            {
+              "addr": "0x1803c2dc0",
+              "name": "sub_1803C2DC0"
+            },
+            {
+              "addr": "0x180cad380",
+              "name": "aBasicAttr",
+              "string": "basic_attr"
+            },
+            {
+              "addr": "0x1803c2e60",
+              "name": "sub_1803C2E60"
+            },
+            {
+              "addr": "0x180cad370",
+              "name": "aBasicLevel",
+              "string": "basic_level"
+            },
+            {
+              "addr": "0x1803c49d0",
+              "name": "sub_1803C49D0"
+            },
+            {
+              "addr": "0x180cad360",
+              "name": "aBasicClass",
+              "string": "basic_class"
+            },
+            {
+              "addr": "0x1803c4a30",
+              "name": "sub_1803C4A30"
+            },
+            {
+              "addr": "0x180cad350",
+              "name": "aBasicStigma",
+              "string": "basic_stigma"
+            },
+            {
+              "addr": "0x1803c4a90",
+              "name": "sub_1803C4A90"
+            },
+            {
+              "addr": "0x180cad340",
+              "name": "aBasicInventory",
+              "string": "basic_inventory"
+            },
+            {
+              "addr": "0x1803c4b50",
+              "name": "sub_1803C4B50"
+            },
+            {
+              "addr": "0x180cad328",
+              "name": "aBasicResetInve",
+              "string": "basic_reset_inven"
+            },
+            {
+              "addr": "0x1803c4ba0",
+              "name": "sub_1803C4BA0"
+            },
+            {
+              "addr": "0x180cad308",
+              "name": "aBasicAddAllCom",
+              "string": "basic_add_all_combine_skill"
+            },
+            {
+              "addr": "0x1803c4bb0",
+              "name": "sub_1803C4BB0"
+            },
+            {
+              "addr": "0x180cad2f0",
+              "name": "aBasicAddAllSki",
+              "string": "basic_add_all_skill"
+            },
+            {
+              "addr": "0x1803c4ec0",
+              "name": "sub_1803C4EC0"
+            },
+            {
+              "addr": "0x180cad2d0",
+              "name": "aBasicAddAllSki_0",
+              "string": "basic_add_all_skill_with_stigma"
+            },
+            {
+              "addr": "0x180cad2b8",
+              "name": "aBasicRemoveAll",
+              "string": "basic_remove_all_skill"
+            },
+            {
+              "addr": "0x1803c4f00",
+              "name": "sub_1803C4F00"
+            },
+            {
+              "addr": "0x180cad2a0",
+              "name": "aBasicAddDevSki",
+              "string": "basic_add_dev_skill"
+            },
+            {
+              "addr": "0x1803c4f60",
+              "name": "sub_1803C4F60"
+            },
+            {
+              "addr": "0x180cad288",
+              "name": "aSkillSearchAdd",
+              "string": "skill_search_add"
+            },
+            {
+              "addr": "0x1803c4fc0",
+              "name": "sub_1803C4FC0"
+            },
+            {
+              "addr": "0x180cad278",
+              "name": "aBasicSetting",
+              "string": "basic_setting"
+            },
+            {
+              "addr": "0x1803c5170",
+              "name": "sub_1803C5170"
+            },
+            {
+              "addr": "0x180cacfb8",
+              "name": "aBasicItemSetti",
+              "string": "basic_item_setting"
+            },
+            {
+              "addr": "0x1803c5530",
+              "name": "sub_1803C5530"
+            },
+            {
+              "addr": "0x180cacfa0",
+              "name": "aBasicEquipSett",
+              "string": "basic_equip_setting"
+            },
+            {
+              "addr": "0x1803c5a60",
+              "name": "sub_1803C5A60"
+            },
+            {
+              "addr": "0x180cacf88",
+              "name": "aProcProbabilit",
+              "string": "proc_probability_on"
+            },
+            {
+              "addr": "0x1803c6850",
+              "name": "sub_1803C6850"
+            },
+            {
+              "addr": "0x180cacf70",
+              "name": "aProcProbabilit_0",
+              "string": "proc_probability_off"
+            },
+            {
+              "addr": "0x1803c6860",
+              "name": "sub_1803C6860"
+            },
+            {
+              "addr": "0x180cacf58",
+              "name": "aGlobalEnchantO",
+              "string": "global_enchant_on"
+            },
+            {
+              "addr": "0x1803c6870",
+              "name": "sub_1803C6870"
+            },
+            {
+              "addr": "0x180cacf40",
+              "name": "aGlobalEnchantO_0",
+              "string": "global_enchant_off"
+            },
+            {
+              "addr": "0x1803c6880",
+              "name": "sub_1803C6880"
+            },
+            {
+              "addr": "0x180cacf28",
+              "name": "aGlobalFlyingOn",
+              "string": "global_flying_on"
+            },
+            {
+              "addr": "0x1803c6890",
+              "name": "sub_1803C6890"
+            },
+            {
+              "addr": "0x180cacf10",
+              "name": "aGlobalFlyingOf",
+              "string": "global_flying_off"
+            },
+            {
+              "addr": "0x1803c68d0",
+              "name": "sub_1803C68D0"
+            },
+            {
+              "addr": "0x180cacef8",
+              "name": "aNpcTestNaction",
+              "string": "npc_test_naction"
+            },
+            {
+              "addr": "0x1803c85a0",
+              "name": "sub_1803C85A0"
+            },
+            {
+              "addr": "0x180cacee8",
+              "name": "aNpcStigma",
+              "string": "npc_stigma"
+            },
+            {
+              "addr": "0x1803c8630",
+              "name": "sub_1803C8630"
+            },
+            {
+              "addr": "0x180caced8",
+              "name": "aNpcCustomize",
+              "string": "npc_customize"
+            },
+            {
+              "addr": "0x1803c8730",
+              "name": "sub_1803C8730"
+            },
+            {
+              "addr": "0x180cacec8",
+              "name": "aNpcWarehouse",
+              "string": "npc_warehouse"
+            },
+            {
+              "addr": "0x1803c85b0",
+              "name": "sub_1803C85B0"
+            },
+            {
+              "addr": "0x180caceb8",
+              "name": "aNpcCharge",
+              "string": "npc_charge"
+            },
+            {
+              "addr": "0x1803c86b0",
+              "name": "sub_1803C86B0"
+            },
+            {
+              "addr": "0x180cacea8",
+              "name": "aNpcSoulhealer",
+              "string": "npc_soulhealer"
+            },
+            {
+              "addr": "0x1803c85f0",
+              "name": "sub_1803C85F0"
+            },
+            {
+              "addr": "0x180cacea0",
+              "name": "aNpcPet",
+              "string": "npc_pet"
+            },
+            {
+              "addr": "0x1803c8670",
+              "name": "sub_1803C8670"
+            },
+            {
+              "addr": "0x180cace90",
+              "name": "aNpcUpgrade",
+              "string": "npc_upgrade"
+            },
+            {
+              "addr": "0x1803c86f0",
+              "name": "sub_1803C86F0"
+            },
+            {
+              "addr": "0x180cad118",
+              "name": "aNpcVendor",
+              "string": "npc_vendor"
+            },
+            {
+              "addr": "0x1803c8770",
+              "name": "sub_1803C8770"
+            },
+            {
+              "addr": "0x180cad100",
+              "name": "aNpcSearchTelep",
+              "string": "npc_search_teleport"
+            },
+            {
+              "addr": "0x1803c87b0",
+              "name": "sub_1803C87B0"
+            },
+            {
+              "addr": "0x180cad0f0",
+              "name": "aNpcSearchWish",
+              "string": "npc_search_wish"
+            },
+            {
+              "addr": "0x1803c8950",
+              "name": "sub_1803C8950"
+            },
+            {
+              "addr": "0x180cad0d8",
+              "name": "aQuestSearchAdd",
+              "string": "quest_search_add"
+            },
+            {
+              "addr": "0x1803c8af0",
+              "name": "sub_1803C8AF0"
+            },
+            {
+              "addr": "0x180cad0c0",
+              "name": "aQuestSearchEnd",
+              "string": "quest_search_end"
+            },
+            {
+              "addr": "0x1803c8c60",
+              "name": "sub_1803C8C60"
+            },
+            {
+              "addr": "0x180cad0a8",
+              "name": "aItemWishSetite",
+              "string": "item_wish_setitems"
+            },
+            {
+              "addr": "0x1803ca860",
+              "name": "sub_1803CA860"
+            },
+            {
+              "addr": "0x180cad098",
+              "name": "aItemRemove",
+              "string": "item_remove"
+            },
+            {
+              "addr": "0x1803caad0",
+              "name": "sub_1803CAAD0"
+            },
+            {
+              "addr": "0x180cad080",
+              "name": "aItemSearchWish",
+              "string": "item_search_wish"
+            },
+            {
+              "addr": "0x1803cabb0",
+              "name": "sub_1803CABB0"
+            },
+            {
+              "addr": "0x180cad070",
+              "name": "aItemEnchantUp",
+              "string": "item_enchant_up"
+            },
+            {
+              "addr": "0x1803cae20",
+              "name": "sub_1803CAE20"
+            },
+            {
+              "addr": "0x180cad058",
+              "name": "aItemEnchantDow",
+              "string": "item_enchant_down"
+            },
+            {
+              "addr": "0x1803caf90",
+              "name": "sub_1803CAF90"
+            },
+            {
+              "addr": "0x180cad040",
+              "name": "aItemEnchantWis",
+              "string": "item_enchant_wish_count"
+            },
+            {
+              "addr": "0x1803cb0e0",
+              "name": "sub_1803CB0E0"
+            },
+            {
+              "addr": "0x180cad030",
+              "name": "aItemEquipLeft",
+              "string": "item_equip_left"
+            },
+            {
+              "addr": "0x1803cb510",
+              "name": "sub_1803CB510"
+            },
+            {
+              "addr": "0x180cad018",
+              "name": "aItemEquipRight",
+              "string": "item_equip_right"
+            },
+            {
+              "addr": "0x1803cb520",
+              "name": "sub_1803CB520"
+            },
+            {
+              "addr": "0x180cad008",
+              "name": "aItemRich",
+              "string": "item_rich"
+            },
+            {
+              "addr": "0x1803cb530",
+              "name": "sub_1803CB530"
+            },
+            {
+              "addr": "0x180cacff0",
+              "name": "aTestAutoSkillT_0",
+              "string": "test_auto_skill_test"
+            },
+            {
+              "addr": "0x1803c6280",
+              "name": "sub_1803C6280"
+            },
+            {
+              "addr": "0x180cacfd0",
+              "name": "aTestAutoSkillT_1",
+              "string": "test_auto_skill_test_cancel"
+            },
+            {
+              "addr": "0x1803c6450",
+              "name": "sub_1803C6450"
+            },
+            {
+              "addr": "0x180cad998",
+              "name": "aSaveOption",
+              "string": "save_option"
+            },
+            {
+              "addr": "0x1803c6460",
+              "name": "sub_1803C6460"
+            },
+            {
+              "addr": "0x180cad980",
+              "name": "aSaveOptionEnvi",
+              "string": "save_option_environment"
+            },
+            {
+              "addr": "0x1803c6470",
+              "name": "sub_1803C6470"
+            },
+            {
+              "addr": "0x180cad968",
+              "name": "aSaveOptionQuic",
+              "string": "save_option_quickbar"
+            },
+            {
+              "addr": "0x1803c6480",
+              "name": "sub_1803C6480"
+            },
+            {
+              "addr": "0x180cad958",
+              "name": "aLoadOption",
+              "string": "load_option"
+            },
+            {
+              "addr": "0x1803c6800",
+              "name": "sub_1803C6800"
+            },
+            {
+              "addr": "0x180cad948",
+              "name": "aManualCommand",
+              "string": "manual_command"
+            },
+            {
+              "addr": "0x1803cb540",
+              "name": "sub_1803CB540"
+            },
+            {
+              "addr": "0x180cad938",
+              "name": "aDisplayMsg",
+              "string": "display_msg"
+            },
+            {
+              "addr": "0x1803cbea0",
+              "name": "sub_1803CBEA0"
+            },
+            {
+              "addr": "0x180b38660",
+              "name": "qword_180B38660"
+            },
+            {
+              "addr": "0x1803c9980",
+              "name": "sub_1803C9980"
+            },
+            {
+              "addr": "0x180cadaf8",
+              "name": "aItemSearchCanc",
+              "string": "item_search_cancel"
+            },
+            {
+              "addr": "0x1803c9b50",
+              "name": "sub_1803C9B50"
+            },
+            {
+              "addr": "0x180cadb10",
+              "name": "aItemSearch",
+              "string": "item_search"
+            },
+            {
+              "addr": "0x1803c78d0",
+              "name": "sub_1803C78D0"
+            },
+            {
+              "addr": "0x180cad888",
+              "name": "aQuestSearchCan",
+              "string": "quest_search_cancel"
+            },
+            {
+              "addr": "0x1803c7a10",
+              "name": "sub_1803C7A10"
+            },
+            {
+              "addr": "0x180cad8a0",
+              "name": "aQuestSearch",
+              "string": "quest_search"
+            },
+            {
+              "addr": "0x1803c6d30",
+              "name": "sub_1803C6D30"
+            },
+            {
+              "addr": "0x180cad8b0",
+              "name": "aNpcSearchCance",
+              "string": "npc_search_cancel"
+            },
+            {
+              "addr": "0x1803c6ec0",
+              "name": "sub_1803C6EC0"
+            },
+            {
+              "addr": "0x180cad8c8",
+              "name": "aNpcSearch",
+              "string": "npc_search"
+            },
+            {
+              "addr": "0x1803c3c50",
+              "name": "sub_1803C3C50"
+            },
+            {
+              "addr": "0x180cad8d8",
+              "name": "aSkillSearchCan",
+              "string": "skill_search_cancel"
+            },
+            {
+              "addr": "0x1803c3de0",
+              "name": "sub_1803C3DE0"
+            },
+            {
+              "addr": "0x180cad8f0",
+              "name": "aSkillSearch",
+              "string": "skill_search"
+            },
+            {
+              "addr": "0x18017acd0",
+              "name": "sub_18017ACD0"
+            },
+            {
+              "addr": "0x180b1d5cc",
+              "name": "sub_180B1D5CC"
+            },
+            {
+              "addr": "0x180cad900",
+              "name": "asc_180CAD900",
+              "string": "਍"
+            },
+            {
+              "addr": "0x1819fbd22",
+              "name": "sub_1819FBD22"
+            },
+            {
+              "addr": "0x1819f3e3c",
+              "name": "sub_1819F3E3C"
+            },
+            {
+              "addr": "0x1819f6671",
+              "name": "sub_1819F6671"
+            },
+            {
+              "addr": "0x180b1d5d2",
+              "name": "sub_180B1D5D2"
+            },
+            {
+              "addr": "0x1819f0df3",
+              "name": "sub_1819F0DF3"
+            },
+            {
+              "addr": "0x1819fc8ca",
+              "name": "sub_1819FC8CA"
+            },
+            {
+              "addr": "0x1819f0f8e",
+              "name": "sub_1819F0F8E"
+            },
+            {
+              "addr": "0x1819f7534",
+              "name": "sub_1819F7534"
+            },
+            {
+              "addr": "0x180b383f0",
+              "name": "qword_180B383F0"
+            },
+            {
+              "addr": "0x180ae76bc",
+              "name": "sub_180AE76BC"
+            },
+            {
+              "addr": "0x1819fcd87",
+              "name": "sub_1819FCD87"
+            },
+            {
+              "addr": "0x180cad908",
+              "name": "aSaveLog",
+              "string": "save_log"
+            },
+            {
+              "addr": "0x1803cc0f0",
+              "name": "sub_1803CC0F0"
+            },
+            {
+              "addr": "0x180cad918",
+              "name": "aClearLog",
+              "string": "clear_log"
+            },
+            {
+              "addr": "0x180cad928",
+              "name": "aCancelCommand",
+              "string": "cancel_command"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "  __int64 v103; // [rsp+40h] [rbp-C0h]\n  unsigned __int64 v104; // [rsp+48h] [rbp-B8h]\n  char *v105; // [rsp+50h] [rbp-B0h] BYREF\n  _QWORD v106[2]; // [rsp+58h] [rbp-A8h]\n  char *v107; // [rsp+68h] [rbp-98h]\n  __int128 v108; // [rsp+70h] [rbp-90h]\n  char *v109; // [rsp+80h] [rbp-80h]\n  __int128 v110; // [rsp+88h] [rbp-78h]\n  char *v111; // [rsp+98h] [rbp-68h]\n  __int128 v112; // [rsp+A0h] [rbp-60h]\n  char *v113; // [rsp+B0h] [rbp-50h]\n  __int128 v114; // [rsp+B8h] [rbp-48h]\n  char *v115; // [rsp+C8h] [rbp-38h]\n  __int128 v116; // [rsp+D0h] [rbp-30h]\n  char *v117; // [rsp+E0h] [rbp-20h]\n  __int128 v118; // [rsp+E8h] [rbp-18h]\n  char *v119; // [rsp+F8h] [rbp-8h]\n  __int128 v120; // [rsp+100h] [rbp+0h]\n  char *v121; // [rsp+110h] [rbp+10h]\n  __int128 v122; // [rsp+118h] [rbp+18h]\n  char *v123; // [rsp+128h] [rbp+28h]\n  __int128 v124; // [rsp+130h] [rbp+30h]\n  char *v125; // [rsp+140h] [rbp+40h]\n  __int128 v126; // [rsp+148h] [rbp+48h]\n  char *v127; // [rsp+158h] [rbp+58h]\n  __int128 v128; // [rsp+160h] [rbp+60h]\n  char *v129; // [rsp+170h] [rbp+70h]\n  __int128 v130; // [rsp+178h] [rbp+78h]\n  char *v131; // [rsp+188h] [rbp+88h]\n  __int128 v132; // [rsp+190h] [rbp+90h]\n  char *v133; // [rsp+1A0h] [rbp+A0h]\n  __int128 v134; // [rsp+1A8h] [rbp+A8h]\n  char *v135; // [rsp+1B8h] [rbp+B8h]\n  __int128 v136; // [rsp+1C0h] [rbp+C0h]\n  char *v137; // [rsp+1D0h] [rbp+D0h]\n  __int128 v138; // [rsp+1D8h] [rbp+D8h]\n  char *v139; // [rsp+1E8h] [rbp+E8h]\n  __int128 v140; // [rsp+1F0h] [rbp+F0h]\n  char *v141; // [rsp+200h] [rbp+100h]\n  __int128 v142; // [rsp+208h] [rbp+108h]\n  char *v143; // [rsp+218h] [rbp+118h]\n  __int128 v144; // [rsp+220h] [rbp+120h]\n  char *v145; // [rsp+230h] [rbp+130h]\n  __int128 v146; // [rsp+238h] [rbp+138h]\n  char *v147; // [rsp+248h] [rbp+148h]\n  __int128 v148; // [rsp+250h] [rbp+150h]\n  char *v149; // [rsp+260h] [rbp+160h]\n  __int128 v150; // [rsp+268h] [rbp+168h]\n  char *v151; // [rsp+278h] [rbp+178h]\n  __int128 v152; // [rsp+280h] [rbp+180h]\n  char *v153; // [rsp+290h] [rbp+190h]\n  __int128 v154; // [rsp+298h] [rbp+198h]\n  char *v155; // [rsp+2A8h] [rbp+1A8h]\n  __int128 v156; // [rsp+2B0h] [rbp+1B0h]\n  char *v157; // [rsp+2C0h] [rbp+1C0h]\n  __int128 v158; // [rsp+2C8h] [rbp+1C8h]\n  char *v159; // [rsp+2D8h] [rbp+1D8h]\n  __int128 v160; // [rsp+2E0h] [rbp+1E0h]\n  char *v161; // [rsp+2F0h] [rbp+1F0h]\n  __int128 v162; // [rsp+2F8h] [rbp+1F8h]\n  char *v163; // [rsp+308h] [rbp+208h]\n  __int128 v164; // [rsp+310h] [rbp+210h]\n  char *v165; // [rsp+320h] [rbp+220h]\n  __int128 v166; // [rsp+328h] [rbp+228h]\n  char *v167; // [rsp+338h] [rbp+238h]\n  __int128 v168; // [rsp+340h] [rbp+240h]\n  char *v169; // [rsp+350h] [rbp+250h]\n  __int128 v170; // [rsp+358h] [rbp+258h]\n  char *v171; // [rsp+368h] [rbp+268h]\n  __int128 v172; // [rsp+370h] [rbp+270h]\n  char *v173; // [rsp+380h] [rbp+280h]\n  __int128 v174; // [rsp+388h] [rbp+288h]\n  char *v175; // [rsp+398h] [rbp+298h]\n  __int128 v176; // [rsp+3A0h] [rbp+2A0h]\n  char *v177; // [rsp+3B0h] [rbp+2B0h]\n  __int128 v178; // [rsp+3B8h] [rbp+2B8h]\n  char *v179; // [rsp+3C8h] [rbp+2C8h]\n  __int128 v180; // [rsp+3D0h] [rbp+2D0h]\n  char *v181; // [rsp+3E0h] [rbp+2E0h]\n  __int128 v182; // [rsp+3E8h] [rbp+2E8h]\n  char *v183; // [rsp+3F8h] [rbp+2F8h]\n  __int128 v184; // [rsp+400h] [rbp+300h]\n  char *v185; // [rsp+410h] [rbp+310h]\n  __int128 v186; // [rsp+418h] [rbp+318h]\n  char *v187; // [rsp+428h] [rbp+328h]\n  __int128 v188; // [rsp+430h] [rbp+330h]\n  char *v189; // [rsp+440h] [rbp+340h]\n  __int128 v190; // [rsp+448h] [rbp+348h]\n  char *v191; // [rsp+458h] [rbp+358h]\n  __int128 v192; // [rsp+460h] [rbp+360h]\n  char *v193; // [rsp+470h] [rbp+370h]\n  __int128 v194; // [rsp+478h] [rbp+378h]\n  char *v195; // [rsp+488h] [rbp+388h]\n  __int128 v196; // [rsp+490h] [rbp+390h]\n  char *v197; // [rsp+4A0h] [rbp+3A0h]\n  __int128 v198; // [rsp+4A8h] [rbp+3A8h]\n  char *v199; // [rsp+4B8h] [rbp+3B8h]\n  __int128 v200; // [rsp+4C0h] [rbp+3C0h]\n  char *v201; // [rsp+4D0h] [rbp+3D0h]\n  __int128 v202; // [rsp+4D8h] [rbp+3D8h]",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 200,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "  char *v203; // [rsp+4E8h] [rbp+3E8h]\n  __int128 v204; // [rsp+4F0h] [rbp+3F0h]\n  char *v205; // [rsp+500h] [rbp+400h]\n  __int128 v206; // [rsp+508h] [rbp+408h]\n  char *v207; // [rsp+518h] [rbp+418h]\n  __int128 v208; // [rsp+520h] [rbp+420h]\n  char *v209; // [rsp+530h] [rbp+430h]\n  __int128 v210; // [rsp+538h] [rbp+438h]\n  char *v211; // [rsp+548h] [rbp+448h]\n  __int128 v212; // [rsp+550h] [rbp+450h]\n  char *v213; // [rsp+560h] [rbp+460h]\n  __int128 v214; // [rsp+568h] [rbp+468h]\n  char *v215; // [rsp+578h] [rbp+478h]\n  __int128 v216; // [rsp+580h] [rbp+480h]\n  char *v217; // [rsp+590h] [rbp+490h]\n  __int128 v218; // [rsp+598h] [rbp+498h]\n  char *v219; // [rsp+5A8h] [rbp+4A8h]\n  __int128 v220; // [rsp+5B0h] [rbp+4B0h]\n  char *v221; // [rsp+5C0h] [rbp+4C0h]\n  __int128 v222; // [rsp+5C8h] [rbp+4C8h]\n  char *v223; // [rsp+5D8h] [rbp+4D8h]\n  __int128 v224; // [rsp+5E0h] [rbp+4E0h]\n  char *v225; // [rsp+5F0h] [rbp+4F0h]\n  __int128 v226; // [rsp+5F8h] [rbp+4F8h]\n  char *v227; // [rsp+608h] [rbp+508h]\n  __int128 v228; // [rsp+610h] [rbp+510h]\n  char *v229; // [rsp+620h] [rbp+520h]\n  __int128 v230; // [rsp+628h] [rbp+528h]\n  char *v231; // [rsp+638h] [rbp+538h]\n  __int128 v232; // [rsp+640h] [rbp+540h]\n  char *v233; // [rsp+650h] [rbp+550h]\n  __int128 v234; // [rsp+658h] [rbp+558h]\n  char *v235; // [rsp+668h] [rbp+568h]\n  __int128 v236; // [rsp+670h] [rbp+570h]\n  char *v237; // [rsp+680h] [rbp+580h]\n  __int128 v238; // [rsp+688h] [rbp+588h]\n\n  v2 = 0; /*0x1803c0a38*/\n  v105 = aBasicAttrbonus; /*0x1803c0a41*/\n  DWORD2(v102) = 0; /*0x1803c0a49*/\n  *(_QWORD *)&v102 = sub_1803C2A80; /*0x1803c0a54*/\n  v5 = v102; /*0x1803c0a5c*/\n  v107 = aBasicClearIndu; /*0x1803c0a6c*/\n  *(_QWORD *)&v102 = sub_1803C2B00; /*0x1803c0a78*/\n  v109 = aBasicClearSyst; /*0x1803c0a84*/\n  *(_OWORD *)v106 = v5; /*0x1803c0a8f*/\n  v6 = v102; /*0x1803c0a94*/\n  *(_QWORD *)&v102 = sub_1803C2B60; /*0x1803c0a99*/\n  v111 = aBasicResurrect; /*0x1803c0aa5*/\n  DWORD2(v102) = 0; /*0x1803c0ab0*/\n  v108 = v6; /*0x1803c0ab4*/\n  v7 = v102; /*0x1803c0ab9*/\n  *(_QWORD *)&v102 = sub_1803C2B90; /*0x1803c0abe*/\n  v113 = aBasicRecall; /*0x1803c0aca*/\n  v110 = v7; /*0x1803c0ad9*/\n  v8 = v102; /*0x1803c0add*/\n  *(_QWORD *)&v102 = sub_1803C2BA0; /*0x1803c0ae2*/\n  v115 = aBasicCooltimeO; /*0x1803c0aee*/\n  DWORD2(v102) = 0; /*0x1803c0af9*/\n  v112 = v8; /*0x1803c0afd*/\n  v9 = v102; /*0x1803c0b01*/\n  *(_QWORD *)&v102 = sub_1803C2BB0; /*0x1803c0b06*/\n  v117 = aBasicCooltimeO_0; /*0x1803c0b12*/\n  v114 = v9; /*0x1803c0b21*/\n  v10 = v102; /*0x1803c0b25*/\n  *(_QWORD *)&v102 = sub_1803C2BF0; /*0x1803c0b2a*/\n  v119 = aBasicGaugeOn; /*0x1803c0b36*/\n  DWORD2(v102) = 0; /*0x1803c0b41*/\n  v116 = v10; /*0x1803c0b45*/\n  v11 = v102; /*0x1803c0b49*/\n  *(_QWORD *)&v102 = sub_1803C2C40; /*0x1803c0b4e*/\n  v121 = aBasicGaugeOff; /*0x1803c0b5a*/\n  v118 = v11; /*0x1803c0b69*/\n  v12 = v102; /*0x1803c0b6d*/\n  *(_QWORD *)&v102 = sub_1803C2C50; /*0x1803c0b72*/\n  DWORD2(v102) = 0; /*0x1803c0b7e*/\n  v123 = aBasicChatlogOn; /*0x1803c0b82*/\n  v120 = v12; /*0x1803c0b8d*/\n  v13 = v102; /*0x1803c0b91*/\n  *(_QWORD *)&v102 = sub_1803C2C60; /*0x1803c0b96*/\n  v122 = v13; /*0x1803c0ba6*/\n  v125 = aBasicChatlogOf; /*0x1803c0baa*/\n  v14 = v102; /*0x1803c0bb5*/\n  *(_QWORD *)&v102 = sub_1803C2CB0; /*0x1803c0bba*/\n  DWORD2(v102) = 0; /*0x1803c0bc6*/\n  v124 = v14; /*0x1803c0bca*/\n  v126 = v102; /*0x1803c0bd3*/\n  v127 = aBasicWarfogOn; /*0x1803c0bd7*/\n  *(_QWORD *)&v102 = sub_1803C2D20; /*0x1803c0be2*/\n  v129 = aBasicWarfogOff; /*0x1803c0bee*/\n  v15 = v102; /*0x1803c0bfd*/\n  *(_QWORD *)&v102 = sub_1803C2D70; /*0x1803c0c02*/\n  v131 = aBasicInvisible; /*0x1803c0c0e*/\n  DWORD2(v102) = 0; /*0x1803c0c1c*/\n  v128 = v15; /*0x1803c0c20*/\n  v16 = v102; /*0x1803c0c24*/\n  *(_QWORD *)&v102 = sub_1803C2D00; /*0x1803c0c29*/\n  v133 = aBasicInvisible_0; /*0x1803c0c35*/\n  v130 = v16; /*0x1803c0c47*/\n  v17 = v102; /*0x1803c0c4b*/",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 300
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 300,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "  *(_QWORD *)&v102 = sub_1803C2D10; /*0x1803c0c50*/\n  v135 = aBasicTeleport; /*0x1803c0c5c*/\n  DWORD2(v102) = 0; /*0x1803c0c6a*/\n  v132 = v17; /*0x1803c0c6e*/\n  v18 = v102; /*0x1803c0c75*/\n  *(_QWORD *)&v102 = sub_1803C2DC0; /*0x1803c0c7a*/\n  v137 = aBasicAttr; /*0x1803c0c86*/\n  v134 = v18; /*0x1803c0c98*/\n  v19 = v102; /*0x1803c0c9f*/\n  *(_QWORD *)&v102 = sub_1803C2E60; /*0x1803c0ca4*/\n  v139 = aBasicLevel; /*0x1803c0cb0*/\n  DWORD2(v102) = 0; /*0x1803c0cbe*/\n  v136 = v19; /*0x1803c0cc2*/\n  v20 = v102; /*0x1803c0cc9*/\n  *(_QWORD *)&v102 = sub_1803C49D0; /*0x1803c0cce*/\n  v141 = aBasicClass; /*0x1803c0cda*/\n  v138 = v20; /*0x1803c0cec*/\n  v21 = v102; /*0x1803c0cf3*/\n  *(_QWORD *)&v102 = sub_1803C4A30; /*0x1803c0cf8*/\n  v143 = aBasicStigma; /*0x1803c0d04*/\n  DWORD2(v102) = 0; /*0x1803c0d12*/\n  v140 = v21; /*0x1803c0d16*/\n  v22 = v102; /*0x1803c0d1d*/\n  *(_QWORD *)&v102 = sub_1803C4A90; /*0x1803c0d22*/\n  v145 = aBasicInventory; /*0x1803c0d2e*/\n  v142 = v22; /*0x1803c0d40*/\n  v23 = v102; /*0x1803c0d47*/\n  *(_QWORD *)&v102 = sub_1803C4B50; /*0x1803c0d4c*/\n  DWORD2(v102) = 0; /*0x1803c0d58*/\n  v147 = aBasicResetInve; /*0x1803c0d5c*/\n  v144 = v23; /*0x1803c0d6a*/\n  v24 = v102; /*0x1803c0d71*/\n  *(_QWORD *)&v102 = sub_1803C4BA0; /*0x1803c0d76*/\n  v146 = v24; /*0x1803c0d86*/\n  v149 = aBasicAddAllCom; /*0x1803c0d8d*/\n  v25 = v102; /*0x1803c0d9b*/\n  *(_QWORD *)&v102 = sub_1803C4BB0; /*0x1803c0da0*/\n  DWORD2(v102) = 0; /*0x1803c0da5*/\n  v148 = v25; /*0x1803c0da9*/\n  v26 = v102; /*0x1803c0db0*/\n  v151 = aBasicAddAllSki; /*0x1803c0dc0*/\n  *(_QWORD *)&v102 = sub_1803C4EC0; /*0x1803c0dce*/\n  v153 = aBasicAddAllSki_0; /*0x1803c0dda*/\n  v150 = v26; /*0x1803c0de8*/\n  v27 = v102; /*0x1803c0def*/\n  *(_QWORD *)&v102 = sub_1803C4EC0; /*0x1803c0df4*/\n  v155 = aBasicRemoveAll; /*0x1803c0e00*/\n  DWORD2(v102) = 0; /*0x1803c0e0e*/\n  v152 = v27; /*0x1803c0e12*/\n  v28 = v102; /*0x1803c0e19*/\n  *(_QWORD *)&v102 = sub_1803C4F00; /*0x1803c0e1e*/\n  v157 = aBasicAddDevSki; /*0x1803c0e2a*/\n  v154 = v28; /*0x1803c0e3c*/\n  v29 = v102; /*0x1803c0e43*/\n  *(_QWORD *)&v102 = sub_1803C4F60; /*0x1803c0e48*/\n  v159 = aSkillSearchAdd; /*0x1803c0e54*/\n  DWORD2(v102) = 0; /*0x1803c0e62*/\n  v156 = v29; /*0x1803c0e66*/\n  v30 = v102; /*0x1803c0e6d*/\n  *(_QWORD *)&v102 = sub_1803C4FC0; /*0x1803c0e72*/\n  v161 = aBasicSetting; /*0x1803c0e7e*/\n  v158 = v30; /*0x1803c0e90*/\n  v31 = v102; /*0x1803c0e97*/\n  *(_QWORD *)&v102 = sub_1803C5170; /*0x1803c0e9c*/\n  v163 = aBasicItemSetti; /*0x1803c0ea8*/\n  DWORD2(v102) = 0; /*0x1803c0eb6*/\n  v160 = v31; /*0x1803c0eba*/\n  v32 = v102; /*0x1803c0ec1*/\n  *(_QWORD *)&v102 = sub_1803C5530; /*0x1803c0ec6*/\n  v165 = aBasicEquipSett; /*0x1803c0ed2*/\n  v162 = v32; /*0x1803c0ee4*/\n  v33 = v102; /*0x1803c0eeb*/\n  *(_QWORD *)&v102 = sub_1803C5A60; /*0x1803c0ef0*/\n  v167 = aProcProbabilit; /*0x1803c0efc*/\n  DWORD2(v102) = 0; /*0x1803c0f0a*/\n  v164 = v33; /*0x1803c0f0e*/\n  v34 = v102; /*0x1803c0f15*/\n  *(_QWORD *)&v102 = sub_1803C6850; /*0x1803c0f1a*/\n  v169 = aProcProbabilit_0; /*0x1803c0f2a*/\n  v166 = v34; /*0x1803c0f38*/\n  v35 = v102; /*0x1803c0f3f*/\n  *(_QWORD *)&v102 = sub_1803C6860; /*0x1803c0f44*/\n  DWORD2(v102) = 0; /*0x1803c0f50*/\n  v168 = v35; /*0x1803c0f54*/\n  v36 = v102; /*0x1803c0f5b*/\n  v171 = aGlobalEnchantO; /*0x1803c0f60*/\n  *(_QWORD *)&v102 = sub_1803C6870; /*0x1803c0f6e*/\n  v170 = v36; /*0x1803c0f7a*/\n  v173 = aGlobalEnchantO_0; /*0x1803c0f8a*/\n  v172 = v102; /*0x1803c0f91*/\n  DWORD2(v102) = 0; /*0x1803c0f98*/\n  *(_QWORD *)&v102 = sub_1803C6880; /*0x1803c0fa3*/\n  v37 = v102; /*0x1803c0faf*/\n  v175 = aGlobalFlyingOn; /*0x1803c0fb4*/\n  *(_QWORD *)&v102 = sub_1803C6890; /*0x1803c0fc2*/\n  v177 = aGlobalFlyingOf; /*0x1803c0fce*/\n  v174 = v37; /*0x1803c0fe0*/\n  v38 = v102; /*0x1803c0fe7*/\n  *(_QWORD *)&v102 = sub_1803C68D0; /*0x1803c0fec*/\n  v179 = aNpcTestNaction; /*0x1803c0ff8*/",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 400
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 400,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "  DWORD2(v102) = 0; /*0x1803c1006*/\n  v176 = v38; /*0x1803c100a*/\n  v39 = v102; /*0x1803c1011*/\n  *(_QWORD *)&v102 = sub_1803C85A0; /*0x1803c1016*/\n  v181 = aNpcStigma; /*0x1803c1022*/\n  v178 = v39; /*0x1803c1034*/\n  v40 = v102; /*0x1803c103b*/\n  *(_QWORD *)&v102 = sub_1803C8630; /*0x1803c1040*/\n  v183 = aNpcCustomize; /*0x1803c104c*/\n  DWORD2(v102) = 0; /*0x1803c105a*/\n  v180 = v40; /*0x1803c105e*/\n  v41 = v102; /*0x1803c1065*/\n  *(_QWORD *)&v102 = sub_1803C8730; /*0x1803c106a*/\n  v185 = aNpcWarehouse; /*0x1803c1076*/\n  v182 = v41; /*0x1803c1088*/\n  v42 = v102; /*0x1803c108f*/\n  *(_QWORD *)&v102 = sub_1803C85B0; /*0x1803c1094*/\n  v187 = aNpcCharge; /*0x1803c10a0*/\n  DWORD2(v102) = 0; /*0x1803c10ae*/\n  v184 = v42; /*0x1803c10b2*/\n  v43 = v102; /*0x1803c10b9*/\n  *(_QWORD *)&v102 = sub_1803C86B0; /*0x1803c10be*/\n  v189 = aNpcSoulhealer; /*0x1803c10ca*/\n  v186 = v43; /*0x1803c10dc*/\n  v44 = v102; /*0x1803c10e3*/\n  *(_QWORD *)&v102 = sub_1803C85F0; /*0x1803c10e8*/\n  v191 = aNpcPet; /*0x1803c10f4*/\n  DWORD2(v102) = 0; /*0x1803c1102*/\n  v188 = v44; /*0x1803c1106*/\n  v45 = v102; /*0x1803c110d*/\n  *(_QWORD *)&v102 = sub_1803C8670; /*0x1803c1112*/\n  v190 = v45; /*0x1803c1122*/\n  v193 = aNpcUpgrade; /*0x1803c1129*/\n  v46 = v102; /*0x1803c1137*/\n  *(_QWORD *)&v102 = sub_1803C86F0; /*0x1803c113c*/\n  DWORD2(v102) = 0; /*0x1803c1148*/\n  v192 = v46; /*0x1803c114c*/\n  v47 = v102; /*0x1803c1153*/\n  v195 = aNpcVendor; /*0x1803c1158*/\n  *(_QWORD *)&v102 = sub_1803C8770; /*0x1803c1166*/\n  v194 = v47; /*0x1803c116b*/\n  v48 = v102; /*0x1803c1176*/\n  DWORD2(v102) = 0; /*0x1803c117b*/\n  v197 = aNpcSearchTelep; /*0x1803c1186*/\n  *(_QWORD *)&v102 = sub_1803C87B0; /*0x1803c1194*/\n  v199 = aNpcSearchWish; /*0x1803c11a0*/\n  v196 = v48; /*0x1803c11ae*/\n  v49 = v102; /*0x1803c11b5*/\n  *(_QWORD *)&v102 = sub_1803C8950; /*0x1803c11ba*/\n  v201 = aQuestSearchAdd; /*0x1803c11c6*/\n  v198 = v49; /*0x1803c11d8*/\n  v50 = v102; /*0x1803c11df*/\n  *(_QWORD *)&v102 = sub_1803C8AF0; /*0x1803c11e4*/\n  v203 = aQuestSearchEnd; /*0x1803c11f0*/\n  DWORD2(v102) = 0; /*0x1803c11fe*/\n  v200 = v50; /*0x1803c1202*/\n  v51 = v102; /*0x1803c1209*/\n  *(_QWORD *)&v102 = sub_1803C8C60; /*0x1803c120e*/\n  v205 = aItemWishSetite; /*0x1803c121a*/\n  v202 = v51; /*0x1803c122c*/\n  v52 = v102; /*0x1803c1233*/\n  *(_QWORD *)&v102 = sub_1803CA860; /*0x1803c1238*/\n  v207 = aItemRemove; /*0x1803c1244*/\n  DWORD2(v102) = 0; /*0x1803c1252*/\n  v204 = v52; /*0x1803c1256*/\n  v53 = v102; /*0x1803c125d*/\n  *(_QWORD *)&v102 = sub_1803CAAD0; /*0x1803c1262*/\n  v209 = aItemSearchWish; /*0x1803c126e*/\n  v206 = v53; /*0x1803c1280*/\n  v54 = v102; /*0x1803c1287*/\n  *(_QWORD *)&v102 = sub_1803CABB0; /*0x1803c128c*/\n  v211 = aItemEnchantUp; /*0x1803c1298*/\n  DWORD2(v102) = 0; /*0x1803c12a6*/\n  v208 = v54; /*0x1803c12aa*/\n  v55 = v102; /*0x1803c12b1*/\n  *(_QWORD *)&v102 = sub_1803CAE20; /*0x1803c12b6*/\n  v213 = aItemEnchantDow; /*0x1803c12c2*/\n  v210 = v55; /*0x1803c12d4*/\n  v56 = v102; /*0x1803c12db*/\n  *(_QWORD *)&v102 = sub_1803CAF90; /*0x1803c12e0*/\n  v215 = aItemEnchantWis; /*0x1803c12ec*/\n  DWORD2(v102) = 0; /*0x1803c12fa*/\n  v212 = v56; /*0x1803c12fe*/\n  v57 = v102; /*0x1803c1305*/\n  *(_QWORD *)&v102 = sub_1803CB0E0; /*0x1803c130a*/\n  v217 = aItemEquipLeft; /*0x1803c131a*/\n  v214 = v57; /*0x1803c1328*/\n  v58 = v102; /*0x1803c132f*/\n  *(_QWORD *)&v102 = sub_1803CB510; /*0x1803c1334*/\n  DWORD2(v102) = 0; /*0x1803c1340*/\n  v216 = v58; /*0x1803c1344*/\n  v219 = aItemEquipRight; /*0x1803c1350*/\n  v218 = v102; /*0x1803c135e*/\n  v59 = *a2; /*0x1803c1365*/\n  *(_QWORD *)&v102 = sub_1803CB520; /*0x1803c1368*/\n  v221 = aItemRich; /*0x1803c1374*/\n  v60 = v102; /*0x1803c1386*/\n  *(_QWORD *)&v102 = sub_1803CB530; /*0x1803c138b*/\n  v223 = aTestAutoSkillT_0; /*0x1803c1397*/\n  v220 = v60; /*0x1803c13a5*/",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 500
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 500,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "  DWORD2(v102) = 0; /*0x1803c13ac*/\n  v61 = v102; /*0x1803c13b0*/\n  *(_QWORD *)&v102 = sub_1803C6280; /*0x1803c13b5*/\n  v225 = aTestAutoSkillT_1; /*0x1803c13c1*/\n  v222 = v61; /*0x1803c13cf*/\n  v62 = v102; /*0x1803c13da*/\n  *(_QWORD *)&v102 = sub_1803C6450; /*0x1803c13df*/\n  v227 = aSaveOption; /*0x1803c13eb*/\n  v224 = v62; /*0x1803c13f9*/\n  DWORD2(v102) = 0; /*0x1803c1400*/\n  v63 = v102; /*0x1803c1404*/\n  *(_QWORD *)&v102 = sub_1803C6460; /*0x1803c1409*/\n  v229 = aSaveOptionEnvi; /*0x1803c1415*/\n  v226 = v63; /*0x1803c1423*/\n  v64 = v102; /*0x1803c142e*/\n  *(_QWORD *)&v102 = sub_1803C6470; /*0x1803c1433*/\n  v231 = aSaveOptionQuic; /*0x1803c143f*/\n  v228 = v64; /*0x1803c144d*/\n  DWORD2(v102) = 0; /*0x1803c1454*/\n  v65 = v102; /*0x1803c1458*/\n  *(_QWORD *)&v102 = sub_1803C6480; /*0x1803c145d*/\n  v233 = aLoadOption; /*0x1803c1469*/\n  v230 = v65; /*0x1803c1477*/\n  v66 = v102; /*0x1803c1482*/\n  *(_QWORD *)&v102 = sub_1803C6800; /*0x1803c1487*/\n  v235 = aManualCommand; /*0x1803c1493*/\n  v232 = v66; /*0x1803c14a1*/\n  DWORD2(v102) = 0; /*0x1803c14a8*/\n  v67 = v102; /*0x1803c14ac*/\n  *(_QWORD *)&v102 = sub_1803CB540; /*0x1803c14b1*/\n  v234 = v67; /*0x1803c14c1*/\n  v237 = aDisplayMsg; /*0x1803c14c8*/\n  v68 = v102; /*0x1803c14d6*/\n  *(_QWORD *)&v102 = sub_1803CBEA0; /*0x1803c14db*/\n  v69 = *v59; /*0x1803c14e0*/\n  v236 = v68; /*0x1803c14e3*/\n  DWORD2(v102) = 0; /*0x1803c14ea*/\n  v238 = v102; /*0x1803c14f3*/\n  v70 = (*(__int64 (__fastcall **)(__int64 *))(v69 + 176))(a1: v59); /*0x1803c14fa*/\n  if ( (unsigned int)qword_180B38660(a1: v70, a2: aCancelCommand) != 0 ) /*0x1803c1512*/\n  {\n    v72 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1535*/\n    if ( (unsigned int)qword_180B38660(a1: v72, a2: aClearLog) != 0 ) /*0x1803c154d*/\n    {\n      v73 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c157b*/\n      if ( (unsigned int)qword_180B38660(a1: v73, a2: aSaveLog) != 0 ) /*0x1803c1593*/\n      {\n        v92 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c179f*/\n        if ( (unsigned int)qword_180B38660(a1: v92, a2: aSkillSearch) != 0 ) /*0x1803c17b7*/\n        {\n          v93 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c17cc*/\n          if ( (unsigned int)qword_180B38660(a1: v93, a2: aSkillSearchCan) != 0 ) /*0x1803c17e4*/\n          {\n            v94 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c17f9*/\n            if ( (unsigned int)qword_180B38660(a1: v94, a2: aNpcSearch) != 0 ) /*0x1803c1811*/\n            {\n              v95 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1826*/\n              if ( (unsigned int)qword_180B38660(a1: v95, a2: aNpcSearchCance) != 0 ) /*0x1803c183e*/\n              {\n                v96 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1853*/\n                if ( (unsigned int)qword_180B38660(a1: v96, a2: aQuestSearch) != 0 ) /*0x1803c186b*/\n                {\n                  v97 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1880*/\n                  if ( (unsigned int)qword_180B38660(a1: v97, a2: aQuestSearchCan) != 0 ) /*0x1803c1898*/\n                  {\n                    v98 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c18ad*/\n                    if ( (unsigned int)qword_180B38660(a1: v98, a2: aItemSearch) != 0 ) /*0x1803c18c5*/\n                    {\n                      v99 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c18d7*/\n                      if ( (unsigned int)qword_180B38660(a1: v99, a2: aItemSearchCanc) != 0 ) /*0x1803c18ef*/\n                      {\n                        for ( i = &v105; ; i += 3 ) /*0x1803c18fb*/\n                        {\n                          v101 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1906*/\n                          if ( (unsigned int)qword_180B38660(a1: v101, a2: *i) == 0 ) /*0x1803c191a*/\n                            break; /*0x1803c191a*/\n                          if ( (unsigned int)++v2 >= 0x43 ) /*0x1803c1925*/\n                            return 0; /*0x1803c1929*/\n                        }\n                        if ( *(_QWORD *)(a1 + 1288) == 0 ) /*0x1803c1933*/\n                          ((void (__fastcall *)(__int64))v106[3 * v2])(a1: a1 + SLODWORD(v106[3 * v2 + 1])); /*0x1803c194c*/\n                      }\n                      else\n                      {\n                        sub_1803C9980(a1); /*0x1803c18f4*/\n                      }\n                    }\n                    else\n                    {\n                      sub_1803C9B50(a1); /*0x1803c18ca*/\n                    }\n                  }\n                  else\n                  {\n                    sub_1803C78D0(a1); /*0x1803c189d*/\n                  }\n                }\n                else\n                {\n                  sub_1803C7A10(a1); /*0x1803c1870*/",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 600
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 600,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "                }\n              }\n              else\n              {\n                sub_1803C6D30(a1); /*0x1803c1843*/\n              }\n            }\n            else\n            {\n              sub_1803C6EC0(a1); /*0x1803c1816*/\n            }\n          }\n          else\n          {\n            sub_1803C3C50(a1); /*0x1803c17e9*/\n          }\n        }\n        else\n        {\n          sub_1803C3DE0(a1); /*0x1803c17bc*/\n        }\n      }\n      else if ( (unsigned int)sub_1819FCD87(a1: 0) != 0 ) /*0x1803c15a3*/\n      {\n        v74 = *(_QWORD **)(a1 + 1296); /*0x1803c15a9*/\n        v75 = 0; /*0x1803c15b0*/\n        v76 = 7; /*0x1803c15b3*/\n        v103 = 0; /*0x1803c15b9*/\n        v104 = 7; /*0x1803c15be*/\n        LOWORD(v102) = 0; /*0x1803c15c3*/\n        v77 = (_QWORD *)*v74; /*0x1803c15c8*/\n        if ( (_QWORD *)*v74 != v74 ) /*0x1803c15ce*/\n        {\n          while ( 1 ) /*0x1803c15e5*/\n          {\n            v78 = v77 + 2; /*0x1803c15e5*/\n            if ( v77[5] >= 8u ) /*0x1803c15e9*/\n              v78 = (_QWORD *)v77[2]; /*0x1803c15eb*/\n            v79 = v77[4]; /*0x1803c15ef*/\n            if ( v79 > v76 - v75 ) /*0x1803c15fc*/\n            {\n              sub_18017ACD0(a1: (unsigned int)&v102, a2: v79, a3: v76, a4: (_DWORD)v78, a5: v77[4]); /*0x1803c1637*/\n            }\n            else\n            {\n              v80 = v75 + v79; /*0x1803c15fe*/\n              v103 = v75 + v79; /*0x1803c160a*/\n              v81 = &v102; /*0x1803c160f*/\n              if ( v76 >= 8 ) /*0x1803c1617*/\n                v81 = (__int128 *)v102; /*0x1803c1617*/\n              sub_180B1D5CC(a1: (char *)v81 + 2 * v75, a2: v78, a3: 2 * v79); /*0x1803c1621*/\n              *((_WORD *)v81 + v80) = 0; /*0x1803c1626*/\n            }\n            v83 = v103; /*0x1803c1641*/\n            if ( v104 - v103 < 2 ) /*0x1803c1650*/\n            {\n              sub_18017ACD0(a1: (unsigned int)&v102, a2: 2, a3: v82, a4: (unsigned int)asc_180CAD900, a5: 2); /*0x1803c16a1*/\n            }\n            else\n            {\n              v84 = v103 + 2; /*0x1803c1656*/\n              v85 = &v102; /*0x1803c165a*/\n              v103 += 2; /*0x1803c165f*/\n              if ( v104 >= 8 ) /*0x1803c1664*/\n                v85 = (__int128 *)v102; /*0x1803c1664*/\n              sub_180B1D5CC(a1: (char *)v85 + 2 * v83, a2: asc_180CAD900, a3: 4); /*0x1803c167b*/\n              *((_WORD *)v85 + v84) = 0; /*0x1803c1680*/\n            }\n            v77 = (_QWORD *)*v77; /*0x1803c16a6*/\n            if ( v77 == *(_QWORD **)(a1 + 1296) ) /*0x1803c16b0*/\n              break; /*0x1803c16b0*/\n            v76 = v104; /*0x1803c16b2*/\n            v75 = v103; /*0x1803c16b7*/\n          }\n        }\n        sub_1819FBD22(); /*0x1803c16c9*/\n        v86 = sub_1819F3E3C(a1: 66, a2: 2 * v103 + 2); /*0x1803c16ea*/\n        v87 = sub_1819F6671(a1: v86); /*0x1803c16ed*/\n        v88 = &v102; /*0x1803c16f9*/\n        if ( v104 >= 8 ) /*0x1803c1706*/\n          v88 = (__int128 *)v102; /*0x1803c1706*/\n        v89 = v87; /*0x1803c170c*/\n        sub_180B1D5D2(a1: v87, a2: v88, a3: 2 * v103); /*0x1803c1712*/\n        *(_WORD *)(v89 + 2 * v103) = 0; /*0x1803c171c*/\n        sub_1819F0DF3(a1: v86); /*0x1803c1723*/\n        if ( sub_1819F0F8E(a1: 13, a2: v86) == 0 ) /*0x1803c173a*/\n          sub_1819FC8CA(a1: v86); /*0x1803c173f*/\n        sub_1819F7534(); /*0x1803c1745*/\n        if ( v104 >= 8 ) /*0x1803c1754*/\n        {\n          v90 = v102; /*0x1803c175a*/\n          v91 = 2 * v104 + 2; /*0x1803c175f*/\n          if ( v91 >= 0x1000 ) /*0x1803c1771*/\n          {\n            v90 = *(_QWORD *)(v102 - 8); /*0x1803c1773*/\n            v91 = 2 * v104 + 41; /*0x1803c1777*/\n            if ( (unsigned __int64)(v102 - v90 - 8) > 0x1F ) /*0x1803c1786*/\n            {\n              qword_180B383F0(a1: v90, a2: v91); /*0x1803c1788*/\n              __debugbreak(); /*0x1803c178e*/",
+          "line_count": 100,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "next": 700
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1803c0a20",
+          "offset": 700,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1803c0a20",
+          "code": "            }\n          }\n          sub_180AE76BC(a1: v90, a2: v91); /*0x1803c178f*/\n        }\n      }\n      return 1; /*0x1803c1950*/\n    }\n    else\n    {\n      sub_1803CC0F0(a1: a1 + 1296); /*0x1803c1556*/\n      *(_BYTE *)(a1 + 1312) = 1; /*0x1803c1560*/\n      return 1; /*0x1803c155b*/\n    }\n  }\n  else\n  {\n    sub_1803CC0F0(a1: a1 + 1280); /*0x1803c151b*/\n    *(_DWORD *)(a1 + 1316) = 0; /*0x1803c1523*/\n    return 1; /*0x1803c1520*/\n  }\n}",
+          "line_count": 21,
+          "total_lines": 721,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_1803C0A20(__int64 a1, __int64 **a2)\n{\n  int v2; // edi\n  __int128 v5; // xmm0\n  __int128 v6; // xmm0\n  __int128 v7; // xmm0\n  __int128 v8; // xmm0\n  __int128 v9; // xmm0\n  __int128 v10; // xmm0\n  __int128 v11; // xmm0\n  __int128 v12; // xmm0\n  __int128 v13; // xmm0\n  __int128 v14; // xmm0\n  __int128 v15; // xmm0\n  __int128 v16; // xmm0\n  __int128 v17; // xmm0\n  __int128 v18; // xmm0\n  __int128 v19; // xmm0\n  __int128 v20; // xmm0\n  __int128 v21; // xmm0\n  __int128 v22; // xmm0\n  __int128 v23; // xmm0\n  __int128 v24; // xmm0\n  __int128 v25; // xmm0\n  __int128 v26; // xmm0\n  __int128 v27; // xmm0\n  __int128 v28; // xmm0\n  __int128 v29; // xmm0\n  __int128 v30; // xmm0\n  __int128 v31; // xmm0\n  __int128 v32; // xmm0\n  __int128 v33; // xmm0\n  __int128 v34; // xmm0\n  __int128 v35; // xmm0\n  __int128 v36; // xmm0\n  __int128 v37; // xmm0\n  __int128 v38; // xmm0\n  __int128 v39; // xmm0\n  __int128 v40; // xmm0\n  __int128 v41; // xmm0\n  __int128 v42; // xmm0\n  __int128 v43; // xmm0\n  __int128 v44; // xmm0\n  __int128 v45; // xmm0\n  __int128 v46; // xmm0\n  __int128 v47; // xmm0\n  __int128 v48; // xmm0\n  __int128 v49; // xmm0\n  __int128 v50; // xmm0\n  __int128 v51; // xmm0\n  __int128 v52; // xmm0\n  __int128 v53; // xmm0\n  __int128 v54; // xmm0\n  __int128 v55; // xmm0\n  __int128 v56; // xmm0\n  __int128 v57; // xmm0\n  __int128 v58; // xmm0\n  __int64 *v59; // rcx\n  __int128 v60; // xmm0\n  __int128 v61; // xmm0\n  __int128 v62; // xmm0\n  __int128 v63; // xmm0\n  __int128 v64; // xmm0\n  __int128 v65; // xmm0\n  __int128 v66; // xmm0\n  __int128 v67; // xmm0\n  __int128 v68; // xmm0\n  __int64 v69; // rax\n  __int64 v70; // rax\n  __int64 v72; // rax\n  __int64 v73; // rax\n  _QWORD *v74; // rax\n  __int64 v75; // rcx\n  unsigned __int64 v76; // r8\n  _QWORD *v77; // rbx\n  _QWORD *v78; // r9\n  unsigned __int64 v79; // rdx\n  __int64 v80; // r14\n  __int128 *v81; // rsi\n  int v82; // r8d\n  __int64 v83; // rcx\n  __int64 v84; // r14\n  __int128 *v85; // rsi\n  __int64 v86; // rsi\n  __int64 v87; // rax\n  __int128 *v88; // rdx\n  __int64 v89; // rbx\n  __int64 v90; // rcx\n  unsigned __int64 v91; // rdx\n  __int64 v92; // rax\n  __int64 v93; // rax\n  __int64 v94; // rax\n  __int64 v95; // rax\n  __int64 v96; // rax\n  __int64 v97; // rax\n  __int64 v98; // rax\n  __int64 v99; // rax\n  char **i; // rsi\n  __int64 v101; // rax\n  __int128 v102; // [rsp+30h] [rbp-D0h] BYREF\n  __int64 v103; // [rsp+40h] [rbp-C0h]\n  unsigned __int64 v104; // [rsp+48h] [rbp-B8h]\n  char *v105; // [rsp+50h] [rbp-B0h] BYREF\n  _QWORD v106[2]; // [rsp+58h] [rbp-A8h]\n  char *v107; // [rsp+68h] [rbp-98h]\n  __int128 v108; // [rsp+70h] [rbp-90h]\n  char *v109; // [rsp+80h] [rbp-80h]\n  __int128 v110; // [rsp+88h] [rbp-78h]\n  char *v111; // [rsp+98h] [rbp-68h]\n  __int128 v112; // [rsp+A0h] [rbp-60h]\n  char *v113; // [rsp+B0h] [rbp-50h]\n  __int128 v114; // [rsp+B8h] [rbp-48h]\n  char *v115; // [rsp+C8h] [rbp-38h]\n  __int128 v116; // [rsp+D0h] [rbp-30h]\n  char *v117; // [rsp+E0h] [rbp-20h]\n  __int128 v118; // [rsp+E8h] [rbp-18h]\n  char *v119; // [rsp+F8h] [rbp-8h]\n  __int128 v120; // [rsp+100h] [rbp+0h]\n  char *v121; // [rsp+110h] [rbp+10h]\n  __int128 v122; // [rsp+118h] [rbp+18h]\n  char *v123; // [rsp+128h] [rbp+28h]\n  __int128 v124; // [rsp+130h] [rbp+30h]\n  char *v125; // [rsp+140h] [rbp+40h]\n  __int128 v126; // [rsp+148h] [rbp+48h]\n  char *v127; // [rsp+158h] [rbp+58h]\n  __int128 v128; // [rsp+160h] [rbp+60h]\n  char *v129; // [rsp+170h] [rbp+70h]\n  __int128 v130; // [rsp+178h] [rbp+78h]\n  char *v131; // [rsp+188h] [rbp+88h]\n  __int128 v132; // [rsp+190h] [rbp+90h]\n  char *v133; // [rsp+1A0h] [rbp+A0h]\n  __int128 v134; // [rsp+1A8h] [rbp+A8h]\n  char *v135; // [rsp+1B8h] [rbp+B8h]\n  __int128 v136; // [rsp+1C0h] [rbp+C0h]\n  char *v137; // [rsp+1D0h] [rbp+D0h]\n  __int128 v138; // [rsp+1D8h] [rbp+D8h]\n  char *v139; // [rsp+1E8h] [rbp+E8h]\n  __int128 v140; // [rsp+1F0h] [rbp+F0h]\n  char *v141; // [rsp+200h] [rbp+100h]\n  __int128 v142; // [rsp+208h] [rbp+108h]\n  char *v143; // [rsp+218h] [rbp+118h]\n  __int128 v144; // [rsp+220h] [rbp+120h]\n  char *v145; // [rsp+230h] [rbp+130h]\n  __int128 v146; // [rsp+238h] [rbp+138h]\n  char *v147; // [rsp+248h] [rbp+148h]\n  __int128 v148; // [rsp+250h] [rbp+150h]\n  char *v149; // [rsp+260h] [rbp+160h]\n  __int128 v150; // [rsp+268h] [rbp+168h]\n  char *v151; // [rsp+278h] [rbp+178h]\n  __int128 v152; // [rsp+280h] [rbp+180h]\n  char *v153; // [rsp+290h] [rbp+190h]\n  __int128 v154; // [rsp+298h] [rbp+198h]\n  char *v155; // [rsp+2A8h] [rbp+1A8h]\n  __int128 v156; // [rsp+2B0h] [rbp+1B0h]\n  char *v157; // [rsp+2C0h] [rbp+1C0h]\n  __int128 v158; // [rsp+2C8h] [rbp+1C8h]\n  char *v159; // [rsp+2D8h] [rbp+1D8h]\n  __int128 v160; // [rsp+2E0h] [rbp+1E0h]\n  char *v161; // [rsp+2F0h] [rbp+1F0h]\n  __int128 v162; // [rsp+2F8h] [rbp+1F8h]\n  char *v163; // [rsp+308h] [rbp+208h]\n  __int128 v164; // [rsp+310h] [rbp+210h]\n  char *v165; // [rsp+320h] [rbp+220h]\n  __int128 v166; // [rsp+328h] [rbp+228h]\n  char *v167; // [rsp+338h] [rbp+238h]\n  __int128 v168; // [rsp+340h] [rbp+240h]\n  char *v169; // [rsp+350h] [rbp+250h]\n  __int128 v170; // [rsp+358h] [rbp+258h]\n  char *v171; // [rsp+368h] [rbp+268h]\n  __int128 v172; // [rsp+370h] [rbp+270h]\n  char *v173; // [rsp+380h] [rbp+280h]\n  __int128 v174; // [rsp+388h] [rbp+288h]\n  char *v175; // [rsp+398h] [rbp+298h]\n  __int128 v176; // [rsp+3A0h] [rbp+2A0h]\n  char *v177; // [rsp+3B0h] [rbp+2B0h]\n  __int128 v178; // [rsp+3B8h] [rbp+2B8h]\n  char *v179; // [rsp+3C8h] [rbp+2C8h]\n  __int128 v180; // [rsp+3D0h] [rbp+2D0h]\n  char *v181; // [rsp+3E0h] [rbp+2E0h]\n  __int128 v182; // [rsp+3E8h] [rbp+2E8h]\n  char *v183; // [rsp+3F8h] [rbp+2F8h]\n  __int128 v184; // [rsp+400h] [rbp+300h]\n  char *v185; // [rsp+410h] [rbp+310h]\n  __int128 v186; // [rsp+418h] [rbp+318h]\n  char *v187; // [rsp+428h] [rbp+328h]\n  __int128 v188; // [rsp+430h] [rbp+330h]\n  char *v189; // [rsp+440h] [rbp+340h]\n  __int128 v190; // [rsp+448h] [rbp+348h]\n  char *v191; // [rsp+458h] [rbp+358h]\n  __int128 v192; // [rsp+460h] [rbp+360h]\n  char *v193; // [rsp+470h] [rbp+370h]\n  __int128 v194; // [rsp+478h] [rbp+378h]\n  char *v195; // [rsp+488h] [rbp+388h]\n  __int128 v196; // [rsp+490h] [rbp+390h]\n  char *v197; // [rsp+4A0h] [rbp+3A0h]\n  __int128 v198; // [rsp+4A8h] [rbp+3A8h]\n  char *v199; // [rsp+4B8h] [rbp+3B8h]\n  __int128 v200; // [rsp+4C0h] [rbp+3C0h]\n  char *v201; // [rsp+4D0h] [rbp+3D0h]\n  __int128 v202; // [rsp+4D8h] [rbp+3D8h]\n  char *v203; // [rsp+4E8h] [rbp+3E8h]\n  __int128 v204; // [rsp+4F0h] [rbp+3F0h]\n  char *v205; // [rsp+500h] [rbp+400h]\n  __int128 v206; // [rsp+508h] [rbp+408h]\n  char *v207; // [rsp+518h] [rbp+418h]\n  __int128 v208; // [rsp+520h] [rbp+420h]\n  char *v209; // [rsp+530h] [rbp+430h]\n  __int128 v210; // [rsp+538h] [rbp+438h]\n  char *v211; // [rsp+548h] [rbp+448h]\n  __int128 v212; // [rsp+550h] [rbp+450h]\n  char *v213; // [rsp+560h] [rbp+460h]\n  __int128 v214; // [rsp+568h] [rbp+468h]\n  char *v215; // [rsp+578h] [rbp+478h]\n  __int128 v216; // [rsp+580h] [rbp+480h]\n  char *v217; // [rsp+590h] [rbp+490h]\n  __int128 v218; // [rsp+598h] [rbp+498h]\n  char *v219; // [rsp+5A8h] [rbp+4A8h]\n  __int128 v220; // [rsp+5B0h] [rbp+4B0h]\n  char *v221; // [rsp+5C0h] [rbp+4C0h]\n  __int128 v222; // [rsp+5C8h] [rbp+4C8h]\n  char *v223; // [rsp+5D8h] [rbp+4D8h]\n  __int128 v224; // [rsp+5E0h] [rbp+4E0h]\n  char *v225; // [rsp+5F0h] [rbp+4F0h]\n  __int128 v226; // [rsp+5F8h] [rbp+4F8h]\n  char *v227; // [rsp+608h] [rbp+508h]\n  __int128 v228; // [rsp+610h] [rbp+510h]\n  char *v229; // [rsp+620h] [rbp+520h]\n  __int128 v230; // [rsp+628h] [rbp+528h]\n  char *v231; // [rsp+638h] [rbp+538h]\n  __int128 v232; // [rsp+640h] [rbp+540h]\n  char *v233; // [rsp+650h] [rbp+550h]\n  __int128 v234; // [rsp+658h] [rbp+558h]\n  char *v235; // [rsp+668h] [rbp+568h]\n  __int128 v236; // [rsp+670h] [rbp+570h]\n  char *v237; // [rsp+680h] [rbp+580h]\n  __int128 v238; // [rsp+688h] [rbp+588h]\n\n  v2 = 0; /*0x1803c0a38*/\n  v105 = aBasicAttrbonus; /*0x1803c0a41*/\n  DWORD2(v102) = 0; /*0x1803c0a49*/\n  *(_QWORD *)&v102 = sub_1803C2A80; /*0x1803c0a54*/\n  v5 = v102; /*0x1803c0a5c*/\n  v107 = aBasicClearIndu; /*0x1803c0a6c*/\n  *(_QWORD *)&v102 = sub_1803C2B00; /*0x1803c0a78*/\n  v109 = aBasicClearSyst; /*0x1803c0a84*/\n  *(_OWORD *)v106 = v5; /*0x1803c0a8f*/\n  v6 = v102; /*0x1803c0a94*/\n  *(_QWORD *)&v102 = sub_1803C2B60; /*0x1803c0a99*/\n  v111 = aBasicResurrect; /*0x1803c0aa5*/\n  DWORD2(v102) = 0; /*0x1803c0ab0*/\n  v108 = v6; /*0x1803c0ab4*/\n  v7 = v102; /*0x1803c0ab9*/\n  *(_QWORD *)&v102 = sub_1803C2B90; /*0x1803c0abe*/\n  v113 = aBasicRecall; /*0x1803c0aca*/\n  v110 = v7; /*0x1803c0ad9*/\n  v8 = v102; /*0x1803c0add*/\n  *(_QWORD *)&v102 = sub_1803C2BA0; /*0x1803c0ae2*/\n  v115 = aBasicCooltimeO; /*0x1803c0aee*/\n  DWORD2(v102) = 0; /*0x1803c0af9*/\n  v112 = v8; /*0x1803c0afd*/\n  v9 = v102; /*0x1803c0b01*/\n  *(_QWORD *)&v102 = sub_1803C2BB0; /*0x1803c0b06*/\n  v117 = aBasicCooltimeO_0; /*0x1803c0b12*/\n  v114 = v9; /*0x1803c0b21*/\n  v10 = v102; /*0x1803c0b25*/\n  *(_QWORD *)&v102 = sub_1803C2BF0; /*0x1803c0b2a*/\n  v119 = aBasicGaugeOn; /*0x1803c0b36*/\n  DWORD2(v102) = 0; /*0x1803c0b41*/\n  v116 = v10; /*0x1803c0b45*/\n  v11 = v102; /*0x1803c0b49*/\n  *(_QWORD *)&v102 = sub_1803C2C40; /*0x1803c0b4e*/\n  v121 = aBasicGaugeOff; /*0x1803c0b5a*/\n  v118 = v11; /*0x1803c0b69*/\n  v12 = v102; /*0x1803c0b6d*/\n  *(_QWORD *)&v102 = sub_1803C2C50; /*0x1803c0b72*/\n  DWORD2(v102) = 0; /*0x1803c0b7e*/\n  v123 = aBasicChatlogOn; /*0x1803c0b82*/\n  v120 = v12; /*0x1803c0b8d*/\n  v13 = v102; /*0x1803c0b91*/\n  *(_QWORD *)&v102 = sub_1803C2C60; /*0x1803c0b96*/\n  v122 = v13; /*0x1803c0ba6*/\n  v125 = aBasicChatlogOf; /*0x1803c0baa*/\n  v14 = v102; /*0x1803c0bb5*/\n  *(_QWORD *)&v102 = sub_1803C2CB0; /*0x1803c0bba*/\n  DWORD2(v102) = 0; /*0x1803c0bc6*/\n  v124 = v14; /*0x1803c0bca*/\n  v126 = v102; /*0x1803c0bd3*/\n  v127 = aBasicWarfogOn; /*0x1803c0bd7*/\n  *(_QWORD *)&v102 = sub_1803C2D20; /*0x1803c0be2*/\n  v129 = aBasicWarfogOff; /*0x1803c0bee*/\n  v15 = v102; /*0x1803c0bfd*/\n  *(_QWORD *)&v102 = sub_1803C2D70; /*0x1803c0c02*/\n  v131 = aBasicInvisible; /*0x1803c0c0e*/\n  DWORD2(v102) = 0; /*0x1803c0c1c*/\n  v128 = v15; /*0x1803c0c20*/\n  v16 = v102; /*0x1803c0c24*/\n  *(_QWORD *)&v102 = sub_1803C2D00; /*0x1803c0c29*/\n  v133 = aBasicInvisible_0; /*0x1803c0c35*/\n  v130 = v16; /*0x1803c0c47*/\n  v17 = v102; /*0x1803c0c4b*/\n  *(_QWORD *)&v102 = sub_1803C2D10; /*0x1803c0c50*/\n  v135 = aBasicTeleport; /*0x1803c0c5c*/\n  DWORD2(v102) = 0; /*0x1803c0c6a*/\n  v132 = v17; /*0x1803c0c6e*/\n  v18 = v102; /*0x1803c0c75*/\n  *(_QWORD *)&v102 = sub_1803C2DC0; /*0x1803c0c7a*/\n  v137 = aBasicAttr; /*0x1803c0c86*/\n  v134 = v18; /*0x1803c0c98*/\n  v19 = v102; /*0x1803c0c9f*/\n  *(_QWORD *)&v102 = sub_1803C2E60; /*0x1803c0ca4*/\n  v139 = aBasicLevel; /*0x1803c0cb0*/\n  DWORD2(v102) = 0; /*0x1803c0cbe*/\n  v136 = v19; /*0x1803c0cc2*/\n  v20 = v102; /*0x1803c0cc9*/\n  *(_QWORD *)&v102 = sub_1803C49D0; /*0x1803c0cce*/\n  v141 = aBasicClass; /*0x1803c0cda*/\n  v138 = v20; /*0x1803c0cec*/\n  v21 = v102; /*0x1803c0cf3*/\n  *(_QWORD *)&v102 = sub_1803C4A30; /*0x1803c0cf8*/\n  v143 = aBasicStigma; /*0x1803c0d04*/\n  DWORD2(v102) = 0; /*0x1803c0d12*/\n  v140 = v21; /*0x1803c0d16*/\n  v22 = v102; /*0x1803c0d1d*/\n  *(_QWORD *)&v102 = sub_1803C4A90; /*0x1803c0d22*/\n  v145 = aBasicInventory; /*0x1803c0d2e*/\n  v142 = v22; /*0x1803c0d40*/\n  v23 = v102; /*0x1803c0d47*/\n  *(_QWORD *)&v102 = sub_1803C4B50; /*0x1803c0d4c*/\n  DWORD2(v102) = 0; /*0x1803c0d58*/\n  v147 = aBasicResetInve; /*0x1803c0d5c*/\n  v144 = v23; /*0x1803c0d6a*/\n  v24 = v102; /*0x1803c0d71*/\n  *(_QWORD *)&v102 = sub_1803C4BA0; /*0x1803c0d76*/\n  v146 = v24; /*0x1803c0d86*/\n  v149 = aBasicAddAllCom; /*0x1803c0d8d*/\n  v25 = v102; /*0x1803c0d9b*/\n  *(_QWORD *)&v102 = sub_1803C4BB0; /*0x1803c0da0*/\n  DWORD2(v102) = 0; /*0x1803c0da5*/\n  v148 = v25; /*0x1803c0da9*/\n  v26 = v102; /*0x1803c0db0*/\n  v151 = aBasicAddAllSki; /*0x1803c0dc0*/\n  *(_QWORD *)&v102 = sub_1803C4EC0; /*0x1803c0dce*/\n  v153 = aBasicAddAllSki_0; /*0x1803c0dda*/\n  v150 = v26; /*0x1803c0de8*/\n  v27 = v102; /*0x1803c0def*/\n  *(_QWORD *)&v102 = sub_1803C4EC0; /*0x1803c0df4*/\n  v155 = aBasicRemoveAll; /*0x1803c0e00*/\n  DWORD2(v102) = 0; /*0x1803c0e0e*/\n  v152 = v27; /*0x1803c0e12*/\n  v28 = v102; /*0x1803c0e19*/\n  *(_QWORD *)&v102 = sub_1803C4F00; /*0x1803c0e1e*/\n  v157 = aBasicAddDevSki; /*0x1803c0e2a*/\n  v154 = v28; /*0x1803c0e3c*/\n  v29 = v102; /*0x1803c0e43*/\n  *(_QWORD *)&v102 = sub_1803C4F60; /*0x1803c0e48*/\n  v159 = aSkillSearchAdd; /*0x1803c0e54*/\n  DWORD2(v102) = 0; /*0x1803c0e62*/\n  v156 = v29; /*0x1803c0e66*/\n  v30 = v102; /*0x1803c0e6d*/\n  *(_QWORD *)&v102 = sub_1803C4FC0; /*0x1803c0e72*/\n  v161 = aBasicSetting; /*0x1803c0e7e*/\n  v158 = v30; /*0x1803c0e90*/\n  v31 = v102; /*0x1803c0e97*/\n  *(_QWORD *)&v102 = sub_1803C5170; /*0x1803c0e9c*/\n  v163 = aBasicItemSetti; /*0x1803c0ea8*/\n  DWORD2(v102) = 0; /*0x1803c0eb6*/\n  v160 = v31; /*0x1803c0eba*/\n  v32 = v102; /*0x1803c0ec1*/\n  *(_QWORD *)&v102 = sub_1803C5530; /*0x1803c0ec6*/\n  v165 = aBasicEquipSett; /*0x1803c0ed2*/\n  v162 = v32; /*0x1803c0ee4*/\n  v33 = v102; /*0x1803c0eeb*/\n  *(_QWORD *)&v102 = sub_1803C5A60; /*0x1803c0ef0*/\n  v167 = aProcProbabilit; /*0x1803c0efc*/\n  DWORD2(v102) = 0; /*0x1803c0f0a*/\n  v164 = v33; /*0x1803c0f0e*/\n  v34 = v102; /*0x1803c0f15*/\n  *(_QWORD *)&v102 = sub_1803C6850; /*0x1803c0f1a*/\n  v169 = aProcProbabilit_0; /*0x1803c0f2a*/\n  v166 = v34; /*0x1803c0f38*/\n  v35 = v102; /*0x1803c0f3f*/\n  *(_QWORD *)&v102 = sub_1803C6860; /*0x1803c0f44*/\n  DWORD2(v102) = 0; /*0x1803c0f50*/\n  v168 = v35; /*0x1803c0f54*/\n  v36 = v102; /*0x1803c0f5b*/\n  v171 = aGlobalEnchantO; /*0x1803c0f60*/\n  *(_QWORD *)&v102 = sub_1803C6870; /*0x1803c0f6e*/\n  v170 = v36; /*0x1803c0f7a*/\n  v173 = aGlobalEnchantO_0; /*0x1803c0f8a*/\n  v172 = v102; /*0x1803c0f91*/\n  DWORD2(v102) = 0; /*0x1803c0f98*/\n  *(_QWORD *)&v102 = sub_1803C6880; /*0x1803c0fa3*/\n  v37 = v102; /*0x1803c0faf*/\n  v175 = aGlobalFlyingOn; /*0x1803c0fb4*/\n  *(_QWORD *)&v102 = sub_1803C6890; /*0x1803c0fc2*/\n  v177 = aGlobalFlyingOf; /*0x1803c0fce*/\n  v174 = v37; /*0x1803c0fe0*/\n  v38 = v102; /*0x1803c0fe7*/\n  *(_QWORD *)&v102 = sub_1803C68D0; /*0x1803c0fec*/\n  v179 = aNpcTestNaction; /*0x1803c0ff8*/\n  DWORD2(v102) = 0; /*0x1803c1006*/\n  v176 = v38; /*0x1803c100a*/\n  v39 = v102; /*0x1803c1011*/\n  *(_QWORD *)&v102 = sub_1803C85A0; /*0x1803c1016*/\n  v181 = aNpcStigma; /*0x1803c1022*/\n  v178 = v39; /*0x1803c1034*/\n  v40 = v102; /*0x1803c103b*/\n  *(_QWORD *)&v102 = sub_1803C8630; /*0x1803c1040*/\n  v183 = aNpcCustomize; /*0x1803c104c*/\n  DWORD2(v102) = 0; /*0x1803c105a*/\n  v180 = v40; /*0x1803c105e*/\n  v41 = v102; /*0x1803c1065*/\n  *(_QWORD *)&v102 = sub_1803C8730; /*0x1803c106a*/\n  v185 = aNpcWarehouse; /*0x1803c1076*/\n  v182 = v41; /*0x1803c1088*/\n  v42 = v102; /*0x1803c108f*/\n  *(_QWORD *)&v102 = sub_1803C85B0; /*0x1803c1094*/\n  v187 = aNpcCharge; /*0x1803c10a0*/\n  DWORD2(v102) = 0; /*0x1803c10ae*/\n  v184 = v42; /*0x1803c10b2*/\n  v43 = v102; /*0x1803c10b9*/\n  *(_QWORD *)&v102 = sub_1803C86B0; /*0x1803c10be*/\n  v189 = aNpcSoulhealer; /*0x1803c10ca*/\n  v186 = v43; /*0x1803c10dc*/\n  v44 = v102; /*0x1803c10e3*/\n  *(_QWORD *)&v102 = sub_1803C85F0; /*0x1803c10e8*/\n  v191 = aNpcPet; /*0x1803c10f4*/\n  DWORD2(v102) = 0; /*0x1803c1102*/\n  v188 = v44; /*0x1803c1106*/\n  v45 = v102; /*0x1803c110d*/\n  *(_QWORD *)&v102 = sub_1803C8670; /*0x1803c1112*/\n  v190 = v45; /*0x1803c1122*/\n  v193 = aNpcUpgrade; /*0x1803c1129*/\n  v46 = v102; /*0x1803c1137*/\n  *(_QWORD *)&v102 = sub_1803C86F0; /*0x1803c113c*/\n  DWORD2(v102) = 0; /*0x1803c1148*/\n  v192 = v46; /*0x1803c114c*/\n  v47 = v102; /*0x1803c1153*/\n  v195 = aNpcVendor; /*0x1803c1158*/\n  *(_QWORD *)&v102 = sub_1803C8770; /*0x1803c1166*/\n  v194 = v47; /*0x1803c116b*/\n  v48 = v102; /*0x1803c1176*/\n  DWORD2(v102) = 0; /*0x1803c117b*/\n  v197 = aNpcSearchTelep; /*0x1803c1186*/\n  *(_QWORD *)&v102 = sub_1803C87B0; /*0x1803c1194*/\n  v199 = aNpcSearchWish; /*0x1803c11a0*/\n  v196 = v48; /*0x1803c11ae*/\n  v49 = v102; /*0x1803c11b5*/\n  *(_QWORD *)&v102 = sub_1803C8950; /*0x1803c11ba*/\n  v201 = aQuestSearchAdd; /*0x1803c11c6*/\n  v198 = v49; /*0x1803c11d8*/\n  v50 = v102; /*0x1803c11df*/\n  *(_QWORD *)&v102 = sub_1803C8AF0; /*0x1803c11e4*/\n  v203 = aQuestSearchEnd; /*0x1803c11f0*/\n  DWORD2(v102) = 0; /*0x1803c11fe*/\n  v200 = v50; /*0x1803c1202*/\n  v51 = v102; /*0x1803c1209*/\n  *(_QWORD *)&v102 = sub_1803C8C60; /*0x1803c120e*/\n  v205 = aItemWishSetite; /*0x1803c121a*/\n  v202 = v51; /*0x1803c122c*/\n  v52 = v102; /*0x1803c1233*/\n  *(_QWORD *)&v102 = sub_1803CA860; /*0x1803c1238*/\n  v207 = aItemRemove; /*0x1803c1244*/\n  DWORD2(v102) = 0; /*0x1803c1252*/\n  v204 = v52; /*0x1803c1256*/\n  v53 = v102; /*0x1803c125d*/\n  *(_QWORD *)&v102 = sub_1803CAAD0; /*0x1803c1262*/\n  v209 = aItemSearchWish; /*0x1803c126e*/\n  v206 = v53; /*0x1803c1280*/\n  v54 = v102; /*0x1803c1287*/\n  *(_QWORD *)&v102 = sub_1803CABB0; /*0x1803c128c*/\n  v211 = aItemEnchantUp; /*0x1803c1298*/\n  DWORD2(v102) = 0; /*0x1803c12a6*/\n  v208 = v54; /*0x1803c12aa*/\n  v55 = v102; /*0x1803c12b1*/\n  *(_QWORD *)&v102 = sub_1803CAE20; /*0x1803c12b6*/\n  v213 = aItemEnchantDow; /*0x1803c12c2*/\n  v210 = v55; /*0x1803c12d4*/\n  v56 = v102; /*0x1803c12db*/\n  *(_QWORD *)&v102 = sub_1803CAF90; /*0x1803c12e0*/\n  v215 = aItemEnchantWis; /*0x1803c12ec*/\n  DWORD2(v102) = 0; /*0x1803c12fa*/\n  v212 = v56; /*0x1803c12fe*/\n  v57 = v102; /*0x1803c1305*/\n  *(_QWORD *)&v102 = sub_1803CB0E0; /*0x1803c130a*/\n  v217 = aItemEquipLeft; /*0x1803c131a*/\n  v214 = v57; /*0x1803c1328*/\n  v58 = v102; /*0x1803c132f*/\n  *(_QWORD *)&v102 = sub_1803CB510; /*0x1803c1334*/\n  DWORD2(v102) = 0; /*0x1803c1340*/\n  v216 = v58; /*0x1803c1344*/\n  v219 = aItemEquipRight; /*0x1803c1350*/\n  v218 = v102; /*0x1803c135e*/\n  v59 = *a2; /*0x1803c1365*/\n  *(_QWORD *)&v102 = sub_1803CB520; /*0x1803c1368*/\n  v221 = aItemRich; /*0x1803c1374*/\n  v60 = v102; /*0x1803c1386*/\n  *(_QWORD *)&v102 = sub_1803CB530; /*0x1803c138b*/\n  v223 = aTestAutoSkillT_0; /*0x1803c1397*/\n  v220 = v60; /*0x1803c13a5*/\n  DWORD2(v102) = 0; /*0x1803c13ac*/\n  v61 = v102; /*0x1803c13b0*/\n  *(_QWORD *)&v102 = sub_1803C6280; /*0x1803c13b5*/\n  v225 = aTestAutoSkillT_1; /*0x1803c13c1*/\n  v222 = v61; /*0x1803c13cf*/\n  v62 = v102; /*0x1803c13da*/\n  *(_QWORD *)&v102 = sub_1803C6450; /*0x1803c13df*/\n  v227 = aSaveOption; /*0x1803c13eb*/\n  v224 = v62; /*0x1803c13f9*/\n  DWORD2(v102) = 0; /*0x1803c1400*/\n  v63 = v102; /*0x1803c1404*/\n  *(_QWORD *)&v102 = sub_1803C6460; /*0x1803c1409*/\n  v229 = aSaveOptionEnvi; /*0x1803c1415*/\n  v226 = v63; /*0x1803c1423*/\n  v64 = v102; /*0x1803c142e*/\n  *(_QWORD *)&v102 = sub_1803C6470; /*0x1803c1433*/\n  v231 = aSaveOptionQuic; /*0x1803c143f*/\n  v228 = v64; /*0x1803c144d*/\n  DWORD2(v102) = 0; /*0x1803c1454*/\n  v65 = v102; /*0x1803c1458*/\n  *(_QWORD *)&v102 = sub_1803C6480; /*0x1803c145d*/\n  v233 = aLoadOption; /*0x1803c1469*/\n  v230 = v65; /*0x1803c1477*/\n  v66 = v102; /*0x1803c1482*/\n  *(_QWORD *)&v102 = sub_1803C6800; /*0x1803c1487*/\n  v235 = aManualCommand; /*0x1803c1493*/\n  v232 = v66; /*0x1803c14a1*/\n  DWORD2(v102) = 0; /*0x1803c14a8*/\n  v67 = v102; /*0x1803c14ac*/\n  *(_QWORD *)&v102 = sub_1803CB540; /*0x1803c14b1*/\n  v234 = v67; /*0x1803c14c1*/\n  v237 = aDisplayMsg; /*0x1803c14c8*/\n  v68 = v102; /*0x1803c14d6*/\n  *(_QWORD *)&v102 = sub_1803CBEA0; /*0x1803c14db*/\n  v69 = *v59; /*0x1803c14e0*/\n  v236 = v68; /*0x1803c14e3*/\n  DWORD2(v102) = 0; /*0x1803c14ea*/\n  v238 = v102; /*0x1803c14f3*/\n  v70 = (*(__int64 (__fastcall **)(__int64 *))(v69 + 176))(a1: v59); /*0x1803c14fa*/\n  if ( (unsigned int)qword_180B38660(a1: v70, a2: aCancelCommand) != 0 ) /*0x1803c1512*/\n  {\n    v72 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1535*/\n    if ( (unsigned int)qword_180B38660(a1: v72, a2: aClearLog) != 0 ) /*0x1803c154d*/\n    {\n      v73 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c157b*/\n      if ( (unsigned int)qword_180B38660(a1: v73, a2: aSaveLog) != 0 ) /*0x1803c1593*/\n      {\n        v92 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c179f*/\n        if ( (unsigned int)qword_180B38660(a1: v92, a2: aSkillSearch) != 0 ) /*0x1803c17b7*/\n        {\n          v93 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c17cc*/\n          if ( (unsigned int)qword_180B38660(a1: v93, a2: aSkillSearchCan) != 0 ) /*0x1803c17e4*/\n          {\n            v94 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c17f9*/\n            if ( (unsigned int)qword_180B38660(a1: v94, a2: aNpcSearch) != 0 ) /*0x1803c1811*/\n            {\n              v95 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1826*/\n              if ( (unsigned int)qword_180B38660(a1: v95, a2: aNpcSearchCance) != 0 ) /*0x1803c183e*/\n              {\n                v96 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1853*/\n                if ( (unsigned int)qword_180B38660(a1: v96, a2: aQuestSearch) != 0 ) /*0x1803c186b*/\n                {\n                  v97 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1880*/\n                  if ( (unsigned int)qword_180B38660(a1: v97, a2: aQuestSearchCan) != 0 ) /*0x1803c1898*/\n                  {\n                    v98 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c18ad*/\n                    if ( (unsigned int)qword_180B38660(a1: v98, a2: aItemSearch) != 0 ) /*0x1803c18c5*/\n                    {\n                      v99 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c18d7*/\n                      if ( (unsigned int)qword_180B38660(a1: v99, a2: aItemSearchCanc) != 0 ) /*0x1803c18ef*/\n                      {\n                        for ( i = &v105; ; i += 3 ) /*0x1803c18fb*/\n                        {\n                          v101 = (*(__int64 (__fastcall **)(__int64 *))(**a2 + 176))(a1: *a2); /*0x1803c1906*/\n                          if ( (unsigned int)qword_180B38660(a1: v101, a2: *i) == 0 ) /*0x1803c191a*/\n                            break; /*0x1803c191a*/\n                          if ( (unsigned int)++v2 >= 0x43 ) /*0x1803c1925*/\n                            return 0; /*0x1803c1929*/\n                        }\n                        if ( *(_QWORD *)(a1 + 1288) == 0 ) /*0x1803c1933*/\n                          ((void (__fastcall *)(__int64))v106[3 * v2])(a1: a1 + SLODWORD(v106[3 * v2 + 1])); /*0x1803c194c*/\n                      }\n                      else\n                      {\n                        sub_1803C9980(a1); /*0x1803c18f4*/\n                      }\n                    }\n                    else\n                    {\n                      sub_1803C9B50(a1); /*0x1803c18ca*/\n                    }\n                  }\n                  else\n                  {\n                    sub_1803C78D0(a1); /*0x1803c189d*/\n                  }\n                }\n                else\n                {\n                  sub_1803C7A10(a1); /*0x1803c1870*/\n                }\n              }\n              else\n              {\n                sub_1803C6D30(a1); /*0x1803c1843*/\n              }\n            }\n            else\n            {\n              sub_1803C6EC0(a1); /*0x1803c1816*/\n            }\n          }\n          else\n          {\n            sub_1803C3C50(a1); /*0x1803c17e9*/\n          }\n        }\n        else\n        {\n          sub_1803C3DE0(a1); /*0x1803c17bc*/\n        }\n      }\n      else if ( (unsigned int)sub_1819FCD87(a1: 0) != 0 ) /*0x1803c15a3*/\n      {\n        v74 = *(_QWORD **)(a1 + 1296); /*0x1803c15a9*/\n        v75 = 0; /*0x1803c15b0*/\n        v76 = 7; /*0x1803c15b3*/\n        v103 = 0; /*0x1803c15b9*/\n        v104 = 7; /*0x1803c15be*/\n        LOWORD(v102) = 0; /*0x1803c15c3*/\n        v77 = (_QWORD *)*v74; /*0x1803c15c8*/\n        if ( (_QWORD *)*v74 != v74 ) /*0x1803c15ce*/\n        {\n          while ( 1 ) /*0x1803c15e5*/\n          {\n            v78 = v77 + 2; /*0x1803c15e5*/\n            if ( v77[5] >= 8u ) /*0x1803c15e9*/\n              v78 = (_QWORD *)v77[2]; /*0x1803c15eb*/\n            v79 = v77[4]; /*0x1803c15ef*/\n            if ( v79 > v76 - v75 ) /*0x1803c15fc*/\n            {\n              sub_18017ACD0(a1: (unsigned int)&v102, a2: v79, a3: v76, a4: (_DWORD)v78, a5: v77[4]); /*0x1803c1637*/\n            }\n            else\n            {\n              v80 = v75 + v79; /*0x1803c15fe*/\n              v103 = v75 + v79; /*0x1803c160a*/\n              v81 = &v102; /*0x1803c160f*/\n              if ( v76 >= 8 ) /*0x1803c1617*/\n                v81 = (__int128 *)v102; /*0x1803c1617*/\n              sub_180B1D5CC(a1: (char *)v81 + 2 * v75, a2: v78, a3: 2 * v79); /*0x1803c1621*/\n              *((_WORD *)v81 + v80) = 0; /*0x1803c1626*/\n            }\n            v83 = v103; /*0x1803c1641*/\n            if ( v104 - v103 < 2 ) /*0x1803c1650*/\n            {\n              sub_18017ACD0(a1: (unsigned int)&v102, a2: 2, a3: v82, a4: (unsigned int)asc_180CAD900, a5: 2); /*0x1803c16a1*/\n            }\n            else\n            {\n              v84 = v103 + 2; /*0x1803c1656*/\n              v85 = &v102; /*0x1803c165a*/\n              v103 += 2; /*0x1803c165f*/\n              if ( v104 >= 8 ) /*0x1803c1664*/\n                v85 = (__int128 *)v102; /*0x1803c1664*/\n              sub_180B1D5CC(a1: (char *)v85 + 2 * v83, a2: asc_180CAD900, a3: 4); /*0x1803c167b*/\n              *((_WORD *)v85 + v84) = 0; /*0x1803c1680*/\n            }\n            v77 = (_QWORD *)*v77; /*0x1803c16a6*/\n            if ( v77 == *(_QWORD **)(a1 + 1296) ) /*0x1803c16b0*/\n              break; /*0x1803c16b0*/\n            v76 = v104; /*0x1803c16b2*/\n            v75 = v103; /*0x1803c16b7*/\n          }\n        }\n        sub_1819FBD22(); /*0x1803c16c9*/\n        v86 = sub_1819F3E3C(a1: 66, a2: 2 * v103 + 2); /*0x1803c16ea*/\n        v87 = sub_1819F6671(a1: v86); /*0x1803c16ed*/\n        v88 = &v102; /*0x1803c16f9*/\n        if ( v104 >= 8 ) /*0x1803c1706*/\n          v88 = (__int128 *)v102; /*0x1803c1706*/\n        v89 = v87; /*0x1803c170c*/\n        sub_180B1D5D2(a1: v87, a2: v88, a3: 2 * v103); /*0x1803c1712*/\n        *(_WORD *)(v89 + 2 * v103) = 0; /*0x1803c171c*/\n        sub_1819F0DF3(a1: v86); /*0x1803c1723*/\n        if ( sub_1819F0F8E(a1: 13, a2: v86) == 0 ) /*0x1803c173a*/\n          sub_1819FC8CA(a1: v86); /*0x1803c173f*/\n        sub_1819F7534(); /*0x1803c1745*/\n        if ( v104 >= 8 ) /*0x1803c1754*/\n        {\n          v90 = v102; /*0x1803c175a*/\n          v91 = 2 * v104 + 2; /*0x1803c175f*/\n          if ( v91 >= 0x1000 ) /*0x1803c1771*/\n          {\n            v90 = *(_QWORD *)(v102 - 8); /*0x1803c1773*/\n            v91 = 2 * v104 + 41; /*0x1803c1777*/\n            if ( (unsigned __int64)(v102 - v90 - 8) > 0x1F ) /*0x1803c1786*/\n            {\n              qword_180B383F0(a1: v90, a2: v91); /*0x1803c1788*/\n              __debugbreak(); /*0x1803c178e*/\n            }\n          }\n          sub_180AE76BC(a1: v90, a2: v91); /*0x1803c178f*/\n        }\n      }\n      return 1; /*0x1803c1950*/\n    }\n    else\n    {\n      sub_1803CC0F0(a1: a1 + 1296); /*0x1803c1556*/\n      *(_BYTE *)(a1 + 1312) = 1; /*0x1803c1560*/\n      return 1; /*0x1803c155b*/\n    }\n  }\n  else\n  {\n    sub_1803CC0F0(a1: a1 + 1280); /*0x1803c151b*/\n    *(_DWORD *)(a1 + 1316) = 0; /*0x1803c1523*/\n    return 1; /*0x1803c1520*/\n  }\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1803c0a20"
+    }
+  ],
+  "evidence_links": []
+}

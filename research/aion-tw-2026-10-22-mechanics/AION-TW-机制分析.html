@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>AION TW 神石、强化与PVP静态研究</title
+  ><style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #edf2f6;
+      color: #172b3b;
+      font:
+        16px/1.8 system-ui,
+        "Microsoft YaHei",
+        sans-serif;
+    }
+    main {
+      max-width: 1160px;
+      margin: auto;
+      padding: 32px 24px 80px;
+    }
+    header {
+      background: #17364b;
+      color: white;
+      padding: 32px;
+      border-radius: 18px;
+    }
+    h1 {
+      font-size: 32px;
+      line-height: 1.4;
+    }
+    h2 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+    h3 {
+      font-size: 18px;
+    }
+    section {
+      margin-top: 24px;
+      padding: 26px;
+      background: white;
+      border: 1px solid #dce4eb;
+      border-radius: 14px;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    nav a {
+      color: #c8f2ef;
+    }
+    a {
+      color: #116d8c;
+    }
+    code,
+    pre,
+    output {
+      font:
+        14px/1.7 Consolas,
+        "Microsoft YaHei",
+        monospace;
+    }
+    code {
+      overflow-wrap: anywhere;
+      background: #edf2f6;
+      padding: 2px 5px;
+    }
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #f3f6f8;
+      padding: 16px;
+      border-radius: 8px;
+    }
+    .note {
+      border-left: 4px solid #c88e20;
+      background: #fff6df;
+      padding: 14px 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: #eaf5f2;
+      padding: 17px;
+      border-radius: 10px;
+    }
+    .card b {
+      display: block;
+      font-size: 29px;
+      color: #16685e;
+    }
+    .table {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th,
+    td {
+      padding: 11px;
+      border: 1px solid #dce4eb;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #e7f0f4;
+    }
+    details {
+      margin: 16px 0;
+      border-top: 1px solid #dce4eb;
+      padding-top: 10px;
+    }
+    summary {
+      cursor: pointer;
+      color: #156b7b;
+      font-weight: 600;
+    }
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 18px 0;
+    }
+    .flow span {
+      background: #e8f0f7;
+      padding: 10px 14px;
+      border-radius: 7px;
+    }
+    .form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    label {
+      display: block;
+    }
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      font: inherit;
+      border: 1px solid #9aafbd;
+      border-radius: 6px;
+    }
+    output {
+      display: block;
+      margin-top: 16px;
+      background: #17364b;
+      color: #effff9;
+      padding: 18px;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+    .error {
+      background: #86352f;
+    }
+    footer {
+      margin-top: 24px;
+      color: #536b7c;
+    }
+    @media (max-width: 650px) {
+      main {
+        padding: 14px 12px;
+      }
+      header,
+      section {
+        padding: 20px 16px;
+      }
+      h1 {
+        font-size: 25px;
+      }
+      .grid,
+      .form {
+        grid-template-columns: 1fr;
+      }
+      td,
+      th {
+        padding: 8px;
+      }
+    }
+    @media print {
+      body {
+        background: white;
+      }
+      main {
+        padding: 0;
+      }
+      section {
+        break-inside: avoid;
+      }
+      nav {
+        display: none;
+      }
+    }
+  </style>
+  <main>
+    <header>
+      <div>REA · 当前台服样本 · 2026-10-22</div>
+      <h1>神石、强化与 PVP<br />资源定义 → 客户端消费者 → 功能边界</h1>
+      <p>当前普通强化显示公式已核对。神石实际概率与最终伤害仍缺服务端证据。</p>
+      <nav>
+        <a href="#scope">范围</a><a href="#godstone">神石</a
+        ><a href="#enchant">强化</a><a href="#pvp">PVP</a
+        ><a href="#automation">自动打怪基础</a><a href="#evidence">证据</a>
+      </nav>
+    </header>
+    <section id="scope">
+      <h2>本次覆盖与版本</h2>
+      <div class="grid">
+        <div class="card"><b>250</b>神石候选物品</div>
+        <div class="card"><b>28</b>原items包XML经CRC核验补解</div>
+        <div class="card"><b>96</b>显式PVP伤害ratio技能</div>
+      </div>
+      <p>
+        初始完整遍历46个XML、122,063条顶层记录，其中物品74,259条、技能10,797条。补解items与初始范围有重叠，不直接相加。神石候选中44条test命名，不能全部认作线上可取得物品。
+      </p>
+      <p>
+        GitHub研究分支检查时本地与远端均为
+        <code>ee6943ff7</code>，没有新提交需要拉取。<a
+          href="sync-verification.json"
+          >同步记录</a
+        >
+        · <a href="release-verification.json">发布检查</a>
+      </p>
+      <p class="note">
+        当前只有客户端资料。资源事实、代码推导、设计建议分别标记；显示百分比不等于服务端真实概率。旧Classic样本未混入本次公式。没有启动游戏、读写游戏内存或执行战斗行为。
+      </p>
+    </section>
+    <section id="godstone">
+      <h2>神石：物品 → 技能 → 效果</h2>
+      <div class="flow">
+        <span>proc_enchant_skill</span>→<span>精确名称关联技能ID</span>→<span
+          >Provoked效果与目标条件</span
+        >
+      </div>
+      <div class="table">
+        <table>
+          <tr>
+            <th>物品ID</th>
+            <th>技能ID</th>
+            <th>效果</th>
+            <th>主列 / left列原值</th>
+          </tr>
+          <tr>
+            <td>168000035</td>
+            <td>8536</td>
+            <td>Paralyze</td>
+            <td>20 / 10</td>
+          </tr>
+          <tr>
+            <td>168000037</td>
+            <td>8538</td>
+            <td>Silence</td>
+            <td>100 / 50</td>
+          </tr>
+          <tr>
+            <td>168000028</td>
+            <td>8428</td>
+            <td>ProcATK_Instant / Fire</td>
+            <td>40 / 缺失</td>
+          </tr>
+          <tr>
+            <td>168000041</td>
+            <td>8542</td>
+            <td>Poison</td>
+            <td>100 / 100</td>
+          </tr>
+          <tr>
+            <td>168000119</td>
+            <td>8852</td>
+            <td>Root</td>
+            <td>60 / 10</td>
+          </tr>
+        </table>
+      </div>
+      <p>
+        249条物品关联到102个不同技能，覆盖直接伤害、麻痹、沉默、中毒等12类效果。唯一缺失是test_proc_give
+        → HolyOffenseProvokerEffect。
+      </p>
+      <p>
+        204条存在left列：95条精确半值、90条相等、8条呈整数半值、11条其他关系；46条没有该列。<strong
+          >不能统一解释为左手减半，也不能把缺失改成0。</strong
+        >
+      </p>
+      <p>
+        当前PE描述符给出概率成员0x194、宽2字节。已审同偏移候选主要是复制或无字段身份关联的UI。概率单位、手别选择、触发事件、抵抗/免疫和服务端RNG仍未知，以上数值不擅自换算百分比。
+      </p>
+      <a href="godstone/summary.json">统计摘要</a> ·
+      <a href="godstone/item-skill-joins.json">全部250条关联</a>
+      <details>
+        <summary>资源细节与限制</summary>
+        <pre>
+AION TW 神石资源链路：2026-10-22 静态分析
+
+证据范围
+本报告仅解析 aion-tw-offline-20261020 包中的当前 TW 解码 XML。
+没有执行客户端、没有读写游戏内存、没有沿用旧 aionclassic2 的概率百分比或服务端公式。
+这是辅助格式解析证据；REA/IDA 二进制消费者证据由本次主报告另行汇总。
+client_items.xml SHA256: 7ee7aa4a0e140a0ad32b014e730123247f64a384a5ac22cc0a4536abc1ce6aa9
+client_skills.xml SHA256: e8a429fbec7eb651731c867c248bc052bacb0ba36fb6e6c55ad07ef833d074db
+源哈希在解析前后均核对。完整源相对路径及字节数见 summary.json。
+
+已观察的关系
+client_item.proc_enchant_skill 通过精确、区分大小写的名称，关联 skill_base_client.name。
+物品定义概率原值、left 概率原值和技能等级；技能记录定义效果类别、目标约束、参数及表现。
+由此可以整理“物品 ID → 技能名称 → 技能 ID → 效果”，但还不能推导服务器随机判定的执行流程。
+
+覆盖
+完整遍历 74,259 条物品记录和 10,797 条技能记录。
+250 条物品带 proc_enchant_ 字段；其 ID 都以 168 开头，mgrouptag 都为 I_Proc_All，图标都为 Holystone 系列。
+其中 44 条名称以 test 开头，不能把它们认定为当前玩家可获得的正式物品。
+250 条记录引用 103 个不同技能名称：249 条物品精确关联成功，落到 102 个不同技能。
+唯一未关联：物品 168000001 / test_proc_give → HolyOffenseProvokerEffect；当前 skills XML 未找到这个名称。
+102 个已关联技能的 activation_attribute 全为 Provoked；所有都只有一个 effect1_type。
+效果类别计数按不同技能统计：ProcATK_Instant 50，Bleed 9，Poison 7，Silence 6，Blind 6，Paralyze 5，stun 4，Root 4，Snare 4，Slow 4，OpenAerial 2，Bind 1。
+proc_enchant_skill_level 原值：237 条为 1，13 条为 5；13 条等级 5 记录都是 test 命名。等级参与效果参数的实际计算仍需消费者证据。
+
+代表性完整关系（概率和效果参数均保留原始单位）
+1. 168000035 / matter_proc_paralyze_l1_40a
+   → item_skill_proc_paralyze_l1_40a → 技能 8536
+   概率原值 20；left 概率原值 10；技能等级 1。
+   技能：Magical / Provoked / Paralyze；effect1_remain2=5000；effect1_effectid=20002；effect1_noresist=0。
+   first_target=Target，target_relation_restriction=Enemy，target_species_restriction=All。
+2. 168000037 / matter_proc_silence_l1_40a
+   → item_skill_proc_silence_l1_40a → 技能 8538
+   概率原值 100；left 原值 50；技能等级 1。
+   效果 Silence；remain2=10000；effectid=20101；noresist=0。
+3. 168000028 / matter_proc_fire_damage_30a
+   → item_skill_proc_fire_damage_30a → 技能 8428
+   概率原值 40；left 字段未出现；技能等级 1。
+   效果 ProcATK_Instant；reserved1=0，reserved2=185，reserved3=1，reserved4=1，reserved10=Fire，reserved11=100。
+   不能只凭 reserved2 名称把 185 当作最终服务端伤害。
+4. 168000041 / matter_proc_poison_l1_40a
+   → item_skill_proc_poison_l1_40a → 技能 8542
+   概率原值 100；left 原值也为 100；效果 Poison；remain2=20000；checktime=2000；reserved9=38。
+   这条记录直接反驳“所有神石 left 概率都等于主字段的一半”的概括。
+5. 168000119 / matter_proc_root_u1_50a
+   → item_skill_proc_root_unique → 技能 8852
+   概率原值 60；left 原值 10；Root；remain2=12000。
+   两列概率必须独立保留，不能用统一倍率覆盖源记录。
+
+概率列的实际分布
+250 条全部有 proc_enchant_effect_occur_prob；204 条明确有 proc_enchant_effect_occur_left_prob，46 条缺失。
+在 204 条同时存在的记录中：95 条精确减半、90 条相等、8 条数值等于整数向下取半（15 与 7），11 条其他关系。
+“整数向下取半”只是数据关系，不能推断运行时代码有除二取整。
+11 条其他关系包含 4 条 test 行，以及正式命名行：
+168000117: 70 / 30；168000118: 30 / 10；168000119: 60 / 10；
+168000120、168000121、168000122、168000123: 60 / 25。
+test 168000076 明确为 500 / 0，test 168000077 明确为 0 / 500。0 与未出现字段不能混为一谈。
+
+现阶段不能从本资源断言的内容
+1. 当前资源包缺少本地化字符串正文；desc_proc 只提供 STR_... 引用。概率分母/显示除数必须由当前版本二进制消费者或对应本地化文本确认，本报告不擅自转换为百分比。
+2. left 字段名称暗示左手相关，但左右手判定路径、攻击事件选择和默认值仍要在消费者中确认。
+3. Provoked 是资源分类，不证明每一段动画、多段伤害、每次技能或每个普通攻击都会独立进行一次概率抽样。
+4. effect1_noresist=0、acc_mod2、critical_prob_mod2 等字段不是触发概率列。效果触发与后续抵抗/命中/免疫不能合成一个未经验证的百分比。
+5. remain/checktime/reserved 字段保留原值；单位和公式未由当前消费者验证。资源中的 delay_time=0 也不能证明服务器没有隐藏冷却。
+6. 客户端资源不是服务端配置或执行日志。服务器 RNG、PvP 修正、目标免疫、服务端覆盖配置及当前可用物品范围均未知。
+
+对功能设计的直接作用
+可构建只读 MechanicCatalog：itemId、skillName、skillId、effectType、rawProc、rawLeftProc、skillLevel、sourceHash、joinStatus、unitsVerified。
+效果分类可供自动打怪规划界面显示控制/持续伤害/直接伤害标签；目标适用性和实战收益必须另接目标状态及实测证据。
+不要让技能规划器把“客户端声明某个概率”当作“保证触发”，也不要把怪物免疫、攻击是否成功及命中事件缺失当成已触发。
+
+后续二进制追踪入口
+proc_enchant_effect_occur_prob、proc_enchant_effect_occur_left_prob、proc_enchant_skill、proc_enchant_skill_level。
+优先闭合：字段注册 → 物品结构成员 → tooltip 格式化与分母 → 手别选择消费者。
+再追效果类别 ProcATK_Instant / Paralyze / Silence 及 noresist、acc_mod2 的消费者。
+若客户端只有表现与消息处理，不应把客户端未发现 RNG 路径表述为已证明服务器的具体公式。
+
+交付与复现
+analyze_godstone.py --resources &lt;当前 resources 根目录&gt;，默认输出到脚本所在目录。
+summary.json 保存哈希、覆盖、分布、代表关系、未知项；item-skill-joins.json 保存全部 250 条物品原字段和关联技能原字段。
+关联结果是原始 XML 的精确名称连接，未进行大小写或名称规范化；缺失及重复匹配不会静默选择第一项。
+</pre>
+      </details>
+      <details>
+        <summary>二进制候选复核</summary>
+        <pre>
+当前 REA 复核：神石偏移候选的收敛与排除
+2026-10-22；样本 SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7。
+
+1. sub_180725EA0 不是概率计算函数
+证据：../binary-evidence/godstone-copy-a.evidence.json
+Evidence ID: ev_0382e8a9fb337f7e90fb01bdc8af37449be61f560c94202f4ad7841de8a5a726
+当前 IDA 伪代码明确显示从 a2 到 a1 的大量逐字段赋值，最后 return a1。
+其中 0x1807263DD 是 WORD(a1+404)=WORD(a2+404)，404 十进制即 0x194。
+0x180726574 是 BYTE(a1+443)=BYTE(a2+443)，443 十进制即 0x1BB。
+函数没有随机取样、概率门槛比较或百分比格式化。
+结论：从“概率计算/tooltip消费者候选”中排除；可以保留为结构复制证据。
+它不自动证明该对象一定是神石物品记录，类型关系仍需描述符/调用链连接。
+相邻 0x180726780 仅有辅助字节复制证据，本次没有把它冒充已由 REA 复核的函数。
+
+2. sub_180531060 不能作为已确认神石概率消费者
+证据：../binary-evidence/godstone-ui-candidate.evidence.json
+Evidence ID: ev_1ec08e93ccb5d0bdbb4b00c6701a47d0e06e3d248d5ba3cd08da3169b6f7d8a4
+关键指令 0x18053110A 的 +0x194 在伪代码中是传入 sub_1809CB690 的地址。
+主体遍历 v10&lt;0x13（19 项），从 v4[index+37] 取标识，通过虚方法找对象；也检查 100000000 起的 ID 区间，更新多种界面资源。
+这与装备/模型界面组装相符，但具体产品语义仍是推断。
+函数内没有建立到 proc_enchant_effect_occur_prob 描述符的连接，也没有对该字段进行概率运算。
+结论：排除“只凭 +0x194 就已找到神石 tooltip”的断言；不宣称所有下游函数都已排除。
+本轮不继续无边界追踪它的所有 UI 调用。
+
+3. desc_proc 的当前交叉引用只到描述符表
+证据：../binary-evidence/desc-proc-xrefs.evidence.json
+Evidence ID: ev_cc258940a104ecc62f366f7ed9e45e8763e3e28b86726bb8a979d438896ff2fd
+查询 0x180D3CAF8 的返回列表只有 0x180F27818。
+这不是一个直接代码引用，未提供可立即确定的 tooltip 消费者。
+结论：不能把该 xref 说成已经建立“描述字符串→显示概率公式”的完整链。
+
+4. 只保留一个最后的、有名字支持的代码入口
+证据：../binary-evidence/proc-probability-switch-xrefs.evidence.json
+Evidence ID: ev_50ae622ca15c757cb9d6d1bb019947fe3d04ff9a367068a9b416db6824503c61
+当前 ASCII 字符串 proc_probability_on 位于 0x180CACF88，唯一 xref 为代码 0x1803C0EF5。
+同 SHA 的历史函数清单把该位置归在 0x1803C0A20 与下一函数 0x1803C1980 之间；建议当前 REA 只再查 sub_1803C0A20。
+名字可能指显示/控件开关；在函数证据出来前，不能称作随机判定开关或分母计算。
+
+边界
+本次这些结果足以排除多个仅数值偏移相同的假线索，但没有验证神石概率单位。
+资源关联与二进制字段描述符可并列作为事实；客户端显示单位、服务器 RNG、有效攻击事件、左右手选择等仍需各自的消费者证据。
+所有排除均针对已检查函数或现有证据的主张，不把有界搜索的未找到写成整个程序不存在。
+
+追加当前消费者复核（主分析）
+proc-probability-switch-consumer.evidence.json / ev_b6021e7eb8286733d7326598337eaecfd107140c848cff7e26d69c71461cf3e8：sub_1803C0A20构造名称与回调的注册列表，proc_probability_on/off处没有直接给出概率分母或随机判定计算。尚未沿回调执行路径进一步证明其用途，也没有执行这些入口。因此不能用这个字符串命中替代神石概率算法证据。
+</pre>
+      </details>
+    </section>
+    <section id="enchant">
+      <h2>普通强化：当前客户端显示公式已核对</h2>
+      <div class="flow">
+        <span>材料 → 模式1</span>→<span>RVA 0x665B80</span>→<span
+          >返回值 × 0.1</span
+        >→<span>%g%% → enchant_prob</span>
+      </div>
+      <p>
+        q为装备品质，L为装备等级，S为强化石等级，n为下一阶段（实例uint8字段+1），A为辅助剂原值。
+      </p>
+      <div class="table">
+        <table>
+          <tr>
+            <th>品质</th>
+            <th>common</th>
+            <th>rare</th>
+            <th>legend</th>
+            <th>unique</th>
+            <th>epic</th>
+            <th>mythic</th>
+          </tr>
+          <tr>
+            <td>q</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>K</td>
+            <td>60</td>
+            <td>40</td>
+            <td>30</td>
+            <td>20</td>
+            <td>15</td>
+            <td>10</td>
+          </tr>
+        </table>
+      </div>
+      <pre>
+Δ = S − L + 10
++1..+10： base = clamp(K × Δ, 0, 800)
++11..+20：base = clamp(trunc0(K × Δ / 2), 0, 500)
+result = clamp(base + A, 0, 1000)
+客户端显示 = float32(result × 0.1) %</pre>
+      <p>
+        补剂在基础限幅后相加；trunc0表示向零截断。n≤20且q不在1..6时直接返回0。n&gt;20的内部路径见详细复核，不表示正常UI或服务器允许；此演算只覆盖1..20。
+      </p>
+      <h3>离线演算：仅模拟客户端显示</h3>
+      <div class="form">
+        <label
+          >品质<select id="q">
+            <option value="1">common</option>
+            <option value="2">rare</option>
+            <option value="3">legend</option>
+            <option value="4" selected>unique</option>
+            <option value="5">epic</option>
+            <option value="6">mythic</option>
+          </select></label
+        >
+        <label
+          >装备等级<input
+            id="level"
+            type="number"
+            value="55"
+            min="0"
+            max="255" /></label
+        ><label
+          >石头等级<input id="stone" type="number" value="85" min="0" max="255"
+        /></label>
+        <label
+          >下一阶段<input
+            id="stage"
+            type="number"
+            value="10"
+            min="1"
+            max="20" /></label
+        ><label
+          >补剂原值<input
+            id="supp"
+            type="number"
+            value="150"
+            min="0"
+            max="65535"
+        /></label>
+      </div>
+      <output id="calc" aria-live="polite"></output>
+      <p class="note">
+        当前资源：55级unique武器100000831配85级石166000085，到+10无补剂显示80%、补150显示95%；到+11为40%/55%。这些是离线客户端算例，不是服务器实测概率。
+      </p>
+      <h3>其他强化功能分别建模</h3>
+      <div class="table">
+        <table>
+          <tr>
+            <th>功能</th>
+            <th>资源/代码事实</th>
+            <th>边界</th>
+          </tr>
+          <tr>
+            <td>option六档</td>
+            <td>5品质×6档，独立查表，加补剂并限幅；当前显示路径×0.1</td>
+            <td>不是普通装备+1..6；调用方槽位语义未全闭合</td>
+          </tr>
+          <tr>
+            <td>跳跃强化</td>
+            <td>30条，现有0..5，结果字段10，成本10..5</td>
+            <td>没有概率字段不能称必成；启用未知</td>
+          </tr>
+          <tr>
+            <td>累计强化</td>
+            <td>16条，阈值30/45/60/65/75/80/85/90</td>
+            <td>两类型引用同组8技能；叠加方式未知</td>
+          </tr>
+          <tr>
+            <td>累计85</td>
+            <td>技能207声明PvPAttackRatio/PVEAttackRatio原值各50</td>
+            <td>属性声明不等于最终伤害增幅</td>
+          </tr>
+        </table>
+      </div>
+      <p>
+        强化石候选424条，辅助剂24条。普通每级属性增量、失败降级/碎裂、保护/保底与服务端判定未闭合。
+      </p>
+      <a href="enchant/current-formula-model.json">普通强化模型</a> ·
+      <a href="enchant/option-display-model.json">option显示模型</a> ·
+      <a href="enchant/enchant-current-evidence.json">资源全证据</a>
+      <details>
+        <summary>当前函数、边界与证据ID</summary>
+        <pre>
+当前TW普通强化计算函数复核（2026-10-22）
+
+定位方法
+以本次SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7原Game.dll为输入，在PE .pdata函数片段内找800/500/1000原字节共同出现的候选，得到0x180665E37片段；REA/IDA随后归属为sub_180665B80。另一候选0x180443BA1经REA归属为问卷/奖励表解析，排除。绝非使用旧Classic函数偏移。
+
+REA证据
+反编译：enchant-formula-candidate-a.evidence.json，ev_d041b6090cbd5e26fed8f6a4944399a82dfba9b2e9ddc9b6ef05555ec11e28f7。
+完整请求返回的指令：enchant-formula-insns.evidence.json，ev_5689857f813c3e757246a601588f3b4c0451168c3bf018266a3b0e6550075126。适配器不宣称完整body区间；返回从函数入口至ret的指令已逐项核对关键计算与分支。
+xrefs：enchant-formula-xrefs.evidence.json，ev_bc3ab2193ff6aed39272bbad8bc3a3f69f31470582bb7012a99442c8c26fc4db，代码引用0x18040CD5D、0x18040E84E、0x18040FA5D。
+显示caller：enchant-prob-display.evidence.json，ev_6380d58c2791556dfd74dd284a786c6656db8154893fd63fb2ab3a4b0a1b6624。sub_18040CC10在模式1调用本函数，返回值转float32并乘0x180DB5A80常量，再格式化传入本地化文本905484，最终写入a1+1368指向的enchant_prob控件。enchant-prob-display-insns.evidence.json的0x18040CD62明确格式字符串为&quot;%g%%&quot;，所以百分号已确认；本地化整句话尚未取得。原字节cdcccc3d=0.10000000149011612，独立核验见formula-field-descriptors.json。
+模式分类：enchant-mode.evidence.json，ev_b15d90b0a267b618dfbc25490d9ca160a83bc78aae7561132d8a58ceba833d92。sub_180408860把物品模板ID166000000..166099999映射模式1，167000000..167099999映射2，168000000..168099999映射4。当前普通强化分支与option分支因此有当前代码区分依据。
+质量converter：quality-converter.evidence.json，ev_2cd45638cfedf9df5fe07c3c407502152a546ef917805cabdf300d0592ecc7f6，委托sub_1801E8A60(a1,1)。quality-enum.evidence.json，ev_1a57c4edd9545b7449aaa66ad1f22905ba6e67a0b063dd64582fd3afd47414ac，在栈上构造junk0/common1/rare2/legend3/unique4/epic5/mythic6/divinity7，未知标签返回1。不是旧版表推测。
+
+当前原PE字段描述符与本函数读取一致（auxiliary事实）
+0x180F26BD8: quality -&gt; record+0x1A5，width1，converter0x1801B9950；函数0x180665CCF用movzx byte读取。
+0x180F273D8: level -&gt; record+0x1B4，width1；函数0x180665D6B与0x180665E0A分别读取目标和材料等级。
+0x180F279D8: sub_enchant_material_effect -&gt; record+0x19A，width2；函数0x180665FBD用movzx word读取。
+原始24字节、来源hash和具体位置见formula-field-descriptors.json。质量字符串到数字代码已由以上当前converter证据补齐。
+
+变量和范围
+q = 目标装备模板quality无符号byte（查模板失败时fallback1）。
+L = 目标装备模板level无符号byte（查模板失败时fallback1）。
+S = 材料模板level无符号byte（查模板失败时fallback1）。
+n = 目标物品实例byte[+0xA9] + 1，指令0x180665E15与0x180665E28；数值范围1..256。
+A = 第三个参数查找模板后读取sub_enchant_material_effect无符号word；找不到模板为0，范围0..65535。
+函数并非完整输入校验器：两个物品实例查找失败后，存在随后解引用；有效实例依赖调用方，不能为非法参数推导“安全返回”。
+
+精确分支（按返回的当前指令）
+q=1,2,3,4,5,6分别系数K=60,40,30,20,15,10。
+若1&lt;=n&lt;=10且q有效：base=clamp(K*(S-L+10),0,800)。
+若11&lt;=n&lt;=20且q有效：base=clamp(trunc_toward_zero(K*(S-L+10)/2),0,500)。
+以上两段最终返回clamp(base+A,0,1000)。
+若n&lt;=20且q不在1..6：直接返回0，不加A。对应两个switch默认分支0x180665F1D。
+若n&gt;20：不进入两个quality switch，eax保持0，base为0，继续补剂处理，返回clamp(A,0,1000)。这不证明正常UI/服务器允许+21及以上，更不证明可利用或提高成功率。
+/2使用cdq; sub eax,edx; sar eax,1，即有符号向零截断，不是Python // 对负数向下取整。
+低段cap800在0x180665EDC；高段cap500在0x180665F2A；先cap再加A；最终1000上限在0x180665FCE..FD5，负数归零在0x180665FD7..FDB。正常已解码宽度范围下base+A不会溢出int32。
+
+当前资源算例（离线代入，非实际强化观察）
+目标100000831 sword_n_u1_r_55a：quality=unique,level55,no_enchant=FALSE。
+另一个目标100000929 sword_a_u2_55a同为unique,level55。
+材料166000055 matter_enchant_55 level55；166000075 level75；166000085 level85。
+补剂166100005 sub_matter_u_15，quality=unique,sub_enchant_material_effect_type=Probability,raw150。
+当前converter已证实unique=4，55级目标的算例为：
+  石55,n=1,A0 -&gt; raw200，客户端显示20%。
+  石75,n=10,A0 -&gt; raw600，客户端显示60%。
+  石85,n=10,A0 -&gt; raw800，显示80%；A150 -&gt; raw950，显示95%。
+  石85,n=11,A0 -&gt; raw400，显示40%；A150 -&gt; raw550，显示55%。
+  石105,n=11,A150 -&gt; base先cap500，再+150，raw650，显示65%。
+model_current_formula.py及current-formula-model.json保存7个资源代入算例和6个分支/边界算例，按当前指令宽度、向零截断和float32运算。算例没有证明材料品质限制满足、玩家可取得、UI实际允许此组合或服务器等价。
+
+结论界限
+现已确认当前TW二进制仍包含此原始整数公式，不再只是旧版对照；字段归属有原字节描述符与当前指令一致支持。
+已补全当前quality枚举转换与caller数值缩放/显示语境。仍需UI可选材料限制、当前本地化文本、服务器规则。没有发现本函数内随机数或成功判定；客户端算出的显示值不是服务端真实概率的独立证明。
+客户端保留公式不证明任意资源记录可取得、任意+级别可达或当前服务器与客户端等价。失败降级/碎裂/保护/保底、普通每级属性增长仍是独立问题。
+
+补充：option表的当前消费与显示链已经闭合
+REA enchant-option-formula.evidence.json：ev_597747bc3807f4dc91470020953f522f9a1ad849b2cc0bd88e25955ae4e29f2a；对应完整返回指令ev_48cdb79b6bb63ffb6d6c613116530e03c6fa01f69baceefa20686a1d76d3aebb。
+sub_180666030先从第一个参数对应物品模板读取quality+0x1A5，然后遍历client_enchant_option_prob记录（每条80字节）。匹配quality字段后，遍历六个三DWORD条目，以条目level==a3+1匹配，取下一DWORD的prob。未匹配到quality/level时base为0。随后用第二个参数查辅助剂模板，读取+0x19A无符号word，缺模板为0；对base+A做有符号上下限0..1000。
+六个条目的布局与先前sub_1801B97E0资源解析器一致：record+8+12*i=level；+12+12*i=prob；+16+12*i=count。该概率计算函数不读取第三DWORD的count，不能拿1000数值自行推断消耗数量或支付方式。
+显示调用sub_18040CF00：ev_df5df443346199b64eb3597c35842551d62c76401e3f1c9399615e64f2b12948；指令ev_40415e5d762e3ade859658a43dc8e1d7f91e364b9243a34cc2564974b128d9e7。
+0x18040CF36调用sub_180666030；0x18040CF3B格式为&quot;%g%%&quot;；0x18040CF56乘同一个0.1f常量。因此当前这条option路径的raw/10百分比显示单位已证实，不再是仅凭资源1000推测。
+
+无补剂且参数命中相应level时，option level 1..6的客户端显示表：
+common: 100%,80%,0%,0%,0%,0%
+rare:   90%,70%,60%,50%,0%,0%
+legend: 80%,60%,50%,40%,30%,0%
+unique: 70%,50%,40%,30%,20%,10%
+epic:   60%,40%,20%,10%,5%,5%
+派生明细见option-display-model.json，复现脚本model_option_display.py。
+
+调用方限制：sub_18040CC10在模式2走option显示，a3来自其槽位/计数helper分支返回值。当前仅证明匹配表达式a3+1，未完成这些helper及所有主副装备/槽位规则的业务归属；不能将level1..6说成普通装备+1..6，不能保证所有零格/高槽位在UI或服务器可达。该函数在零格或未匹配时仍会加辅助剂，不意味着可以绕过槽位限制。所有数值仍是客户端显示计算，非服务器实际随机判定。
+</pre>
+      </details>
+      <details>
+        <summary>资源分类与累计技能关联</summary>
+        <pre>
+AION TW 当前归档强化资源分析，2026-10-22
+
+后续二进制补证：binary-review.txt与current-formula-model.json已经闭合当前TW普通强化客户端显示公式、quality枚举、字段来源和乘0.1显示链；option-display-model.json也已闭合option表在当前调用路径的raw/10百分比显示。以下资源分析的“需二进制确认”是当时资源独立分析的证据边界；最终当前二进制结论请合并阅读binary-review.txt，勿误认为只停留在资源线索。UI可达性与服务器等价仍未证明。
+
+范围与方法
+只读解码 resources__original-paks-20261020/data/items/items.pak 的28个XML成员，全部通过解压长度与CRC32核验。没有启动游戏、写进程内存、发请求或验证服务器行为。这些是辅助文件格式与数据关联证据；REA/IDA二进制消费者证据由主分析另行归档。
+items.pak SHA256: 5078c708ffe77a1714869323f77bc129c57ef4627dfc2e6fa2f06014ea69cef7
+源清单source-manifest.json保留每个成员raw/decoded SHA256、CRC、变换模式与记录数。
+enchant-current-evidence.json保留全部选中的原始记录、嵌套结构、匹配依据与未知项。
+
+1. 普通装备强化与强化材料
+client_items.xml共74259条物品。166000000至166099999这个ID段共424条；每条motion_name=Enchant、activation_mode=Both、activation_count=1、quality=common，level范围1..190。这个分类同时使用ID段和这些一致的字段校验；ID段本身不是一般性规则。
+例如166000001 matter_enchant_01 level=1；166000002 matter_enchant_02 level=2。记录保存石头等级、品质、动作与消耗信息，但没有足以单独推出普通装备+1..20成功率的表。
+有24条辅助剂：17条sub_enchant_material_effect_type=Probability，其effect原值分布50(5条)、100(5条)、150(7条)；7条type=cash_option_prob，原值1000。
+例如166100002 sub_matter_l_15：quality=legend, level=50, Probability=150。不能仅凭名字后缀15就把当前实际加成断言为15个百分点；需要当前二进制读取、缩放、上限和叠加方式。
+装备记录有no_enchant、sub_enchant_material_many、accumulated_enchant_effect、enchant_type等字段。缺失字段不等于FALSE或0。breakable广泛出现在普通物品中，不可解释为“强化失败碎装备概率”。stat_enchant_type/value也不能不区分镶嵌材料就当普通每级强化属性增长。
+
+2. client_enchant_option_prob.xml 是另一张六阶段/槽位相关表
+5种quality，每种enchant_option_level=1..6，共30个单元；每格enchant_sub_matter_count=1000。
+以下均为原值，不是本报告确认过的百分比：
+common: 1000,800,0,0,0,0
+rare:   900,700,600,500,0,0
+legend: 800,600,500,400,300,0
+unique: 700,500,400,300,200,100
+epic:   600,400,200,100,50,50
+字段明确存在数值，并非仅文本提示。但不能将enchant_option_level直接解释为普通武器+1..+6强化等级，亦不能以此替代普通+1..20公式。零值在当前消费者中的含义、概率分母和使用条件未由本资源分析证明。
+decoded SHA256: 40848a036056ea0a8931c8884f72a489ab60e66a28552320c158efef269f48c4
+
+3. client_jumping_enchant.xml 是跳跃强化配置
+30条=5种品质×现有enchant_level 0..5。enchant_result全为10；enchant_tool_cost依次10,9,8,7,6,5。
+required_exceed_level按品质为common0、rare5、legend15、unique35、epic50。上述字段关系来自原表；这个前置阈值具体比较什么，以及功能是否启用，还需当前消费者确认。
+该表没有success_prob字段，不能据此宣称100%成功或当前服务器可用。
+decoded SHA256: 2eb3a2de6e11ba6b58755c55c1b4aa03fe74f6c5794e95cffcd82a7d58f324c6
+
+4. 累计强化到技能的链路已完成资源关联
+4232条物品显式accumulated_enchant_effect=TRUE。
+client_accumulated_enchant_effect.xml有16条：名称pve_equipment_enchant_effect对应enchant_type1，pvp_equipment_enchant_effect对应type2；各有阈值enchant_sum=30,45,60,65,75,80,85,90。
+16条activation_skill都能在当前client_skills.xml按不区分大小写的精确name匹配到唯一技能，共8个不同技能（ID201..208）。PVE/PVP两组引用相同技能，不能从组名直接断言属性种类。
+阈值30：技能201 Statup，PvEAttackRatio原值20。
+阈值45：技能202 Statup，PvEAttackRatio原值30。
+阈值60：技能203 ProcDamageReduce原值50，并有DRBoost原值10。
+阈值65：技能204多种控制Duration原值-15，并有PvEDefendRatio与PVEAttackRatio原值各50。
+阈值75：技能205多种控制Duration原值-10，并有PvEAttackRatio_BossTarget原值100。
+阈值80：技能206控制Duration原值-10、DRBoost20、ProcDamageReduce50。
+阈值85：技能207控制Duration原值-5；另有PvPAttackRatio与PVEAttackRatio原值各50。
+阈值90：技能208控制Duration原值-20、DRBoost50、ApBoost5、ProcDamageReduce50。
+这些是字段及关联事实。多个阈值是否叠加、技能effect参数单位、哪些装备计入总和、主副手/槽位排除条件，尚未由消费者或运行时验证。
+decoded SHA256: 4d145603301c7b54a095ca9d037f27b64c0012ccaf1cc75805fa3619c59d4482
+
+5. 其他相关表与下一步入口
+client_item_skill_enchant.xml有29条技能赋予候选配置，存在skill_name/skill_prob嵌套列表；client_item_skill_enchant_cost.xml有11条品质/部位/费用配置。不能把skill_prob当强化成功率。
+当前Game.dll优先追踪字符串/注册字段：enchant_prob、enchant_option_level_prob、enchant_cut_prob_count_0/10/15/20、sub_enchant_material_effect、C_ENCHANT_ITEM、client_jumping_enchant、accumulated_enchant_effect、enchant_sum、Enchant_Effect_COMBINE_85_4CCDuration。
+需继续补齐：普通强化成功率计算的当前客户端消费者；普通装备每级攻击/防御增量；失败后降级/碎裂/保护/保底的状态处理；服务器随机数与真正成功判定。
+现有本地原包仅items/skills/pc五个PAK，缺当前版L10N本地化、客户端UI目录及可能的额外规则包。已知资源存在不意味着服务器启用或玩家可取得。
+旧aionclassic2 Game.dll SHA256 834300c2...中的60/40/30/20/15/10系数、800/500上限仅可作寻找相似代码的对照，不能替代当前b3043f0e...样本验证。
+
+复现
+用Python运行analyze_resources.py后运行build_evidence.py。第一步只读原PAK并保存辅助解码；第二步验证decoded SHA、解析完整结构并精确关联技能。完整解码目录和粗筛中间件被本目录.gitignore排除提交；保留脚本、源清单、字段统计和主证据即可复现。
+</pre>
+      </details>
+    </section>
+    <section id="pvp">
+      <h2>PVP：属性来源与显示单位，不冒充最终伤害公式</h2>
+      <div class="flow">
+        <span>装备/技能/阵营/惩罚</span>→<span>PVP攻防属性</span>→<span
+          >客户端显示</span
+        ><span>最终战斗计算：未知</span>
+      </div>
+      <p>
+        3,873物品含PVP属性声明；普通/a/b槽和充能条件分别保留，不能直接相加。96技能显式pvp_damage_ratio，52技能显式pvp_remain_time_ratio，缺失不当默认100。
+      </p>
+      <div class="table">
+        <table>
+          <tr>
+            <th>枚举</th>
+            <th>名称</th>
+            <th>已核实</th>
+          </tr>
+          <tr>
+            <td>106 / 107</td>
+            <td>PvPAttackRatio / PvPDefendRatio</td>
+            <td>总攻防名称及显示</td>
+          </tr>
+          <tr>
+            <td>111 / 112</td>
+            <td>物理PVP攻 / 防</td>
+            <td>独立枚举与同一显示分支</td>
+          </tr>
+          <tr>
+            <td>113 / 114</td>
+            <td>魔法PVP攻 / 防</td>
+            <td>独立枚举与同一显示分支</td>
+          </tr>
+        </table>
+      </div>
+      <p>
+        RVA
+        0x333530以%s%d%%或%s%.1f%%格式显示输入的十分之一：输入24→2.4%，80→8%。<strong
+          >尚未证明资源值进入格式函数前没有转换；技能pvp_damage_ratio也不能套用这个单位。</strong
+        >
+      </p>
+      <p>
+        技能3790
+        ratio原值75，3804为80，11905为200且另带PVP防御下降声明。pc_attr_max=520/430只证明配置字段，不能认作战斗硬上限。基础伤害、物防/魔防、PVP攻防、技能ratio、暴击/格挡与等级差的合成顺序仍未知。
+      </p>
+      <a href="pvp/feature-summary.json">PVP摘要</a> ·
+      <a href="pvp/resource-evidence.json">资源索引</a>
+      <details>
+        <summary>显示函数与原字节复核</summary>
+        <pre>
+PVP 客户端二进制证据独立复核（2026-10-22）
+
+范围：复核主分析会话保存的 4 份 REA/IDA procedure_pseudo_code、2 份 read_function_instructions 原始证据，并辅助读取原始 PE 字节；不新开会话、不执行目标。structuredContent 本身是 Evidence，normalized_result 是伪代码字符串或指令对象。
+共同目标：Game.dll，SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7。
+来源：../binary-evidence/ 下同名 .evidence.json。
+IDA 数据库状态/修改历史不因输入哈希自动得到证明；伪代码调用签名可能不完整，以下判断标明尚需指令和原始字节核对的边界。
+
+证据对应
+pvp-attribute-parser，sub_1802E4020：ev_ac04336d30f4963092f7b2338188a8c3296d7ca3eb440a54a1eed3a3de4901bf
+pvp-display-a，sub_1805CAC40：ev_bb4f9f65bd615ea6b053e92ae92307e9697bebff522011f40e3f107bce81d41b
+pvp-display-b，sub_1805CB3A0：ev_bd80e2ac8144b0e3de0df97beb15b8c9faccf123e666625f3999c652522f48a0
+pvp-format，sub_180333530：ev_fc92a538737065cb7dee630a8fddb40150446f82c21ddda365cff38dd77fb936
+pvp-format-insns：ev_45a1d6b7666fc5497c361355615aadc4b40aacbf081f4233e73dea6809cbe118
+pvp-parser-insns：ev_f6e6591ec6704151286aaa8887dd93d4e67d945ac319d34fe2ccf65985a3371a
+原始 PE 核对脚本 verify_binary_literals.py；输出 binary-literal-facts.json 保存目标 SHA256、源文件字节偏移、范围、原始十六进制和各范围哈希。
+
+已观察：属性名转换为内部枚举
+sub_1802E4020 逐项比较字符串。匹配分支写入 _WORD *a2 并返回 1：
+IDA 名称 aPvpattackratio → 106，赋值位置 0x1802E52E2。
+aPvpdefendratio → 107，0x1802E530E。
+aPvpattackratio_0 → 111，0x1802E533A。
+aPvpdefendratio_0 → 112，0x1802E5366。
+aPvpattackratio_1 → 113，0x1802E5392。
+aPvpdefendratio_1 → 114，0x1802E53BE。
+后缀 _0/_1 是 IDA 自动别名，本次已沿真实 LEA 的 RIP 位移读取原始 PE UTF-16 字符串，确认：111=PvPAttackRatio_Physical，112=PvPDefendRatio_Physical，113=PvPAttackRatio_Magical，114=PvPDefendRatio_Magical；106/107 分别为 PvPAttackRatio/PvPDefendRatio。指令使用 mov [rbx],ax 写入16位枚举。该函数仅是属性名解析，不计算伤害。
+
+已观察：两条描述文本构造路径
+sub_1805CAC40 先限制选择值为 51003/51004，经 manager 索引 42 调用 sub_1802F5090 获得记录 v17，再读取描述与字段。
+sub_1805CB3A0 从常量表选出两个分类值，经 manager 索引 43 调用 sub_1802F54E0 获得记录 v23。
+两者均把 记录+868（0x364）作为属性值对象，枚举 106，传给 sub_180333530；把 记录+876（0x36C）与枚举 107 传给同一函数。
+随后查找 aPvpattackratio_2 / aPvpdefendratio_2 指向的占位文本，替换为格式化结果，再交给包含 aV3TooltipInfoD 的界面渲染调用。
+这是资源记录到 tooltip 的路径。0x364/0x36C 不能写成“当前角色 PVP 攻防内存偏移”；两个记录查找器的资源类别归属尚需解析/注册链进一步证明。
+这些函数中的 double 加减和尺寸字段属于界面布局语境，不能拿来构建 PVP 伤害公式。
+
+已观察：显示缩放分支
+sub_180333530 读取属性值对象首个 int32 为 v9，读取 +4 字节标志。v9==0 时清空字符串后直接返回 0。
+枚举 106、107、111、112、113、114 无论 +4 标志分支如何，均进入同一个 LABEL_12 显示分支：
+ - v9 能被 10 整除：v17=v9/10，传给 aSD_3 格式字符串。
+ - 不能整除：float(v9) * float[0x180DB5A80]，传给 aS1f 格式字符串。
+ - a5/a6 控制可选的 + 或 - 前缀，符号仅在相应条件满足时添加。
+原始字节核对已完成：0x180DB5A80 的 cdcccc3d 按 float32 为 0.10000000149011612；0x1803335F3 的 LEA 指向 UTF-16 &quot;%s%d%%&quot;，0x18033361A 的 LEA 指向 &quot;%s%.1f%%&quot;。对应指令为整数除10的编译序列或 cvtdq2ps → mulss → cvtps2pd。
+因此可证明：这些枚举的数值对象若以 24 进入此格式函数，则格式化为 2.4%；80 为 8%；50 为 5%。这是假定给定输入的静态计算结果，本次未观察实际游戏界面。资源中的 24 是否经过转换才成为此输入，还要验证资源值解析到属性值对象的完整生产链，不能省略。
+禁止把该显示缩放等同于战斗中直接使用 (1+value/1000)，也不能由此证明与技能 pvp_damage_ratio 使用同一单位。
+
+继续核对的边界
+1. 枚举与格式常量的指令/原始字节核对已经闭合，不必重复调用。
+2. 若需确认这两条 tooltip 所属资源及原始数值是否直存，检查 sub_1802F5090 与 sub_1802F54E0 及 manager42/43 的生产者，而非直接把记录结构称为角色结构。
+3. 最终伤害算法仍需另查实际属性消费者/状态同步/攻击结果处理；以上证据均不能证明客户端拥有完整权威计算。
+</pre>
+      </details>
+      <details>
+        <summary>PVP字段、技能与阵营关系</summary>
+        <pre>
+AION TW 当前归档：PVP 攻击计算相关资源调查（2026-10-22）
+
+结论状态：部分回答。已确认客户端资源的属性入口、装备/技能/种族奖励声明与代表记录；没有得到服务端最终伤害公式，不得把几个 ratio 名称拼成“已逆向公式”。本次仅静态解析资源，无目标执行、内存写入或网络发包。
+
+来源和方法
+输入为 aion-tw-offline-20261020 归档中 aion-tw-20261019/resources；没有混用早期其他版本。
+analyze_pvp.py 用 XML 解析器完整遍历已提供的 46 个 XML、122063 条顶层记录，每文件保存路径、字节数、SHA256、字段计数和记录序号。pvp/pve 字段名或值关键词命中 6496 条；该数字含名称、外观、任务等非战斗命中，不能称为 6496 条 PVP 公式。
+resource-evidence.json 保留全量命中索引及代表记录原始叶字段；feature-summary.json 是摘要及技能学习表的精确名称关联。均为辅助资源证据，不冒充 REA Evidence ID。
+client_items.xml SHA256：7ee7aa4a0e140a0ad32b014e730123247f64a384a5ac22cc0a4536abc1ce6aa9
+client_skills.xml SHA256：e8a429fbec7eb651731c867c248bc052bacb0ba36fb6e6c55ad07ef833d074db
+
+1. 装备属性层
+74259 条物品中，3873 条记录在 bonus_attr* 槽声明 PVP 属性。将原始大小写仅用于统计归组后，共 1518 次 pvpattackratio、3080 次 pvpdefendratio；这是属性出现次数，不是各自物品数量。
+例：100000363 sword_a_r2_30a 的 bonus_attr12=Pvpattackratio 24；同记录 min_damage=88、max_damage=108、hit_accuracy=408、attack_type=physical、level=30。
+例：110100604 rb_torso_a_r2_30a 的 bonus_attr12=Pvpdefendratio 20；同记录 physical_defend=70、magical_resist=82、level=30。
+例：100001282 sword_n_u1_pvp_55a 同时有 bonus_attr4=pvpattackratio 51、bonus_attr_a2=pvpattackratio 5。110101375 有普通槽 42 与 a 槽 4。不同槽组和充能声明必须保留；仅凭表不能把所有槽无条件相加。
+例：187000069 同时有 PVP 攻击 30 和 PVE 攻击 20，证实两者在资源中分开声明，不能把 PVP 加成直接当作自动打怪收益。
+24、51、5 等原始数值的百分比单位/定点缩放，需要消费代码或面板对照确认，当前报告不擅自解释为 24% 或 2.4%。
+同次新增二进制复核已确认属性格式函数按输入值/10输出百分数，例如输入24格式化为2.4%；资源值到该输入的完整生产链和最终伤害公式仍未证明。详见 binary-review.txt 及 binary-literal-facts.json，勿把资源声明与格式函数输入未经验证地直接画等号。
+
+2. 技能独立参数层
+10797 条技能中，96 条显式声明 pvp_damage_ratio。分布：80×61、60×3、45×3、70×4、130×9、50×3、200×9、53×2、120×1、75×1。
+其余 10701 条未显式给出该字段；缺失不等于已证明默认 100。
+52 条显式声明 pvp_remain_time_ratio（25/40/50/60/80/200）；持续时间修正和伤害修正是不同字段。
+2 条 pvp_skill_cancel_bonus 分别为 500、10000，名称均含 Test，应作为测试定义保留，不代表线上玩家技能。
+例：3790 KN_BloodySlash_G1，type=Physical，effect1_type=SkillATK_Instant，pvp_damage_ratio=75。
+例：3804 WI_MagicalFlame_G1，type=Magical，effect1_type=SpellATK_Instant，pvp_damage_ratio=80，effect1_reserved10=Fire；还有 acc_mod2、critical_prob_mod2、hop_type=SkillLV 等字段。
+例：11905 Abyss_RankerSkill_AbyssianChainBolt_G1，pvp_damage_ratio=200，effect1_type=NoReduceSpellATK_Instant；effect2_type=StatDown、effect2_reserved13=PVPDefendRatio、effect2_reserved2=200。可确认该技能声明了独立的伤害参数和防御属性下降效果；reserved2 的单位/运算及 NoReduce 的完整例外语义，不能仅凭命名断言。
+例：20357 Arena_pvp01_S6_buff01 的 effect1_reserved13=PVPDefendRatio_Physical，提供物理 PVP 防御属性的资源入口。资源里没有观察到所有二进制注册名称都被装备表使用，不等于引擎不支持。
+这些 ratio 的数值分布和名字支持“PVP 特定修正参数”解释，但是否直接乘 ratio/100、是在减伤前后应用、是否受上下限影响，需要代码数据流或可控制服务端实测证明。
+
+3. 种族、称号、惩罚与属性展示
+abyss_race_bonuses.xml 共 20 条；Light_Inp_1 明确声明 PvPattackratio +80 和 PVPDefendRatio +40，配有 race=Light、condition=Inperior_1。可确认有带符号的属性调整声明，不能确认触发条件当前满足、所有来源如何叠加。
+abyss_type_race_bonuses.xml 两条阵营记录均声明 PvPattackratio +100 和 maxhp +1000。
+client_serial_killer.xml 中 SLAYER_LIGHT_G1/SLAYER_DARK_G1 含攻击 -65、防御 -60；G2 含 -250/-175。说明正向装备收益之外，还有条件惩罚来源。
+client_stat_info.xml ID13 PvPAttackRatio 的 pc_attr_max=520，ID14 PvPDefendRatio 的 pc_attr_max=430；都有 pc_attr_ratio_step1..6 等展示/属性配置。没有消费代码前，不把 pc_attr_max 写成实际战斗硬上限。
+client_PCRace.xml 4 条记录主要是性别、体型、移动速度等；client_character_class_info.xml 13 条提供 str/vit/agi/dex/kno/wil 等职业参数。它们没有直接提供本次所需的完整等级差、种族差或物理/魔法 PVP 伤害运算规则。
+
+4. 目前可以建立的功能关系（声明关系，不是执行顺序）
+物品/称号/阵营状态/技能效果 → PVP 攻击或防御属性候选来源。
+同次强化分工新增解码的 client_accumulated_enchant_effect.xml 还补出：enchant_sum=85 → activation_skill=Enchant_Effect_COMBINE_85_4CCDuration → 技能 207 → effect2_type=Statup，reserved13=PvPAttackRatio、reserved14=PVEAttackRatio，reserved2/reserved4 均为 50。这是明确的跨表引用；其消费逻辑和触发条件仍待确认。该新增表不在上述原有 46 文件计数内；源哈希与原始字段见 ../enchant/enchant-current-evidence.json 的 sources 和 accumulated_skill_joins。PVE/PVP 命名的两组强化记录引用相同技能，不能按记录名误判为各自单一用途。
+技能记录 → 物理/魔法类型、元素、效果类别、PVP 伤害/持续时间参数、命中/暴击相关参数。
+目标限制字段 → target_species_restriction、target_relation_restriction、少量 target_race_restriction。
+尚未证明：属性合并次序、乘加顺序、单位、取整、等级差规则、普通攻击与技能的差异、物理防御/魔法增幅与抵抗之间的公式、暴击/格挡/招架/闪避流程、服务端最终权威伤害。
+
+5. 二进制后续入口
+优先定位 PvPAttackRatio、PvPDefendRatio 及 _Physical/_Magical 变体、pvp_damage_ratio、pvp_remain_time_ratio、pvp_skill_cancel_bonus 的注册/解析函数与消费者。
+检查 StatUp、StatDown、SkillATK_Instant、SpellATK_Instant、NoReduceSpellATK_Instant 的 reserved 字段解释。注册表或 UI 文本引用只证明名称识别，必须沿字段存储与读取继续追踪，不能据此宣称找到服务端算法。
+对自动打怪需求，应单独区分 PVE 与 PVP 策略。资源目前可支持技能目录、目标类型、射程、冷却、耗蓝/耗血、连段前置条件的候选约束；它们不直接提供当前怪物坐标、血量、仇恨、可达性或任务运行状态。
+
+6. 复现与检验
+运行 analyze_pvp.py --resources &lt;上述 resources 根目录&gt;；再运行 summarize_pvp.py（摘要脚本默认同一归档位置）。
+脚本只读取资源，输出本目录 JSON。检查 XML 解析成功、46 文件总数和 122063 条记录与输出一致，并可按 source SHA + XML 文件 + 顶层序号/ID 回查。
+本报告没有进行游戏运行时验证，也没有声称资源中的 Test/旧活动记录在线生效。
+</pre>
+      </details>
+    </section>
+    <section id="automation">
+      <h2>自动打怪与任务：功能基础设计</h2>
+      <p>
+        可建立机制目录、技能约束与效果标签。自动打怪使用PVE场景，PVP属性不直接计作打怪收益；神石Provoked效果与主动技能分开，不能假定必定触发。
+      </p>
+      <div class="table">
+        <table>
+          <tr>
+            <th>模块</th>
+            <th>当前可用</th>
+            <th>尚缺</th>
+          </tr>
+          <tr>
+            <td>机制目录</td>
+            <td>物品→技能→效果，强化及PVP/PVE声明</td>
+            <td>线上范围与实际效果</td>
+          </tr>
+          <tr>
+            <td>技能规划</td>
+            <td>目标/距离/冷却/消耗/连段原字段</td>
+            <td>单位、当前技能与状态</td>
+          </tr>
+          <tr>
+            <td>目标观察</td>
+            <td>静态目标条件</td>
+            <td>实体、HP、位置、仇恨、可达性</td>
+          </tr>
+          <tr>
+            <td>任务流程</td>
+            <td>设计边界</td>
+            <td>任务表、状态与执行接口</td>
+          </tr>
+        </table>
+      </div>
+      <div class="flow">
+        <span>观察</span
+        >→<span>选目标</span>→<span>检查约束</span>→<span>选技能</span>→<span>等结果</span>→<span
+          >重新评估</span
+        >
+      </div>
+      <p>
+        这是设计建议，本次没有实现自动战斗/任务执行。动作表现、命中、伤害与任务完成分别验证。
+      </p>
+      <a href="combat-feature-plan.md">完整功能与数据契约设计</a>
+    </section>
+    <section id="evidence">
+      <h2>证据与复现</h2>
+      <p>
+        Game.dll SHA256：<code
+          >b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7</code
+        >
+      </p>
+      <p>
+        REA本次使用自有临时IDA数据库；原始MCP响应留在本地，规范Evidence入档。辅助PE/PAK/XML解析单独标记。
+      </p>
+      <p>
+        <a href="finding-ledger.json">结论台账</a> ·
+        <a href="binary-evidence/index.json">REA证据索引</a> ·
+        <a href="enchant/source-manifest.json">PAK成员CRC/SHA</a> ·
+        <a href="verification.json">交付验证</a> ·
+        <a href="README.md">复现说明</a>
+      </p>
+    </section>
+    <footer>客户端静态研究 · 未知项不以猜测填补。</footer>
+  </main>
+  <script>
+    const K = { 1: 60, 2: 40, 3: 30, 4: 20, 5: 15, 6: 10 };
+    function calculate(q, l, s, n, a) {
+      if (
+        ![q, l, s, n, a].every(Number.isInteger) ||
+        !K[q] ||
+        l < 0 ||
+        l > 255 ||
+        s < 0 ||
+        s > 255 ||
+        n < 1 ||
+        n > 20 ||
+        a < 0 ||
+        a > 65535
+      )
+        throw Error("请输入有效整数：等级0～255，阶段1～20，辅助剂0～65535。");
+      let base = K[q] * (s - l + 10);
+      if (n > 10) base = Math.trunc(base / 2);
+      base = Math.max(0, Math.min(n > 10 ? 500 : 800, base));
+      const raw = Math.max(0, Math.min(1000, base + a));
+      return {
+        base,
+        raw,
+        display: Math.fround(Math.fround(raw) * Math.fround(0.1)),
+      };
+    }
+    window.study = { calculate };
+    function update() {
+      const out = document.getElementById("calc");
+      try {
+        const values = ["q", "level", "stone", "stage", "supp"].map((id) => {
+          const text = document.getElementById(id).value;
+          if (text.trim() === "") throw Error("输入不能为空");
+          return Number(text);
+        });
+        const r = calculate(...values);
+        out.className = "";
+        out.textContent =
+          "基础原值 " +
+          r.base +
+          " → 加补剂并限幅 " +
+          r.raw +
+          " → 客户端显示 " +
+          Number(r.display.toPrecision(6)) +
+          "%";
+      } catch (e) {
+        out.className = "error";
+        out.textContent = e.message;
+      }
+    }
+    for (const id of ["q", "level", "stone", "stage", "supp"])
+      document.getElementById(id).addEventListener("input", update);
+    update();
+  </script>
+</html>

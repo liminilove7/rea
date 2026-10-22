@@ -1,0 +1,71 @@
+当前TW普通强化计算函数复核（2026-10-22）
+
+定位方法
+以本次SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7原Game.dll为输入，在PE .pdata函数片段内找800/500/1000原字节共同出现的候选，得到0x180665E37片段；REA/IDA随后归属为sub_180665B80。另一候选0x180443BA1经REA归属为问卷/奖励表解析，排除。绝非使用旧Classic函数偏移。
+
+REA证据
+反编译：enchant-formula-candidate-a.evidence.json，ev_d041b6090cbd5e26fed8f6a4944399a82dfba9b2e9ddc9b6ef05555ec11e28f7。
+完整请求返回的指令：enchant-formula-insns.evidence.json，ev_5689857f813c3e757246a601588f3b4c0451168c3bf018266a3b0e6550075126。适配器不宣称完整body区间；返回从函数入口至ret的指令已逐项核对关键计算与分支。
+xrefs：enchant-formula-xrefs.evidence.json，ev_bc3ab2193ff6aed39272bbad8bc3a3f69f31470582bb7012a99442c8c26fc4db，代码引用0x18040CD5D、0x18040E84E、0x18040FA5D。
+显示caller：enchant-prob-display.evidence.json，ev_6380d58c2791556dfd74dd284a786c6656db8154893fd63fb2ab3a4b0a1b6624。sub_18040CC10在模式1调用本函数，返回值转float32并乘0x180DB5A80常量，再格式化传入本地化文本905484，最终写入a1+1368指向的enchant_prob控件。enchant-prob-display-insns.evidence.json的0x18040CD62明确格式字符串为"%g%%"，所以百分号已确认；本地化整句话尚未取得。原字节cdcccc3d=0.10000000149011612，独立核验见formula-field-descriptors.json。
+模式分类：enchant-mode.evidence.json，ev_b15d90b0a267b618dfbc25490d9ca160a83bc78aae7561132d8a58ceba833d92。sub_180408860把物品模板ID166000000..166099999映射模式1，167000000..167099999映射2，168000000..168099999映射4。当前普通强化分支与option分支因此有当前代码区分依据。
+质量converter：quality-converter.evidence.json，ev_2cd45638cfedf9df5fe07c3c407502152a546ef917805cabdf300d0592ecc7f6，委托sub_1801E8A60(a1,1)。quality-enum.evidence.json，ev_1a57c4edd9545b7449aaa66ad1f22905ba6e67a0b063dd64582fd3afd47414ac，在栈上构造junk0/common1/rare2/legend3/unique4/epic5/mythic6/divinity7，未知标签返回1。不是旧版表推测。
+
+当前原PE字段描述符与本函数读取一致（auxiliary事实）
+0x180F26BD8: quality -> record+0x1A5，width1，converter0x1801B9950；函数0x180665CCF用movzx byte读取。
+0x180F273D8: level -> record+0x1B4，width1；函数0x180665D6B与0x180665E0A分别读取目标和材料等级。
+0x180F279D8: sub_enchant_material_effect -> record+0x19A，width2；函数0x180665FBD用movzx word读取。
+原始24字节、来源hash和具体位置见formula-field-descriptors.json。质量字符串到数字代码已由以上当前converter证据补齐。
+
+变量和范围
+q = 目标装备模板quality无符号byte（查模板失败时fallback1）。
+L = 目标装备模板level无符号byte（查模板失败时fallback1）。
+S = 材料模板level无符号byte（查模板失败时fallback1）。
+n = 目标物品实例byte[+0xA9] + 1，指令0x180665E15与0x180665E28；数值范围1..256。
+A = 第三个参数查找模板后读取sub_enchant_material_effect无符号word；找不到模板为0，范围0..65535。
+函数并非完整输入校验器：两个物品实例查找失败后，存在随后解引用；有效实例依赖调用方，不能为非法参数推导“安全返回”。
+
+精确分支（按返回的当前指令）
+q=1,2,3,4,5,6分别系数K=60,40,30,20,15,10。
+若1<=n<=10且q有效：base=clamp(K*(S-L+10),0,800)。
+若11<=n<=20且q有效：base=clamp(trunc_toward_zero(K*(S-L+10)/2),0,500)。
+以上两段最终返回clamp(base+A,0,1000)。
+若n<=20且q不在1..6：直接返回0，不加A。对应两个switch默认分支0x180665F1D。
+若n>20：不进入两个quality switch，eax保持0，base为0，继续补剂处理，返回clamp(A,0,1000)。这不证明正常UI/服务器允许+21及以上，更不证明可利用或提高成功率。
+/2使用cdq; sub eax,edx; sar eax,1，即有符号向零截断，不是Python // 对负数向下取整。
+低段cap800在0x180665EDC；高段cap500在0x180665F2A；先cap再加A；最终1000上限在0x180665FCE..FD5，负数归零在0x180665FD7..FDB。正常已解码宽度范围下base+A不会溢出int32。
+
+当前资源算例（离线代入，非实际强化观察）
+目标100000831 sword_n_u1_r_55a：quality=unique,level55,no_enchant=FALSE。
+另一个目标100000929 sword_a_u2_55a同为unique,level55。
+材料166000055 matter_enchant_55 level55；166000075 level75；166000085 level85。
+补剂166100005 sub_matter_u_15，quality=unique,sub_enchant_material_effect_type=Probability,raw150。
+当前converter已证实unique=4，55级目标的算例为：
+  石55,n=1,A0 -> raw200，客户端显示20%。
+  石75,n=10,A0 -> raw600，客户端显示60%。
+  石85,n=10,A0 -> raw800，显示80%；A150 -> raw950，显示95%。
+  石85,n=11,A0 -> raw400，显示40%；A150 -> raw550，显示55%。
+  石105,n=11,A150 -> base先cap500，再+150，raw650，显示65%。
+model_current_formula.py及current-formula-model.json保存7个资源代入算例和6个分支/边界算例，按当前指令宽度、向零截断和float32运算。算例没有证明材料品质限制满足、玩家可取得、UI实际允许此组合或服务器等价。
+
+结论界限
+现已确认当前TW二进制仍包含此原始整数公式，不再只是旧版对照；字段归属有原字节描述符与当前指令一致支持。
+已补全当前quality枚举转换与caller数值缩放/显示语境。仍需UI可选材料限制、当前本地化文本、服务器规则。没有发现本函数内随机数或成功判定；客户端算出的显示值不是服务端真实概率的独立证明。
+客户端保留公式不证明任意资源记录可取得、任意+级别可达或当前服务器与客户端等价。失败降级/碎裂/保护/保底、普通每级属性增长仍是独立问题。
+
+补充：option表的当前消费与显示链已经闭合
+REA enchant-option-formula.evidence.json：ev_597747bc3807f4dc91470020953f522f9a1ad849b2cc0bd88e25955ae4e29f2a；对应完整返回指令ev_48cdb79b6bb63ffb6d6c613116530e03c6fa01f69baceefa20686a1d76d3aebb。
+sub_180666030先从第一个参数对应物品模板读取quality+0x1A5，然后遍历client_enchant_option_prob记录（每条80字节）。匹配quality字段后，遍历六个三DWORD条目，以条目level==a3+1匹配，取下一DWORD的prob。未匹配到quality/level时base为0。随后用第二个参数查辅助剂模板，读取+0x19A无符号word，缺模板为0；对base+A做有符号上下限0..1000。
+六个条目的布局与先前sub_1801B97E0资源解析器一致：record+8+12*i=level；+12+12*i=prob；+16+12*i=count。该概率计算函数不读取第三DWORD的count，不能拿1000数值自行推断消耗数量或支付方式。
+显示调用sub_18040CF00：ev_df5df443346199b64eb3597c35842551d62c76401e3f1c9399615e64f2b12948；指令ev_40415e5d762e3ade859658a43dc8e1d7f91e364b9243a34cc2564974b128d9e7。
+0x18040CF36调用sub_180666030；0x18040CF3B格式为"%g%%"；0x18040CF56乘同一个0.1f常量。因此当前这条option路径的raw/10百分比显示单位已证实，不再是仅凭资源1000推测。
+
+无补剂且参数命中相应level时，option level 1..6的客户端显示表：
+common: 100%,80%,0%,0%,0%,0%
+rare:   90%,70%,60%,50%,0%,0%
+legend: 80%,60%,50%,40%,30%,0%
+unique: 70%,50%,40%,30%,20%,10%
+epic:   60%,40%,20%,10%,5%,5%
+派生明细见option-display-model.json，复现脚本model_option_display.py。
+
+调用方限制：sub_18040CC10在模式2走option显示，a3来自其槽位/计数helper分支返回值。当前仅证明匹配表达式a3+1，未完成这些helper及所有主副装备/槽位规则的业务归属；不能将level1..6说成普通装备+1..6，不能保证所有零格/高槽位在UI或服务器可达。该函数在零格或未匹配时仍会加辅助剂，不意味着可以绕过槽位限制。所有数值仍是客户端显示计算，非服务器实际随机判定。

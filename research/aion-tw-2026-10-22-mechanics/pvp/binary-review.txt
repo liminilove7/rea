@@ -1,0 +1,48 @@
+PVP 客户端二进制证据独立复核（2026-10-22）
+
+范围：复核主分析会话保存的 4 份 REA/IDA procedure_pseudo_code、2 份 read_function_instructions 原始证据，并辅助读取原始 PE 字节；不新开会话、不执行目标。structuredContent 本身是 Evidence，normalized_result 是伪代码字符串或指令对象。
+共同目标：Game.dll，SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7。
+来源：../binary-evidence/ 下同名 .evidence.json。
+IDA 数据库状态/修改历史不因输入哈希自动得到证明；伪代码调用签名可能不完整，以下判断标明尚需指令和原始字节核对的边界。
+
+证据对应
+pvp-attribute-parser，sub_1802E4020：ev_ac04336d30f4963092f7b2338188a8c3296d7ca3eb440a54a1eed3a3de4901bf
+pvp-display-a，sub_1805CAC40：ev_bb4f9f65bd615ea6b053e92ae92307e9697bebff522011f40e3f107bce81d41b
+pvp-display-b，sub_1805CB3A0：ev_bd80e2ac8144b0e3de0df97beb15b8c9faccf123e666625f3999c652522f48a0
+pvp-format，sub_180333530：ev_fc92a538737065cb7dee630a8fddb40150446f82c21ddda365cff38dd77fb936
+pvp-format-insns：ev_45a1d6b7666fc5497c361355615aadc4b40aacbf081f4233e73dea6809cbe118
+pvp-parser-insns：ev_f6e6591ec6704151286aaa8887dd93d4e67d945ac319d34fe2ccf65985a3371a
+原始 PE 核对脚本 verify_binary_literals.py；输出 binary-literal-facts.json 保存目标 SHA256、源文件字节偏移、范围、原始十六进制和各范围哈希。
+
+已观察：属性名转换为内部枚举
+sub_1802E4020 逐项比较字符串。匹配分支写入 _WORD *a2 并返回 1：
+IDA 名称 aPvpattackratio → 106，赋值位置 0x1802E52E2。
+aPvpdefendratio → 107，0x1802E530E。
+aPvpattackratio_0 → 111，0x1802E533A。
+aPvpdefendratio_0 → 112，0x1802E5366。
+aPvpattackratio_1 → 113，0x1802E5392。
+aPvpdefendratio_1 → 114，0x1802E53BE。
+后缀 _0/_1 是 IDA 自动别名，本次已沿真实 LEA 的 RIP 位移读取原始 PE UTF-16 字符串，确认：111=PvPAttackRatio_Physical，112=PvPDefendRatio_Physical，113=PvPAttackRatio_Magical，114=PvPDefendRatio_Magical；106/107 分别为 PvPAttackRatio/PvPDefendRatio。指令使用 mov [rbx],ax 写入16位枚举。该函数仅是属性名解析，不计算伤害。
+
+已观察：两条描述文本构造路径
+sub_1805CAC40 先限制选择值为 51003/51004，经 manager 索引 42 调用 sub_1802F5090 获得记录 v17，再读取描述与字段。
+sub_1805CB3A0 从常量表选出两个分类值，经 manager 索引 43 调用 sub_1802F54E0 获得记录 v23。
+两者均把 记录+868（0x364）作为属性值对象，枚举 106，传给 sub_180333530；把 记录+876（0x36C）与枚举 107 传给同一函数。
+随后查找 aPvpattackratio_2 / aPvpdefendratio_2 指向的占位文本，替换为格式化结果，再交给包含 aV3TooltipInfoD 的界面渲染调用。
+这是资源记录到 tooltip 的路径。0x364/0x36C 不能写成“当前角色 PVP 攻防内存偏移”；两个记录查找器的资源类别归属尚需解析/注册链进一步证明。
+这些函数中的 double 加减和尺寸字段属于界面布局语境，不能拿来构建 PVP 伤害公式。
+
+已观察：显示缩放分支
+sub_180333530 读取属性值对象首个 int32 为 v9，读取 +4 字节标志。v9==0 时清空字符串后直接返回 0。
+枚举 106、107、111、112、113、114 无论 +4 标志分支如何，均进入同一个 LABEL_12 显示分支：
+ - v9 能被 10 整除：v17=v9/10，传给 aSD_3 格式字符串。
+ - 不能整除：float(v9) * float[0x180DB5A80]，传给 aS1f 格式字符串。
+ - a5/a6 控制可选的 + 或 - 前缀，符号仅在相应条件满足时添加。
+原始字节核对已完成：0x180DB5A80 的 cdcccc3d 按 float32 为 0.10000000149011612；0x1803335F3 的 LEA 指向 UTF-16 "%s%d%%"，0x18033361A 的 LEA 指向 "%s%.1f%%"。对应指令为整数除10的编译序列或 cvtdq2ps → mulss → cvtps2pd。
+因此可证明：这些枚举的数值对象若以 24 进入此格式函数，则格式化为 2.4%；80 为 8%；50 为 5%。这是假定给定输入的静态计算结果，本次未观察实际游戏界面。资源中的 24 是否经过转换才成为此输入，还要验证资源值解析到属性值对象的完整生产链，不能省略。
+禁止把该显示缩放等同于战斗中直接使用 (1+value/1000)，也不能由此证明与技能 pvp_damage_ratio 使用同一单位。
+
+继续核对的边界
+1. 枚举与格式常量的指令/原始字节核对已经闭合，不必重复调用。
+2. 若需确认这两条 tooltip 所属资源及原始数值是否直存，检查 sub_1802F5090 与 sub_1802F54E0 及 manager42/43 的生产者，而非直接把记录结构称为角色结构。
+3. 最终伤害算法仍需另查实际属性消费者/状态同步/攻击结果处理；以上证据均不能证明客户端拥有完整权威计算。

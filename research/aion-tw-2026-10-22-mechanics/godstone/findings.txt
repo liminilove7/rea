@@ -1,0 +1,81 @@
+AION TW 神石资源链路：2026-10-22 静态分析
+
+证据范围
+本报告仅解析 aion-tw-offline-20261020 包中的当前 TW 解码 XML。
+没有执行客户端、没有读写游戏内存、没有沿用旧 aionclassic2 的概率百分比或服务端公式。
+这是辅助格式解析证据；REA/IDA 二进制消费者证据由本次主报告另行汇总。
+client_items.xml SHA256: 7ee7aa4a0e140a0ad32b014e730123247f64a384a5ac22cc0a4536abc1ce6aa9
+client_skills.xml SHA256: e8a429fbec7eb651731c867c248bc052bacb0ba36fb6e6c55ad07ef833d074db
+源哈希在解析前后均核对。完整源相对路径及字节数见 summary.json。
+
+已观察的关系
+client_item.proc_enchant_skill 通过精确、区分大小写的名称，关联 skill_base_client.name。
+物品定义概率原值、left 概率原值和技能等级；技能记录定义效果类别、目标约束、参数及表现。
+由此可以整理“物品 ID → 技能名称 → 技能 ID → 效果”，但还不能推导服务器随机判定的执行流程。
+
+覆盖
+完整遍历 74,259 条物品记录和 10,797 条技能记录。
+250 条物品带 proc_enchant_ 字段；其 ID 都以 168 开头，mgrouptag 都为 I_Proc_All，图标都为 Holystone 系列。
+其中 44 条名称以 test 开头，不能把它们认定为当前玩家可获得的正式物品。
+250 条记录引用 103 个不同技能名称：249 条物品精确关联成功，落到 102 个不同技能。
+唯一未关联：物品 168000001 / test_proc_give → HolyOffenseProvokerEffect；当前 skills XML 未找到这个名称。
+102 个已关联技能的 activation_attribute 全为 Provoked；所有都只有一个 effect1_type。
+效果类别计数按不同技能统计：ProcATK_Instant 50，Bleed 9，Poison 7，Silence 6，Blind 6，Paralyze 5，stun 4，Root 4，Snare 4，Slow 4，OpenAerial 2，Bind 1。
+proc_enchant_skill_level 原值：237 条为 1，13 条为 5；13 条等级 5 记录都是 test 命名。等级参与效果参数的实际计算仍需消费者证据。
+
+代表性完整关系（概率和效果参数均保留原始单位）
+1. 168000035 / matter_proc_paralyze_l1_40a
+   → item_skill_proc_paralyze_l1_40a → 技能 8536
+   概率原值 20；left 概率原值 10；技能等级 1。
+   技能：Magical / Provoked / Paralyze；effect1_remain2=5000；effect1_effectid=20002；effect1_noresist=0。
+   first_target=Target，target_relation_restriction=Enemy，target_species_restriction=All。
+2. 168000037 / matter_proc_silence_l1_40a
+   → item_skill_proc_silence_l1_40a → 技能 8538
+   概率原值 100；left 原值 50；技能等级 1。
+   效果 Silence；remain2=10000；effectid=20101；noresist=0。
+3. 168000028 / matter_proc_fire_damage_30a
+   → item_skill_proc_fire_damage_30a → 技能 8428
+   概率原值 40；left 字段未出现；技能等级 1。
+   效果 ProcATK_Instant；reserved1=0，reserved2=185，reserved3=1，reserved4=1，reserved10=Fire，reserved11=100。
+   不能只凭 reserved2 名称把 185 当作最终服务端伤害。
+4. 168000041 / matter_proc_poison_l1_40a
+   → item_skill_proc_poison_l1_40a → 技能 8542
+   概率原值 100；left 原值也为 100；效果 Poison；remain2=20000；checktime=2000；reserved9=38。
+   这条记录直接反驳“所有神石 left 概率都等于主字段的一半”的概括。
+5. 168000119 / matter_proc_root_u1_50a
+   → item_skill_proc_root_unique → 技能 8852
+   概率原值 60；left 原值 10；Root；remain2=12000。
+   两列概率必须独立保留，不能用统一倍率覆盖源记录。
+
+概率列的实际分布
+250 条全部有 proc_enchant_effect_occur_prob；204 条明确有 proc_enchant_effect_occur_left_prob，46 条缺失。
+在 204 条同时存在的记录中：95 条精确减半、90 条相等、8 条数值等于整数向下取半（15 与 7），11 条其他关系。
+“整数向下取半”只是数据关系，不能推断运行时代码有除二取整。
+11 条其他关系包含 4 条 test 行，以及正式命名行：
+168000117: 70 / 30；168000118: 30 / 10；168000119: 60 / 10；
+168000120、168000121、168000122、168000123: 60 / 25。
+test 168000076 明确为 500 / 0，test 168000077 明确为 0 / 500。0 与未出现字段不能混为一谈。
+
+现阶段不能从本资源断言的内容
+1. 当前资源包缺少本地化字符串正文；desc_proc 只提供 STR_... 引用。概率分母/显示除数必须由当前版本二进制消费者或对应本地化文本确认，本报告不擅自转换为百分比。
+2. left 字段名称暗示左手相关，但左右手判定路径、攻击事件选择和默认值仍要在消费者中确认。
+3. Provoked 是资源分类，不证明每一段动画、多段伤害、每次技能或每个普通攻击都会独立进行一次概率抽样。
+4. effect1_noresist=0、acc_mod2、critical_prob_mod2 等字段不是触发概率列。效果触发与后续抵抗/命中/免疫不能合成一个未经验证的百分比。
+5. remain/checktime/reserved 字段保留原值；单位和公式未由当前消费者验证。资源中的 delay_time=0 也不能证明服务器没有隐藏冷却。
+6. 客户端资源不是服务端配置或执行日志。服务器 RNG、PvP 修正、目标免疫、服务端覆盖配置及当前可用物品范围均未知。
+
+对功能设计的直接作用
+可构建只读 MechanicCatalog：itemId、skillName、skillId、effectType、rawProc、rawLeftProc、skillLevel、sourceHash、joinStatus、unitsVerified。
+效果分类可供自动打怪规划界面显示控制/持续伤害/直接伤害标签；目标适用性和实战收益必须另接目标状态及实测证据。
+不要让技能规划器把“客户端声明某个概率”当作“保证触发”，也不要把怪物免疫、攻击是否成功及命中事件缺失当成已触发。
+
+后续二进制追踪入口
+proc_enchant_effect_occur_prob、proc_enchant_effect_occur_left_prob、proc_enchant_skill、proc_enchant_skill_level。
+优先闭合：字段注册 → 物品结构成员 → tooltip 格式化与分母 → 手别选择消费者。
+再追效果类别 ProcATK_Instant / Paralyze / Silence 及 noresist、acc_mod2 的消费者。
+若客户端只有表现与消息处理，不应把客户端未发现 RNG 路径表述为已证明服务器的具体公式。
+
+交付与复现
+analyze_godstone.py --resources <当前 resources 根目录>，默认输出到脚本所在目录。
+summary.json 保存哈希、覆盖、分布、代表关系、未知项；item-skill-joins.json 保存全部 250 条物品原字段和关联技能原字段。
+关联结果是原始 XML 的精确名称连接，未进行大小写或名称规范化；缺失及重复匹配不会静默选择第一项。

@@ -1,0 +1,58 @@
+AION TW 当前归档强化资源分析，2026-10-22
+
+后续二进制补证：binary-review.txt与current-formula-model.json已经闭合当前TW普通强化客户端显示公式、quality枚举、字段来源和乘0.1显示链；option-display-model.json也已闭合option表在当前调用路径的raw/10百分比显示。以下资源分析的“需二进制确认”是当时资源独立分析的证据边界；最终当前二进制结论请合并阅读binary-review.txt，勿误认为只停留在资源线索。UI可达性与服务器等价仍未证明。
+
+范围与方法
+只读解码 resources__original-paks-20261020/data/items/items.pak 的28个XML成员，全部通过解压长度与CRC32核验。没有启动游戏、写进程内存、发请求或验证服务器行为。这些是辅助文件格式与数据关联证据；REA/IDA二进制消费者证据由主分析另行归档。
+items.pak SHA256: 5078c708ffe77a1714869323f77bc129c57ef4627dfc2e6fa2f06014ea69cef7
+源清单source-manifest.json保留每个成员raw/decoded SHA256、CRC、变换模式与记录数。
+enchant-current-evidence.json保留全部选中的原始记录、嵌套结构、匹配依据与未知项。
+
+1. 普通装备强化与强化材料
+client_items.xml共74259条物品。166000000至166099999这个ID段共424条；每条motion_name=Enchant、activation_mode=Both、activation_count=1、quality=common，level范围1..190。这个分类同时使用ID段和这些一致的字段校验；ID段本身不是一般性规则。
+例如166000001 matter_enchant_01 level=1；166000002 matter_enchant_02 level=2。记录保存石头等级、品质、动作与消耗信息，但没有足以单独推出普通装备+1..20成功率的表。
+有24条辅助剂：17条sub_enchant_material_effect_type=Probability，其effect原值分布50(5条)、100(5条)、150(7条)；7条type=cash_option_prob，原值1000。
+例如166100002 sub_matter_l_15：quality=legend, level=50, Probability=150。不能仅凭名字后缀15就把当前实际加成断言为15个百分点；需要当前二进制读取、缩放、上限和叠加方式。
+装备记录有no_enchant、sub_enchant_material_many、accumulated_enchant_effect、enchant_type等字段。缺失字段不等于FALSE或0。breakable广泛出现在普通物品中，不可解释为“强化失败碎装备概率”。stat_enchant_type/value也不能不区分镶嵌材料就当普通每级强化属性增长。
+
+2. client_enchant_option_prob.xml 是另一张六阶段/槽位相关表
+5种quality，每种enchant_option_level=1..6，共30个单元；每格enchant_sub_matter_count=1000。
+以下均为原值，不是本报告确认过的百分比：
+common: 1000,800,0,0,0,0
+rare:   900,700,600,500,0,0
+legend: 800,600,500,400,300,0
+unique: 700,500,400,300,200,100
+epic:   600,400,200,100,50,50
+字段明确存在数值，并非仅文本提示。但不能将enchant_option_level直接解释为普通武器+1..+6强化等级，亦不能以此替代普通+1..20公式。零值在当前消费者中的含义、概率分母和使用条件未由本资源分析证明。
+decoded SHA256: 40848a036056ea0a8931c8884f72a489ab60e66a28552320c158efef269f48c4
+
+3. client_jumping_enchant.xml 是跳跃强化配置
+30条=5种品质×现有enchant_level 0..5。enchant_result全为10；enchant_tool_cost依次10,9,8,7,6,5。
+required_exceed_level按品质为common0、rare5、legend15、unique35、epic50。上述字段关系来自原表；这个前置阈值具体比较什么，以及功能是否启用，还需当前消费者确认。
+该表没有success_prob字段，不能据此宣称100%成功或当前服务器可用。
+decoded SHA256: 2eb3a2de6e11ba6b58755c55c1b4aa03fe74f6c5794e95cffcd82a7d58f324c6
+
+4. 累计强化到技能的链路已完成资源关联
+4232条物品显式accumulated_enchant_effect=TRUE。
+client_accumulated_enchant_effect.xml有16条：名称pve_equipment_enchant_effect对应enchant_type1，pvp_equipment_enchant_effect对应type2；各有阈值enchant_sum=30,45,60,65,75,80,85,90。
+16条activation_skill都能在当前client_skills.xml按不区分大小写的精确name匹配到唯一技能，共8个不同技能（ID201..208）。PVE/PVP两组引用相同技能，不能从组名直接断言属性种类。
+阈值30：技能201 Statup，PvEAttackRatio原值20。
+阈值45：技能202 Statup，PvEAttackRatio原值30。
+阈值60：技能203 ProcDamageReduce原值50，并有DRBoost原值10。
+阈值65：技能204多种控制Duration原值-15，并有PvEDefendRatio与PVEAttackRatio原值各50。
+阈值75：技能205多种控制Duration原值-10，并有PvEAttackRatio_BossTarget原值100。
+阈值80：技能206控制Duration原值-10、DRBoost20、ProcDamageReduce50。
+阈值85：技能207控制Duration原值-5；另有PvPAttackRatio与PVEAttackRatio原值各50。
+阈值90：技能208控制Duration原值-20、DRBoost50、ApBoost5、ProcDamageReduce50。
+这些是字段及关联事实。多个阈值是否叠加、技能effect参数单位、哪些装备计入总和、主副手/槽位排除条件，尚未由消费者或运行时验证。
+decoded SHA256: 4d145603301c7b54a095ca9d037f27b64c0012ccaf1cc75805fa3619c59d4482
+
+5. 其他相关表与下一步入口
+client_item_skill_enchant.xml有29条技能赋予候选配置，存在skill_name/skill_prob嵌套列表；client_item_skill_enchant_cost.xml有11条品质/部位/费用配置。不能把skill_prob当强化成功率。
+当前Game.dll优先追踪字符串/注册字段：enchant_prob、enchant_option_level_prob、enchant_cut_prob_count_0/10/15/20、sub_enchant_material_effect、C_ENCHANT_ITEM、client_jumping_enchant、accumulated_enchant_effect、enchant_sum、Enchant_Effect_COMBINE_85_4CCDuration。
+需继续补齐：普通强化成功率计算的当前客户端消费者；普通装备每级攻击/防御增量；失败后降级/碎裂/保护/保底的状态处理；服务器随机数与真正成功判定。
+现有本地原包仅items/skills/pc五个PAK，缺当前版L10N本地化、客户端UI目录及可能的额外规则包。已知资源存在不意味着服务器启用或玩家可取得。
+旧aionclassic2 Game.dll SHA256 834300c2...中的60/40/30/20/15/10系数、800/500上限仅可作寻找相似代码的对照，不能替代当前b3043f0e...样本验证。
+
+复现
+用Python运行analyze_resources.py后运行build_evidence.py。第一步只读原PAK并保存辅助解码；第二步验证decoded SHA、解析完整结构并精确关联技能。完整解码目录和粗筛中间件被本目录.gitignore排除提交；保留脚本、源清单、字段统计和主证据即可复现。

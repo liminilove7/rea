@@ -1,0 +1,212 @@
+{
+  "evidence_id": "ev_d041b6090cbd5e26fed8f6a4944399a82dfba9b2e9ddc9b6ef05555ec11e28f7",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x180665e37"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 402.75,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 403.152,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x180665e37"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x180665e37",
+            "fn": {
+              "addr": "0x180665b80",
+              "name": "sub_180665B80",
+              "size": "0x4a4"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180665b80",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180665b80",
+          "code": "__int64 __fastcall sub_180665B80(unsigned int a1, unsigned int a2, int a3)\n{\n  unsigned __int64 v4; // r11\n  __int64 *v5; // r10\n  __int64 *v6; // r9\n  __int64 *v7; // rax\n  __int64 *v8; // rcx\n  char v9; // bl\n  __int64 v10; // r13\n  unsigned __int64 v11; // r8\n  __int64 *v12; // rdx\n  __int64 *v13; // rcx\n  __int64 v14; // r15\n  __int64 v15; // rdi\n  int *v16; // rbx\n  int *v17; // rcx\n  __int64 v18; // rax\n  __int64 v19; // rcx\n  __int64 v20; // rax\n  __int64 v21; // rdx\n  __int64 v22; // rcx\n  int v23; // r14d\n  __int64 v24; // rdi\n  int *v25; // rbx\n  int *v26; // rcx\n  __int64 v27; // rax\n  __int64 v28; // rcx\n  __int64 v29; // rax\n  __int64 v30; // rdx\n  __int64 v31; // rcx\n  unsigned __int8 v32; // al\n  int v33; // edi\n  __int64 v34; // rsi\n  int *v35; // rbx\n  int *v36; // rcx\n  __int64 v37; // rax\n  __int64 v38; // rcx\n  __int64 v39; // rax\n  unsigned __int64 v40; // rdx\n  unsigned __int8 v41; // al\n  unsigned int v42; // r8d\n  __int64 v43; // rcx\n  int v44; // eax\n  int v45; // eax\n  int v46; // edi\n  int v47; // eax\n  __int64 result; // rax\n  __int64 v49; // rsi\n  int *v50; // rbx\n  int *v51; // rcx\n  __int64 v52; // rax\n  __int64 v53; // rcx\n  __int64 v54; // rax\n  unsigned __int16 v55; // ax\n  int v56; // edi\n  int v57; // [rsp+70h] [rbp+38h] BYREF\n  int v58; // [rsp+78h] [rbp+40h] BYREF\n  int *v59; // [rsp+88h] [rbp+50h] BYREF\n\n  v4 = a1; /*0x180665b9a*/\n  v5 = *(__int64 **)(qword_181370638 + 3256); /*0x180665ba5*/\n  v6 = v5; /*0x180665bac*/\n  v7 = (__int64 *)v5[1]; /*0x180665baf*/\n  v8 = v7; /*0x180665bb3*/\n  v9 = *((_BYTE *)v7 + 25); /*0x180665bb6*/\n  if ( v9 == 0 ) /*0x180665bbc*/\n  {\n    do /*0x180665bd6*/\n    {\n      if ( v8[4] >= v4 ) /*0x180665bc4*/\n      {\n        v6 = v8; /*0x180665bcc*/\n        v8 = (__int64 *)*v8; /*0x180665bcf*/\n      }\n      else\n      {\n        v8 = (__int64 *)v8[2]; /*0x180665bc6*/\n      }\n    }\n    while ( *((_BYTE *)v8 + 25) == 0 ); /*0x180665bd6*/\n  }\n  if ( v6 == v5 || v4 < v6[4] ) /*0x180665be1*/\n    v6 = *(__int64 **)(qword_181370638 + 3256); /*0x180665be3*/\n  if ( v6 == v5 ) /*0x180665bec*/\n    v10 = 0; /*0x180665bf4*/\n  else\n    v10 = v6[5]; /*0x180665bee*/\n  v11 = a2; /*0x180665bf7*/\n  v12 = *(__int64 **)(qword_181370638 + 3256); /*0x180665bfa*/\n  v13 = v12; /*0x180665bfd*/\n  if ( v9 == 0 ) /*0x180665c02*/\n  {\n    do /*0x180665c1a*/\n    {\n      if ( v7[4] >= v11 ) /*0x180665c08*/\n      {\n        v13 = v7; /*0x180665c10*/\n        v7 = (__int64 *)*v7; /*0x180665c13*/\n      }\n      else",
+          "line_count": 100,
+          "total_lines": 333,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x181370638",
+              "name": "qword_181370638"
+            },
+            {
+              "addr": "0x180170c50",
+              "name": "sub_180170C50"
+            },
+            {
+              "addr": "0x18027a4d0",
+              "name": "sub_18027A4D0"
+            },
+            {
+              "addr": "0x1809b55a0",
+              "name": "sub_1809B55A0"
+            },
+            {
+              "addr": "0x18019f8d0",
+              "name": "sub_18019F8D0"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180665b80",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180665b80",
+          "code": "      {\n        v7 = (__int64 *)v7[2]; /*0x180665c0a*/\n      }\n    }\n    while ( *((_BYTE *)v7 + 25) == 0 ); /*0x180665c1a*/\n  }\n  if ( v13 == v5 || v11 < v13[4] ) /*0x180665c25*/\n  {\n    v13 = *(__int64 **)(qword_181370638 + 3256); /*0x180665c27*/\n    v12 = v13; /*0x180665c2a*/\n  }\n  if ( v13 == v12 ) /*0x180665c30*/\n    v14 = 0; /*0x180665c38*/\n  else\n    v14 = v13[5]; /*0x180665c32*/\n  v57 = 11; /*0x180665c3b*/\n  v15 = sub_180170C50(a1: v13, a2: v12); /*0x180665c4a*/\n  v16 = *(int **)v15; /*0x180665c4d*/\n  v17 = *(int **)(*(_QWORD *)v15 + 8LL); /*0x180665c53*/\n  while ( *((_BYTE *)v17 + 25) == 0 ) /*0x180665c5b*/\n  {\n    if ( v17[8] >= v57 ) /*0x180665c63*/\n    {\n      v16 = v17; /*0x180665c6b*/\n      v17 = *(int **)v17; /*0x180665c6e*/\n    }\n    else\n    {\n      v17 = *((int **)v17 + 2); /*0x180665c65*/\n    }\n  }\n  if ( v16 == *(int **)v15 || v57 < v16[8] ) /*0x180665c7f*/\n  {\n    v59 = &v57; /*0x180665c8c*/\n    v18 = sub_18027A4D0(a1: v15, a2: (unsigned int)v57, a3: &v59); /*0x180665c90*/\n    sub_1809B55A0(a1: v15, a2: (unsigned int)&v59, a3: (_DWORD)v16, a4: v18 + 32, a5: v18); /*0x180665ca8*/\n    v16 = v59; /*0x180665cad*/\n  }\n  v19 = *((_QWORD *)v16 + 5); /*0x180665cb9*/\n  v58 = *(_DWORD *)(v10 + 16); /*0x180665cbd*/\n  v20 = sub_18019F8D0(a1: v19, a2: &v58); /*0x180665cc5*/\n  if ( v20 != 0 ) /*0x180665ccd*/\n    v23 = *(unsigned __int8 *)(v20 + 421); /*0x180665ccf*/\n  else\n    v23 = 1; /*0x180665cd9*/\n  v57 = 11; /*0x180665cdf*/\n  v24 = sub_180170C50(a1: v22, a2: v21); /*0x180665cee*/\n  v25 = *(int **)v24; /*0x180665cf1*/\n  v26 = *(int **)(*(_QWORD *)v24 + 8LL); /*0x180665cf7*/\n  while ( *((_BYTE *)v26 + 25) == 0 ) /*0x180665cff*/\n  {\n    if ( v26[8] >= v57 ) /*0x180665d04*/\n    {\n      v25 = v26; /*0x180665d0c*/\n      v26 = *(int **)v26; /*0x180665d0f*/\n    }\n    else\n    {\n      v26 = *((int **)v26 + 2); /*0x180665d06*/\n    }\n  }\n  if ( v25 == *(int **)v24 || v57 < v25[8] ) /*0x180665d20*/\n  {\n    v59 = &v57; /*0x180665d2d*/\n    v27 = sub_18027A4D0(a1: v24, a2: (unsigned int)v57, a3: &v59); /*0x180665d31*/\n    sub_1809B55A0(a1: v24, a2: (unsigned int)&v59, a3: (_DWORD)v25, a4: v27 + 32, a5: v27); /*0x180665d49*/\n    v25 = v59; /*0x180665d4e*/\n  }\n  v28 = *((_QWORD *)v25 + 5); /*0x180665d5a*/\n  v58 = *(_DWORD *)(v10 + 16); /*0x180665d5e*/\n  v29 = sub_18019F8D0(a1: v28, a2: &v58); /*0x180665d61*/\n  if ( v29 != 0 ) /*0x180665d69*/\n    v32 = *(_BYTE *)(v29 + 436); /*0x180665d6b*/\n  else\n    v32 = 1; /*0x180665d74*/\n  v33 = v32; /*0x180665d76*/\n  v57 = 11; /*0x180665d79*/\n  v34 = sub_180170C50(a1: v31, a2: v30); /*0x180665d88*/\n  v35 = *(int **)v34; /*0x180665d8b*/\n  v36 = *(int **)(*(_QWORD *)v34 + 8LL); /*0x180665d91*/\n  while ( *((_BYTE *)v36 + 25) == 0 ) /*0x180665d99*/\n  {\n    if ( v36[8] >= v57 ) /*0x180665da3*/\n    {\n      v35 = v36; /*0x180665dab*/\n      v36 = *(int **)v36; /*0x180665dae*/\n    }\n    else\n    {\n      v36 = *((int **)v36 + 2); /*0x180665da5*/\n    }\n  }\n  if ( v35 == *(int **)v34 || v57 < v35[8] ) /*0x180665dbf*/\n  {\n    v59 = &v57; /*0x180665dcc*/\n    v37 = sub_18027A4D0(a1: v34, a2: (unsigned int)v57, a3: &v59); /*0x180665dd0*/\n    sub_1809B55A0(a1: v34, a2: (unsigned int)&v59, a3: (_DWORD)v35, a4: v37 + 32, a5: v37); /*0x180665de8*/\n    v35 = v59; /*0x180665ded*/\n  }\n  v38 = *((_QWORD *)v35 + 5); /*0x180665df9*/",
+          "line_count": 100,
+          "total_lines": 333,
+          "truncated": true,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180665b80",
+          "offset": 200,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180665b80",
+          "code": "  v58 = *(_DWORD *)(v14 + 16); /*0x180665dfd*/\n  v39 = sub_18019F8D0(a1: v38, a2: &v58); /*0x180665e00*/\n  if ( v39 != 0 ) /*0x180665e08*/\n    v41 = *(_BYTE *)(v39 + 436); /*0x180665e0a*/\n  else\n    v41 = 1; /*0x180665e13*/\n  v42 = *(unsigned __int8 *)(v10 + 169) + 1; /*0x180665e28*/\n  v43 = v41; /*0x180665e2b*/\n  v44 = 0; /*0x180665e2e*/\n  if ( v42 <= 0xA ) /*0x180665e35*/\n  {\n    v40 = 0x180000000uLL; /*0x180665e46*/\n    switch ( v23 ) /*0x180665e57*/\n    {\n      case 1: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e5b*/\n        v44 = 60 * v43; /*0x180665e5e*/\n        goto LABEL_68; /*0x180665e61*/\n      case 2: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e65*/\n        v44 = 40 * v43; /*0x180665e6b*/\n        goto LABEL_68; /*0x180665e6e*/\n      case 3: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e72*/\n        v44 = 30 * v43; /*0x180665e75*/\n        goto LABEL_68; /*0x180665e78*/\n      case 4: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e7c*/\n        v44 = 20 * v43; /*0x180665e82*/\n        goto LABEL_68; /*0x180665e85*/\n      case 5: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e89*/\n        v44 = 15 * v43; /*0x180665e8c*/\n        goto LABEL_68; /*0x180665e8f*/\n      case 6: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e93*/\n        v44 = 10 * v43; /*0x180665e99*/\n        goto LABEL_68; /*0x180665e9b*/\n      default:\n        return 0;\n    }\n  }\n  if ( v42 <= 0x14 ) /*0x180665ea1*/\n  {\n    switch ( v23 ) /*0x180665ebf*/\n    {\n      case 1: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ec3*/\n        v45 = 60 * v43; /*0x180665ec6*/\n        goto LABEL_67; /*0x180665ec6*/\n      case 2: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ee5*/\n        v45 = 40 * v43; /*0x180665eeb*/\n        goto LABEL_67; /*0x180665eee*/\n      case 3: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ef2*/\n        v45 = 30 * v43; /*0x180665ef5*/\n        goto LABEL_67; /*0x180665ef8*/\n      case 4: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665efc*/\n        v45 = 20 * v43; /*0x180665f02*/\n        goto LABEL_67; /*0x180665f05*/\n      case 5: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665f09*/\n        v45 = 15 * v43; /*0x180665f0c*/\n        goto LABEL_67; /*0x180665f0f*/\n      case 6: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665f13*/\n        v45 = 10 * v43; /*0x180665f19*/\nLABEL_67:\n        v40 = (unsigned int)(v45 >> 31); /*0x180665ec9*/\n        v44 = v45 / 2; /*0x180665ecc*/\n        break; /*0x180665ecc*/\n      default:\n        return 0; /*0x180665f1f*/\n    }\n  }\nLABEL_68:\n  v46 = 0; /*0x180665ece*/\n  if ( v44 > 0 ) /*0x180665ed3*/\n    v46 = v44; /*0x180665ed3*/\n  if ( v42 <= 0xA ) /*0x180665eda*/\n  {\n    v47 = 800; /*0x180665edc*/\n    goto LABEL_80; /*0x180665ee1*/\n  }\n  if ( v42 <= 0x14 ) /*0x180665f28*/\n  {\n    v47 = 500; /*0x180665f2a*/\nLABEL_80:\n    if ( v46 > v47 ) /*0x180665f31*/\n      v46 = v47; /*0x180665f31*/\n  }\n  v57 = 11; /*0x180665f34*/\n  v49 = sub_180170C50(a1: v43, a2: v40); /*0x180665f43*/\n  v50 = *(int **)v49; /*0x180665f46*/\n  v51 = *(int **)(*(_QWORD *)v49 + 8LL); /*0x180665f4c*/\n  while ( *((_BYTE *)v51 + 25) == 0 ) /*0x180665f54*/\n  {\n    if ( v51[8] >= v57 ) /*0x180665f59*/",
+          "line_count": 100,
+          "total_lines": 333,
+          "truncated": true,
+          "cursor": {
+            "next": 300
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180665b80",
+          "offset": 300,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180665b80",
+          "code": "    {\n      v50 = v51; /*0x180665f61*/\n      v51 = *(int **)v51; /*0x180665f64*/\n    }\n    else\n    {\n      v51 = *((int **)v51 + 2); /*0x180665f5b*/\n    }\n  }\n  if ( v50 == *(int **)v49 || v57 < v50[8] ) /*0x180665f75*/\n  {\n    v59 = &v57; /*0x180665f82*/\n    v52 = sub_18027A4D0(a1: v49, a2: (unsigned int)v57, a3: &v59); /*0x180665f86*/\n    sub_1809B55A0(a1: v49, a2: (unsigned int)&v59, a3: (_DWORD)v50, a4: v52 + 32, a5: v52); /*0x180665f9e*/\n    v50 = v59; /*0x180665fa3*/\n  }\n  v53 = *((_QWORD *)v50 + 5); /*0x180665fa7*/\n  v58 = a3; /*0x180665faf*/\n  v54 = sub_18019F8D0(a1: v53, a2: &v58); /*0x180665fb3*/\n  if ( v54 != 0 ) /*0x180665fbb*/\n    v55 = *(_WORD *)(v54 + 410); /*0x180665fbd*/\n  else\n    v55 = 0; /*0x180665fc6*/\n  v56 = v55 + v46; /*0x180665fcc*/\n  result = 1000; /*0x180665fce*/\n  if ( v56 <= 1000 ) /*0x180665fd5*/\n  {\n    result = (unsigned int)v56; /*0x180665fd9*/\n    if ( v56 < 0 ) /*0x180665fdb*/\n      return 0; /*0x180665fdb*/\n  }\n  return result; /*0x180665fe4*/\n}",
+          "line_count": 33,
+          "total_lines": 333,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_180665B80(unsigned int a1, unsigned int a2, int a3)\n{\n  unsigned __int64 v4; // r11\n  __int64 *v5; // r10\n  __int64 *v6; // r9\n  __int64 *v7; // rax\n  __int64 *v8; // rcx\n  char v9; // bl\n  __int64 v10; // r13\n  unsigned __int64 v11; // r8\n  __int64 *v12; // rdx\n  __int64 *v13; // rcx\n  __int64 v14; // r15\n  __int64 v15; // rdi\n  int *v16; // rbx\n  int *v17; // rcx\n  __int64 v18; // rax\n  __int64 v19; // rcx\n  __int64 v20; // rax\n  __int64 v21; // rdx\n  __int64 v22; // rcx\n  int v23; // r14d\n  __int64 v24; // rdi\n  int *v25; // rbx\n  int *v26; // rcx\n  __int64 v27; // rax\n  __int64 v28; // rcx\n  __int64 v29; // rax\n  __int64 v30; // rdx\n  __int64 v31; // rcx\n  unsigned __int8 v32; // al\n  int v33; // edi\n  __int64 v34; // rsi\n  int *v35; // rbx\n  int *v36; // rcx\n  __int64 v37; // rax\n  __int64 v38; // rcx\n  __int64 v39; // rax\n  unsigned __int64 v40; // rdx\n  unsigned __int8 v41; // al\n  unsigned int v42; // r8d\n  __int64 v43; // rcx\n  int v44; // eax\n  int v45; // eax\n  int v46; // edi\n  int v47; // eax\n  __int64 result; // rax\n  __int64 v49; // rsi\n  int *v50; // rbx\n  int *v51; // rcx\n  __int64 v52; // rax\n  __int64 v53; // rcx\n  __int64 v54; // rax\n  unsigned __int16 v55; // ax\n  int v56; // edi\n  int v57; // [rsp+70h] [rbp+38h] BYREF\n  int v58; // [rsp+78h] [rbp+40h] BYREF\n  int *v59; // [rsp+88h] [rbp+50h] BYREF\n\n  v4 = a1; /*0x180665b9a*/\n  v5 = *(__int64 **)(qword_181370638 + 3256); /*0x180665ba5*/\n  v6 = v5; /*0x180665bac*/\n  v7 = (__int64 *)v5[1]; /*0x180665baf*/\n  v8 = v7; /*0x180665bb3*/\n  v9 = *((_BYTE *)v7 + 25); /*0x180665bb6*/\n  if ( v9 == 0 ) /*0x180665bbc*/\n  {\n    do /*0x180665bd6*/\n    {\n      if ( v8[4] >= v4 ) /*0x180665bc4*/\n      {\n        v6 = v8; /*0x180665bcc*/\n        v8 = (__int64 *)*v8; /*0x180665bcf*/\n      }\n      else\n      {\n        v8 = (__int64 *)v8[2]; /*0x180665bc6*/\n      }\n    }\n    while ( *((_BYTE *)v8 + 25) == 0 ); /*0x180665bd6*/\n  }\n  if ( v6 == v5 || v4 < v6[4] ) /*0x180665be1*/\n    v6 = *(__int64 **)(qword_181370638 + 3256); /*0x180665be3*/\n  if ( v6 == v5 ) /*0x180665bec*/\n    v10 = 0; /*0x180665bf4*/\n  else\n    v10 = v6[5]; /*0x180665bee*/\n  v11 = a2; /*0x180665bf7*/\n  v12 = *(__int64 **)(qword_181370638 + 3256); /*0x180665bfa*/\n  v13 = v12; /*0x180665bfd*/\n  if ( v9 == 0 ) /*0x180665c02*/\n  {\n    do /*0x180665c1a*/\n    {\n      if ( v7[4] >= v11 ) /*0x180665c08*/\n      {\n        v13 = v7; /*0x180665c10*/\n        v7 = (__int64 *)*v7; /*0x180665c13*/\n      }\n      else\n      {\n        v7 = (__int64 *)v7[2]; /*0x180665c0a*/\n      }\n    }\n    while ( *((_BYTE *)v7 + 25) == 0 ); /*0x180665c1a*/\n  }\n  if ( v13 == v5 || v11 < v13[4] ) /*0x180665c25*/\n  {\n    v13 = *(__int64 **)(qword_181370638 + 3256); /*0x180665c27*/\n    v12 = v13; /*0x180665c2a*/\n  }\n  if ( v13 == v12 ) /*0x180665c30*/\n    v14 = 0; /*0x180665c38*/\n  else\n    v14 = v13[5]; /*0x180665c32*/\n  v57 = 11; /*0x180665c3b*/\n  v15 = sub_180170C50(a1: v13, a2: v12); /*0x180665c4a*/\n  v16 = *(int **)v15; /*0x180665c4d*/\n  v17 = *(int **)(*(_QWORD *)v15 + 8LL); /*0x180665c53*/\n  while ( *((_BYTE *)v17 + 25) == 0 ) /*0x180665c5b*/\n  {\n    if ( v17[8] >= v57 ) /*0x180665c63*/\n    {\n      v16 = v17; /*0x180665c6b*/\n      v17 = *(int **)v17; /*0x180665c6e*/\n    }\n    else\n    {\n      v17 = *((int **)v17 + 2); /*0x180665c65*/\n    }\n  }\n  if ( v16 == *(int **)v15 || v57 < v16[8] ) /*0x180665c7f*/\n  {\n    v59 = &v57; /*0x180665c8c*/\n    v18 = sub_18027A4D0(a1: v15, a2: (unsigned int)v57, a3: &v59); /*0x180665c90*/\n    sub_1809B55A0(a1: v15, a2: (unsigned int)&v59, a3: (_DWORD)v16, a4: v18 + 32, a5: v18); /*0x180665ca8*/\n    v16 = v59; /*0x180665cad*/\n  }\n  v19 = *((_QWORD *)v16 + 5); /*0x180665cb9*/\n  v58 = *(_DWORD *)(v10 + 16); /*0x180665cbd*/\n  v20 = sub_18019F8D0(a1: v19, a2: &v58); /*0x180665cc5*/\n  if ( v20 != 0 ) /*0x180665ccd*/\n    v23 = *(unsigned __int8 *)(v20 + 421); /*0x180665ccf*/\n  else\n    v23 = 1; /*0x180665cd9*/\n  v57 = 11; /*0x180665cdf*/\n  v24 = sub_180170C50(a1: v22, a2: v21); /*0x180665cee*/\n  v25 = *(int **)v24; /*0x180665cf1*/\n  v26 = *(int **)(*(_QWORD *)v24 + 8LL); /*0x180665cf7*/\n  while ( *((_BYTE *)v26 + 25) == 0 ) /*0x180665cff*/\n  {\n    if ( v26[8] >= v57 ) /*0x180665d04*/\n    {\n      v25 = v26; /*0x180665d0c*/\n      v26 = *(int **)v26; /*0x180665d0f*/\n    }\n    else\n    {\n      v26 = *((int **)v26 + 2); /*0x180665d06*/\n    }\n  }\n  if ( v25 == *(int **)v24 || v57 < v25[8] ) /*0x180665d20*/\n  {\n    v59 = &v57; /*0x180665d2d*/\n    v27 = sub_18027A4D0(a1: v24, a2: (unsigned int)v57, a3: &v59); /*0x180665d31*/\n    sub_1809B55A0(a1: v24, a2: (unsigned int)&v59, a3: (_DWORD)v25, a4: v27 + 32, a5: v27); /*0x180665d49*/\n    v25 = v59; /*0x180665d4e*/\n  }\n  v28 = *((_QWORD *)v25 + 5); /*0x180665d5a*/\n  v58 = *(_DWORD *)(v10 + 16); /*0x180665d5e*/\n  v29 = sub_18019F8D0(a1: v28, a2: &v58); /*0x180665d61*/\n  if ( v29 != 0 ) /*0x180665d69*/\n    v32 = *(_BYTE *)(v29 + 436); /*0x180665d6b*/\n  else\n    v32 = 1; /*0x180665d74*/\n  v33 = v32; /*0x180665d76*/\n  v57 = 11; /*0x180665d79*/\n  v34 = sub_180170C50(a1: v31, a2: v30); /*0x180665d88*/\n  v35 = *(int **)v34; /*0x180665d8b*/\n  v36 = *(int **)(*(_QWORD *)v34 + 8LL); /*0x180665d91*/\n  while ( *((_BYTE *)v36 + 25) == 0 ) /*0x180665d99*/\n  {\n    if ( v36[8] >= v57 ) /*0x180665da3*/\n    {\n      v35 = v36; /*0x180665dab*/\n      v36 = *(int **)v36; /*0x180665dae*/\n    }\n    else\n    {\n      v36 = *((int **)v36 + 2); /*0x180665da5*/\n    }\n  }\n  if ( v35 == *(int **)v34 || v57 < v35[8] ) /*0x180665dbf*/\n  {\n    v59 = &v57; /*0x180665dcc*/\n    v37 = sub_18027A4D0(a1: v34, a2: (unsigned int)v57, a3: &v59); /*0x180665dd0*/\n    sub_1809B55A0(a1: v34, a2: (unsigned int)&v59, a3: (_DWORD)v35, a4: v37 + 32, a5: v37); /*0x180665de8*/\n    v35 = v59; /*0x180665ded*/\n  }\n  v38 = *((_QWORD *)v35 + 5); /*0x180665df9*/\n  v58 = *(_DWORD *)(v14 + 16); /*0x180665dfd*/\n  v39 = sub_18019F8D0(a1: v38, a2: &v58); /*0x180665e00*/\n  if ( v39 != 0 ) /*0x180665e08*/\n    v41 = *(_BYTE *)(v39 + 436); /*0x180665e0a*/\n  else\n    v41 = 1; /*0x180665e13*/\n  v42 = *(unsigned __int8 *)(v10 + 169) + 1; /*0x180665e28*/\n  v43 = v41; /*0x180665e2b*/\n  v44 = 0; /*0x180665e2e*/\n  if ( v42 <= 0xA ) /*0x180665e35*/\n  {\n    v40 = 0x180000000uLL; /*0x180665e46*/\n    switch ( v23 ) /*0x180665e57*/\n    {\n      case 1: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e5b*/\n        v44 = 60 * v43; /*0x180665e5e*/\n        goto LABEL_68; /*0x180665e61*/\n      case 2: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e65*/\n        v44 = 40 * v43; /*0x180665e6b*/\n        goto LABEL_68; /*0x180665e6e*/\n      case 3: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e72*/\n        v44 = 30 * v43; /*0x180665e75*/\n        goto LABEL_68; /*0x180665e78*/\n      case 4: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e7c*/\n        v44 = 20 * v43; /*0x180665e82*/\n        goto LABEL_68; /*0x180665e85*/\n      case 5: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e89*/\n        v44 = 15 * v43; /*0x180665e8c*/\n        goto LABEL_68; /*0x180665e8f*/\n      case 6: /*0x180665e57*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665e93*/\n        v44 = 10 * v43; /*0x180665e99*/\n        goto LABEL_68; /*0x180665e9b*/\n      default:\n        return 0;\n    }\n  }\n  if ( v42 <= 0x14 ) /*0x180665ea1*/\n  {\n    switch ( v23 ) /*0x180665ebf*/\n    {\n      case 1: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ec3*/\n        v45 = 60 * v43; /*0x180665ec6*/\n        goto LABEL_67; /*0x180665ec6*/\n      case 2: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ee5*/\n        v45 = 40 * v43; /*0x180665eeb*/\n        goto LABEL_67; /*0x180665eee*/\n      case 3: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665ef2*/\n        v45 = 30 * v43; /*0x180665ef5*/\n        goto LABEL_67; /*0x180665ef8*/\n      case 4: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665efc*/\n        v45 = 20 * v43; /*0x180665f02*/\n        goto LABEL_67; /*0x180665f05*/\n      case 5: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665f09*/\n        v45 = 15 * v43; /*0x180665f0c*/\n        goto LABEL_67; /*0x180665f0f*/\n      case 6: /*0x180665ebf*/\n        v43 = (unsigned int)(v43 - v33 + 10); /*0x180665f13*/\n        v45 = 10 * v43; /*0x180665f19*/\nLABEL_67:\n        v40 = (unsigned int)(v45 >> 31); /*0x180665ec9*/\n        v44 = v45 / 2; /*0x180665ecc*/\n        break; /*0x180665ecc*/\n      default:\n        return 0; /*0x180665f1f*/\n    }\n  }\nLABEL_68:\n  v46 = 0; /*0x180665ece*/\n  if ( v44 > 0 ) /*0x180665ed3*/\n    v46 = v44; /*0x180665ed3*/\n  if ( v42 <= 0xA ) /*0x180665eda*/\n  {\n    v47 = 800; /*0x180665edc*/\n    goto LABEL_80; /*0x180665ee1*/\n  }\n  if ( v42 <= 0x14 ) /*0x180665f28*/\n  {\n    v47 = 500; /*0x180665f2a*/\nLABEL_80:\n    if ( v46 > v47 ) /*0x180665f31*/\n      v46 = v47; /*0x180665f31*/\n  }\n  v57 = 11; /*0x180665f34*/\n  v49 = sub_180170C50(a1: v43, a2: v40); /*0x180665f43*/\n  v50 = *(int **)v49; /*0x180665f46*/\n  v51 = *(int **)(*(_QWORD *)v49 + 8LL); /*0x180665f4c*/\n  while ( *((_BYTE *)v51 + 25) == 0 ) /*0x180665f54*/\n  {\n    if ( v51[8] >= v57 ) /*0x180665f59*/\n    {\n      v50 = v51; /*0x180665f61*/\n      v51 = *(int **)v51; /*0x180665f64*/\n    }\n    else\n    {\n      v51 = *((int **)v51 + 2); /*0x180665f5b*/\n    }\n  }\n  if ( v50 == *(int **)v49 || v57 < v50[8] ) /*0x180665f75*/\n  {\n    v59 = &v57; /*0x180665f82*/\n    v52 = sub_18027A4D0(a1: v49, a2: (unsigned int)v57, a3: &v59); /*0x180665f86*/\n    sub_1809B55A0(a1: v49, a2: (unsigned int)&v59, a3: (_DWORD)v50, a4: v52 + 32, a5: v52); /*0x180665f9e*/\n    v50 = v59; /*0x180665fa3*/\n  }\n  v53 = *((_QWORD *)v50 + 5); /*0x180665fa7*/\n  v58 = a3; /*0x180665faf*/\n  v54 = sub_18019F8D0(a1: v53, a2: &v58); /*0x180665fb3*/\n  if ( v54 != 0 ) /*0x180665fbb*/\n    v55 = *(_WORD *)(v54 + 410); /*0x180665fbd*/\n  else\n    v55 = 0; /*0x180665fc6*/\n  v56 = v55 + v46; /*0x180665fcc*/\n  result = 1000; /*0x180665fce*/\n  if ( v56 <= 1000 ) /*0x180665fd5*/\n  {\n    result = (unsigned int)v56; /*0x180665fd9*/\n    if ( v56 < 0 ) /*0x180665fdb*/\n      return 0; /*0x180665fdb*/\n  }\n  return result; /*0x180665fe4*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x180665b80"
+    }
+  ],
+  "evidence_links": []
+}

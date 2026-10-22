@@ -1,0 +1,172 @@
+{
+  "evidence_id": "ev_a5178451c04851642b4a27f81f89c2954a397e00851cedab22abea74f677d6ba",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x1801b97e0"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 270.558,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 270.738,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x1801b97e0"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x1801b97e0",
+            "fn": {
+              "addr": "0x1801b97e0",
+              "name": "sub_1801B97E0",
+              "size": "0x163"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801b97e0",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801b97e0",
+          "code": "__int64 __fastcall sub_1801B97E0(__int64 a1, __int64 a2, __int64 a3)\n{\n  __int16 *v3; // rcx\n  __int64 result; // rax\n  __int64 v7; // r14\n  __int64 v8; // r15\n  _DWORD *v9; // rsi\n  __int16 *v10; // rcx\n  __int64 i; // rbx\n  __int16 *v12; // rbp\n  __int16 *v13; // rdi\n\n  v3 = &word_180C3EA00; /*0x1801b97eb*/\n  if ( *(_QWORD *)a2 != 0 ) /*0x1801b9802*/\n    v3 = *(__int16 **)a2; /*0x1801b9802*/\n  result = qword_180B38658(a1: v3, a2: aOptionEnchant); /*0x1801b9806*/\n  if ( (_DWORD)result == 0 ) /*0x1801b980e*/\n  {\n    v7 = *(_QWORD *)(a2 + 24); /*0x1801b9814*/\n    if ( v7 != 0 ) /*0x1801b981b*/\n    {\n      v8 = 0; /*0x1801b9835*/\n      v9 = (_DWORD *)(a3 + 12); /*0x1801b9838*/\n      do /*0x1801b9921*/\n      {\n        if ( v8 >= 6 ) /*0x1801b9844*/\n          break; /*0x1801b9844*/\n        v10 = &word_180C3EA00; /*0x1801b984d*/\n        if ( *(_QWORD *)v7 != 0 ) /*0x1801b985e*/\n          v10 = *(__int16 **)v7; /*0x1801b985e*/\n        result = qword_180B38658(a1: v10, a2: aData_0); /*0x1801b9862*/\n        if ( (_DWORD)result == 0 ) /*0x1801b986a*/\n        {\n          for ( i = *(_QWORD *)(v7 + 24); i != 0; i = *(_QWORD *)(i + 48) ) /*0x1801b9877*/\n          {\n            v12 = &word_180C3EA00; /*0x1801b9883*/\n            v13 = &word_180C3EA00; /*0x1801b988d*/\n            if ( *(_QWORD *)i != 0 ) /*0x1801b989b*/\n              v12 = *(__int16 **)i; /*0x1801b989b*/\n            if ( *(_QWORD *)(i + 8) != 0 ) /*0x1801b98a9*/\n              v13 = *(__int16 **)(i + 8); /*0x1801b98a9*/\n            if ( (unsigned int)qword_180B38658(a1: v12, a2: aEnchantOptionL) != 0 ) /*0x1801b98b5*/\n            {\n              if ( (unsigned int)qword_180B38658(a1: v12, a2: aEnchantOptionL_0) != 0 ) /*0x1801b98d7*/\n              {\n                result = qword_180B38658(a1: v12, a2: aEnchantSubMatt); /*0x1801b98f0*/\n                if ( (_DWORD)result == 0 ) /*0x1801b98f8*/\n                {\n                  result = qword_180B38198(a1: v13); /*0x1801b98fd*/\n                  v9[1] = result; /*0x1801b9903*/\n                }\n              }\n              else\n              {\n                result = qword_180B38198(a1: v13); /*0x1801b98dc*/\n                *v9 = result; /*0x1801b98e2*/\n              }\n            }\n            else\n            {\n              result = qword_180B38198(a1: v13); /*0x1801b98ba*/\n              *(v9 - 1) = result; /*0x1801b98c0*/\n            }\n          }\n        }\n        v7 = *(_QWORD *)(v7 + 48); /*0x1801b9913*/\n        ++v8; /*0x1801b9917*/\n        v9 += 3; /*0x1801b991a*/\n      }\n      while ( v7 != 0 ); /*0x1801b9921*/\n    }\n  }\n  return result; /*0x1801b993b*/\n}",
+          "line_count": 74,
+          "total_lines": 74,
+          "truncated": false,
+          "cursor": {
+            "done": true
+          },
+          "refs": [
+            {
+              "addr": "0x180c3ea00",
+              "name": "word_180C3EA00"
+            },
+            {
+              "addr": "0x180b38658",
+              "name": "qword_180B38658"
+            },
+            {
+              "addr": "0x180c47e70",
+              "name": "aOptionEnchant",
+              "string": "灯楴湯敟据慨瑮"
+            },
+            {
+              "addr": "0x180c47e90",
+              "name": "aData_0",
+              "string": "慤慴"
+            },
+            {
+              "addr": "0x180c47d48",
+              "name": "aEnchantSubMatt",
+              "string": "湥档湡彴畳形慭瑴牥损畯瑮"
+            },
+            {
+              "addr": "0x180b38198",
+              "name": "qword_180B38198"
+            },
+            {
+              "addr": "0x180c47d10",
+              "name": "aEnchantOptionL_0",
+              "string": "湥档湡彴灯楴湯江癥汥灟潲�"
+            },
+            {
+              "addr": "0x180c47ce0",
+              "name": "aEnchantOptionL",
+              "string": "湥档湡彴灯楴湯江癥汥"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_1801B97E0(__int64 a1, __int64 a2, __int64 a3)\n{\n  __int16 *v3; // rcx\n  __int64 result; // rax\n  __int64 v7; // r14\n  __int64 v8; // r15\n  _DWORD *v9; // rsi\n  __int16 *v10; // rcx\n  __int64 i; // rbx\n  __int16 *v12; // rbp\n  __int16 *v13; // rdi\n\n  v3 = &word_180C3EA00; /*0x1801b97eb*/\n  if ( *(_QWORD *)a2 != 0 ) /*0x1801b9802*/\n    v3 = *(__int16 **)a2; /*0x1801b9802*/\n  result = qword_180B38658(a1: v3, a2: aOptionEnchant); /*0x1801b9806*/\n  if ( (_DWORD)result == 0 ) /*0x1801b980e*/\n  {\n    v7 = *(_QWORD *)(a2 + 24); /*0x1801b9814*/\n    if ( v7 != 0 ) /*0x1801b981b*/\n    {\n      v8 = 0; /*0x1801b9835*/\n      v9 = (_DWORD *)(a3 + 12); /*0x1801b9838*/\n      do /*0x1801b9921*/\n      {\n        if ( v8 >= 6 ) /*0x1801b9844*/\n          break; /*0x1801b9844*/\n        v10 = &word_180C3EA00; /*0x1801b984d*/\n        if ( *(_QWORD *)v7 != 0 ) /*0x1801b985e*/\n          v10 = *(__int16 **)v7; /*0x1801b985e*/\n        result = qword_180B38658(a1: v10, a2: aData_0); /*0x1801b9862*/\n        if ( (_DWORD)result == 0 ) /*0x1801b986a*/\n        {\n          for ( i = *(_QWORD *)(v7 + 24); i != 0; i = *(_QWORD *)(i + 48) ) /*0x1801b9877*/\n          {\n            v12 = &word_180C3EA00; /*0x1801b9883*/\n            v13 = &word_180C3EA00; /*0x1801b988d*/\n            if ( *(_QWORD *)i != 0 ) /*0x1801b989b*/\n              v12 = *(__int16 **)i; /*0x1801b989b*/\n            if ( *(_QWORD *)(i + 8) != 0 ) /*0x1801b98a9*/\n              v13 = *(__int16 **)(i + 8); /*0x1801b98a9*/\n            if ( (unsigned int)qword_180B38658(a1: v12, a2: aEnchantOptionL) != 0 ) /*0x1801b98b5*/\n            {\n              if ( (unsigned int)qword_180B38658(a1: v12, a2: aEnchantOptionL_0) != 0 ) /*0x1801b98d7*/\n              {\n                result = qword_180B38658(a1: v12, a2: aEnchantSubMatt); /*0x1801b98f0*/\n                if ( (_DWORD)result == 0 ) /*0x1801b98f8*/\n                {\n                  result = qword_180B38198(a1: v13); /*0x1801b98fd*/\n                  v9[1] = result; /*0x1801b9903*/\n                }\n              }\n              else\n              {\n                result = qword_180B38198(a1: v13); /*0x1801b98dc*/\n                *v9 = result; /*0x1801b98e2*/\n              }\n            }\n            else\n            {\n              result = qword_180B38198(a1: v13); /*0x1801b98ba*/\n              *(v9 - 1) = result; /*0x1801b98c0*/\n            }\n          }\n        }\n        v7 = *(_QWORD *)(v7 + 48); /*0x1801b9913*/\n        ++v8; /*0x1801b9917*/\n        v9 += 3; /*0x1801b991a*/\n      }\n      while ( v7 != 0 ); /*0x1801b9921*/\n    }\n  }\n  return result; /*0x1801b993b*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1801b97e0"
+    }
+  ],
+  "evidence_links": []
+}

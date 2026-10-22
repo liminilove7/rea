@@ -1,0 +1,190 @@
+{
+  "evidence_id": "ev_fc92a538737065cb7dee630a8fddb40150446f82c21ddda365cff38dd77fb936",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x180333530"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 319.253,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 319.49,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x180333530"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x180333530",
+            "fn": {
+              "addr": "0x180333530",
+              "name": "sub_180333530",
+              "size": "0x282"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180333530",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180333530",
+          "code": "__int64 __fastcall sub_180333530(__int64 a1, int a2, _WORD *a3, unsigned int a4, int a5, char a6)\n{\n  __int64 result; // rax\n  int v9; // r10d\n  char v10; // r8\n  __int16 v11; // ax\n  __int16 *v12; // r9\n  wchar_t *v13; // r8\n  __int16 *v14; // r9\n  __int16 *v15; // r9\n  float v16; // xmm0_4\n  int v17; // [rsp+20h] [rbp-18h]\n  int v18; // [rsp+40h] [rbp+8h] BYREF\n\n  result = 0; /*0x180333536*/\n  *a3 = 0; /*0x18033353b*/\n  v9 = *(_DWORD *)a1; /*0x180333542*/\n  if ( *(_DWORD *)a1 == 0 ) /*0x18033354b*/\n    return result; /*0x18033354b*/\n  v18 = 0; /*0x180333555*/\n  if ( a5 != 0 || a6 != 0 ) /*0x180333564*/\n  {\n    v10 = 1; /*0x18033356b*/\n    if ( a5 != 0 ) /*0x180333570*/\n    {\n      v11 = 43; /*0x180333572*/\n    }\n    else\n    {\n      if ( a6 == 0 ) /*0x18033357b*/\n        goto LABEL_10; /*0x18033357b*/\n      v11 = 45; /*0x18033357d*/\n    }\n    LOWORD(v18) = v11; /*0x180333582*/\n    goto LABEL_10; /*0x180333582*/\n  }\n  v10 = 0; /*0x180333566*/\nLABEL_10:\n  if ( *(_BYTE *)(a1 + 4) != 0 ) /*0x18033358c*/\n  {\n    switch ( a2 ) /*0x1803335b9*/\n    {\n      case 106: /*0x1803335b9*/\n      case 107: /*0x1803335b9*/\n      case 109: /*0x1803335b9*/\n      case 111: /*0x1803335b9*/\n      case 112: /*0x1803335b9*/\n      case 113: /*0x1803335b9*/\n      case 114: /*0x1803335b9*/\n      case 119: /*0x1803335b9*/\n      case 120: /*0x1803335b9*/\n      case 121: /*0x1803335b9*/\n      case 122: /*0x1803335b9*/\n      case 123: /*0x1803335b9*/\n      case 124: /*0x1803335b9*/\n      case 130: /*0x1803335b9*/\n        goto LABEL_12;\n      default:\n        if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x180333647*/\n          v12 = &word_180C3EA00; /*0x180333649*/\n        v13 = aSD_3; /*0x180333650*/\n        goto LABEL_39; /*0x180333657*/\n    }\n  }\n  switch ( a2 ) /*0x18033367f*/\n  {\n    case 29: /*0x18033367f*/\n      if ( v10 == 0 || (v15 = (__int16 *)&v18, v9 <= 0) ) /*0x18033368e*/\n        v15 = &word_180C3EA00; /*0x180333690*/\n      v16 = (float)v9 * *(float *)&dword_180DB5A00; /*0x18033369f*/\n      goto LABEL_30; /*0x18033369f*/\n    case 36: /*0x18033367f*/\n    case 37: /*0x18033367f*/\n      if ( v10 == 0 || (v15 = (__int16 *)&v18, v9 <= 0) ) /*0x1803336c6*/\n        v15 = &word_180C3EA00; /*0x1803336c8*/\n      v16 = (float)v9 * *(float *)&dword_180DB5A80; /*0x1803336d7*/\nLABEL_30:\n      sub_180182530(a1: a3, a2: a4, a3: aS1f_0, a4: v15, a5: v16); /*0x1803336a7*/\n      goto LABEL_41; /*0x1803336b7*/\n    case 106: /*0x18033367f*/\n    case 107: /*0x18033367f*/\n    case 111: /*0x18033367f*/\n    case 112: /*0x18033367f*/\n    case 113: /*0x18033367f*/\n    case 114: /*0x18033367f*/\n    case 119: /*0x18033367f*/\n    case 120: /*0x18033367f*/\n    case 121: /*0x18033367f*/\n    case 122: /*0x18033367f*/\n    case 123: /*0x18033367f*/\n    case 124: /*0x18033367f*/\n    case 130: /*0x18033367f*/\nLABEL_12:\n      if ( v9 == 10 * (v9 / 10) ) /*0x1803335d7*/\n      {\n        if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x1803335e6*/\n          v12 = &word_180C3EA00; /*0x1803335e8*/\n        v17 = v9 / 10; /*0x1803335ef*/\n        v13 = aSD_3; /*0x1803335f3*/\nLABEL_40:",
+          "line_count": 100,
+          "total_lines": 121,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x180c3ea00",
+              "name": "word_180C3EA00"
+            },
+            {
+              "addr": "0x180c9a808",
+              "name": "aSD_3",
+              "string": "猥搥┥"
+            },
+            {
+              "addr": "0x180db5a00",
+              "name": "dword_180DB5A00"
+            },
+            {
+              "addr": "0x180db5a80",
+              "name": "dword_180DB5A80"
+            },
+            {
+              "addr": "0x180182530",
+              "name": "sub_180182530"
+            },
+            {
+              "addr": "0x180c9a7e0",
+              "name": "aS1f_0",
+              "string": "猥⸥昱"
+            },
+            {
+              "addr": "0x180c9a7f0",
+              "name": "aS1f",
+              "string": "猥⸥昱┥"
+            },
+            {
+              "addr": "0x180c58780",
+              "name": "aSD_1",
+              "string": "猥搥"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180333530",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180333530",
+          "code": "        sub_180182530(a1: a3, a2: a4, a3: v13, a4: v12, a5: v17); /*0x180333703*/\n      }\n      else\n      {\n        if ( v10 == 0 || (v14 = (__int16 *)&v18, v9 <= 0) ) /*0x18033360c*/\n          v14 = &word_180C3EA00; /*0x18033360e*/\n        sub_180182530(a1: a3, a2: a4, a3: aS1f, a4: v14, a5: (float)((float)v9 * *(float *)&dword_180DB5A80)); /*0x180333635*/\n      }\nLABEL_41:\n      result = 1; /*0x18033370d*/\n      break; /*0x18033370d*/\n    default:\n      if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x1803336ee*/\n        v12 = &word_180C3EA00; /*0x1803336f0*/\n      v13 = aSD_1; /*0x1803336f7*/\nLABEL_39:\n      v17 = v9; /*0x1803336fe*/\n      goto LABEL_40; /*0x1803336fe*/\n  }\n  return result; /*0x180333712*/\n}",
+          "line_count": 21,
+          "total_lines": 121,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_180333530(__int64 a1, int a2, _WORD *a3, unsigned int a4, int a5, char a6)\n{\n  __int64 result; // rax\n  int v9; // r10d\n  char v10; // r8\n  __int16 v11; // ax\n  __int16 *v12; // r9\n  wchar_t *v13; // r8\n  __int16 *v14; // r9\n  __int16 *v15; // r9\n  float v16; // xmm0_4\n  int v17; // [rsp+20h] [rbp-18h]\n  int v18; // [rsp+40h] [rbp+8h] BYREF\n\n  result = 0; /*0x180333536*/\n  *a3 = 0; /*0x18033353b*/\n  v9 = *(_DWORD *)a1; /*0x180333542*/\n  if ( *(_DWORD *)a1 == 0 ) /*0x18033354b*/\n    return result; /*0x18033354b*/\n  v18 = 0; /*0x180333555*/\n  if ( a5 != 0 || a6 != 0 ) /*0x180333564*/\n  {\n    v10 = 1; /*0x18033356b*/\n    if ( a5 != 0 ) /*0x180333570*/\n    {\n      v11 = 43; /*0x180333572*/\n    }\n    else\n    {\n      if ( a6 == 0 ) /*0x18033357b*/\n        goto LABEL_10; /*0x18033357b*/\n      v11 = 45; /*0x18033357d*/\n    }\n    LOWORD(v18) = v11; /*0x180333582*/\n    goto LABEL_10; /*0x180333582*/\n  }\n  v10 = 0; /*0x180333566*/\nLABEL_10:\n  if ( *(_BYTE *)(a1 + 4) != 0 ) /*0x18033358c*/\n  {\n    switch ( a2 ) /*0x1803335b9*/\n    {\n      case 106: /*0x1803335b9*/\n      case 107: /*0x1803335b9*/\n      case 109: /*0x1803335b9*/\n      case 111: /*0x1803335b9*/\n      case 112: /*0x1803335b9*/\n      case 113: /*0x1803335b9*/\n      case 114: /*0x1803335b9*/\n      case 119: /*0x1803335b9*/\n      case 120: /*0x1803335b9*/\n      case 121: /*0x1803335b9*/\n      case 122: /*0x1803335b9*/\n      case 123: /*0x1803335b9*/\n      case 124: /*0x1803335b9*/\n      case 130: /*0x1803335b9*/\n        goto LABEL_12;\n      default:\n        if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x180333647*/\n          v12 = &word_180C3EA00; /*0x180333649*/\n        v13 = aSD_3; /*0x180333650*/\n        goto LABEL_39; /*0x180333657*/\n    }\n  }\n  switch ( a2 ) /*0x18033367f*/\n  {\n    case 29: /*0x18033367f*/\n      if ( v10 == 0 || (v15 = (__int16 *)&v18, v9 <= 0) ) /*0x18033368e*/\n        v15 = &word_180C3EA00; /*0x180333690*/\n      v16 = (float)v9 * *(float *)&dword_180DB5A00; /*0x18033369f*/\n      goto LABEL_30; /*0x18033369f*/\n    case 36: /*0x18033367f*/\n    case 37: /*0x18033367f*/\n      if ( v10 == 0 || (v15 = (__int16 *)&v18, v9 <= 0) ) /*0x1803336c6*/\n        v15 = &word_180C3EA00; /*0x1803336c8*/\n      v16 = (float)v9 * *(float *)&dword_180DB5A80; /*0x1803336d7*/\nLABEL_30:\n      sub_180182530(a1: a3, a2: a4, a3: aS1f_0, a4: v15, a5: v16); /*0x1803336a7*/\n      goto LABEL_41; /*0x1803336b7*/\n    case 106: /*0x18033367f*/\n    case 107: /*0x18033367f*/\n    case 111: /*0x18033367f*/\n    case 112: /*0x18033367f*/\n    case 113: /*0x18033367f*/\n    case 114: /*0x18033367f*/\n    case 119: /*0x18033367f*/\n    case 120: /*0x18033367f*/\n    case 121: /*0x18033367f*/\n    case 122: /*0x18033367f*/\n    case 123: /*0x18033367f*/\n    case 124: /*0x18033367f*/\n    case 130: /*0x18033367f*/\nLABEL_12:\n      if ( v9 == 10 * (v9 / 10) ) /*0x1803335d7*/\n      {\n        if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x1803335e6*/\n          v12 = &word_180C3EA00; /*0x1803335e8*/\n        v17 = v9 / 10; /*0x1803335ef*/\n        v13 = aSD_3; /*0x1803335f3*/\nLABEL_40:\n        sub_180182530(a1: a3, a2: a4, a3: v13, a4: v12, a5: v17); /*0x180333703*/\n      }\n      else\n      {\n        if ( v10 == 0 || (v14 = (__int16 *)&v18, v9 <= 0) ) /*0x18033360c*/\n          v14 = &word_180C3EA00; /*0x18033360e*/\n        sub_180182530(a1: a3, a2: a4, a3: aS1f, a4: v14, a5: (float)((float)v9 * *(float *)&dword_180DB5A80)); /*0x180333635*/\n      }\nLABEL_41:\n      result = 1; /*0x18033370d*/\n      break; /*0x18033370d*/\n    default:\n      if ( v10 == 0 || (v12 = (__int16 *)&v18, v9 <= 0) ) /*0x1803336ee*/\n        v12 = &word_180C3EA00; /*0x1803336f0*/\n      v13 = aSD_1; /*0x1803336f7*/\nLABEL_39:\n      v17 = v9; /*0x1803336fe*/\n      goto LABEL_40; /*0x1803336fe*/\n  }\n  return result; /*0x180333712*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x180333530"
+    }
+  ],
+  "evidence_links": []
+}

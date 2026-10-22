@@ -1,0 +1,341 @@
+{
+  "evidence_id": "ev_82baffbcb54562955238cba37562e4078c11e9023359d82edfd9f6aa68e999d3",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x180443ba1"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 403.275,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 403.981,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x180443ba1"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x180443ba1",
+            "fn": {
+              "addr": "0x180443b30",
+              "name": "sub_180443B30",
+              "size": "0x6b5"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180443b30",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180443b30",
+          "code": "char __fastcall sub_180443B30(__int64 a1, __int64 *a2)\n{\n  __int64 v2; // rbx\n  __int16 *v4; // rcx\n  __int64 v5; // r12\n  unsigned __int64 v6; // r15\n  unsigned int v7; // r13d\n  __int16 *v8; // rbx\n  __int16 *v9; // rdx\n  __int64 v10; // r8\n  __int64 v11; // rcx\n  _WORD *v12; // rcx\n  _QWORD *v13; // rdi\n  _QWORD *v14; // rax\n  __int64 *v15; // rbx\n  _WORD *v16; // rcx\n  __int64 j; // rsi\n  __int16 *v18; // rcx\n  _WORD *v19; // rcx\n  unsigned int v20; // eax\n  _QWORD *v21; // rdi\n  _QWORD *v22; // rax\n  __int64 *v23; // rbx\n  _WORD *v24; // rcx\n  __int64 *v25; // rdx\n  __int64 i; // rsi\n  __int16 *v27; // rcx\n  __int64 v28; // rcx\n  __int64 v29; // rax\n  int v30; // r8d\n  __int64 v31; // rdi\n  __int64 v32; // rbx\n  __int64 v33; // rax\n  int v34; // r8d\n  char v35; // bl\n  __int64 *v36; // rax\n  __int64 v37; // r9\n  int v38; // ecx\n  __int64 v40; // [rsp+20h] [rbp-99h]\n  __m128i v41; // [rsp+30h] [rbp-89h] BYREF\n  __int64 v42; // [rsp+40h] [rbp-79h]\n  _WORD v43[8]; // [rsp+48h] [rbp-71h] BYREF\n  __m128i v44; // [rsp+58h] [rbp-61h]\n  __int64 v45; // [rsp+70h] [rbp-49h] BYREF\n  int v46; // [rsp+78h] [rbp-41h]\n  _WORD v47[8]; // [rsp+80h] [rbp-39h] BYREF\n  __int64 v48; // [rsp+90h] [rbp-29h]\n  __int64 v49; // [rsp+98h] [rbp-21h]\n  __m128i v50; // [rsp+A0h] [rbp-19h] BYREF\n  __int64 v51; // [rsp+B0h] [rbp-9h]\n  _DWORD v52[6]; // [rsp+B8h] [rbp-1h] BYREF\n  __m256 v53; // [rsp+D0h] [rbp+17h] BYREF\n  __int64 v54; // [rsp+128h] [rbp+6Fh] BYREF\n\n  v2 = *a2; /*0x180443b41*/\n  if ( *a2 != 0 ) /*0x180443b4a*/\n  {\n    v4 = &word_180C3EA00; /*0x180443b53*/\n    if ( *(_QWORD *)v2 != 0 ) /*0x180443b64*/\n      v4 = *(__int16 **)v2; /*0x180443b64*/\n    if ( (unsigned int)qword_180B38658(a1: v4, a2: aPoll) == 0 ) /*0x180443b70*/\n    {\n      v5 = *(_QWORD *)(v2 + 24); /*0x180443b7e*/\n      v6 = 0; /*0x180443b92*/\n      v7 = 0; /*0x180443b95*/\n      if ( v5 == 0 ) /*0x180443b9b*/\n        goto LABEL_84; /*0x180443b9b*/\n      do /*0x18044406f*/\n      {\n        v8 = &word_180C3EA00; /*0x180443bb5*/\n        if ( *(_QWORD *)v5 != 0 ) /*0x180443bc6*/\n          v8 = *(__int16 **)v5; /*0x180443bc6*/\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aPollTitle) == 0 ) /*0x180443bd5*/\n        {\n          v9 = &word_180C3EA00; /*0x180443bdc*/\n          v10 = -1; /*0x180443be6*/\n          if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180443bed*/\n            v9 = *(__int16 **)(v5 + 8); /*0x180443bed*/\n          do /*0x180443bf9*/\n            ++v10; /*0x180443bf1*/\n          while ( v9[v10] != 0 ); /*0x180443bf9*/\n          v11 = a1 + 1336; /*0x180443bfb*/\nLABEL_81:\n          sub_18016EF40(a1: v11, a2: v9, a3: v10); /*0x180444062*/\n          goto LABEL_82; /*0x180444062*/\n        }\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aPollIntroducti) == 0 ) /*0x180443c19*/\n        {\n          v9 = &word_180C3EA00; /*0x180443c20*/\n          v10 = -1; /*0x180443c2a*/\n          if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180443c31*/\n            v9 = *(__int16 **)(v5 + 8); /*0x180443c31*/\n          do /*0x180443c3d*/\n            ++v10; /*0x180443c35*/\n          while ( v9[v10] != 0 ); /*0x180443c3d*/\n          v11 = a1 + 1368; /*0x180443c3f*/\n          goto LABEL_81; /*0x180443c46*/\n        }\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aOrderNum) != 0 ) /*0x180443c5d*/\n        {",
+          "line_count": 100,
+          "total_lines": 321,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x180c3ea00",
+              "name": "word_180C3EA00"
+            },
+            {
+              "addr": "0x18016ef40",
+              "name": "sub_18016EF40"
+            },
+            {
+              "addr": "0x180b38658",
+              "name": "qword_180B38658"
+            },
+            {
+              "addr": "0x180cc6898",
+              "name": "aPollTitle",
+              "string": "潰汬瑟瑩敬"
+            },
+            {
+              "addr": "0x180cc6870",
+              "name": "aPollIntroducti",
+              "string": "潰汬楟瑮潲畤瑣潩�"
+            },
+            {
+              "addr": "0x180cc6720",
+              "name": "aConcludingRema",
+              "string": "潣据畬楤杮牟浥牡獫"
+            },
+            {
+              "addr": "0x180cc6748",
+              "name": "aRewardInfo",
+              "string": "敲慷摲楟普�"
+            },
+            {
+              "addr": "0x180cc6708",
+              "name": "aQuestions",
+              "string": "畱獥楴湯�"
+            },
+            {
+              "addr": "0x1804441f0",
+              "name": "sub_1804441F0"
+            },
+            {
+              "addr": "0x180449540",
+              "name": "sub_180449540"
+            },
+            {
+              "addr": "0x180449aa0",
+              "name": "sub_180449AA0"
+            },
+            {
+              "addr": "0x180449b10",
+              "name": "sub_180449B10"
+            },
+            {
+              "addr": "0x1801700c0",
+              "name": "sub_1801700C0"
+            },
+            {
+              "addr": "0x1804499c0",
+              "name": "sub_1804499C0"
+            },
+            {
+              "addr": "0x18016eeb0",
+              "name": "sub_18016EEB0"
+            },
+            {
+              "addr": "0x180449300",
+              "name": "sub_180449300"
+            },
+            {
+              "addr": "0x1804493c0",
+              "name": "sub_1804493C0"
+            },
+            {
+              "addr": "0x180cc66f0",
+              "name": "aQuestion",
+              "string": "畱獥楴湯"
+            },
+            {
+              "addr": "0x180cc6838",
+              "name": "aMultiCount",
+              "string": "畭瑬彩潣湵�"
+            },
+            {
+              "addr": "0x180b38198",
+              "name": "qword_180B38198"
+            },
+            {
+              "addr": "0x180c735d0",
+              "name": "aCount_1",
+              "string": "潣湵�"
+            },
+            {
+              "addr": "0x180175690",
+              "name": "sub_180175690"
+            },
+            {
+              "addr": "0x180cc6828",
+              "name": "aItemId",
+              "string": "瑩浥楟�"
+            },
+            {
+              "addr": "0x180cc67f0",
+              "name": "aRewardItems",
+              "string": "敲慷摲楟整獭"
+            },
+            {
+              "addr": "0x180cc6810",
+              "name": "aOrderNum",
+              "string": "牯敤彲畮�"
+            },
+            {
+              "addr": "0x180db6670",
+              "name": "xmmword_180DB6670"
+            },
+            {
+              "addr": "0x180cb3400",
+              "name": "aSubmit",
+              "string": "submit"
+            },
+            {
+              "addr": "0x180444a80",
+              "name": "sub_180444A80"
+            },
+            {
+              "addr": "0x18064e9c0",
+              "name": "sub_18064E9C0"
+            },
+            {
+              "addr": "0x181410bd0",
+              "name": "qword_181410BD0"
+            },
+            {
+              "addr": "0x180151660",
+              "name": "sub_180151660"
+            },
+            {
+              "addr": "0x180bc4480",
+              "name": "ymmword_180BC4480"
+            },
+            {
+              "addr": "0x1814329b0",
+              "name": "xmmword_1814329B0"
+            },
+            {
+              "addr": "0x180cc6850",
+              "name": "aPoll",
+              "string": "潰汬"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180443b30",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180443b30",
+          "code": "          if ( (unsigned int)qword_180B38658(a1: v8, a2: aRewardItems) != 0 ) /*0x180443ca7*/\n          {\n            if ( (unsigned int)qword_180B38658(a1: v8, a2: aQuestions) != 0 ) /*0x180443e5f*/\n            {\n              if ( (unsigned int)qword_180B38658(a1: v8, a2: aRewardInfo) != 0 ) /*0x180443fec*/\n              {\n                if ( (unsigned int)qword_180B38658(a1: v8, a2: aConcludingRema) != 0 ) /*0x180444035*/\n                  goto LABEL_82; /*0x180444035*/\n                v9 = &word_180C3EA00; /*0x18044403c*/\n                v10 = -1; /*0x180444046*/\n                if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x18044404d*/\n                  v9 = *(__int16 **)(v5 + 8); /*0x18044404d*/\n                do /*0x180444059*/\n                  ++v10; /*0x180444051*/\n                while ( v9[v10] != 0 ); /*0x180444059*/\n                v11 = a1 + 1464; /*0x18044405b*/\n              }\n              else\n              {\n                v9 = &word_180C3EA00; /*0x180443ff3*/\n                v10 = -1; /*0x180443ffd*/\n                if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180444004*/\n                  v9 = *(__int16 **)(v5 + 8); /*0x180444004*/\n                do /*0x180444018*/\n                  ++v10; /*0x180444010*/\n                while ( v9[v10] != 0 ); /*0x180444018*/\n                v11 = a1 + 1432; /*0x18044401a*/\n              }\n              goto LABEL_81; /*0x180444021*/\n            }\n            for ( i = *(_QWORD *)(v5 + 24); i != 0; i = *(_QWORD *)(i + 48) ) /*0x180443e6d*/\n            {\n              v27 = &word_180C3EA00; /*0x180443e76*/\n              if ( *(_QWORD *)i != 0 ) /*0x180443e87*/\n                v27 = *(__int16 **)i; /*0x180443e87*/\n              if ( (unsigned int)qword_180B38658(a1: v27, a2: aQuestion) == 0 ) /*0x180443e93*/\n              {\n                LODWORD(v45) = 0; /*0x180443e9c*/\n                v50 = 0; /*0x180443ea4*/\n                v46 = 1; /*0x180443eac*/\n                v48 = 0; /*0x180443eb6*/\n                v49 = 7; /*0x180443eba*/\n                v47[0] = 0; /*0x180443ec2*/\n                v51 = 0; /*0x180443ec7*/\n                v52[0] = 1; /*0x180443ecb*/\n                sub_1804441F0(a1: v28, a2: i, a3: v7, a4: &v45); /*0x180443ed2*/\n                v42 = 0; /*0x180443eda*/\n                v44.m128i_i64[0] = 0; /*0x180443ee2*/\n                v44.m128i_i64[1] = 7; /*0x180443ee8*/\n                v43[0] = 0; /*0x180443ef5*/\n                v41 = 0; /*0x180443efa*/\n                ++v7; /*0x180443f00*/\n                sub_180449540(a1: &v41, a2: 0, a3: &v45); /*0x180443f03*/\n                v29 = sub_180449AA0(a1: a1 + 1320, a2: v52, a3: &v41); /*0x180443f1b*/\n                sub_180449B10(a1: a1 + 1320, a2: (unsigned int)&v53, a3: v30, a4: v29 + 32, a5: v29); /*0x180443f30*/\n                if ( LOBYTE(v53.m256_f32[2]) == 0 ) /*0x180443f39*/\n                {\n                  v31 = *(_QWORD *)v53.m256_f32; /*0x180443f3b*/\n                  v32 = *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 48LL); /*0x180443f3f*/\n                  if ( *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 56LL) == v32 ) /*0x180443f47*/\n                  {\n                    sub_180449540( /*0x180443f9e*/\n                      a1: *(_QWORD *)v53.m256_f32 + 40LL,\n                      a2: *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 48LL),\n                      a3: &v45);\n                  }\n                  else\n                  {\n                    *(_QWORD *)v32 = v45; /*0x180443f50*/\n                    *(_DWORD *)(v32 + 8) = v46; /*0x180443f5f*/\n                    sub_1801700C0(a1: v32 + 16, a2: v47); /*0x180443f62*/\n                    sub_1804499C0(a1: v32 + 48, a2: &v50); /*0x180443f6f*/\n                    *(_DWORD *)(v32 + 72) = v52[0]; /*0x180443f77*/\n                    *(_DWORD *)(v32 + 76) = v52[1]; /*0x180443f7d*/\n                    *(_DWORD *)(v32 + 80) = v52[2]; /*0x180443f83*/\n                    *(_DWORD *)(v32 + 84) = v52[3]; /*0x180443f89*/\n                    *(_QWORD *)(v31 + 48) += 88LL; /*0x180443f8c*/\n                  }\n                }\n                sub_18016EEB0(a1: v43); /*0x180443fa7*/\n                sub_180449300(a1: &v41); /*0x180443fb1*/\n                sub_1804493C0(a1: &v50); /*0x180443fba*/\n                sub_18016EEB0(a1: v47); /*0x180443fc3*/\n              }\n            }\n          }\n          else\n          {\n            *(_DWORD *)(a1 + 1424) = 0; /*0x180443cad*/\n            v13 = *(_QWORD **)(v5 + 56); /*0x180443cb4*/\n            v14 = v13; /*0x180443cb9*/\n            v15 = (__int64 *)v13[1]; /*0x180443cbc*/\n            if ( *((_BYTE *)v15 + 25) == 0 ) /*0x180443cc4*/\n            {\n              do /*0x180443cf5*/\n              {\n                if ( (int)qword_180B38658(a1: v15[4], a2: aMultiCount) >= 0 ) /*0x180443ce3*/\n                {\n                  v13 = v15; /*0x180443ceb*/\n                  v15 = (__int64 *)*v15; /*0x180443cee*/",
+          "line_count": 100,
+          "total_lines": 321,
+          "truncated": true,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180443b30",
+          "offset": 200,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180443b30",
+          "code": "                }\n                else\n                {\n                  v15 = (__int64 *)v15[2]; /*0x180443ce5*/\n                }\n              }\n              while ( *((_BYTE *)v15 + 25) == 0 ); /*0x180443cf5*/\n              v14 = *(_QWORD **)(v5 + 56); /*0x180443cf7*/\n            }\n            if ( v13 != v14 && (int)qword_180B38658(a1: aMultiCount, a2: v13[4]) >= 0 && v13 != *(_QWORD **)(v5 + 56) ) /*0x180443d1b*/\n            {\n              v16 = (_WORD *)v13[5]; /*0x180443d1d*/\n              if ( v16 != nullptr && *v16 != 0 ) /*0x180443d2a*/\n                *(_DWORD *)(a1 + 1424) = qword_180B38198(a1: v16); /*0x180443d32*/\n            }\n            for ( j = *(_QWORD *)(v5 + 24); j != 0; j = *(_QWORD *)(j + 48) ) /*0x180443d41*/\n            {\n              v18 = &word_180C3EA00; /*0x180443d53*/\n              if ( *(_QWORD *)j != 0 ) /*0x180443d64*/\n                v18 = *(__int16 **)j; /*0x180443d64*/\n              if ( (unsigned int)qword_180B38658(a1: v18, a2: aItemId) == 0 ) /*0x180443d70*/\n              {\n                v19 = *(_WORD **)(j + 8); /*0x180443d76*/\n                if ( v19 != nullptr && *v19 != 0 ) /*0x180443d87*/\n                {\n                  v20 = qword_180B38198(a1: v19); /*0x180443d8d*/\n                  v21 = *(_QWORD **)(j + 56); /*0x180443d93*/\n                  v54 = v20 | 0x100000000LL; /*0x180443d97*/\n                  v22 = v21; /*0x180443d9a*/\n                  v23 = (__int64 *)v21[1]; /*0x180443da4*/\n                  if ( *((_BYTE *)v23 + 25) == 0 ) /*0x180443dac*/\n                  {\n                    do /*0x180443dd5*/\n                    {\n                      if ( (int)qword_180B38658(a1: v23[4], a2: aCount_1) >= 0 ) /*0x180443dc3*/\n                      {\n                        v21 = v23; /*0x180443dcb*/\n                        v23 = (__int64 *)*v23; /*0x180443dce*/\n                      }\n                      else\n                      {\n                        v23 = (__int64 *)v23[2]; /*0x180443dc5*/\n                      }\n                    }\n                    while ( *((_BYTE *)v23 + 25) == 0 ); /*0x180443dd5*/\n                    v22 = *(_QWORD **)(j + 56); /*0x180443dd7*/\n                  }\n                  if ( v21 != v22 && (int)qword_180B38658(a1: aCount_1, a2: v21[4]) >= 0 && v21 != *(_QWORD **)(j + 56) ) /*0x180443df9*/\n                  {\n                    v24 = (_WORD *)v21[5]; /*0x180443dfb*/\n                    if ( v24 != nullptr && *v24 != 0 ) /*0x180443e08*/\n                      HIDWORD(v54) = qword_180B38198(a1: v24); /*0x180443e10*/\n                  }\n                  v25 = *(__int64 **)(a1 + 1408); /*0x180443e1a*/\n                  if ( *(__int64 **)(a1 + 1416) == v25 ) /*0x180443e22*/\n                  {\n                    sub_180175690(a1: a1 + 1400, a2: v25, a3: &v54); /*0x180443e36*/\n                  }\n                  else\n                  {\n                    *v25 = v54; /*0x180443e28*/\n                    *(_QWORD *)(a1 + 1408) += 8LL; /*0x180443e2b*/\n                  }\n                }\n              }\n            }\n          }\n        }\n        else\n        {\n          v12 = *(_WORD **)(v5 + 8); /*0x180443c5f*/\n          if ( v12 != nullptr && *v12 != 0 && (int)qword_180B38198(a1: v12) >= 1000 ) /*0x180443c82*/\n            *(_BYTE *)(a1 + 1537) = 1; /*0x180443c88*/\n        }\nLABEL_82:\n        v5 = *(_QWORD *)(v5 + 48); /*0x180444067*/\n      }\n      while ( v5 != 0 ); /*0x18044406f*/\n      if ( v7 == 0 ) /*0x180444088*/\n      {\nLABEL_84:\n        v42 = 0; /*0x18044408a*/\n        v43[0] = 0; /*0x1804440a3*/\n        LODWORD(v54) = 1; /*0x1804440ad*/\n        v41 = 0; /*0x1804440b8*/\n        v44 = (__m128i)xmmword_180DB6670; /*0x1804440be*/\n        v33 = sub_180449AA0(a1: a1 + 1320, a2: &v54, a3: &v41); /*0x1804440c3*/\n        sub_180449B10(a1: a1 + 1320, a2: (unsigned int)&v53, a3: v34, a4: v33 + 32, a5: v33); /*0x1804440d8*/\n        sub_18016EEB0(a1: v43); /*0x1804440e1*/\n        sub_180449300(a1: &v41); /*0x1804440eb*/\n      }\n      v35 = *(_BYTE *)(a1 + 1537); /*0x1804440fa*/\n      v36 = (__int64 *)(*(__int64 (__fastcall **)(__int64, char *))(*(_QWORD *)a1 + 760LL))(a1, a2: aSubmit); /*0x180444105*/\n      if ( v36 != nullptr ) /*0x18044411e*/\n      {\n        v37 = *v36; /*0x180444120*/\n        if ( v35 != 0 ) /*0x18044412f*/\n          (*(void (__fastcall **)(__int64 *, __int64))(v37 + 216))(a1: v36, a2: 2); /*0x180444131*/\n        else\n          (*(void (__fastcall **)(__int64 *, __int64))(v37 + 224))(a1: v36, a2: 2); /*0x18044413a*/",
+          "line_count": 100,
+          "total_lines": 321,
+          "truncated": true,
+          "cursor": {
+            "next": 300
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x180443b30",
+          "offset": 300,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x180443b30",
+          "code": "      }\n      sub_180444A80(a1, a2: 1); /*0x180444149*/\n      *(_BYTE *)(a1 + 1536) = 0; /*0x18044414e*/\n      if ( *(_BYTE *)(a1 + 1537) != 0 ) /*0x18044415c*/\n        sub_18064E9C0(a1: qword_181410BD0, a2: 208); /*0x18044417c*/\n      else\n        sub_180151660(a1: v38, a2: 1300036, a3: 0, a4: 0, a5: v40); /*0x180444169*/\n      v53 = ymmword_180BC4480; /*0x180444196*/\n      do /*0x1804441bf*/\n      {\n        xmmword_1814329B0[v6 / 0x10] = (__int128)_mm_or_si128( /*0x1804441b1*/\n                                                   *(__m128i *)&v53.m256_f32[v6 / 4],\n                                                   (__m128i)xmmword_1814329B0[v6 / 0x10]);\n        v6 += 16LL; /*0x1804441b7*/\n      }\n      while ( (__int64)v6 < 32 ); /*0x1804441bf*/\n      return 1; /*0x1804441cb*/\n    }\n  }\n  return 0; /*0x1804441d7*/\n}",
+          "line_count": 21,
+          "total_lines": 321,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "char __fastcall sub_180443B30(__int64 a1, __int64 *a2)\n{\n  __int64 v2; // rbx\n  __int16 *v4; // rcx\n  __int64 v5; // r12\n  unsigned __int64 v6; // r15\n  unsigned int v7; // r13d\n  __int16 *v8; // rbx\n  __int16 *v9; // rdx\n  __int64 v10; // r8\n  __int64 v11; // rcx\n  _WORD *v12; // rcx\n  _QWORD *v13; // rdi\n  _QWORD *v14; // rax\n  __int64 *v15; // rbx\n  _WORD *v16; // rcx\n  __int64 j; // rsi\n  __int16 *v18; // rcx\n  _WORD *v19; // rcx\n  unsigned int v20; // eax\n  _QWORD *v21; // rdi\n  _QWORD *v22; // rax\n  __int64 *v23; // rbx\n  _WORD *v24; // rcx\n  __int64 *v25; // rdx\n  __int64 i; // rsi\n  __int16 *v27; // rcx\n  __int64 v28; // rcx\n  __int64 v29; // rax\n  int v30; // r8d\n  __int64 v31; // rdi\n  __int64 v32; // rbx\n  __int64 v33; // rax\n  int v34; // r8d\n  char v35; // bl\n  __int64 *v36; // rax\n  __int64 v37; // r9\n  int v38; // ecx\n  __int64 v40; // [rsp+20h] [rbp-99h]\n  __m128i v41; // [rsp+30h] [rbp-89h] BYREF\n  __int64 v42; // [rsp+40h] [rbp-79h]\n  _WORD v43[8]; // [rsp+48h] [rbp-71h] BYREF\n  __m128i v44; // [rsp+58h] [rbp-61h]\n  __int64 v45; // [rsp+70h] [rbp-49h] BYREF\n  int v46; // [rsp+78h] [rbp-41h]\n  _WORD v47[8]; // [rsp+80h] [rbp-39h] BYREF\n  __int64 v48; // [rsp+90h] [rbp-29h]\n  __int64 v49; // [rsp+98h] [rbp-21h]\n  __m128i v50; // [rsp+A0h] [rbp-19h] BYREF\n  __int64 v51; // [rsp+B0h] [rbp-9h]\n  _DWORD v52[6]; // [rsp+B8h] [rbp-1h] BYREF\n  __m256 v53; // [rsp+D0h] [rbp+17h] BYREF\n  __int64 v54; // [rsp+128h] [rbp+6Fh] BYREF\n\n  v2 = *a2; /*0x180443b41*/\n  if ( *a2 != 0 ) /*0x180443b4a*/\n  {\n    v4 = &word_180C3EA00; /*0x180443b53*/\n    if ( *(_QWORD *)v2 != 0 ) /*0x180443b64*/\n      v4 = *(__int16 **)v2; /*0x180443b64*/\n    if ( (unsigned int)qword_180B38658(a1: v4, a2: aPoll) == 0 ) /*0x180443b70*/\n    {\n      v5 = *(_QWORD *)(v2 + 24); /*0x180443b7e*/\n      v6 = 0; /*0x180443b92*/\n      v7 = 0; /*0x180443b95*/\n      if ( v5 == 0 ) /*0x180443b9b*/\n        goto LABEL_84; /*0x180443b9b*/\n      do /*0x18044406f*/\n      {\n        v8 = &word_180C3EA00; /*0x180443bb5*/\n        if ( *(_QWORD *)v5 != 0 ) /*0x180443bc6*/\n          v8 = *(__int16 **)v5; /*0x180443bc6*/\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aPollTitle) == 0 ) /*0x180443bd5*/\n        {\n          v9 = &word_180C3EA00; /*0x180443bdc*/\n          v10 = -1; /*0x180443be6*/\n          if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180443bed*/\n            v9 = *(__int16 **)(v5 + 8); /*0x180443bed*/\n          do /*0x180443bf9*/\n            ++v10; /*0x180443bf1*/\n          while ( v9[v10] != 0 ); /*0x180443bf9*/\n          v11 = a1 + 1336; /*0x180443bfb*/\nLABEL_81:\n          sub_18016EF40(a1: v11, a2: v9, a3: v10); /*0x180444062*/\n          goto LABEL_82; /*0x180444062*/\n        }\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aPollIntroducti) == 0 ) /*0x180443c19*/\n        {\n          v9 = &word_180C3EA00; /*0x180443c20*/\n          v10 = -1; /*0x180443c2a*/\n          if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180443c31*/\n            v9 = *(__int16 **)(v5 + 8); /*0x180443c31*/\n          do /*0x180443c3d*/\n            ++v10; /*0x180443c35*/\n          while ( v9[v10] != 0 ); /*0x180443c3d*/\n          v11 = a1 + 1368; /*0x180443c3f*/\n          goto LABEL_81; /*0x180443c46*/\n        }\n        if ( (unsigned int)qword_180B38658(a1: v8, a2: aOrderNum) != 0 ) /*0x180443c5d*/\n        {\n          if ( (unsigned int)qword_180B38658(a1: v8, a2: aRewardItems) != 0 ) /*0x180443ca7*/\n          {\n            if ( (unsigned int)qword_180B38658(a1: v8, a2: aQuestions) != 0 ) /*0x180443e5f*/\n            {\n              if ( (unsigned int)qword_180B38658(a1: v8, a2: aRewardInfo) != 0 ) /*0x180443fec*/\n              {\n                if ( (unsigned int)qword_180B38658(a1: v8, a2: aConcludingRema) != 0 ) /*0x180444035*/\n                  goto LABEL_82; /*0x180444035*/\n                v9 = &word_180C3EA00; /*0x18044403c*/\n                v10 = -1; /*0x180444046*/\n                if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x18044404d*/\n                  v9 = *(__int16 **)(v5 + 8); /*0x18044404d*/\n                do /*0x180444059*/\n                  ++v10; /*0x180444051*/\n                while ( v9[v10] != 0 ); /*0x180444059*/\n                v11 = a1 + 1464; /*0x18044405b*/\n              }\n              else\n              {\n                v9 = &word_180C3EA00; /*0x180443ff3*/\n                v10 = -1; /*0x180443ffd*/\n                if ( *(_QWORD *)(v5 + 8) != 0 ) /*0x180444004*/\n                  v9 = *(__int16 **)(v5 + 8); /*0x180444004*/\n                do /*0x180444018*/\n                  ++v10; /*0x180444010*/\n                while ( v9[v10] != 0 ); /*0x180444018*/\n                v11 = a1 + 1432; /*0x18044401a*/\n              }\n              goto LABEL_81; /*0x180444021*/\n            }\n            for ( i = *(_QWORD *)(v5 + 24); i != 0; i = *(_QWORD *)(i + 48) ) /*0x180443e6d*/\n            {\n              v27 = &word_180C3EA00; /*0x180443e76*/\n              if ( *(_QWORD *)i != 0 ) /*0x180443e87*/\n                v27 = *(__int16 **)i; /*0x180443e87*/\n              if ( (unsigned int)qword_180B38658(a1: v27, a2: aQuestion) == 0 ) /*0x180443e93*/\n              {\n                LODWORD(v45) = 0; /*0x180443e9c*/\n                v50 = 0; /*0x180443ea4*/\n                v46 = 1; /*0x180443eac*/\n                v48 = 0; /*0x180443eb6*/\n                v49 = 7; /*0x180443eba*/\n                v47[0] = 0; /*0x180443ec2*/\n                v51 = 0; /*0x180443ec7*/\n                v52[0] = 1; /*0x180443ecb*/\n                sub_1804441F0(a1: v28, a2: i, a3: v7, a4: &v45); /*0x180443ed2*/\n                v42 = 0; /*0x180443eda*/\n                v44.m128i_i64[0] = 0; /*0x180443ee2*/\n                v44.m128i_i64[1] = 7; /*0x180443ee8*/\n                v43[0] = 0; /*0x180443ef5*/\n                v41 = 0; /*0x180443efa*/\n                ++v7; /*0x180443f00*/\n                sub_180449540(a1: &v41, a2: 0, a3: &v45); /*0x180443f03*/\n                v29 = sub_180449AA0(a1: a1 + 1320, a2: v52, a3: &v41); /*0x180443f1b*/\n                sub_180449B10(a1: a1 + 1320, a2: (unsigned int)&v53, a3: v30, a4: v29 + 32, a5: v29); /*0x180443f30*/\n                if ( LOBYTE(v53.m256_f32[2]) == 0 ) /*0x180443f39*/\n                {\n                  v31 = *(_QWORD *)v53.m256_f32; /*0x180443f3b*/\n                  v32 = *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 48LL); /*0x180443f3f*/\n                  if ( *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 56LL) == v32 ) /*0x180443f47*/\n                  {\n                    sub_180449540( /*0x180443f9e*/\n                      a1: *(_QWORD *)v53.m256_f32 + 40LL,\n                      a2: *(_QWORD *)(*(_QWORD *)v53.m256_f32 + 48LL),\n                      a3: &v45);\n                  }\n                  else\n                  {\n                    *(_QWORD *)v32 = v45; /*0x180443f50*/\n                    *(_DWORD *)(v32 + 8) = v46; /*0x180443f5f*/\n                    sub_1801700C0(a1: v32 + 16, a2: v47); /*0x180443f62*/\n                    sub_1804499C0(a1: v32 + 48, a2: &v50); /*0x180443f6f*/\n                    *(_DWORD *)(v32 + 72) = v52[0]; /*0x180443f77*/\n                    *(_DWORD *)(v32 + 76) = v52[1]; /*0x180443f7d*/\n                    *(_DWORD *)(v32 + 80) = v52[2]; /*0x180443f83*/\n                    *(_DWORD *)(v32 + 84) = v52[3]; /*0x180443f89*/\n                    *(_QWORD *)(v31 + 48) += 88LL; /*0x180443f8c*/\n                  }\n                }\n                sub_18016EEB0(a1: v43); /*0x180443fa7*/\n                sub_180449300(a1: &v41); /*0x180443fb1*/\n                sub_1804493C0(a1: &v50); /*0x180443fba*/\n                sub_18016EEB0(a1: v47); /*0x180443fc3*/\n              }\n            }\n          }\n          else\n          {\n            *(_DWORD *)(a1 + 1424) = 0; /*0x180443cad*/\n            v13 = *(_QWORD **)(v5 + 56); /*0x180443cb4*/\n            v14 = v13; /*0x180443cb9*/\n            v15 = (__int64 *)v13[1]; /*0x180443cbc*/\n            if ( *((_BYTE *)v15 + 25) == 0 ) /*0x180443cc4*/\n            {\n              do /*0x180443cf5*/\n              {\n                if ( (int)qword_180B38658(a1: v15[4], a2: aMultiCount) >= 0 ) /*0x180443ce3*/\n                {\n                  v13 = v15; /*0x180443ceb*/\n                  v15 = (__int64 *)*v15; /*0x180443cee*/\n                }\n                else\n                {\n                  v15 = (__int64 *)v15[2]; /*0x180443ce5*/\n                }\n              }\n              while ( *((_BYTE *)v15 + 25) == 0 ); /*0x180443cf5*/\n              v14 = *(_QWORD **)(v5 + 56); /*0x180443cf7*/\n            }\n            if ( v13 != v14 && (int)qword_180B38658(a1: aMultiCount, a2: v13[4]) >= 0 && v13 != *(_QWORD **)(v5 + 56) ) /*0x180443d1b*/\n            {\n              v16 = (_WORD *)v13[5]; /*0x180443d1d*/\n              if ( v16 != nullptr && *v16 != 0 ) /*0x180443d2a*/\n                *(_DWORD *)(a1 + 1424) = qword_180B38198(a1: v16); /*0x180443d32*/\n            }\n            for ( j = *(_QWORD *)(v5 + 24); j != 0; j = *(_QWORD *)(j + 48) ) /*0x180443d41*/\n            {\n              v18 = &word_180C3EA00; /*0x180443d53*/\n              if ( *(_QWORD *)j != 0 ) /*0x180443d64*/\n                v18 = *(__int16 **)j; /*0x180443d64*/\n              if ( (unsigned int)qword_180B38658(a1: v18, a2: aItemId) == 0 ) /*0x180443d70*/\n              {\n                v19 = *(_WORD **)(j + 8); /*0x180443d76*/\n                if ( v19 != nullptr && *v19 != 0 ) /*0x180443d87*/\n                {\n                  v20 = qword_180B38198(a1: v19); /*0x180443d8d*/\n                  v21 = *(_QWORD **)(j + 56); /*0x180443d93*/\n                  v54 = v20 | 0x100000000LL; /*0x180443d97*/\n                  v22 = v21; /*0x180443d9a*/\n                  v23 = (__int64 *)v21[1]; /*0x180443da4*/\n                  if ( *((_BYTE *)v23 + 25) == 0 ) /*0x180443dac*/\n                  {\n                    do /*0x180443dd5*/\n                    {\n                      if ( (int)qword_180B38658(a1: v23[4], a2: aCount_1) >= 0 ) /*0x180443dc3*/\n                      {\n                        v21 = v23; /*0x180443dcb*/\n                        v23 = (__int64 *)*v23; /*0x180443dce*/\n                      }\n                      else\n                      {\n                        v23 = (__int64 *)v23[2]; /*0x180443dc5*/\n                      }\n                    }\n                    while ( *((_BYTE *)v23 + 25) == 0 ); /*0x180443dd5*/\n                    v22 = *(_QWORD **)(j + 56); /*0x180443dd7*/\n                  }\n                  if ( v21 != v22 && (int)qword_180B38658(a1: aCount_1, a2: v21[4]) >= 0 && v21 != *(_QWORD **)(j + 56) ) /*0x180443df9*/\n                  {\n                    v24 = (_WORD *)v21[5]; /*0x180443dfb*/\n                    if ( v24 != nullptr && *v24 != 0 ) /*0x180443e08*/\n                      HIDWORD(v54) = qword_180B38198(a1: v24); /*0x180443e10*/\n                  }\n                  v25 = *(__int64 **)(a1 + 1408); /*0x180443e1a*/\n                  if ( *(__int64 **)(a1 + 1416) == v25 ) /*0x180443e22*/\n                  {\n                    sub_180175690(a1: a1 + 1400, a2: v25, a3: &v54); /*0x180443e36*/\n                  }\n                  else\n                  {\n                    *v25 = v54; /*0x180443e28*/\n                    *(_QWORD *)(a1 + 1408) += 8LL; /*0x180443e2b*/\n                  }\n                }\n              }\n            }\n          }\n        }\n        else\n        {\n          v12 = *(_WORD **)(v5 + 8); /*0x180443c5f*/\n          if ( v12 != nullptr && *v12 != 0 && (int)qword_180B38198(a1: v12) >= 1000 ) /*0x180443c82*/\n            *(_BYTE *)(a1 + 1537) = 1; /*0x180443c88*/\n        }\nLABEL_82:\n        v5 = *(_QWORD *)(v5 + 48); /*0x180444067*/\n      }\n      while ( v5 != 0 ); /*0x18044406f*/\n      if ( v7 == 0 ) /*0x180444088*/\n      {\nLABEL_84:\n        v42 = 0; /*0x18044408a*/\n        v43[0] = 0; /*0x1804440a3*/\n        LODWORD(v54) = 1; /*0x1804440ad*/\n        v41 = 0; /*0x1804440b8*/\n        v44 = (__m128i)xmmword_180DB6670; /*0x1804440be*/\n        v33 = sub_180449AA0(a1: a1 + 1320, a2: &v54, a3: &v41); /*0x1804440c3*/\n        sub_180449B10(a1: a1 + 1320, a2: (unsigned int)&v53, a3: v34, a4: v33 + 32, a5: v33); /*0x1804440d8*/\n        sub_18016EEB0(a1: v43); /*0x1804440e1*/\n        sub_180449300(a1: &v41); /*0x1804440eb*/\n      }\n      v35 = *(_BYTE *)(a1 + 1537); /*0x1804440fa*/\n      v36 = (__int64 *)(*(__int64 (__fastcall **)(__int64, char *))(*(_QWORD *)a1 + 760LL))(a1, a2: aSubmit); /*0x180444105*/\n      if ( v36 != nullptr ) /*0x18044411e*/\n      {\n        v37 = *v36; /*0x180444120*/\n        if ( v35 != 0 ) /*0x18044412f*/\n          (*(void (__fastcall **)(__int64 *, __int64))(v37 + 216))(a1: v36, a2: 2); /*0x180444131*/\n        else\n          (*(void (__fastcall **)(__int64 *, __int64))(v37 + 224))(a1: v36, a2: 2); /*0x18044413a*/\n      }\n      sub_180444A80(a1, a2: 1); /*0x180444149*/\n      *(_BYTE *)(a1 + 1536) = 0; /*0x18044414e*/\n      if ( *(_BYTE *)(a1 + 1537) != 0 ) /*0x18044415c*/\n        sub_18064E9C0(a1: qword_181410BD0, a2: 208); /*0x18044417c*/\n      else\n        sub_180151660(a1: v38, a2: 1300036, a3: 0, a4: 0, a5: v40); /*0x180444169*/\n      v53 = ymmword_180BC4480; /*0x180444196*/\n      do /*0x1804441bf*/\n      {\n        xmmword_1814329B0[v6 / 0x10] = (__int128)_mm_or_si128( /*0x1804441b1*/\n                                                   *(__m128i *)&v53.m256_f32[v6 / 4],\n                                                   (__m128i)xmmword_1814329B0[v6 / 0x10]);\n        v6 += 16LL; /*0x1804441b7*/\n      }\n      while ( (__int64)v6 < 32 ); /*0x1804441bf*/\n      return 1; /*0x1804441cb*/\n    }\n  }\n  return 0; /*0x1804441d7*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x180443b30"
+    }
+  ],
+  "evidence_links": []
+}

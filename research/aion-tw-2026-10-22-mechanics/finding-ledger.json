@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-22",
+  "sample_sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+  "materials": "client-only",
+  "target_executed": false,
+  "claims": [
+    {
+      "id": "G1",
+      "topic": "神石",
+      "status": "observed-resource",
+      "statement": "250条候选，249条关联到102个技能；left缺失和0分开，不能固定减半",
+      "sources": ["godstone/summary.json", "godstone/item-skill-joins.json"],
+      "unknown": "概率单位、触发事件及服务端RNG"
+    },
+    {
+      "id": "G2",
+      "topic": "神石",
+      "status": "observed-client-schema",
+      "statement": "原PE描述符声明概率成员0x194宽2；已审相同偏移候选主要是复制或无身份关联UI",
+      "sources": [
+        "binary-evidence/descriptor-candidates.json",
+        "godstone/binary-review.txt"
+      ],
+      "unknown": "概率字段到运算消费者的完整链"
+    },
+    {
+      "id": "E1",
+      "topic": "普通强化",
+      "status": "derived-from-current-instructions",
+      "statement": "665B80按品质、等级差、下一阶段计算；显示乘0.1并带百分号",
+      "sources": [
+        "enchant/current-formula-model.json",
+        "enchant/binary-review.txt",
+        "binary-evidence/enchant-formula-insns.evidence.json",
+        "binary-evidence/enchant-prob-display-insns.evidence.json"
+      ],
+      "unknown": "服务端概率、失败处置、线上可达范围"
+    },
+    {
+      "id": "E2",
+      "topic": "强化分类",
+      "status": "observed-resource-and-client",
+      "statement": "普通强化、六档option、跳跃、累计强化分开；累计85关联技能207",
+      "sources": [
+        "enchant/enchant-current-evidence.json",
+        "enchant/option-display-model.json"
+      ],
+      "unknown": "累计叠加及活动启用条件"
+    },
+    {
+      "id": "P1",
+      "topic": "PVP",
+      "status": "observed-resource",
+      "statement": "3873物品含PVP属性，96技能显式伤害ratio，52显式持续时间ratio",
+      "sources": ["pvp/feature-summary.json", "pvp/resource-evidence.json"],
+      "unknown": "完整伤害公式与属性合并顺序"
+    },
+    {
+      "id": "P2",
+      "topic": "PVP显示",
+      "status": "derived-from-current-instructions",
+      "statement": "106/107及111..114输入按十分之一显示百分比；不能套作技能ratio单位",
+      "sources": [
+        "pvp/binary-review.txt",
+        "pvp/binary-literal-facts.json",
+        "binary-evidence/pvp-format-insns.evidence.json"
+      ],
+      "unknown": "资源进入formatter前的生产链及服务端语义"
+    },
+    {
+      "id": "A1",
+      "topic": "自动打怪/任务",
+      "status": "design-only",
+      "statement": "资源目录、目标观察、技能约束、规划与结果观察的设计边界",
+      "sources": ["combat-feature-plan.md"],
+      "unknown": "实体/任务状态与执行接口；未实现自动打怪"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+当前 REA 复核：神石偏移候选的收敛与排除
+2026-10-22；样本 SHA256 b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7。
+
+1. sub_180725EA0 不是概率计算函数
+证据：../binary-evidence/godstone-copy-a.evidence.json
+Evidence ID: ev_0382e8a9fb337f7e90fb01bdc8af37449be61f560c94202f4ad7841de8a5a726
+当前 IDA 伪代码明确显示从 a2 到 a1 的大量逐字段赋值，最后 return a1。
+其中 0x1807263DD 是 WORD(a1+404)=WORD(a2+404)，404 十进制即 0x194。
+0x180726574 是 BYTE(a1+443)=BYTE(a2+443)，443 十进制即 0x1BB。
+函数没有随机取样、概率门槛比较或百分比格式化。
+结论：从“概率计算/tooltip消费者候选”中排除；可以保留为结构复制证据。
+它不自动证明该对象一定是神石物品记录，类型关系仍需描述符/调用链连接。
+相邻 0x180726780 仅有辅助字节复制证据，本次没有把它冒充已由 REA 复核的函数。
+
+2. sub_180531060 不能作为已确认神石概率消费者
+证据：../binary-evidence/godstone-ui-candidate.evidence.json
+Evidence ID: ev_1ec08e93ccb5d0bdbb4b00c6701a47d0e06e3d248d5ba3cd08da3169b6f7d8a4
+关键指令 0x18053110A 的 +0x194 在伪代码中是传入 sub_1809CB690 的地址。
+主体遍历 v10<0x13（19 项），从 v4[index+37] 取标识，通过虚方法找对象；也检查 100000000 起的 ID 区间，更新多种界面资源。
+这与装备/模型界面组装相符，但具体产品语义仍是推断。
+函数内没有建立到 proc_enchant_effect_occur_prob 描述符的连接，也没有对该字段进行概率运算。
+结论：排除“只凭 +0x194 就已找到神石 tooltip”的断言；不宣称所有下游函数都已排除。
+本轮不继续无边界追踪它的所有 UI 调用。
+
+3. desc_proc 的当前交叉引用只到描述符表
+证据：../binary-evidence/desc-proc-xrefs.evidence.json
+Evidence ID: ev_cc258940a104ecc62f366f7ed9e45e8763e3e28b86726bb8a979d438896ff2fd
+查询 0x180D3CAF8 的返回列表只有 0x180F27818。
+这不是一个直接代码引用，未提供可立即确定的 tooltip 消费者。
+结论：不能把该 xref 说成已经建立“描述字符串→显示概率公式”的完整链。
+
+4. 只保留一个最后的、有名字支持的代码入口
+证据：../binary-evidence/proc-probability-switch-xrefs.evidence.json
+Evidence ID: ev_50ae622ca15c757cb9d6d1bb019947fe3d04ff9a367068a9b416db6824503c61
+当前 ASCII 字符串 proc_probability_on 位于 0x180CACF88，唯一 xref 为代码 0x1803C0EF5。
+同 SHA 的历史函数清单把该位置归在 0x1803C0A20 与下一函数 0x1803C1980 之间；建议当前 REA 只再查 sub_1803C0A20。
+名字可能指显示/控件开关；在函数证据出来前，不能称作随机判定开关或分母计算。
+
+边界
+本次这些结果足以排除多个仅数值偏移相同的假线索，但没有验证神石概率单位。
+资源关联与二进制字段描述符可并列作为事实；客户端显示单位、服务器 RNG、有效攻击事件、左右手选择等仍需各自的消费者证据。
+所有排除均针对已检查函数或现有证据的主张，不把有界搜索的未找到写成整个程序不存在。
+
+追加当前消费者复核（主分析）
+proc-probability-switch-consumer.evidence.json / ev_b6021e7eb8286733d7326598337eaecfd107140c848cff7e26d69c71461cf3e8：sub_1803C0A20构造名称与回调的注册列表，proc_probability_on/off处没有直接给出概率分母或随机判定计算。尚未沿回调执行路径进一步证明其用途，也没有执行这些入口。因此不能用这个字符串命中替代神石概率算法证据。

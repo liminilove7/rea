@@ -1,0 +1,699 @@
+{
+  "evidence_id": "ev_d177fce8c2390d045550b3f626eb524c4e5d1cbf34af194e3b36de296cbe6146",
+  "subject": {
+    "name": "Game.dll",
+    "digest": {
+      "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+    },
+    "format": "pe",
+    "architecture": "x86_64",
+    "local_path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+  },
+  "provider": {
+    "id": "ida",
+    "name": "IDA MCP adapter",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "ida",
+      "name": "IDA MCP adapter",
+      "version": "1"
+    },
+    "parameters": {
+      "version_scope": "rea-ida-adapter",
+      "engine_version": null,
+      "upstream_distribution_version": null,
+      "mode": "headless",
+      "compatibility_profile": "database-supervisor",
+      "database_revision": null,
+      "cache_policy": "live",
+      "registration_digest": "1a443db34dce8be54e4d0c3471e15c791be4631b961846db8c7de641cd1d5760"
+    },
+    "digest": "36cbc85e5d421b96f82729495638edb7a384873c5ba57b4c6a65ab57fec40b6c"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "procedure_pseudo_code",
+  "parameters": {
+    "procedure": "0x1801c4830"
+  },
+  "raw_result": {
+    "upstream": {
+      "name": "ida-pro-mcp",
+      "version": "1.0.0"
+    },
+    "metadata_before": {
+      "status": "ok",
+      "uptime_sec": 270.905,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "metadata_after": {
+      "status": "ok",
+      "uptime_sec": 271.587,
+      "idb_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll.i64",
+      "module": "Game.dll",
+      "input_path": "C:\\Users\\admin\\AppData\\Local\\Temp\\rea-ida-982bca66b941bbedef62cfbe55ca53d6\\Game.dll",
+      "imagebase": "0x180000000",
+      "auto_analysis_ready": true,
+      "hexrays_ready": true,
+      "strings_cache_ready": true,
+      "strings_cache_size": 21696
+    },
+    "observations": [
+      {
+        "tool": "lookup_funcs",
+        "arguments": {
+          "queries": ["0x1801c4830"],
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": [
+          {
+            "query": "0x1801c4830",
+            "fn": {
+              "addr": "0x1801c4830",
+              "name": "sub_1801C4830",
+              "size": "0x1013"
+            },
+            "error": null
+          }
+        ]
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801c4830",
+          "offset": 0,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801c4830",
+          "code": "__int64 __fastcall sub_1801C4830(__int64 a1)\n{\n  unsigned int v1; // edi\n  __int64 v3; // rdx\n  __int64 v4; // rdx\n  __int64 v5; // rdx\n  __int64 v6; // rdx\n  __int64 v7; // rdx\n  __int64 v8; // rdx\n  __int64 v9; // rdx\n  __int64 v10; // rdx\n  __int64 v11; // rdx\n  __int64 v12; // rdx\n  __int64 v13; // rdx\n  unsigned int v14; // r15d\n  __int64 v15; // rax\n  __int64 v16; // rsi\n  __int64 v17; // rax\n  __int64 v18; // rbx\n  __int64 v19; // rax\n  _QWORD v21[4]; // [rsp+20h] [rbp-E0h] BYREF\n  _BYTE v22[8]; // [rsp+40h] [rbp-C0h] BYREF\n  __int64 v23; // [rsp+48h] [rbp-B8h]\n  _WORD v24[8]; // [rsp+80h] [rbp-80h] BYREF\n  __m128i v25; // [rsp+90h] [rbp-70h]\n  _QWORD v26[8]; // [rsp+A0h] [rbp-60h] BYREF\n  _WORD v27[8]; // [rsp+E0h] [rbp-20h] BYREF\n  __m128i v28; // [rsp+F0h] [rbp-10h]\n  _QWORD v29[8]; // [rsp+100h] [rbp+0h] BYREF\n  _WORD v30[8]; // [rsp+140h] [rbp+40h] BYREF\n  __m128i v31; // [rsp+150h] [rbp+50h]\n  _QWORD v32[8]; // [rsp+160h] [rbp+60h] BYREF\n  _WORD v33[8]; // [rsp+1A0h] [rbp+A0h] BYREF\n  __m128i v34; // [rsp+1B0h] [rbp+B0h]\n  _QWORD v35[8]; // [rsp+1C0h] [rbp+C0h] BYREF\n  _WORD v36[8]; // [rsp+200h] [rbp+100h] BYREF\n  __m128i v37; // [rsp+210h] [rbp+110h]\n  _QWORD v38[8]; // [rsp+220h] [rbp+120h] BYREF\n  _WORD v39[8]; // [rsp+260h] [rbp+160h] BYREF\n  __m128i v40; // [rsp+270h] [rbp+170h]\n  _QWORD v41[8]; // [rsp+280h] [rbp+180h] BYREF\n  _WORD v42[8]; // [rsp+2C0h] [rbp+1C0h] BYREF\n  __m128i v43; // [rsp+2D0h] [rbp+1D0h]\n  _QWORD v44[8]; // [rsp+2E0h] [rbp+1E0h] BYREF\n  _WORD v45[8]; // [rsp+320h] [rbp+220h] BYREF\n  __m128i v46; // [rsp+330h] [rbp+230h]\n  _QWORD v47[8]; // [rsp+340h] [rbp+240h] BYREF\n  _WORD v48[8]; // [rsp+380h] [rbp+280h] BYREF\n  __m128i v49; // [rsp+390h] [rbp+290h]\n  _QWORD v50[8]; // [rsp+3A0h] [rbp+2A0h] BYREF\n  _WORD v51[8]; // [rsp+3E0h] [rbp+2E0h] BYREF\n  __m128i v52; // [rsp+3F0h] [rbp+2F0h]\n  _QWORD v53[8]; // [rsp+400h] [rbp+300h] BYREF\n  _WORD v54[8]; // [rsp+440h] [rbp+340h] BYREF\n  __m128i v55; // [rsp+450h] [rbp+350h]\n  _QWORD v56[8]; // [rsp+460h] [rbp+360h] BYREF\n  _WORD v57[8]; // [rsp+4A0h] [rbp+3A0h] BYREF\n  __m128i v58; // [rsp+4B0h] [rbp+3B0h]\n  _QWORD v59[8]; // [rsp+4C0h] [rbp+3C0h] BYREF\n  _WORD v60[8]; // [rsp+500h] [rbp+400h] BYREF\n  __m128i v61; // [rsp+510h] [rbp+410h]\n  _QWORD v62[8]; // [rsp+520h] [rbp+420h] BYREF\n  _WORD v63[8]; // [rsp+560h] [rbp+460h] BYREF\n  __m128i v64; // [rsp+570h] [rbp+470h]\n  _QWORD v65[8]; // [rsp+580h] [rbp+480h] BYREF\n  _WORD v66[8]; // [rsp+5C0h] [rbp+4C0h] BYREF\n  __m128i v67; // [rsp+5D0h] [rbp+4D0h]\n  _QWORD v68[8]; // [rsp+5E0h] [rbp+4E0h] BYREF\n  _WORD v69[8]; // [rsp+620h] [rbp+520h] BYREF\n  __m128i v70; // [rsp+630h] [rbp+530h]\n  _QWORD v71[8]; // [rsp+640h] [rbp+540h] BYREF\n  _WORD v72[8]; // [rsp+680h] [rbp+580h] BYREF\n  __m128i v73; // [rsp+690h] [rbp+590h]\n  _QWORD v74[8]; // [rsp+6A0h] [rbp+5A0h] BYREF\n  _WORD v75[8]; // [rsp+6E0h] [rbp+5E0h] BYREF\n  __m128i v76; // [rsp+6F0h] [rbp+5F0h]\n  _QWORD v77[8]; // [rsp+700h] [rbp+600h] BYREF\n  _WORD v78[8]; // [rsp+740h] [rbp+640h] BYREF\n  __m128i v79; // [rsp+750h] [rbp+650h]\n  _QWORD v80[8]; // [rsp+760h] [rbp+660h] BYREF\n  _WORD v81[8]; // [rsp+7A0h] [rbp+6A0h] BYREF\n  __m128i v82; // [rsp+7B0h] [rbp+6B0h]\n  _QWORD v83[8]; // [rsp+7C0h] [rbp+6C0h] BYREF\n  _WORD v84[8]; // [rsp+800h] [rbp+700h] BYREF\n  __m128i v85; // [rsp+810h] [rbp+710h]\n  _QWORD v86[8]; // [rsp+820h] [rbp+720h] BYREF\n  _WORD v87[8]; // [rsp+860h] [rbp+760h] BYREF\n  __m128i v88; // [rsp+870h] [rbp+770h]\n  _QWORD v89[8]; // [rsp+880h] [rbp+780h] BYREF\n  _WORD v90[8]; // [rsp+8C0h] [rbp+7C0h] BYREF\n  __m128i v91; // [rsp+8D0h] [rbp+7D0h]\n  _QWORD v92[8]; // [rsp+8E0h] [rbp+7E0h] BYREF\n  _WORD v93[8]; // [rsp+920h] [rbp+820h] BYREF\n  __m128i v94; // [rsp+930h] [rbp+830h]\n  _QWORD v95[8]; // [rsp+940h] [rbp+840h] BYREF\n  _WORD v96[8]; // [rsp+980h] [rbp+880h] BYREF\n  __m128i v97; // [rsp+990h] [rbp+890h]\n  _QWORD v98[8]; // [rsp+9A0h] [rbp+8A0h] BYREF\n  _WORD v99[8]; // [rsp+9E0h] [rbp+8E0h] BYREF\n  __m128i v100; // [rsp+9F0h] [rbp+8F0h]",
+          "line_count": 100,
+          "total_lines": 488,
+          "truncated": true,
+          "cursor": {
+            "next": 100
+          },
+          "refs": [
+            {
+              "addr": "0x180db6670",
+              "name": "xmmword_180DB6670"
+            },
+            {
+              "addr": "0x18016ef40",
+              "name": "sub_18016EF40"
+            },
+            {
+              "addr": "0x180c48fb0",
+              "name": "aWorldVendorReg",
+              "string": "潷汲彤敶摮牯牟来獩牴瑡潩彮楫慮獟整ㅰ晟敥"
+            },
+            {
+              "addr": "0x180c4a538",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_b5f9266696ed2da67fd2226318d8c513>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48db0",
+              "name": "aWorldVendorReg_0",
+              "string": "潷汲彤敶摮牯牟来獩牴瑡潩彮楫慮獟整㉰晟敥"
+            },
+            {
+              "addr": "0x180c4a4c8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_72e8e85cd759472acfa3c1e1d3f9bf08>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48d70",
+              "name": "aWorldVendorCal",
+              "string": "潷汲彤敶摮牯损污畣慬整煟湵彡敦�"
+            },
+            {
+              "addr": "0x180c4a500",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_76f96b8600b41e2739bcd88673e621dd>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48e28",
+              "name": "aLegionWarehous",
+              "string": "敬楧湯睟牡桥畯敳牟来獩整�"
+            },
+            {
+              "addr": "0x180c4a458",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_a8a67400d6393307c09495d83f576fad>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48e08",
+              "name": "aPersonalShop",
+              "string": "数獲湯污獟潨�"
+            },
+            {
+              "addr": "0x180c4a490",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_2c3f07546c9a62b007d6800ba468103d>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48e80",
+              "name": "aPersonalTrade",
+              "string": "数獲湯污瑟慲敤"
+            },
+            {
+              "addr": "0x180c4a3e8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_15019fd05aea7578276ca6c730872f5e>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48e60",
+              "name": "aSendItemMail",
+              "string": "敳摮楟整彭慭汩"
+            },
+            {
+              "addr": "0x180c4a420",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_13e53ce0816153c4afe9cbffacbccd10>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48eb8",
+              "name": "aSplitGroupKina",
+              "string": "灳楬彴牧畯彰楫慮"
+            },
+            {
+              "addr": "0x180c4a1b8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_1aa932644876bd32b69f9c3f521e152f>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48ea0",
+              "name": "aUseFlyinfo",
+              "string": "獵彥汦楹普�"
+            },
+            {
+              "addr": "0x180c4a1f0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_0e913b61eab4f8fe9dcf9bfed27251b1>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49200",
+              "name": "aDisplayUnlimit",
+              "string": "楤灳慬役湵楬業整彤汦�"
+            },
+            {
+              "addr": "0x180c4a148",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_8c6eaebeab5dad0dc4f9c71613e4e8b1>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c491b0",
+              "name": "aCanRegisterPac",
+              "string": "慣彮敲楧瑳牥灟捡敫彤瑩浥楟彮硥档湡敧"
+            },
+            {
+              "addr": "0x180c4a180",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_4852612745c42479f513a8395329063c>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49280",
+              "name": "aCanRegisterPac_0",
+              "string": "慣彮敲楧瑳牥灟捡敫彤瑩浥楟彮数獲湯污獟潨�"
+            },
+            {
+              "addr": "0x180c4a0d8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_3800541e9e1a66399eef6df19a3af7f2>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49230",
+              "name": "aCanRegisterPac_1",
+              "string": "慣彮敲楧瑳牥灟捡敫彤瑩浥楟彮敶摮牯"
+            },
+            {
+              "addr": "0x180c4a110",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_b8e815506def619c0ca6c5b854e1e808>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49310",
+              "name": "aPackingCheckIn",
+              "string": "慰正湩彧档捥彫湩潦"
+            },
+            {
+              "addr": "0x180c4a068",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_7d51b268907f08aad38feba2d7b7a315>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c492d8",
+              "name": "aDisplayItemRes",
+              "string": "楤灳慬役瑩浥牟獥潴慲楴湯"
+            },
+            {
+              "addr": "0x180c4a0a0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_92999272e82107d8f8343eed74db381b>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49360",
+              "name": "aOnGoingRanking",
+              "string": "湯束楯杮牟湡楫杮獟慥潳彮摩"
+            },
+            {
+              "addr": "0x180c4a378",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_17697f1c4da46642a772e663f622477f>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49338",
+              "name": "aShowFreePlayIc",
+              "string": "桳睯晟敲彥汰祡楟潣�"
+            },
+            {
+              "addr": "0x180c4a3b0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_d62b5e841b4a51316492260fafe36d91>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49048",
+              "name": "aShowPcRoomChar",
+              "string": "桳睯灟彣潲浯损慨杲彥捩湯"
+            },
+            {
+              "addr": "0x180c4a308",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_2b1900054c096488b2c8da1a4566877b>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49018",
+              "name": "aShowMemebershi",
+              "string": "桳睯浟浥扥牥桳灩楟潣�"
+            },
+            {
+              "addr": "0x180c4a340",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_49d8958bcf4f16d064453dd3d2014336>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c490b8",
+              "name": "aShowAccountInf",
+              "string": "桳睯慟捣畯瑮楟普�"
+            },
+            {
+              "addr": "0x180c4a298",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_9f79993036f11243e04a85b990d67b69>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49080",
+              "name": "aCansummontoype",
+              "string": "慣卮浵潭呮祯敐坴楨敬汆楹杮"
+            },
+            {
+              "addr": "0x180c4a2d0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_c751babbc9996de176d4c170a7c9a8ef>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49110",
+              "name": "aDeveScheduleUr",
+              "string": "敤敶獟档摥汵彥牵彬捲"
+            },
+            {
+              "addr": "0x180c4a228",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_7ccf0a325ba71002c99ac5abc4a8cf14>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c490e0",
+              "name": "aDeveScheduleUr_0",
+              "string": "敤敶獟档摥汵彥牵彬楬敶"
+            },
+            {
+              "addr": "0x180c4a260",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_2066adfaa239c0df5fffe187ab7dd0b4>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49188",
+              "name": "aDevapassUiDisp",
+              "string": "敤慶慰獳畟彩楤灳慬�"
+            },
+            {
+              "addr": "0x180c49e38",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_2fbedb7b18af799a14138b5b099bd555>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49140",
+              "name": "aUseAccountWare",
+              "string": "獵彥捡潣湵彴慷敲潨獵彥敤潰楳彴楫慮"
+            },
+            {
+              "addr": "0x180c49e70",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_c8859fdb1fce100671f2e6005a2eea16>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49568",
+              "name": "aUseAllianceUni",
+              "string": "獵彥污楬湡散畟楮湯"
+            },
+            {
+              "addr": "0x180c49dc8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_53884ddd0cbfae923321d0e652e18e08>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49548",
+              "name": "aUseAlliance",
+              "string": "獵彥污楬湡散"
+            },
+            {
+              "addr": "0x180c49e00",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_0d538b310b4bbf5c6bf4db4731beb32f>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c495c8",
+              "name": "aUseItemUpgrade",
+              "string": "獵彥瑩浥畟杰慲敤"
+            },
+            {
+              "addr": "0x180c49d58",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_27a4510b13e12069bf481ee01644c38a>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c48690",
+              "name": "aUseGroupRootDi",
+              "string": "獵彥牧畯彰潲瑯摟獩彴潧摬"
+            },
+            {
+              "addr": "0x180c49d90",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_b7f5d80e62e431b48472e471bc9bc1e0>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49590",
+              "name": "aMarketProbabil",
+              "string": "慭歲瑥灟潲慢楢楬祴獟牴牟�"
+            },
+            {
+              "addr": "0x180c49ce8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_51849bbfa43e4f5dfdd83f7a5133885b>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49620",
+              "name": "aMarketProbabil_0",
+              "string": "慭歲瑥灟潲慢楢楬祴獟牴江癩�"
+            },
+            {
+              "addr": "0x180c49d20",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_916881cf91b13c2603f33c79f8ae5aeb>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c495f0",
+              "name": "aGotchaProbabil",
+              "string": "潧捴慨灟潲慢楢楬祴獟牴"
+            },
+            {
+              "addr": "0x180c49ff8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_26ba8cfd706a99ae43e82b505a509a4a>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49688",
+              "name": "aMembershipIcon",
+              "string": "敭扭牥桳灩楟潣彮捰潲浯"
+            },
+            {
+              "addr": "0x180c4a030",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_388645dee92e8c86a634deff80341149>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49658",
+              "name": "aMembershipIcon_0",
+              "string": "敭扭牥桳灩楟潣彮慰摩"
+            },
+            {
+              "addr": "0x180c49f88",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_42774e365bc732a49e4aa1bde0a22c8f>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c493d8",
+              "name": "aMembershipIcon_1",
+              "string": "敭扭牥桳灩楟潣彮牴慩�"
+            },
+            {
+              "addr": "0x180c49fc0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_d244bfcec893859cc44f054badb8fc1a>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49398",
+              "name": "aMembershipIcon_2",
+              "string": "敭扭牥桳灩楟潣彮牴慩彬慦楴畧�"
+            },
+            {
+              "addr": "0x180c49f18",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_d037368226a0f794a40f5165e0eb191d>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49440",
+              "name": "aMembershipIcon_3",
+              "string": "敭扭牥桳灩楟潣彮瑩浥浟浥敢獲楨�"
+            },
+            {
+              "addr": "0x180c49f50",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_1b3ae70cf521b6521e50024e7700477c>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49408",
+              "name": "aShowReturnBtnI",
+              "string": "桳睯牟瑥牵彮瑢彮捩湯"
+            },
+            {
+              "addr": "0x180c49ea8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_67bf19d733f8a7cbd3ab020d0eaca8d4>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c494b0",
+              "name": "aUseItemAddSkil",
+              "string": "獵彥瑩浥慟摤獟楫汬"
+            },
+            {
+              "addr": "0x180c49ee0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_c51c3452cd072e71646323fa15290e88>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49480",
+              "name": "aUsePvpKillRank",
+              "string": "獵彥癰彰楫汬牟湡楫杮"
+            },
+            {
+              "addr": "0x180c49ab8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_1df430312e8b8128a97e8f126b9fefcc>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c49510",
+              "name": "aEnchantCutProb",
+              "string": "湥档湡彴畣彴牰扯损畯瑮た"
+            },
+            {
+              "addr": "0x180c49af0",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_42690ac3497333e54278be3492732feb>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c494d8",
+              "name": "aEnchantCutProb_0",
+              "string": "湥档湡彴畣彴牰扯损畯瑮ㅟ�"
+            },
+            {
+              "addr": "0x180c49a48",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_24fbfee0821f91f0b8c2baadd2e2f294>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c497e8",
+              "name": "aEnchantCutProb_1",
+              "string": "湥档湡彴畣彴牰扯损畯瑮ㅟ�"
+            },
+            {
+              "addr": "0x180c49a80",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_02fc91a934f9a73233b18ac425dea1a1>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x180c497b0",
+              "name": "aEnchantCutProb_2",
+              "string": "湥档湡彴畣彴牰扯损畯瑮㉟�"
+            },
+            {
+              "addr": "0x180c499d8",
+              "name": "??_7?$_Func_impl_no_alloc@V<lambda_24deab1c1bdb6c1b59dbfd98b5c51916>@@XAEBV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@std@@6B@"
+            },
+            {
+              "addr": "0x1801c6c10",
+              "name": "sub_1801C6C10"
+            },
+            {
+              "addr": "0x1801c6c70",
+              "name": "sub_1801C6C70"
+            },
+            {
+              "addr": "0x1801c6cd0",
+              "name": "sub_1801C6CD0"
+            },
+            {
+              "addr": "0x1801c6d30",
+              "name": "sub_1801C6D30"
+            },
+            {
+              "addr": "0x1801c6d90",
+              "name": "sub_1801C6D90"
+            },
+            {
+              "addr": "0x1801c6df0",
+              "name": "sub_1801C6DF0"
+            },
+            {
+              "addr": "0x1801c6e50",
+              "name": "sub_1801C6E50"
+            },
+            {
+              "addr": "0x1801c6eb0",
+              "name": "sub_1801C6EB0"
+            },
+            {
+              "addr": "0x1801c6f10",
+              "name": "sub_1801C6F10"
+            },
+            {
+              "addr": "0x1801c6f70",
+              "name": "sub_1801C6F70"
+            },
+            {
+              "addr": "0x1801c6fd0",
+              "name": "sub_1801C6FD0"
+            },
+            {
+              "addr": "0x1801c59b0",
+              "name": "sub_1801C59B0"
+            },
+            {
+              "addr": "0x18016f5d0",
+              "name": "sub_18016F5D0"
+            },
+            {
+              "addr": "0x1801c5850",
+              "name": "sub_1801C5850"
+            },
+            {
+              "addr": "0x1801c6ba0",
+              "name": "sub_1801C6BA0"
+            },
+            {
+              "addr": "0x180172a90",
+              "name": "sub_180172A90"
+            },
+            {
+              "addr": "0x18016f080",
+              "name": "sub_18016F080"
+            },
+            {
+              "addr": "0x1801c5990",
+              "name": "sub_1801C5990"
+            },
+            {
+              "addr": "0x18016eeb0",
+              "name": "sub_18016EEB0"
+            },
+            {
+              "addr": "0x1801c6bf0",
+              "name": "sub_1801C6BF0"
+            },
+            {
+              "addr": "0x1801c5890",
+              "name": "sub_1801C5890"
+            }
+          ]
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801c4830",
+          "offset": 100,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801c4830",
+          "code": "  _QWORD v101[8]; // [rsp+A00h] [rbp+900h] BYREF\n  _WORD v102[8]; // [rsp+A40h] [rbp+940h] BYREF\n  __m128i v103; // [rsp+A50h] [rbp+950h]\n  _QWORD v104[8]; // [rsp+A60h] [rbp+960h] BYREF\n  _WORD v105[8]; // [rsp+AA0h] [rbp+9A0h] BYREF\n  __m128i v106; // [rsp+AB0h] [rbp+9B0h]\n  _QWORD v107[8]; // [rsp+AC0h] [rbp+9C0h] BYREF\n  _WORD v108[8]; // [rsp+B00h] [rbp+A00h] BYREF\n  __m128i v109; // [rsp+B10h] [rbp+A10h]\n  _QWORD v110[8]; // [rsp+B20h] [rbp+A20h] BYREF\n  _WORD v111[8]; // [rsp+B60h] [rbp+A60h] BYREF\n  __m128i v112; // [rsp+B70h] [rbp+A70h]\n  _QWORD v113[8]; // [rsp+B80h] [rbp+A80h] BYREF\n  _WORD v114[8]; // [rsp+BC0h] [rbp+AC0h] BYREF\n  __m128i v115; // [rsp+BD0h] [rbp+AD0h]\n  _QWORD v116[8]; // [rsp+BE0h] [rbp+AE0h] BYREF\n  _WORD v117[8]; // [rsp+C20h] [rbp+B20h] BYREF\n  __m128i v118; // [rsp+C30h] [rbp+B30h]\n  _QWORD v119[8]; // [rsp+C40h] [rbp+B40h] BYREF\n  _WORD v120[8]; // [rsp+C80h] [rbp+B80h] BYREF\n  __m128i v121; // [rsp+C90h] [rbp+B90h]\n  _QWORD v122[8]; // [rsp+CA0h] [rbp+BA0h] BYREF\n  _WORD v123[8]; // [rsp+CE0h] [rbp+BE0h] BYREF\n  __m128i v124; // [rsp+CF0h] [rbp+BF0h]\n  _QWORD v125[8]; // [rsp+D00h] [rbp+C00h] BYREF\n  _WORD v126[8]; // [rsp+D40h] [rbp+C40h] BYREF\n  __m128i v127; // [rsp+D50h] [rbp+C50h]\n  _QWORD v128[8]; // [rsp+D60h] [rbp+C60h] BYREF\n  _WORD v129[8]; // [rsp+DA0h] [rbp+CA0h] BYREF\n  __m128i v130; // [rsp+DB0h] [rbp+CB0h]\n  _QWORD v131[8]; // [rsp+DC0h] [rbp+CC0h] BYREF\n  _WORD v132[8]; // [rsp+E00h] [rbp+D00h] BYREF\n  __m128i v133; // [rsp+E10h] [rbp+D10h]\n  _QWORD v134[8]; // [rsp+E20h] [rbp+D20h] BYREF\n  _WORD v135[8]; // [rsp+E60h] [rbp+D60h] BYREF\n  __m128i v136; // [rsp+E70h] [rbp+D70h]\n  _QWORD v137[8]; // [rsp+E80h] [rbp+D80h] BYREF\n  _WORD v138[8]; // [rsp+EC0h] [rbp+DC0h] BYREF\n  __m128i v139; // [rsp+ED0h] [rbp+DD0h]\n  _QWORD v140[8]; // [rsp+EE0h] [rbp+DE0h] BYREF\n  _WORD v141[8]; // [rsp+F20h] [rbp+E20h] BYREF\n  __m128i v142; // [rsp+F30h] [rbp+E30h]\n  _QWORD v143[8]; // [rsp+F40h] [rbp+E40h] BYREF\n  _WORD v144[8]; // [rsp+F80h] [rbp+E80h] BYREF\n  __m128i v145; // [rsp+F90h] [rbp+E90h]\n  _QWORD v146[8]; // [rsp+FA0h] [rbp+EA0h] BYREF\n  _WORD v147[8]; // [rsp+FE0h] [rbp+EE0h] BYREF\n  __m128i v148; // [rsp+FF0h] [rbp+EF0h]\n  _QWORD v149[8]; // [rsp+1000h] [rbp+F00h] BYREF\n  _WORD v150[8]; // [rsp+1040h] [rbp+F40h] BYREF\n  __m128i v151; // [rsp+1050h] [rbp+F50h]\n  _QWORD v152[8]; // [rsp+1060h] [rbp+F60h] BYREF\n  _WORD v153[8]; // [rsp+10A0h] [rbp+FA0h] BYREF\n  __m128i v154; // [rsp+10B0h] [rbp+FB0h]\n  _QWORD v155[8]; // [rsp+10C0h] [rbp+FC0h] BYREF\n  _BYTE v156[96]; // [rsp+1100h] [rbp+1000h] BYREF\n  _BYTE v157[96]; // [rsp+1160h] [rbp+1060h] BYREF\n  _BYTE v158[96]; // [rsp+11C0h] [rbp+10C0h] BYREF\n  _BYTE v159[96]; // [rsp+1220h] [rbp+1120h] BYREF\n  _BYTE v160[96]; // [rsp+1280h] [rbp+1180h] BYREF\n  _BYTE v161[96]; // [rsp+12E0h] [rbp+11E0h] BYREF\n  _BYTE v162[96]; // [rsp+1340h] [rbp+1240h] BYREF\n  _BYTE v163[96]; // [rsp+13A0h] [rbp+12A0h] BYREF\n  _BYTE v164[96]; // [rsp+1400h] [rbp+1300h] BYREF\n  _BYTE v165[96]; // [rsp+1460h] [rbp+1360h] BYREF\n  _BYTE v166[96]; // [rsp+14C0h] [rbp+13C0h] BYREF\n  char v167; // [rsp+1520h] [rbp+1420h] BYREF\n  __int64 v168; // [rsp+1540h] [rbp+1440h] BYREF\n\n  v1 = 0; /*0x1801c485e*/\n  v25 = (__m128i)xmmword_180DB6670; /*0x1801c4860*/\n  v24[0] = 0; /*0x1801c4868*/\n  sub_18016EF40(a1: v24, a2: aWorldVendorReg, a3: 40); /*0x1801c4874*/\n  v26[0] = &std::_Func_impl_no_alloc<<lambda_b5f9266696ed2da67fd2226318d8c513>,void,std::wstring const &>::`vftable'; /*0x1801c4888*/\n  v26[1] = a1; /*0x1801c4894*/\n  v26[7] = v26; /*0x1801c489f*/\n  v28 = (__m128i)xmmword_180DB6670; /*0x1801c48a7*/\n  v27[0] = 0; /*0x1801c48ac*/\n  sub_18016EF40(a1: v27, a2: aWorldVendorReg_0, a3: 40); /*0x1801c48b0*/\n  v29[0] = &std::_Func_impl_no_alloc<<lambda_72e8e85cd759472acfa3c1e1d3f9bf08>,void,std::wstring const &>::`vftable'; /*0x1801c48c4*/\n  v29[1] = a1; /*0x1801c48d0*/\n  v29[7] = v29; /*0x1801c48db*/\n  v31 = (__m128i)xmmword_180DB6670; /*0x1801c48e3*/\n  v30[0] = 0; /*0x1801c48e8*/\n  sub_18016EF40(a1: v30, a2: aWorldVendorCal, a3: 31); /*0x1801c48ec*/\n  v32[0] = &std::_Func_impl_no_alloc<<lambda_76f96b8600b41e2739bcd88673e621dd>,void,std::wstring const &>::`vftable'; /*0x1801c4900*/\n  v32[1] = a1; /*0x1801c490c*/\n  v32[7] = v32; /*0x1801c4917*/\n  v34 = (__m128i)xmmword_180DB6670; /*0x1801c4925*/\n  v33[0] = 0; /*0x1801c492d*/\n  sub_18016EF40(a1: v33, a2: aLegionWarehous, a3: 25); /*0x1801c4934*/\n  v35[0] = &std::_Func_impl_no_alloc<<lambda_a8a67400d6393307c09495d83f576fad>,void,std::wstring const &>::`vftable'; /*0x1801c4948*/\n  v35[1] = a1; /*0x1801c495a*/\n  v35[7] = v35; /*0x1801c4968*/\n  v37 = (__m128i)xmmword_180DB6670; /*0x1801c4976*/\n  v36[0] = 0; /*0x1801c497e*/\n  sub_18016EF40(a1: v36, a2: aPersonalShop, a3: 13); /*0x1801c4985*/\n  v38[0] = &std::_Func_impl_no_alloc<<lambda_2c3f07546c9a62b007d6800ba468103d>,void,std::wstring const &>::`vftable'; /*0x1801c4999*/\n  v38[1] = a1; /*0x1801c49ab*/\n  v38[7] = v38; /*0x1801c49b9*/",
+          "line_count": 100,
+          "total_lines": 488,
+          "truncated": true,
+          "cursor": {
+            "next": 200
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801c4830",
+          "offset": 200,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801c4830",
+          "code": "  v40 = (__m128i)xmmword_180DB6670; /*0x1801c49c7*/\n  v39[0] = 0; /*0x1801c49cf*/\n  sub_18016EF40(a1: v39, a2: aPersonalTrade, a3: 14); /*0x1801c49d6*/\n  v41[0] = &std::_Func_impl_no_alloc<<lambda_15019fd05aea7578276ca6c730872f5e>,void,std::wstring const &>::`vftable'; /*0x1801c49ea*/\n  v41[1] = a1; /*0x1801c49fc*/\n  v41[7] = v41; /*0x1801c4a0a*/\n  v43 = (__m128i)xmmword_180DB6670; /*0x1801c4a18*/\n  v42[0] = 0; /*0x1801c4a20*/\n  sub_18016EF40(a1: v42, a2: aSendItemMail, a3: 14); /*0x1801c4a27*/\n  v44[0] = &std::_Func_impl_no_alloc<<lambda_13e53ce0816153c4afe9cbffacbccd10>,void,std::wstring const &>::`vftable'; /*0x1801c4a3b*/\n  v44[1] = a1; /*0x1801c4a4d*/\n  v44[7] = v44; /*0x1801c4a5b*/\n  v46 = (__m128i)xmmword_180DB6670; /*0x1801c4a69*/\n  v45[0] = 0; /*0x1801c4a71*/\n  sub_18016EF40(a1: v45, a2: aSplitGroupKina, a3: 16); /*0x1801c4a78*/\n  v47[0] = &std::_Func_impl_no_alloc<<lambda_1aa932644876bd32b69f9c3f521e152f>,void,std::wstring const &>::`vftable'; /*0x1801c4a8c*/\n  v47[1] = a1; /*0x1801c4a9e*/\n  v47[7] = v47; /*0x1801c4aac*/\n  v49 = (__m128i)xmmword_180DB6670; /*0x1801c4aba*/\n  v48[0] = 0; /*0x1801c4ac2*/\n  sub_18016EF40(a1: v48, a2: aUseFlyinfo, a3: 11); /*0x1801c4ac9*/\n  v50[0] = &std::_Func_impl_no_alloc<<lambda_0e913b61eab4f8fe9dcf9bfed27251b1>,void,std::wstring const &>::`vftable'; /*0x1801c4add*/\n  v50[1] = a1; /*0x1801c4aef*/\n  v50[7] = v50; /*0x1801c4afd*/\n  v52 = (__m128i)xmmword_180DB6670; /*0x1801c4b0b*/\n  v51[0] = 0; /*0x1801c4b13*/\n  sub_18016EF40(a1: v51, a2: aDisplayUnlimit, a3: 21); /*0x1801c4b1a*/\n  v53[0] = &std::_Func_impl_no_alloc<<lambda_8c6eaebeab5dad0dc4f9c71613e4e8b1>,void,std::wstring const &>::`vftable'; /*0x1801c4b2e*/\n  v53[1] = a1; /*0x1801c4b40*/\n  v53[7] = v53; /*0x1801c4b4e*/\n  v55 = (__m128i)xmmword_180DB6670; /*0x1801c4b5c*/\n  v54[0] = 0; /*0x1801c4b64*/\n  sub_18016EF40(a1: v54, a2: aCanRegisterPac, a3: 36); /*0x1801c4b6b*/\n  v56[0] = &std::_Func_impl_no_alloc<<lambda_4852612745c42479f513a8395329063c>,void,std::wstring const &>::`vftable'; /*0x1801c4b7f*/\n  v56[1] = a1; /*0x1801c4b91*/\n  v56[7] = v56; /*0x1801c4b9f*/\n  v58 = (__m128i)xmmword_180DB6670; /*0x1801c4bad*/\n  v57[0] = 0; /*0x1801c4bb5*/\n  sub_18016EF40(a1: v57, a2: aCanRegisterPac_0, a3: 41); /*0x1801c4bbc*/\n  v59[0] = &std::_Func_impl_no_alloc<<lambda_3800541e9e1a66399eef6df19a3af7f2>,void,std::wstring const &>::`vftable'; /*0x1801c4bd0*/\n  v59[1] = a1; /*0x1801c4be2*/\n  v59[7] = v59; /*0x1801c4bf0*/\n  v61 = (__m128i)xmmword_180DB6670; /*0x1801c4bfe*/\n  v60[0] = 0; /*0x1801c4c06*/\n  sub_18016EF40(a1: v60, a2: aCanRegisterPac_1, a3: 34); /*0x1801c4c0d*/\n  v62[0] = &std::_Func_impl_no_alloc<<lambda_b8e815506def619c0ca6c5b854e1e808>,void,std::wstring const &>::`vftable'; /*0x1801c4c21*/\n  v62[1] = a1; /*0x1801c4c33*/\n  v62[7] = v62; /*0x1801c4c3a*/\n  v64 = (__m128i)xmmword_180DB6670; /*0x1801c4c41*/\n  v63[0] = 0; /*0x1801c4c49*/\n  sub_18016EF40(a1: v63, a2: aPackingCheckIn, a3: 18); /*0x1801c4c5e*/\n  v65[0] = &std::_Func_impl_no_alloc<<lambda_7d51b268907f08aad38feba2d7b7a315>,void,std::wstring const &>::`vftable'; /*0x1801c4c72*/\n  v65[1] = a1; /*0x1801c4c84*/\n  v65[7] = v65; /*0x1801c4c92*/\n  v67 = (__m128i)xmmword_180DB6670; /*0x1801c4ca0*/\n  v66[0] = 0; /*0x1801c4ca8*/\n  sub_18016EF40(a1: v66, a2: aDisplayItemRes, a3: 24); /*0x1801c4caf*/\n  v68[0] = &std::_Func_impl_no_alloc<<lambda_92999272e82107d8f8343eed74db381b>,void,std::wstring const &>::`vftable'; /*0x1801c4cc3*/\n  v68[1] = a1; /*0x1801c4cd5*/\n  v68[7] = v68; /*0x1801c4ce3*/\n  v70 = (__m128i)xmmword_180DB6670; /*0x1801c4cf1*/\n  v69[0] = 0; /*0x1801c4cf9*/\n  sub_18016EF40(a1: v69, a2: aOnGoingRanking, a3: 26); /*0x1801c4d00*/\n  v71[0] = &std::_Func_impl_no_alloc<<lambda_17697f1c4da46642a772e663f622477f>,void,std::wstring const &>::`vftable'; /*0x1801c4d14*/\n  v71[1] = a1; /*0x1801c4d26*/\n  v71[7] = v71; /*0x1801c4d34*/\n  v73 = (__m128i)xmmword_180DB6670; /*0x1801c4d42*/\n  v72[0] = 0; /*0x1801c4d4a*/\n  sub_18016EF40(a1: v72, a2: aShowFreePlayIc, a3: 19); /*0x1801c4d51*/\n  v74[0] = &std::_Func_impl_no_alloc<<lambda_d62b5e841b4a51316492260fafe36d91>,void,std::wstring const &>::`vftable'; /*0x1801c4d65*/\n  v74[1] = a1; /*0x1801c4d77*/\n  v74[7] = v74; /*0x1801c4d85*/\n  v76 = (__m128i)xmmword_180DB6670; /*0x1801c4d93*/\n  v75[0] = 0; /*0x1801c4d9b*/\n  sub_18016EF40(a1: v75, a2: aShowPcRoomChar, a3: 24); /*0x1801c4da2*/\n  v77[0] = &std::_Func_impl_no_alloc<<lambda_2b1900054c096488b2c8da1a4566877b>,void,std::wstring const &>::`vftable'; /*0x1801c4db6*/\n  v77[1] = a1; /*0x1801c4dc8*/\n  v77[7] = v77; /*0x1801c4dd6*/\n  v79 = (__m128i)xmmword_180DB6670; /*0x1801c4de4*/\n  v78[0] = 0; /*0x1801c4dec*/\n  sub_18016EF40(a1: v78, a2: aShowMemebershi, a3: 21); /*0x1801c4df3*/\n  v80[0] = &std::_Func_impl_no_alloc<<lambda_49d8958bcf4f16d064453dd3d2014336>,void,std::wstring const &>::`vftable'; /*0x1801c4e07*/\n  v80[1] = a1; /*0x1801c4e19*/\n  v80[7] = v80; /*0x1801c4e27*/\n  v82 = (__m128i)xmmword_180DB6670; /*0x1801c4e35*/\n  v81[0] = 0; /*0x1801c4e3d*/\n  sub_18016EF40(a1: v81, a2: aShowAccountInf, a3: 17); /*0x1801c4e44*/\n  v83[0] = &std::_Func_impl_no_alloc<<lambda_9f79993036f11243e04a85b990d67b69>,void,std::wstring const &>::`vftable'; /*0x1801c4e58*/\n  v83[7] = v83; /*0x1801c4e66*/\n  v83[1] = a1; /*0x1801c4e6d*/\n  v85 = (__m128i)xmmword_180DB6670; /*0x1801c4e78*/\n  v84[0] = 0; /*0x1801c4e87*/\n  sub_18016EF40(a1: v84, a2: aCansummontoype, a3: 26); /*0x1801c4e95*/\n  v86[0] = &std::_Func_impl_no_alloc<<lambda_c751babbc9996de176d4c170a7c9a8ef>,void,std::wstring const &>::`vftable'; /*0x1801c4ea9*/\n  v86[1] = a1; /*0x1801c4ebb*/\n  v86[7] = v86; /*0x1801c4ec9*/\n  v88 = (__m128i)xmmword_180DB6670; /*0x1801c4ed7*/\n  v87[0] = 0; /*0x1801c4edf*/\n  sub_18016EF40(a1: v87, a2: aDeveScheduleUr, a3: 20); /*0x1801c4ee6*/\n  v89[0] = &std::_Func_impl_no_alloc<<lambda_7ccf0a325ba71002c99ac5abc4a8cf14>,void,std::wstring const &>::`vftable'; /*0x1801c4efa*/",
+          "line_count": 100,
+          "total_lines": 488,
+          "truncated": true,
+          "cursor": {
+            "next": 300
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801c4830",
+          "offset": 300,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801c4830",
+          "code": "  v89[1] = a1; /*0x1801c4f0c*/\n  v89[7] = v89; /*0x1801c4f1a*/\n  v91 = (__m128i)xmmword_180DB6670; /*0x1801c4f28*/\n  v90[0] = 0; /*0x1801c4f30*/\n  sub_18016EF40(a1: v90, a2: aDeveScheduleUr_0, a3: 22); /*0x1801c4f37*/\n  v92[0] = &std::_Func_impl_no_alloc<<lambda_2066adfaa239c0df5fffe187ab7dd0b4>,void,std::wstring const &>::`vftable'; /*0x1801c4f4b*/\n  v92[1] = a1; /*0x1801c4f5d*/\n  v92[7] = v92; /*0x1801c4f6b*/\n  v94 = (__m128i)xmmword_180DB6670; /*0x1801c4f79*/\n  v93[0] = 0; /*0x1801c4f81*/\n  sub_18016EF40(a1: v93, a2: aDevapassUiDisp, a3: 19); /*0x1801c4f88*/\n  v95[0] = &std::_Func_impl_no_alloc<<lambda_2fbedb7b18af799a14138b5b099bd555>,void,std::wstring const &>::`vftable'; /*0x1801c4f9c*/\n  v95[1] = a1; /*0x1801c4fae*/\n  v95[7] = v95; /*0x1801c4fbc*/\n  v97 = (__m128i)xmmword_180DB6670; /*0x1801c4fca*/\n  v96[0] = 0; /*0x1801c4fd2*/\n  sub_18016EF40(a1: v96, a2: aUseAccountWare, a3: 34); /*0x1801c4fd9*/\n  v98[0] = &std::_Func_impl_no_alloc<<lambda_c8859fdb1fce100671f2e6005a2eea16>,void,std::wstring const &>::`vftable'; /*0x1801c4fed*/\n  v98[1] = a1; /*0x1801c4fff*/\n  v98[7] = v98; /*0x1801c500d*/\n  v100 = (__m128i)xmmword_180DB6670; /*0x1801c501b*/\n  v99[0] = 0; /*0x1801c5023*/\n  sub_18016EF40(a1: v99, a2: aUseAllianceUni, a3: 18); /*0x1801c502a*/\n  v101[0] = &std::_Func_impl_no_alloc<<lambda_53884ddd0cbfae923321d0e652e18e08>,void,std::wstring const &>::`vftable'; /*0x1801c503e*/\n  v101[1] = a1; /*0x1801c5050*/\n  v101[7] = v101; /*0x1801c505e*/\n  v103 = (__m128i)xmmword_180DB6670; /*0x1801c506c*/\n  v102[0] = 0; /*0x1801c5074*/\n  sub_18016EF40(a1: v102, a2: aUseAlliance, a3: 12); /*0x1801c507b*/\n  v104[1] = a1; /*0x1801c5087*/\n  v104[0] = &std::_Func_impl_no_alloc<<lambda_0d538b310b4bbf5c6bf4db4731beb32f>,void,std::wstring const &>::`vftable'; /*0x1801c508e*/\n  v104[7] = v104; /*0x1801c50a8*/\n  v106 = (__m128i)xmmword_180DB6670; /*0x1801c50b6*/\n  v105[0] = 0; /*0x1801c50c5*/\n  sub_18016EF40(a1: v105, a2: aUseItemUpgrade, a3: 16); /*0x1801c50cc*/\n  v107[0] = &std::_Func_impl_no_alloc<<lambda_27a4510b13e12069bf481ee01644c38a>,void,std::wstring const &>::`vftable'; /*0x1801c50e0*/\n  v107[1] = a1; /*0x1801c50f2*/\n  v107[7] = v107; /*0x1801c5100*/\n  v109 = (__m128i)xmmword_180DB6670; /*0x1801c510e*/\n  v108[0] = 0; /*0x1801c5116*/\n  sub_18016EF40(a1: v108, a2: aUseGroupRootDi, a3: 24); /*0x1801c511d*/\n  v110[0] = &std::_Func_impl_no_alloc<<lambda_b7f5d80e62e431b48472e471bc9bc1e0>,void,std::wstring const &>::`vftable'; /*0x1801c5131*/\n  v110[1] = a1; /*0x1801c5143*/\n  v110[7] = v110; /*0x1801c5151*/\n  v112 = (__m128i)xmmword_180DB6670; /*0x1801c515f*/\n  v111[0] = 0; /*0x1801c5167*/\n  sub_18016EF40(a1: v111, a2: aMarketProbabil, a3: 25); /*0x1801c516e*/\n  v113[0] = &std::_Func_impl_no_alloc<<lambda_51849bbfa43e4f5dfdd83f7a5133885b>,void,std::wstring const &>::`vftable'; /*0x1801c5182*/\n  v113[1] = a1; /*0x1801c5194*/\n  v113[7] = v113; /*0x1801c51a2*/\n  v115 = (__m128i)xmmword_180DB6670; /*0x1801c51b0*/\n  v114[0] = 0; /*0x1801c51b8*/\n  sub_18016EF40(a1: v114, a2: aMarketProbabil_0, a3: 27); /*0x1801c51bf*/\n  v116[0] = &std::_Func_impl_no_alloc<<lambda_916881cf91b13c2603f33c79f8ae5aeb>,void,std::wstring const &>::`vftable'; /*0x1801c51d3*/\n  v116[1] = a1; /*0x1801c51e5*/\n  v116[7] = v116; /*0x1801c51f3*/\n  v118 = (__m128i)xmmword_180DB6670; /*0x1801c5201*/\n  v117[0] = 0; /*0x1801c5209*/\n  sub_18016EF40(a1: v117, a2: aGotchaProbabil, a3: 22); /*0x1801c5210*/\n  v119[0] = &std::_Func_impl_no_alloc<<lambda_26ba8cfd706a99ae43e82b505a509a4a>,void,std::wstring const &>::`vftable'; /*0x1801c5224*/\n  v119[1] = a1; /*0x1801c5236*/\n  v119[7] = v119; /*0x1801c5244*/\n  v121 = (__m128i)xmmword_180DB6670; /*0x1801c5252*/\n  v120[0] = 0; /*0x1801c525a*/\n  sub_18016EF40(a1: v120, a2: aMembershipIcon, a3: 22); /*0x1801c5261*/\n  v122[0] = &std::_Func_impl_no_alloc<<lambda_388645dee92e8c86a634deff80341149>,void,std::wstring const &>::`vftable'; /*0x1801c5275*/\n  v122[1] = a1; /*0x1801c5287*/\n  v122[7] = v122; /*0x1801c5295*/\n  v124 = (__m128i)xmmword_180DB6670; /*0x1801c52a3*/\n  v123[0] = 0; /*0x1801c52ab*/\n  sub_18016EF40(a1: v123, a2: aMembershipIcon_0, a3: 20); /*0x1801c52b2*/\n  v125[0] = &std::_Func_impl_no_alloc<<lambda_42774e365bc732a49e4aa1bde0a22c8f>,void,std::wstring const &>::`vftable'; /*0x1801c52c6*/\n  v125[1] = a1; /*0x1801c52d8*/\n  v125[7] = v125; /*0x1801c52e6*/\n  v127 = (__m128i)xmmword_180DB6670; /*0x1801c52f4*/\n  v126[0] = 0; /*0x1801c52fc*/\n  sub_18016EF40(a1: v126, a2: aMembershipIcon_1, a3: 21); /*0x1801c5303*/\n  v128[0] = &std::_Func_impl_no_alloc<<lambda_d244bfcec893859cc44f054badb8fc1a>,void,std::wstring const &>::`vftable'; /*0x1801c5317*/\n  v128[1] = a1; /*0x1801c5329*/\n  v128[7] = v128; /*0x1801c5337*/\n  v130 = (__m128i)xmmword_180DB6670; /*0x1801c5345*/\n  v129[0] = 0; /*0x1801c534d*/\n  sub_18016EF40(a1: v129, a2: aMembershipIcon_2, a3: 29); /*0x1801c5354*/\n  v131[0] = &std::_Func_impl_no_alloc<<lambda_d037368226a0f794a40f5165e0eb191d>,void,std::wstring const &>::`vftable'; /*0x1801c5368*/\n  v131[1] = a1; /*0x1801c537a*/\n  v131[7] = v131; /*0x1801c5388*/\n  v133 = (__m128i)xmmword_180DB6670; /*0x1801c5396*/\n  v132[0] = 0; /*0x1801c539e*/\n  sub_18016EF40(a1: v132, a2: aMembershipIcon_3, a3: 31); /*0x1801c53a5*/\n  v134[0] = &std::_Func_impl_no_alloc<<lambda_1b3ae70cf521b6521e50024e7700477c>,void,std::wstring const &>::`vftable'; /*0x1801c53b9*/\n  v134[1] = a1; /*0x1801c53cb*/\n  v134[7] = v134; /*0x1801c53d9*/\n  v136 = (__m128i)xmmword_180DB6670; /*0x1801c53e7*/\n  v135[0] = 0; /*0x1801c53ef*/\n  sub_18016EF40(a1: v135, a2: aShowReturnBtnI, a3: 20); /*0x1801c53f6*/\n  v137[0] = &std::_Func_impl_no_alloc<<lambda_67bf19d733f8a7cbd3ab020d0eaca8d4>,void,std::wstring const &>::`vftable'; /*0x1801c540a*/\n  v137[1] = a1; /*0x1801c541c*/\n  v137[7] = v137; /*0x1801c542a*/\n  v139 = (__m128i)xmmword_180DB6670; /*0x1801c5438*/\n  v138[0] = 0; /*0x1801c5440*/",
+          "line_count": 100,
+          "total_lines": 488,
+          "truncated": true,
+          "cursor": {
+            "next": 400
+          }
+        }
+      },
+      {
+        "tool": "decompile",
+        "arguments": {
+          "addr": "0x1801c4830",
+          "offset": 400,
+          "max_lines": 100,
+          "database": "rea-4dfa6c3a-a70f-456f-8eab-ff5003d13fa3"
+        },
+        "result": {
+          "addr": "0x1801c4830",
+          "code": "  sub_18016EF40(a1: v138, a2: aUseItemAddSkil, a3: 18); /*0x1801c5447*/\n  v140[0] = &std::_Func_impl_no_alloc<<lambda_c51c3452cd072e71646323fa15290e88>,void,std::wstring const &>::`vftable'; /*0x1801c545b*/\n  v140[1] = a1; /*0x1801c546d*/\n  v140[7] = v140; /*0x1801c547b*/\n  v142 = (__m128i)xmmword_180DB6670; /*0x1801c5489*/\n  v141[0] = 0; /*0x1801c5491*/\n  sub_18016EF40(a1: v141, a2: aUsePvpKillRank, a3: 20); /*0x1801c5498*/\n  v143[0] = &std::_Func_impl_no_alloc<<lambda_1df430312e8b8128a97e8f126b9fefcc>,void,std::wstring const &>::`vftable'; /*0x1801c54ac*/\n  v143[1] = a1; /*0x1801c54be*/\n  v143[7] = v143; /*0x1801c54c5*/\n  v145 = (__m128i)xmmword_180DB6670; /*0x1801c54cc*/\n  v144[0] = 0; /*0x1801c54d4*/\n  sub_18016EF40(a1: v144, a2: aEnchantCutProb, a3: 24); /*0x1801c54e9*/\n  v146[0] = &std::_Func_impl_no_alloc<<lambda_42690ac3497333e54278be3492732feb>,void,std::wstring const &>::`vftable'; /*0x1801c54fd*/\n  v146[1] = a1; /*0x1801c550f*/\n  v146[7] = v146; /*0x1801c551d*/\n  v148 = (__m128i)xmmword_180DB6670; /*0x1801c552b*/\n  v147[0] = 0; /*0x1801c5533*/\n  sub_18016EF40(a1: v147, a2: aEnchantCutProb_0, a3: 25); /*0x1801c553a*/\n  v149[0] = &std::_Func_impl_no_alloc<<lambda_24fbfee0821f91f0b8c2baadd2e2f294>,void,std::wstring const &>::`vftable'; /*0x1801c554e*/\n  v149[1] = a1; /*0x1801c5560*/\n  v149[7] = v149; /*0x1801c556e*/\n  v151 = (__m128i)xmmword_180DB6670; /*0x1801c557c*/\n  v150[0] = 0; /*0x1801c5584*/\n  sub_18016EF40(a1: v150, a2: aEnchantCutProb_1, a3: 25); /*0x1801c558b*/\n  v152[0] = &std::_Func_impl_no_alloc<<lambda_02fc91a934f9a73233b18ac425dea1a1>,void,std::wstring const &>::`vftable'; /*0x1801c559f*/\n  v152[1] = a1; /*0x1801c55b1*/\n  v152[7] = v152; /*0x1801c55bf*/\n  v154 = (__m128i)xmmword_180DB6670; /*0x1801c55cd*/\n  v153[0] = 0; /*0x1801c55d5*/\n  sub_18016EF40(a1: v153, a2: aEnchantCutProb_2, a3: 25); /*0x1801c55dc*/\n  v155[1] = a1; /*0x1801c55e8*/\n  v155[0] = &std::_Func_impl_no_alloc<<lambda_24deab1c1bdb6c1b59dbfd98b5c51916>,void,std::wstring const &>::`vftable'; /*0x1801c55ef*/\n  v168 = a1; /*0x1801c5604*/\n  v155[7] = v155; /*0x1801c5612*/\n  sub_1801C6C10(a1: v156, a2: v3, a3: &v168); /*0x1801c5619*/\n  v168 = a1; /*0x1801c5625*/\n  sub_1801C6C70(a1: v157, a2: v4, a3: &v168); /*0x1801c5633*/\n  v168 = a1; /*0x1801c563f*/\n  sub_1801C6CD0(a1: v158, a2: v5, a3: &v168); /*0x1801c564d*/\n  v168 = a1; /*0x1801c5659*/\n  sub_1801C6D30(a1: v159, a2: v6, a3: &v168); /*0x1801c5667*/\n  v168 = a1; /*0x1801c5673*/\n  sub_1801C6D90(a1: v160, a2: v7, a3: &v168); /*0x1801c5681*/\n  v168 = a1; /*0x1801c568d*/\n  sub_1801C6DF0(a1: v161, a2: v8, a3: &v168); /*0x1801c569b*/\n  v168 = a1; /*0x1801c56a7*/\n  sub_1801C6E50(a1: v162, a2: v9, a3: &v168); /*0x1801c56b5*/\n  v168 = a1; /*0x1801c56c1*/\n  sub_1801C6EB0(a1: v163, a2: v10, a3: &v168); /*0x1801c56cf*/\n  v168 = a1; /*0x1801c56db*/\n  sub_1801C6F10(a1: v164, a2: v11, a3: &v168); /*0x1801c56e9*/\n  v168 = a1; /*0x1801c56ee*/\n  sub_1801C6F70(a1: v165, a2: v12, a3: &v168); /*0x1801c5703*/\n  v168 = a1; /*0x1801c570f*/\n  sub_1801C6FD0(a1: v166, a2: v13, a3: &v168); /*0x1801c571d*/\n  v21[0] = v24; /*0x1801c5726*/\n  v21[1] = &v167; /*0x1801c5737*/\n  sub_1801C59B0(a1: v22, a2: v21); /*0x1801c574c*/\n  sub_18016F5D0(a1: v24, a2: 96, a3: 55, a4: sub_1801C5850); /*0x1801c5763*/\n  v14 = *(_DWORD *)(a1 + 8); /*0x1801c5768*/\n  if ( v14 != 0 ) /*0x1801c576f*/\n  {\n    do /*0x1801c580e*/\n    {\n      v15 = sub_1801C6BA0(a1, a2: v1); /*0x1801c578a*/\n      v16 = v15; /*0x1801c578f*/\n      if ( v15 != 0 ) /*0x1801c5795*/\n      {\n        v17 = sub_180172A90(a1: v15 + 4); /*0x1801c579b*/\n        sub_18016F080(a1: v21, a2: v17); /*0x1801c57a8*/\n        sub_1801C5990(a1: v22, a2: &v168, a3: v21); /*0x1801c57be*/\n        sub_18016EEB0(a1: v21); /*0x1801c57c8*/\n        v18 = v168; /*0x1801c57cd*/\n        if ( v168 != v23 ) /*0x1801c57d9*/\n        {\n          v19 = sub_180172A90(a1: v16 + 8); /*0x1801c57df*/\n          sub_18016F080(a1: v21, a2: v19); /*0x1801c57ec*/\n          sub_1801C6BF0(a1: v18 + 48, a2: v21); /*0x1801c57fa*/\n          sub_18016EEB0(a1: v21); /*0x1801c5804*/\n        }\n      }\n      ++v1; /*0x1801c5809*/\n    }\n    while ( v1 < v14 ); /*0x1801c580e*/\n  }\n  return sub_1801C5890(a1: v22); /*0x1801c582e*/\n}",
+          "line_count": 88,
+          "total_lines": 488,
+          "truncated": true,
+          "cursor": {
+            "done": true
+          }
+        }
+      }
+    ]
+  },
+  "normalized_result": "__int64 __fastcall sub_1801C4830(__int64 a1)\n{\n  unsigned int v1; // edi\n  __int64 v3; // rdx\n  __int64 v4; // rdx\n  __int64 v5; // rdx\n  __int64 v6; // rdx\n  __int64 v7; // rdx\n  __int64 v8; // rdx\n  __int64 v9; // rdx\n  __int64 v10; // rdx\n  __int64 v11; // rdx\n  __int64 v12; // rdx\n  __int64 v13; // rdx\n  unsigned int v14; // r15d\n  __int64 v15; // rax\n  __int64 v16; // rsi\n  __int64 v17; // rax\n  __int64 v18; // rbx\n  __int64 v19; // rax\n  _QWORD v21[4]; // [rsp+20h] [rbp-E0h] BYREF\n  _BYTE v22[8]; // [rsp+40h] [rbp-C0h] BYREF\n  __int64 v23; // [rsp+48h] [rbp-B8h]\n  _WORD v24[8]; // [rsp+80h] [rbp-80h] BYREF\n  __m128i v25; // [rsp+90h] [rbp-70h]\n  _QWORD v26[8]; // [rsp+A0h] [rbp-60h] BYREF\n  _WORD v27[8]; // [rsp+E0h] [rbp-20h] BYREF\n  __m128i v28; // [rsp+F0h] [rbp-10h]\n  _QWORD v29[8]; // [rsp+100h] [rbp+0h] BYREF\n  _WORD v30[8]; // [rsp+140h] [rbp+40h] BYREF\n  __m128i v31; // [rsp+150h] [rbp+50h]\n  _QWORD v32[8]; // [rsp+160h] [rbp+60h] BYREF\n  _WORD v33[8]; // [rsp+1A0h] [rbp+A0h] BYREF\n  __m128i v34; // [rsp+1B0h] [rbp+B0h]\n  _QWORD v35[8]; // [rsp+1C0h] [rbp+C0h] BYREF\n  _WORD v36[8]; // [rsp+200h] [rbp+100h] BYREF\n  __m128i v37; // [rsp+210h] [rbp+110h]\n  _QWORD v38[8]; // [rsp+220h] [rbp+120h] BYREF\n  _WORD v39[8]; // [rsp+260h] [rbp+160h] BYREF\n  __m128i v40; // [rsp+270h] [rbp+170h]\n  _QWORD v41[8]; // [rsp+280h] [rbp+180h] BYREF\n  _WORD v42[8]; // [rsp+2C0h] [rbp+1C0h] BYREF\n  __m128i v43; // [rsp+2D0h] [rbp+1D0h]\n  _QWORD v44[8]; // [rsp+2E0h] [rbp+1E0h] BYREF\n  _WORD v45[8]; // [rsp+320h] [rbp+220h] BYREF\n  __m128i v46; // [rsp+330h] [rbp+230h]\n  _QWORD v47[8]; // [rsp+340h] [rbp+240h] BYREF\n  _WORD v48[8]; // [rsp+380h] [rbp+280h] BYREF\n  __m128i v49; // [rsp+390h] [rbp+290h]\n  _QWORD v50[8]; // [rsp+3A0h] [rbp+2A0h] BYREF\n  _WORD v51[8]; // [rsp+3E0h] [rbp+2E0h] BYREF\n  __m128i v52; // [rsp+3F0h] [rbp+2F0h]\n  _QWORD v53[8]; // [rsp+400h] [rbp+300h] BYREF\n  _WORD v54[8]; // [rsp+440h] [rbp+340h] BYREF\n  __m128i v55; // [rsp+450h] [rbp+350h]\n  _QWORD v56[8]; // [rsp+460h] [rbp+360h] BYREF\n  _WORD v57[8]; // [rsp+4A0h] [rbp+3A0h] BYREF\n  __m128i v58; // [rsp+4B0h] [rbp+3B0h]\n  _QWORD v59[8]; // [rsp+4C0h] [rbp+3C0h] BYREF\n  _WORD v60[8]; // [rsp+500h] [rbp+400h] BYREF\n  __m128i v61; // [rsp+510h] [rbp+410h]\n  _QWORD v62[8]; // [rsp+520h] [rbp+420h] BYREF\n  _WORD v63[8]; // [rsp+560h] [rbp+460h] BYREF\n  __m128i v64; // [rsp+570h] [rbp+470h]\n  _QWORD v65[8]; // [rsp+580h] [rbp+480h] BYREF\n  _WORD v66[8]; // [rsp+5C0h] [rbp+4C0h] BYREF\n  __m128i v67; // [rsp+5D0h] [rbp+4D0h]\n  _QWORD v68[8]; // [rsp+5E0h] [rbp+4E0h] BYREF\n  _WORD v69[8]; // [rsp+620h] [rbp+520h] BYREF\n  __m128i v70; // [rsp+630h] [rbp+530h]\n  _QWORD v71[8]; // [rsp+640h] [rbp+540h] BYREF\n  _WORD v72[8]; // [rsp+680h] [rbp+580h] BYREF\n  __m128i v73; // [rsp+690h] [rbp+590h]\n  _QWORD v74[8]; // [rsp+6A0h] [rbp+5A0h] BYREF\n  _WORD v75[8]; // [rsp+6E0h] [rbp+5E0h] BYREF\n  __m128i v76; // [rsp+6F0h] [rbp+5F0h]\n  _QWORD v77[8]; // [rsp+700h] [rbp+600h] BYREF\n  _WORD v78[8]; // [rsp+740h] [rbp+640h] BYREF\n  __m128i v79; // [rsp+750h] [rbp+650h]\n  _QWORD v80[8]; // [rsp+760h] [rbp+660h] BYREF\n  _WORD v81[8]; // [rsp+7A0h] [rbp+6A0h] BYREF\n  __m128i v82; // [rsp+7B0h] [rbp+6B0h]\n  _QWORD v83[8]; // [rsp+7C0h] [rbp+6C0h] BYREF\n  _WORD v84[8]; // [rsp+800h] [rbp+700h] BYREF\n  __m128i v85; // [rsp+810h] [rbp+710h]\n  _QWORD v86[8]; // [rsp+820h] [rbp+720h] BYREF\n  _WORD v87[8]; // [rsp+860h] [rbp+760h] BYREF\n  __m128i v88; // [rsp+870h] [rbp+770h]\n  _QWORD v89[8]; // [rsp+880h] [rbp+780h] BYREF\n  _WORD v90[8]; // [rsp+8C0h] [rbp+7C0h] BYREF\n  __m128i v91; // [rsp+8D0h] [rbp+7D0h]\n  _QWORD v92[8]; // [rsp+8E0h] [rbp+7E0h] BYREF\n  _WORD v93[8]; // [rsp+920h] [rbp+820h] BYREF\n  __m128i v94; // [rsp+930h] [rbp+830h]\n  _QWORD v95[8]; // [rsp+940h] [rbp+840h] BYREF\n  _WORD v96[8]; // [rsp+980h] [rbp+880h] BYREF\n  __m128i v97; // [rsp+990h] [rbp+890h]\n  _QWORD v98[8]; // [rsp+9A0h] [rbp+8A0h] BYREF\n  _WORD v99[8]; // [rsp+9E0h] [rbp+8E0h] BYREF\n  __m128i v100; // [rsp+9F0h] [rbp+8F0h]\n  _QWORD v101[8]; // [rsp+A00h] [rbp+900h] BYREF\n  _WORD v102[8]; // [rsp+A40h] [rbp+940h] BYREF\n  __m128i v103; // [rsp+A50h] [rbp+950h]\n  _QWORD v104[8]; // [rsp+A60h] [rbp+960h] BYREF\n  _WORD v105[8]; // [rsp+AA0h] [rbp+9A0h] BYREF\n  __m128i v106; // [rsp+AB0h] [rbp+9B0h]\n  _QWORD v107[8]; // [rsp+AC0h] [rbp+9C0h] BYREF\n  _WORD v108[8]; // [rsp+B00h] [rbp+A00h] BYREF\n  __m128i v109; // [rsp+B10h] [rbp+A10h]\n  _QWORD v110[8]; // [rsp+B20h] [rbp+A20h] BYREF\n  _WORD v111[8]; // [rsp+B60h] [rbp+A60h] BYREF\n  __m128i v112; // [rsp+B70h] [rbp+A70h]\n  _QWORD v113[8]; // [rsp+B80h] [rbp+A80h] BYREF\n  _WORD v114[8]; // [rsp+BC0h] [rbp+AC0h] BYREF\n  __m128i v115; // [rsp+BD0h] [rbp+AD0h]\n  _QWORD v116[8]; // [rsp+BE0h] [rbp+AE0h] BYREF\n  _WORD v117[8]; // [rsp+C20h] [rbp+B20h] BYREF\n  __m128i v118; // [rsp+C30h] [rbp+B30h]\n  _QWORD v119[8]; // [rsp+C40h] [rbp+B40h] BYREF\n  _WORD v120[8]; // [rsp+C80h] [rbp+B80h] BYREF\n  __m128i v121; // [rsp+C90h] [rbp+B90h]\n  _QWORD v122[8]; // [rsp+CA0h] [rbp+BA0h] BYREF\n  _WORD v123[8]; // [rsp+CE0h] [rbp+BE0h] BYREF\n  __m128i v124; // [rsp+CF0h] [rbp+BF0h]\n  _QWORD v125[8]; // [rsp+D00h] [rbp+C00h] BYREF\n  _WORD v126[8]; // [rsp+D40h] [rbp+C40h] BYREF\n  __m128i v127; // [rsp+D50h] [rbp+C50h]\n  _QWORD v128[8]; // [rsp+D60h] [rbp+C60h] BYREF\n  _WORD v129[8]; // [rsp+DA0h] [rbp+CA0h] BYREF\n  __m128i v130; // [rsp+DB0h] [rbp+CB0h]\n  _QWORD v131[8]; // [rsp+DC0h] [rbp+CC0h] BYREF\n  _WORD v132[8]; // [rsp+E00h] [rbp+D00h] BYREF\n  __m128i v133; // [rsp+E10h] [rbp+D10h]\n  _QWORD v134[8]; // [rsp+E20h] [rbp+D20h] BYREF\n  _WORD v135[8]; // [rsp+E60h] [rbp+D60h] BYREF\n  __m128i v136; // [rsp+E70h] [rbp+D70h]\n  _QWORD v137[8]; // [rsp+E80h] [rbp+D80h] BYREF\n  _WORD v138[8]; // [rsp+EC0h] [rbp+DC0h] BYREF\n  __m128i v139; // [rsp+ED0h] [rbp+DD0h]\n  _QWORD v140[8]; // [rsp+EE0h] [rbp+DE0h] BYREF\n  _WORD v141[8]; // [rsp+F20h] [rbp+E20h] BYREF\n  __m128i v142; // [rsp+F30h] [rbp+E30h]\n  _QWORD v143[8]; // [rsp+F40h] [rbp+E40h] BYREF\n  _WORD v144[8]; // [rsp+F80h] [rbp+E80h] BYREF\n  __m128i v145; // [rsp+F90h] [rbp+E90h]\n  _QWORD v146[8]; // [rsp+FA0h] [rbp+EA0h] BYREF\n  _WORD v147[8]; // [rsp+FE0h] [rbp+EE0h] BYREF\n  __m128i v148; // [rsp+FF0h] [rbp+EF0h]\n  _QWORD v149[8]; // [rsp+1000h] [rbp+F00h] BYREF\n  _WORD v150[8]; // [rsp+1040h] [rbp+F40h] BYREF\n  __m128i v151; // [rsp+1050h] [rbp+F50h]\n  _QWORD v152[8]; // [rsp+1060h] [rbp+F60h] BYREF\n  _WORD v153[8]; // [rsp+10A0h] [rbp+FA0h] BYREF\n  __m128i v154; // [rsp+10B0h] [rbp+FB0h]\n  _QWORD v155[8]; // [rsp+10C0h] [rbp+FC0h] BYREF\n  _BYTE v156[96]; // [rsp+1100h] [rbp+1000h] BYREF\n  _BYTE v157[96]; // [rsp+1160h] [rbp+1060h] BYREF\n  _BYTE v158[96]; // [rsp+11C0h] [rbp+10C0h] BYREF\n  _BYTE v159[96]; // [rsp+1220h] [rbp+1120h] BYREF\n  _BYTE v160[96]; // [rsp+1280h] [rbp+1180h] BYREF\n  _BYTE v161[96]; // [rsp+12E0h] [rbp+11E0h] BYREF\n  _BYTE v162[96]; // [rsp+1340h] [rbp+1240h] BYREF\n  _BYTE v163[96]; // [rsp+13A0h] [rbp+12A0h] BYREF\n  _BYTE v164[96]; // [rsp+1400h] [rbp+1300h] BYREF\n  _BYTE v165[96]; // [rsp+1460h] [rbp+1360h] BYREF\n  _BYTE v166[96]; // [rsp+14C0h] [rbp+13C0h] BYREF\n  char v167; // [rsp+1520h] [rbp+1420h] BYREF\n  __int64 v168; // [rsp+1540h] [rbp+1440h] BYREF\n\n  v1 = 0; /*0x1801c485e*/\n  v25 = (__m128i)xmmword_180DB6670; /*0x1801c4860*/\n  v24[0] = 0; /*0x1801c4868*/\n  sub_18016EF40(a1: v24, a2: aWorldVendorReg, a3: 40); /*0x1801c4874*/\n  v26[0] = &std::_Func_impl_no_alloc<<lambda_b5f9266696ed2da67fd2226318d8c513>,void,std::wstring const &>::`vftable'; /*0x1801c4888*/\n  v26[1] = a1; /*0x1801c4894*/\n  v26[7] = v26; /*0x1801c489f*/\n  v28 = (__m128i)xmmword_180DB6670; /*0x1801c48a7*/\n  v27[0] = 0; /*0x1801c48ac*/\n  sub_18016EF40(a1: v27, a2: aWorldVendorReg_0, a3: 40); /*0x1801c48b0*/\n  v29[0] = &std::_Func_impl_no_alloc<<lambda_72e8e85cd759472acfa3c1e1d3f9bf08>,void,std::wstring const &>::`vftable'; /*0x1801c48c4*/\n  v29[1] = a1; /*0x1801c48d0*/\n  v29[7] = v29; /*0x1801c48db*/\n  v31 = (__m128i)xmmword_180DB6670; /*0x1801c48e3*/\n  v30[0] = 0; /*0x1801c48e8*/\n  sub_18016EF40(a1: v30, a2: aWorldVendorCal, a3: 31); /*0x1801c48ec*/\n  v32[0] = &std::_Func_impl_no_alloc<<lambda_76f96b8600b41e2739bcd88673e621dd>,void,std::wstring const &>::`vftable'; /*0x1801c4900*/\n  v32[1] = a1; /*0x1801c490c*/\n  v32[7] = v32; /*0x1801c4917*/\n  v34 = (__m128i)xmmword_180DB6670; /*0x1801c4925*/\n  v33[0] = 0; /*0x1801c492d*/\n  sub_18016EF40(a1: v33, a2: aLegionWarehous, a3: 25); /*0x1801c4934*/\n  v35[0] = &std::_Func_impl_no_alloc<<lambda_a8a67400d6393307c09495d83f576fad>,void,std::wstring const &>::`vftable'; /*0x1801c4948*/\n  v35[1] = a1; /*0x1801c495a*/\n  v35[7] = v35; /*0x1801c4968*/\n  v37 = (__m128i)xmmword_180DB6670; /*0x1801c4976*/\n  v36[0] = 0; /*0x1801c497e*/\n  sub_18016EF40(a1: v36, a2: aPersonalShop, a3: 13); /*0x1801c4985*/\n  v38[0] = &std::_Func_impl_no_alloc<<lambda_2c3f07546c9a62b007d6800ba468103d>,void,std::wstring const &>::`vftable'; /*0x1801c4999*/\n  v38[1] = a1; /*0x1801c49ab*/\n  v38[7] = v38; /*0x1801c49b9*/\n  v40 = (__m128i)xmmword_180DB6670; /*0x1801c49c7*/\n  v39[0] = 0; /*0x1801c49cf*/\n  sub_18016EF40(a1: v39, a2: aPersonalTrade, a3: 14); /*0x1801c49d6*/\n  v41[0] = &std::_Func_impl_no_alloc<<lambda_15019fd05aea7578276ca6c730872f5e>,void,std::wstring const &>::`vftable'; /*0x1801c49ea*/\n  v41[1] = a1; /*0x1801c49fc*/\n  v41[7] = v41; /*0x1801c4a0a*/\n  v43 = (__m128i)xmmword_180DB6670; /*0x1801c4a18*/\n  v42[0] = 0; /*0x1801c4a20*/\n  sub_18016EF40(a1: v42, a2: aSendItemMail, a3: 14); /*0x1801c4a27*/\n  v44[0] = &std::_Func_impl_no_alloc<<lambda_13e53ce0816153c4afe9cbffacbccd10>,void,std::wstring const &>::`vftable'; /*0x1801c4a3b*/\n  v44[1] = a1; /*0x1801c4a4d*/\n  v44[7] = v44; /*0x1801c4a5b*/\n  v46 = (__m128i)xmmword_180DB6670; /*0x1801c4a69*/\n  v45[0] = 0; /*0x1801c4a71*/\n  sub_18016EF40(a1: v45, a2: aSplitGroupKina, a3: 16); /*0x1801c4a78*/\n  v47[0] = &std::_Func_impl_no_alloc<<lambda_1aa932644876bd32b69f9c3f521e152f>,void,std::wstring const &>::`vftable'; /*0x1801c4a8c*/\n  v47[1] = a1; /*0x1801c4a9e*/\n  v47[7] = v47; /*0x1801c4aac*/\n  v49 = (__m128i)xmmword_180DB6670; /*0x1801c4aba*/\n  v48[0] = 0; /*0x1801c4ac2*/\n  sub_18016EF40(a1: v48, a2: aUseFlyinfo, a3: 11); /*0x1801c4ac9*/\n  v50[0] = &std::_Func_impl_no_alloc<<lambda_0e913b61eab4f8fe9dcf9bfed27251b1>,void,std::wstring const &>::`vftable'; /*0x1801c4add*/\n  v50[1] = a1; /*0x1801c4aef*/\n  v50[7] = v50; /*0x1801c4afd*/\n  v52 = (__m128i)xmmword_180DB6670; /*0x1801c4b0b*/\n  v51[0] = 0; /*0x1801c4b13*/\n  sub_18016EF40(a1: v51, a2: aDisplayUnlimit, a3: 21); /*0x1801c4b1a*/\n  v53[0] = &std::_Func_impl_no_alloc<<lambda_8c6eaebeab5dad0dc4f9c71613e4e8b1>,void,std::wstring const &>::`vftable'; /*0x1801c4b2e*/\n  v53[1] = a1; /*0x1801c4b40*/\n  v53[7] = v53; /*0x1801c4b4e*/\n  v55 = (__m128i)xmmword_180DB6670; /*0x1801c4b5c*/\n  v54[0] = 0; /*0x1801c4b64*/\n  sub_18016EF40(a1: v54, a2: aCanRegisterPac, a3: 36); /*0x1801c4b6b*/\n  v56[0] = &std::_Func_impl_no_alloc<<lambda_4852612745c42479f513a8395329063c>,void,std::wstring const &>::`vftable'; /*0x1801c4b7f*/\n  v56[1] = a1; /*0x1801c4b91*/\n  v56[7] = v56; /*0x1801c4b9f*/\n  v58 = (__m128i)xmmword_180DB6670; /*0x1801c4bad*/\n  v57[0] = 0; /*0x1801c4bb5*/\n  sub_18016EF40(a1: v57, a2: aCanRegisterPac_0, a3: 41); /*0x1801c4bbc*/\n  v59[0] = &std::_Func_impl_no_alloc<<lambda_3800541e9e1a66399eef6df19a3af7f2>,void,std::wstring const &>::`vftable'; /*0x1801c4bd0*/\n  v59[1] = a1; /*0x1801c4be2*/\n  v59[7] = v59; /*0x1801c4bf0*/\n  v61 = (__m128i)xmmword_180DB6670; /*0x1801c4bfe*/\n  v60[0] = 0; /*0x1801c4c06*/\n  sub_18016EF40(a1: v60, a2: aCanRegisterPac_1, a3: 34); /*0x1801c4c0d*/\n  v62[0] = &std::_Func_impl_no_alloc<<lambda_b8e815506def619c0ca6c5b854e1e808>,void,std::wstring const &>::`vftable'; /*0x1801c4c21*/\n  v62[1] = a1; /*0x1801c4c33*/\n  v62[7] = v62; /*0x1801c4c3a*/\n  v64 = (__m128i)xmmword_180DB6670; /*0x1801c4c41*/\n  v63[0] = 0; /*0x1801c4c49*/\n  sub_18016EF40(a1: v63, a2: aPackingCheckIn, a3: 18); /*0x1801c4c5e*/\n  v65[0] = &std::_Func_impl_no_alloc<<lambda_7d51b268907f08aad38feba2d7b7a315>,void,std::wstring const &>::`vftable'; /*0x1801c4c72*/\n  v65[1] = a1; /*0x1801c4c84*/\n  v65[7] = v65; /*0x1801c4c92*/\n  v67 = (__m128i)xmmword_180DB6670; /*0x1801c4ca0*/\n  v66[0] = 0; /*0x1801c4ca8*/\n  sub_18016EF40(a1: v66, a2: aDisplayItemRes, a3: 24); /*0x1801c4caf*/\n  v68[0] = &std::_Func_impl_no_alloc<<lambda_92999272e82107d8f8343eed74db381b>,void,std::wstring const &>::`vftable'; /*0x1801c4cc3*/\n  v68[1] = a1; /*0x1801c4cd5*/\n  v68[7] = v68; /*0x1801c4ce3*/\n  v70 = (__m128i)xmmword_180DB6670; /*0x1801c4cf1*/\n  v69[0] = 0; /*0x1801c4cf9*/\n  sub_18016EF40(a1: v69, a2: aOnGoingRanking, a3: 26); /*0x1801c4d00*/\n  v71[0] = &std::_Func_impl_no_alloc<<lambda_17697f1c4da46642a772e663f622477f>,void,std::wstring const &>::`vftable'; /*0x1801c4d14*/\n  v71[1] = a1; /*0x1801c4d26*/\n  v71[7] = v71; /*0x1801c4d34*/\n  v73 = (__m128i)xmmword_180DB6670; /*0x1801c4d42*/\n  v72[0] = 0; /*0x1801c4d4a*/\n  sub_18016EF40(a1: v72, a2: aShowFreePlayIc, a3: 19); /*0x1801c4d51*/\n  v74[0] = &std::_Func_impl_no_alloc<<lambda_d62b5e841b4a51316492260fafe36d91>,void,std::wstring const &>::`vftable'; /*0x1801c4d65*/\n  v74[1] = a1; /*0x1801c4d77*/\n  v74[7] = v74; /*0x1801c4d85*/\n  v76 = (__m128i)xmmword_180DB6670; /*0x1801c4d93*/\n  v75[0] = 0; /*0x1801c4d9b*/\n  sub_18016EF40(a1: v75, a2: aShowPcRoomChar, a3: 24); /*0x1801c4da2*/\n  v77[0] = &std::_Func_impl_no_alloc<<lambda_2b1900054c096488b2c8da1a4566877b>,void,std::wstring const &>::`vftable'; /*0x1801c4db6*/\n  v77[1] = a1; /*0x1801c4dc8*/\n  v77[7] = v77; /*0x1801c4dd6*/\n  v79 = (__m128i)xmmword_180DB6670; /*0x1801c4de4*/\n  v78[0] = 0; /*0x1801c4dec*/\n  sub_18016EF40(a1: v78, a2: aShowMemebershi, a3: 21); /*0x1801c4df3*/\n  v80[0] = &std::_Func_impl_no_alloc<<lambda_49d8958bcf4f16d064453dd3d2014336>,void,std::wstring const &>::`vftable'; /*0x1801c4e07*/\n  v80[1] = a1; /*0x1801c4e19*/\n  v80[7] = v80; /*0x1801c4e27*/\n  v82 = (__m128i)xmmword_180DB6670; /*0x1801c4e35*/\n  v81[0] = 0; /*0x1801c4e3d*/\n  sub_18016EF40(a1: v81, a2: aShowAccountInf, a3: 17); /*0x1801c4e44*/\n  v83[0] = &std::_Func_impl_no_alloc<<lambda_9f79993036f11243e04a85b990d67b69>,void,std::wstring const &>::`vftable'; /*0x1801c4e58*/\n  v83[7] = v83; /*0x1801c4e66*/\n  v83[1] = a1; /*0x1801c4e6d*/\n  v85 = (__m128i)xmmword_180DB6670; /*0x1801c4e78*/\n  v84[0] = 0; /*0x1801c4e87*/\n  sub_18016EF40(a1: v84, a2: aCansummontoype, a3: 26); /*0x1801c4e95*/\n  v86[0] = &std::_Func_impl_no_alloc<<lambda_c751babbc9996de176d4c170a7c9a8ef>,void,std::wstring const &>::`vftable'; /*0x1801c4ea9*/\n  v86[1] = a1; /*0x1801c4ebb*/\n  v86[7] = v86; /*0x1801c4ec9*/\n  v88 = (__m128i)xmmword_180DB6670; /*0x1801c4ed7*/\n  v87[0] = 0; /*0x1801c4edf*/\n  sub_18016EF40(a1: v87, a2: aDeveScheduleUr, a3: 20); /*0x1801c4ee6*/\n  v89[0] = &std::_Func_impl_no_alloc<<lambda_7ccf0a325ba71002c99ac5abc4a8cf14>,void,std::wstring const &>::`vftable'; /*0x1801c4efa*/\n  v89[1] = a1; /*0x1801c4f0c*/\n  v89[7] = v89; /*0x1801c4f1a*/\n  v91 = (__m128i)xmmword_180DB6670; /*0x1801c4f28*/\n  v90[0] = 0; /*0x1801c4f30*/\n  sub_18016EF40(a1: v90, a2: aDeveScheduleUr_0, a3: 22); /*0x1801c4f37*/\n  v92[0] = &std::_Func_impl_no_alloc<<lambda_2066adfaa239c0df5fffe187ab7dd0b4>,void,std::wstring const &>::`vftable'; /*0x1801c4f4b*/\n  v92[1] = a1; /*0x1801c4f5d*/\n  v92[7] = v92; /*0x1801c4f6b*/\n  v94 = (__m128i)xmmword_180DB6670; /*0x1801c4f79*/\n  v93[0] = 0; /*0x1801c4f81*/\n  sub_18016EF40(a1: v93, a2: aDevapassUiDisp, a3: 19); /*0x1801c4f88*/\n  v95[0] = &std::_Func_impl_no_alloc<<lambda_2fbedb7b18af799a14138b5b099bd555>,void,std::wstring const &>::`vftable'; /*0x1801c4f9c*/\n  v95[1] = a1; /*0x1801c4fae*/\n  v95[7] = v95; /*0x1801c4fbc*/\n  v97 = (__m128i)xmmword_180DB6670; /*0x1801c4fca*/\n  v96[0] = 0; /*0x1801c4fd2*/\n  sub_18016EF40(a1: v96, a2: aUseAccountWare, a3: 34); /*0x1801c4fd9*/\n  v98[0] = &std::_Func_impl_no_alloc<<lambda_c8859fdb1fce100671f2e6005a2eea16>,void,std::wstring const &>::`vftable'; /*0x1801c4fed*/\n  v98[1] = a1; /*0x1801c4fff*/\n  v98[7] = v98; /*0x1801c500d*/\n  v100 = (__m128i)xmmword_180DB6670; /*0x1801c501b*/\n  v99[0] = 0; /*0x1801c5023*/\n  sub_18016EF40(a1: v99, a2: aUseAllianceUni, a3: 18); /*0x1801c502a*/\n  v101[0] = &std::_Func_impl_no_alloc<<lambda_53884ddd0cbfae923321d0e652e18e08>,void,std::wstring const &>::`vftable'; /*0x1801c503e*/\n  v101[1] = a1; /*0x1801c5050*/\n  v101[7] = v101; /*0x1801c505e*/\n  v103 = (__m128i)xmmword_180DB6670; /*0x1801c506c*/\n  v102[0] = 0; /*0x1801c5074*/\n  sub_18016EF40(a1: v102, a2: aUseAlliance, a3: 12); /*0x1801c507b*/\n  v104[1] = a1; /*0x1801c5087*/\n  v104[0] = &std::_Func_impl_no_alloc<<lambda_0d538b310b4bbf5c6bf4db4731beb32f>,void,std::wstring const &>::`vftable'; /*0x1801c508e*/\n  v104[7] = v104; /*0x1801c50a8*/\n  v106 = (__m128i)xmmword_180DB6670; /*0x1801c50b6*/\n  v105[0] = 0; /*0x1801c50c5*/\n  sub_18016EF40(a1: v105, a2: aUseItemUpgrade, a3: 16); /*0x1801c50cc*/\n  v107[0] = &std::_Func_impl_no_alloc<<lambda_27a4510b13e12069bf481ee01644c38a>,void,std::wstring const &>::`vftable'; /*0x1801c50e0*/\n  v107[1] = a1; /*0x1801c50f2*/\n  v107[7] = v107; /*0x1801c5100*/\n  v109 = (__m128i)xmmword_180DB6670; /*0x1801c510e*/\n  v108[0] = 0; /*0x1801c5116*/\n  sub_18016EF40(a1: v108, a2: aUseGroupRootDi, a3: 24); /*0x1801c511d*/\n  v110[0] = &std::_Func_impl_no_alloc<<lambda_b7f5d80e62e431b48472e471bc9bc1e0>,void,std::wstring const &>::`vftable'; /*0x1801c5131*/\n  v110[1] = a1; /*0x1801c5143*/\n  v110[7] = v110; /*0x1801c5151*/\n  v112 = (__m128i)xmmword_180DB6670; /*0x1801c515f*/\n  v111[0] = 0; /*0x1801c5167*/\n  sub_18016EF40(a1: v111, a2: aMarketProbabil, a3: 25); /*0x1801c516e*/\n  v113[0] = &std::_Func_impl_no_alloc<<lambda_51849bbfa43e4f5dfdd83f7a5133885b>,void,std::wstring const &>::`vftable'; /*0x1801c5182*/\n  v113[1] = a1; /*0x1801c5194*/\n  v113[7] = v113; /*0x1801c51a2*/\n  v115 = (__m128i)xmmword_180DB6670; /*0x1801c51b0*/\n  v114[0] = 0; /*0x1801c51b8*/\n  sub_18016EF40(a1: v114, a2: aMarketProbabil_0, a3: 27); /*0x1801c51bf*/\n  v116[0] = &std::_Func_impl_no_alloc<<lambda_916881cf91b13c2603f33c79f8ae5aeb>,void,std::wstring const &>::`vftable'; /*0x1801c51d3*/\n  v116[1] = a1; /*0x1801c51e5*/\n  v116[7] = v116; /*0x1801c51f3*/\n  v118 = (__m128i)xmmword_180DB6670; /*0x1801c5201*/\n  v117[0] = 0; /*0x1801c5209*/\n  sub_18016EF40(a1: v117, a2: aGotchaProbabil, a3: 22); /*0x1801c5210*/\n  v119[0] = &std::_Func_impl_no_alloc<<lambda_26ba8cfd706a99ae43e82b505a509a4a>,void,std::wstring const &>::`vftable'; /*0x1801c5224*/\n  v119[1] = a1; /*0x1801c5236*/\n  v119[7] = v119; /*0x1801c5244*/\n  v121 = (__m128i)xmmword_180DB6670; /*0x1801c5252*/\n  v120[0] = 0; /*0x1801c525a*/\n  sub_18016EF40(a1: v120, a2: aMembershipIcon, a3: 22); /*0x1801c5261*/\n  v122[0] = &std::_Func_impl_no_alloc<<lambda_388645dee92e8c86a634deff80341149>,void,std::wstring const &>::`vftable'; /*0x1801c5275*/\n  v122[1] = a1; /*0x1801c5287*/\n  v122[7] = v122; /*0x1801c5295*/\n  v124 = (__m128i)xmmword_180DB6670; /*0x1801c52a3*/\n  v123[0] = 0; /*0x1801c52ab*/\n  sub_18016EF40(a1: v123, a2: aMembershipIcon_0, a3: 20); /*0x1801c52b2*/\n  v125[0] = &std::_Func_impl_no_alloc<<lambda_42774e365bc732a49e4aa1bde0a22c8f>,void,std::wstring const &>::`vftable'; /*0x1801c52c6*/\n  v125[1] = a1; /*0x1801c52d8*/\n  v125[7] = v125; /*0x1801c52e6*/\n  v127 = (__m128i)xmmword_180DB6670; /*0x1801c52f4*/\n  v126[0] = 0; /*0x1801c52fc*/\n  sub_18016EF40(a1: v126, a2: aMembershipIcon_1, a3: 21); /*0x1801c5303*/\n  v128[0] = &std::_Func_impl_no_alloc<<lambda_d244bfcec893859cc44f054badb8fc1a>,void,std::wstring const &>::`vftable'; /*0x1801c5317*/\n  v128[1] = a1; /*0x1801c5329*/\n  v128[7] = v128; /*0x1801c5337*/\n  v130 = (__m128i)xmmword_180DB6670; /*0x1801c5345*/\n  v129[0] = 0; /*0x1801c534d*/\n  sub_18016EF40(a1: v129, a2: aMembershipIcon_2, a3: 29); /*0x1801c5354*/\n  v131[0] = &std::_Func_impl_no_alloc<<lambda_d037368226a0f794a40f5165e0eb191d>,void,std::wstring const &>::`vftable'; /*0x1801c5368*/\n  v131[1] = a1; /*0x1801c537a*/\n  v131[7] = v131; /*0x1801c5388*/\n  v133 = (__m128i)xmmword_180DB6670; /*0x1801c5396*/\n  v132[0] = 0; /*0x1801c539e*/\n  sub_18016EF40(a1: v132, a2: aMembershipIcon_3, a3: 31); /*0x1801c53a5*/\n  v134[0] = &std::_Func_impl_no_alloc<<lambda_1b3ae70cf521b6521e50024e7700477c>,void,std::wstring const &>::`vftable'; /*0x1801c53b9*/\n  v134[1] = a1; /*0x1801c53cb*/\n  v134[7] = v134; /*0x1801c53d9*/\n  v136 = (__m128i)xmmword_180DB6670; /*0x1801c53e7*/\n  v135[0] = 0; /*0x1801c53ef*/\n  sub_18016EF40(a1: v135, a2: aShowReturnBtnI, a3: 20); /*0x1801c53f6*/\n  v137[0] = &std::_Func_impl_no_alloc<<lambda_67bf19d733f8a7cbd3ab020d0eaca8d4>,void,std::wstring const &>::`vftable'; /*0x1801c540a*/\n  v137[1] = a1; /*0x1801c541c*/\n  v137[7] = v137; /*0x1801c542a*/\n  v139 = (__m128i)xmmword_180DB6670; /*0x1801c5438*/\n  v138[0] = 0; /*0x1801c5440*/\n  sub_18016EF40(a1: v138, a2: aUseItemAddSkil, a3: 18); /*0x1801c5447*/\n  v140[0] = &std::_Func_impl_no_alloc<<lambda_c51c3452cd072e71646323fa15290e88>,void,std::wstring const &>::`vftable'; /*0x1801c545b*/\n  v140[1] = a1; /*0x1801c546d*/\n  v140[7] = v140; /*0x1801c547b*/\n  v142 = (__m128i)xmmword_180DB6670; /*0x1801c5489*/\n  v141[0] = 0; /*0x1801c5491*/\n  sub_18016EF40(a1: v141, a2: aUsePvpKillRank, a3: 20); /*0x1801c5498*/\n  v143[0] = &std::_Func_impl_no_alloc<<lambda_1df430312e8b8128a97e8f126b9fefcc>,void,std::wstring const &>::`vftable'; /*0x1801c54ac*/\n  v143[1] = a1; /*0x1801c54be*/\n  v143[7] = v143; /*0x1801c54c5*/\n  v145 = (__m128i)xmmword_180DB6670; /*0x1801c54cc*/\n  v144[0] = 0; /*0x1801c54d4*/\n  sub_18016EF40(a1: v144, a2: aEnchantCutProb, a3: 24); /*0x1801c54e9*/\n  v146[0] = &std::_Func_impl_no_alloc<<lambda_42690ac3497333e54278be3492732feb>,void,std::wstring const &>::`vftable'; /*0x1801c54fd*/\n  v146[1] = a1; /*0x1801c550f*/\n  v146[7] = v146; /*0x1801c551d*/\n  v148 = (__m128i)xmmword_180DB6670; /*0x1801c552b*/\n  v147[0] = 0; /*0x1801c5533*/\n  sub_18016EF40(a1: v147, a2: aEnchantCutProb_0, a3: 25); /*0x1801c553a*/\n  v149[0] = &std::_Func_impl_no_alloc<<lambda_24fbfee0821f91f0b8c2baadd2e2f294>,void,std::wstring const &>::`vftable'; /*0x1801c554e*/\n  v149[1] = a1; /*0x1801c5560*/\n  v149[7] = v149; /*0x1801c556e*/\n  v151 = (__m128i)xmmword_180DB6670; /*0x1801c557c*/\n  v150[0] = 0; /*0x1801c5584*/\n  sub_18016EF40(a1: v150, a2: aEnchantCutProb_1, a3: 25); /*0x1801c558b*/\n  v152[0] = &std::_Func_impl_no_alloc<<lambda_02fc91a934f9a73233b18ac425dea1a1>,void,std::wstring const &>::`vftable'; /*0x1801c559f*/\n  v152[1] = a1; /*0x1801c55b1*/\n  v152[7] = v152; /*0x1801c55bf*/\n  v154 = (__m128i)xmmword_180DB6670; /*0x1801c55cd*/\n  v153[0] = 0; /*0x1801c55d5*/\n  sub_18016EF40(a1: v153, a2: aEnchantCutProb_2, a3: 25); /*0x1801c55dc*/\n  v155[1] = a1; /*0x1801c55e8*/\n  v155[0] = &std::_Func_impl_no_alloc<<lambda_24deab1c1bdb6c1b59dbfd98b5c51916>,void,std::wstring const &>::`vftable'; /*0x1801c55ef*/\n  v168 = a1; /*0x1801c5604*/\n  v155[7] = v155; /*0x1801c5612*/\n  sub_1801C6C10(a1: v156, a2: v3, a3: &v168); /*0x1801c5619*/\n  v168 = a1; /*0x1801c5625*/\n  sub_1801C6C70(a1: v157, a2: v4, a3: &v168); /*0x1801c5633*/\n  v168 = a1; /*0x1801c563f*/\n  sub_1801C6CD0(a1: v158, a2: v5, a3: &v168); /*0x1801c564d*/\n  v168 = a1; /*0x1801c5659*/\n  sub_1801C6D30(a1: v159, a2: v6, a3: &v168); /*0x1801c5667*/\n  v168 = a1; /*0x1801c5673*/\n  sub_1801C6D90(a1: v160, a2: v7, a3: &v168); /*0x1801c5681*/\n  v168 = a1; /*0x1801c568d*/\n  sub_1801C6DF0(a1: v161, a2: v8, a3: &v168); /*0x1801c569b*/\n  v168 = a1; /*0x1801c56a7*/\n  sub_1801C6E50(a1: v162, a2: v9, a3: &v168); /*0x1801c56b5*/\n  v168 = a1; /*0x1801c56c1*/\n  sub_1801C6EB0(a1: v163, a2: v10, a3: &v168); /*0x1801c56cf*/\n  v168 = a1; /*0x1801c56db*/\n  sub_1801C6F10(a1: v164, a2: v11, a3: &v168); /*0x1801c56e9*/\n  v168 = a1; /*0x1801c56ee*/\n  sub_1801C6F70(a1: v165, a2: v12, a3: &v168); /*0x1801c5703*/\n  v168 = a1; /*0x1801c570f*/\n  sub_1801C6FD0(a1: v166, a2: v13, a3: &v168); /*0x1801c571d*/\n  v21[0] = v24; /*0x1801c5726*/\n  v21[1] = &v167; /*0x1801c5737*/\n  sub_1801C59B0(a1: v22, a2: v21); /*0x1801c574c*/\n  sub_18016F5D0(a1: v24, a2: 96, a3: 55, a4: sub_1801C5850); /*0x1801c5763*/\n  v14 = *(_DWORD *)(a1 + 8); /*0x1801c5768*/\n  if ( v14 != 0 ) /*0x1801c576f*/\n  {\n    do /*0x1801c580e*/\n    {\n      v15 = sub_1801C6BA0(a1, a2: v1); /*0x1801c578a*/\n      v16 = v15; /*0x1801c578f*/\n      if ( v15 != 0 ) /*0x1801c5795*/\n      {\n        v17 = sub_180172A90(a1: v15 + 4); /*0x1801c579b*/\n        sub_18016F080(a1: v21, a2: v17); /*0x1801c57a8*/\n        sub_1801C5990(a1: v22, a2: &v168, a3: v21); /*0x1801c57be*/\n        sub_18016EEB0(a1: v21); /*0x1801c57c8*/\n        v18 = v168; /*0x1801c57cd*/\n        if ( v168 != v23 ) /*0x1801c57d9*/\n        {\n          v19 = sub_180172A90(a1: v16 + 8); /*0x1801c57df*/\n          sub_18016F080(a1: v21, a2: v19); /*0x1801c57ec*/\n          sub_1801C6BF0(a1: v18 + 48, a2: v21); /*0x1801c57fa*/\n          sub_18016EEB0(a1: v21); /*0x1801c5804*/\n        }\n      }\n      ++v1; /*0x1801c5809*/\n    }\n    while ( v1 < v14 ); /*0x1801c580e*/\n  }\n  return sub_1801C5890(a1: v22); /*0x1801c582e*/\n}",
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "D:\\REA\\_reference\\github-releases\\aion-tw-offline-20261020\\client__static-programs-20261020\\bin56\\Game.dll"
+    },
+    {
+      "kind": "address",
+      "address": "0x1801c4830"
+    }
+  ],
+  "evidence_links": []
+}

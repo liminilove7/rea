@@ -1,0 +1,54 @@
+AION TW 当前归档：PVP 攻击计算相关资源调查（2026-10-22）
+
+结论状态：部分回答。已确认客户端资源的属性入口、装备/技能/种族奖励声明与代表记录；没有得到服务端最终伤害公式，不得把几个 ratio 名称拼成“已逆向公式”。本次仅静态解析资源，无目标执行、内存写入或网络发包。
+
+来源和方法
+输入为 aion-tw-offline-20261020 归档中 aion-tw-20261019/resources；没有混用早期其他版本。
+analyze_pvp.py 用 XML 解析器完整遍历已提供的 46 个 XML、122063 条顶层记录，每文件保存路径、字节数、SHA256、字段计数和记录序号。pvp/pve 字段名或值关键词命中 6496 条；该数字含名称、外观、任务等非战斗命中，不能称为 6496 条 PVP 公式。
+resource-evidence.json 保留全量命中索引及代表记录原始叶字段；feature-summary.json 是摘要及技能学习表的精确名称关联。均为辅助资源证据，不冒充 REA Evidence ID。
+client_items.xml SHA256：7ee7aa4a0e140a0ad32b014e730123247f64a384a5ac22cc0a4536abc1ce6aa9
+client_skills.xml SHA256：e8a429fbec7eb651731c867c248bc052bacb0ba36fb6e6c55ad07ef833d074db
+
+1. 装备属性层
+74259 条物品中，3873 条记录在 bonus_attr* 槽声明 PVP 属性。将原始大小写仅用于统计归组后，共 1518 次 pvpattackratio、3080 次 pvpdefendratio；这是属性出现次数，不是各自物品数量。
+例：100000363 sword_a_r2_30a 的 bonus_attr12=Pvpattackratio 24；同记录 min_damage=88、max_damage=108、hit_accuracy=408、attack_type=physical、level=30。
+例：110100604 rb_torso_a_r2_30a 的 bonus_attr12=Pvpdefendratio 20；同记录 physical_defend=70、magical_resist=82、level=30。
+例：100001282 sword_n_u1_pvp_55a 同时有 bonus_attr4=pvpattackratio 51、bonus_attr_a2=pvpattackratio 5。110101375 有普通槽 42 与 a 槽 4。不同槽组和充能声明必须保留；仅凭表不能把所有槽无条件相加。
+例：187000069 同时有 PVP 攻击 30 和 PVE 攻击 20，证实两者在资源中分开声明，不能把 PVP 加成直接当作自动打怪收益。
+24、51、5 等原始数值的百分比单位/定点缩放，需要消费代码或面板对照确认，当前报告不擅自解释为 24% 或 2.4%。
+同次新增二进制复核已确认属性格式函数按输入值/10输出百分数，例如输入24格式化为2.4%；资源值到该输入的完整生产链和最终伤害公式仍未证明。详见 binary-review.txt 及 binary-literal-facts.json，勿把资源声明与格式函数输入未经验证地直接画等号。
+
+2. 技能独立参数层
+10797 条技能中，96 条显式声明 pvp_damage_ratio。分布：80×61、60×3、45×3、70×4、130×9、50×3、200×9、53×2、120×1、75×1。
+其余 10701 条未显式给出该字段；缺失不等于已证明默认 100。
+52 条显式声明 pvp_remain_time_ratio（25/40/50/60/80/200）；持续时间修正和伤害修正是不同字段。
+2 条 pvp_skill_cancel_bonus 分别为 500、10000，名称均含 Test，应作为测试定义保留，不代表线上玩家技能。
+例：3790 KN_BloodySlash_G1，type=Physical，effect1_type=SkillATK_Instant，pvp_damage_ratio=75。
+例：3804 WI_MagicalFlame_G1，type=Magical，effect1_type=SpellATK_Instant，pvp_damage_ratio=80，effect1_reserved10=Fire；还有 acc_mod2、critical_prob_mod2、hop_type=SkillLV 等字段。
+例：11905 Abyss_RankerSkill_AbyssianChainBolt_G1，pvp_damage_ratio=200，effect1_type=NoReduceSpellATK_Instant；effect2_type=StatDown、effect2_reserved13=PVPDefendRatio、effect2_reserved2=200。可确认该技能声明了独立的伤害参数和防御属性下降效果；reserved2 的单位/运算及 NoReduce 的完整例外语义，不能仅凭命名断言。
+例：20357 Arena_pvp01_S6_buff01 的 effect1_reserved13=PVPDefendRatio_Physical，提供物理 PVP 防御属性的资源入口。资源里没有观察到所有二进制注册名称都被装备表使用，不等于引擎不支持。
+这些 ratio 的数值分布和名字支持“PVP 特定修正参数”解释，但是否直接乘 ratio/100、是在减伤前后应用、是否受上下限影响，需要代码数据流或可控制服务端实测证明。
+
+3. 种族、称号、惩罚与属性展示
+abyss_race_bonuses.xml 共 20 条；Light_Inp_1 明确声明 PvPattackratio +80 和 PVPDefendRatio +40，配有 race=Light、condition=Inperior_1。可确认有带符号的属性调整声明，不能确认触发条件当前满足、所有来源如何叠加。
+abyss_type_race_bonuses.xml 两条阵营记录均声明 PvPattackratio +100 和 maxhp +1000。
+client_serial_killer.xml 中 SLAYER_LIGHT_G1/SLAYER_DARK_G1 含攻击 -65、防御 -60；G2 含 -250/-175。说明正向装备收益之外，还有条件惩罚来源。
+client_stat_info.xml ID13 PvPAttackRatio 的 pc_attr_max=520，ID14 PvPDefendRatio 的 pc_attr_max=430；都有 pc_attr_ratio_step1..6 等展示/属性配置。没有消费代码前，不把 pc_attr_max 写成实际战斗硬上限。
+client_PCRace.xml 4 条记录主要是性别、体型、移动速度等；client_character_class_info.xml 13 条提供 str/vit/agi/dex/kno/wil 等职业参数。它们没有直接提供本次所需的完整等级差、种族差或物理/魔法 PVP 伤害运算规则。
+
+4. 目前可以建立的功能关系（声明关系，不是执行顺序）
+物品/称号/阵营状态/技能效果 → PVP 攻击或防御属性候选来源。
+同次强化分工新增解码的 client_accumulated_enchant_effect.xml 还补出：enchant_sum=85 → activation_skill=Enchant_Effect_COMBINE_85_4CCDuration → 技能 207 → effect2_type=Statup，reserved13=PvPAttackRatio、reserved14=PVEAttackRatio，reserved2/reserved4 均为 50。这是明确的跨表引用；其消费逻辑和触发条件仍待确认。该新增表不在上述原有 46 文件计数内；源哈希与原始字段见 ../enchant/enchant-current-evidence.json 的 sources 和 accumulated_skill_joins。PVE/PVP 命名的两组强化记录引用相同技能，不能按记录名误判为各自单一用途。
+技能记录 → 物理/魔法类型、元素、效果类别、PVP 伤害/持续时间参数、命中/暴击相关参数。
+目标限制字段 → target_species_restriction、target_relation_restriction、少量 target_race_restriction。
+尚未证明：属性合并次序、乘加顺序、单位、取整、等级差规则、普通攻击与技能的差异、物理防御/魔法增幅与抵抗之间的公式、暴击/格挡/招架/闪避流程、服务端最终权威伤害。
+
+5. 二进制后续入口
+优先定位 PvPAttackRatio、PvPDefendRatio 及 _Physical/_Magical 变体、pvp_damage_ratio、pvp_remain_time_ratio、pvp_skill_cancel_bonus 的注册/解析函数与消费者。
+检查 StatUp、StatDown、SkillATK_Instant、SpellATK_Instant、NoReduceSpellATK_Instant 的 reserved 字段解释。注册表或 UI 文本引用只证明名称识别，必须沿字段存储与读取继续追踪，不能据此宣称找到服务端算法。
+对自动打怪需求，应单独区分 PVE 与 PVP 策略。资源目前可支持技能目录、目标类型、射程、冷却、耗蓝/耗血、连段前置条件的候选约束；它们不直接提供当前怪物坐标、血量、仇恨、可达性或任务运行状态。
+
+6. 复现与检验
+运行 analyze_pvp.py --resources <上述 resources 根目录>；再运行 summarize_pvp.py（摘要脚本默认同一归档位置）。
+脚本只读取资源，输出本目录 JSON。检查 XML 解析成功、46 文件总数和 122063 条记录与输出一致，并可按 source SHA + XML 文件 + 顶层序号/ID 回查。
+本报告没有进行游戏运行时验证，也没有声称资源中的 Test/旧活动记录在线生效。
