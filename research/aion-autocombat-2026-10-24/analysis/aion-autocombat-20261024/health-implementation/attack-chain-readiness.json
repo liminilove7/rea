@@ -1,0 +1,119 @@
+{
+  "newReaQueries": 0,
+  "reusedReaSources": [
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-144f10-pseudo.evidence.json",
+      "evidenceId": "ev_5b4220360c0f02129a6804a95c6d41284125495922389b5d2ff8630342376d39",
+      "sha256": "5b1d789a8101c6f0862fc3f3ba867da79fe616de56b7f36c72945f80033b184a"
+    },
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-144f10-insns.evidence.json",
+      "evidenceId": "ev_5869e5a1bd03cfae65c08d4e5a5ec0c623787ffe2c2d1ddec1c9dfa86a42acf6",
+      "sha256": "be5ced147558668b7dc70a01271cf3dfe196d4cb47b796f66dc7123cf018dec0"
+    },
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-144f10-callers.evidence.json",
+      "evidenceId": "ev_d973be14e1ed735490c1c32176d4cc4d6e7bd20ad1253d316802bb22039b5d90",
+      "sha256": "7f7fbd7d32b39f98bd86ca143a2ae558ea0ee07a1d62bf54fc178c093be785ab"
+    },
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-16d600-pseudo.evidence.json",
+      "evidenceId": "ev_690d852de361a17e7c5acd11fbf19b29571e1784303de015a8578a3ab455062f",
+      "sha256": "90eea94b4aee2827ac41135e1987d6180a0826d9c56105f6b6817fa0955ca32e"
+    },
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-16d600-insns.evidence.json",
+      "evidenceId": "ev_a37f017ebc91c7e228b85669f51ddc016539bda8e4b49e632108e74c2446945a",
+      "sha256": "f315a4c207e1831b4bad2165671193804ed08352a8c2ef5a18cc1b099d0ff950"
+    },
+    {
+      "file": "aion-autocombat-20261024/rea-health-2026-10-24T11-28-17.313Z/stop-16d600-callers.evidence.json",
+      "evidenceId": "ev_bb8dc01ca601577ad75fd512f614eee84ea777773dc1acdb8913f20c940d42d2",
+      "sha256": "3ed8469e0476c6b25cf51939b5b807a55b2bb53526a6e25efaf919f08aa71f3a"
+    }
+  ],
+  "originalPeChecks": [
+    {
+      "label": "direct call",
+      "rva": "0x1455f6",
+      "actual": [
+        232,
+        "0x16d600"
+      ],
+      "expected": [
+        232,
+        "0x16d600"
+      ],
+      "passed": true
+    },
+    {
+      "label": "direct call",
+      "rva": "0x16d88e",
+      "actual": [
+        232,
+        "0x7cfbf0"
+      ],
+      "expected": [
+        232,
+        "0x7cfbf0"
+      ],
+      "passed": true
+    },
+    {
+      "label": "original argument/timing/return instruction",
+      "rva": "0x1455f3",
+      "actual": "488bcf",
+      "expected": "488bcf",
+      "passed": true
+    },
+    {
+      "label": "original argument/timing/return instruction",
+      "rva": "0x16d6b5",
+      "actual": "0386901e0000",
+      "expected": "0386901e0000",
+      "passed": true
+    },
+    {
+      "label": "original argument/timing/return instruction",
+      "rva": "0x16d89b",
+      "actual": "b801000000",
+      "expected": "b801000000",
+      "passed": true
+    },
+    {
+      "label": "original argument/timing/return instruction",
+      "rva": "0x16d8a0",
+      "actual": "89ae901e0000",
+      "expected": "89ae901e0000",
+      "passed": true
+    },
+    {
+      "label": "LEA address of global object, not load of its qword value",
+      "rva": "0x16d887",
+      "actual": [
+        "488d0d",
+        "0x145eed0"
+      ],
+      "expected": [
+        "488d0d",
+        "0x145eed0"
+      ],
+      "passed": true
+    }
+  ],
+  "observed": [
+    "144F10 passes its saved object argument in RCX to 16D600 at 1455F6.",
+    "16D600 combines object+1E90 and module attack interval for a timing check.",
+    "16D88E calls 7CFBF0 after LEA RCX,module+145EED0; do not substitute the qword stored there.",
+    "16D600 can return 1 when conditional transport send is skipped; it does not prove a server hit."
+  ],
+  "missing": [
+    "Verified upper action construction and request lifetime.",
+    "Executing thread, engine scheduler and reentrancy constraints.",
+    "Attack cancellation and queued-request behavior.",
+    "Hostility, range/LOS, local-player death and scene transition conditions.",
+    "Server acceptance and real no-further-attack verification."
+  ],
+  "targetCalls": 0,
+  "serverHitProven": false
+}

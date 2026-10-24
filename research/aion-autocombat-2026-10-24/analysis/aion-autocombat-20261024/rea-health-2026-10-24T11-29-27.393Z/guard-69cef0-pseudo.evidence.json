@@ -1,0 +1,124 @@
+{
+  "ok": true,
+  "data": {
+    "evidence_id": "ev_c8002ef8be909d976cc20ebbe4f1a7cad2dc096c8cfb8510c99ea7594de93555",
+    "subject": {
+      "name": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+      "digest": {
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+      },
+      "format": "pe",
+      "architecture": "x86_64",
+      "local_path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll"
+    },
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "predicate_type": "rea.analysis",
+    "operation": "procedure_pseudo_code",
+    "parameters": {
+      "procedure": "0x18069cef0",
+      "document": null
+    },
+    "raw_result": {
+      "upstream": {
+        "name": "ida-pro-mcp",
+        "version": "1.16.0"
+      },
+      "metadata_before": {
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+        "module": "Game.dll",
+        "base": "0x180000000",
+        "size": "0x1c68000",
+        "md5": "ef869b4c616b354fa4f5c9facb813a53",
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+        "crc32": "0x464e058d",
+        "filesize": "0x1c677e8"
+      },
+      "metadata_after": {
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+        "module": "Game.dll",
+        "base": "0x180000000",
+        "size": "0x1c68000",
+        "md5": "ef869b4c616b354fa4f5c9facb813a53",
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+        "crc32": "0x464e058d",
+        "filesize": "0x1c677e8"
+      },
+      "observations": [
+        {
+          "tool": "get_function_by_address",
+          "arguments": {
+            "address": "0x18069cef0"
+          },
+          "result": {
+            "address": "0x18069cef0",
+            "name": "sub_18069CEF0",
+            "size": "0xb1"
+          }
+        },
+        {
+          "tool": "get_function_by_name",
+          "arguments": {
+            "name": "sub_18069CEF0"
+          },
+          "result": {
+            "address": "0x18069cef0",
+            "name": "sub_18069CEF0",
+            "size": "0xb1"
+          }
+        },
+        {
+          "tool": "decompile_function",
+          "arguments": {
+            "address": "0x18069cef0"
+          },
+          "result": "/* line: 0, address: 0x18069cef0 */ void __fastcall sub_18069CEF0(__int64 a1, int a2)\n/* line: 1 */ {\n/* line: 2 */   __int64 v2; // rbx\n/* line: 3 */   __int64 v4; // rax\n/* line: 4 */   __int64 v5; // rdi\n/* line: 5 */   __int64 v6; // rax\n/* line: 6 */   __int64 v7; // [rsp+40h] [rbp+8h] BYREF\n/* line: 7 */ \n/* line: 8, address: 0x18069ceff */   v2 = 0i64;\n/* line: 9, address: 0x18069cf0a */   v7 = 0i64;\n/* line: 10, address: 0x18069cf12 */   if ( HIWORD(dword_181422648) )\n/* line: 11 */   {\n/* line: 12, address: 0x18069cf1e */     if ( qword_180F25C68 )\n/* line: 13 */     {\n/* line: 14, address: 0x18069cf28 */       v4 = (*(__int64 (**)(void))(*(_QWORD *)qword_180F25C68 + 48i64))();\n/* line: 15, address: 0x18069cf2b */       v5 = v4;\n/* line: 16, address: 0x18069cf31 */       if ( v4 )\n/* line: 17 */       {\n/* line: 18, address: 0x18069cf39 */         if ( (*(__int64 (__fastcall **)(__int64))(*(_QWORD *)v4 + 192i64))(v4) )\n/* line: 19 */         {\n/* line: 20, address: 0x18069cf4a */           v6 = (*(__int64 (__fastcall **)(__int64))(*(_QWORD *)v5 + 192i64))(v5);\n/* line: 21, address: 0x18069cf5d */           (*(void (__fastcall **)(__int64, _QWORD, __int64 *))(*(_QWORD *)v6 + 80i64))(v6, 0i64, &v7);\n/* line: 22 */         }\n/* line: 23, address: 0x18069cf61 */         v2 = v7;\n/* line: 24 */       }\n/* line: 25 */     }\n/* line: 26 */   }\n/* line: 27, address: 0x18069cf78 */   if ( a2 || !v2 || *(_DWORD *)(v2 + 32) != 23 )\n/* line: 28, address: 0x18069cf91 */     sub_18069BD60((unsigned int)&dword_1814225D0, 0, a2, 0, -1);\n/* line: 29 */ }"
+        }
+      ]
+    },
+    "normalized_result": "/* line: 0, address: 0x18069cef0 */ void __fastcall sub_18069CEF0(__int64 a1, int a2)\n/* line: 1 */ {\n/* line: 2 */   __int64 v2; // rbx\n/* line: 3 */   __int64 v4; // rax\n/* line: 4 */   __int64 v5; // rdi\n/* line: 5 */   __int64 v6; // rax\n/* line: 6 */   __int64 v7; // [rsp+40h] [rbp+8h] BYREF\n/* line: 7 */ \n/* line: 8, address: 0x18069ceff */   v2 = 0i64;\n/* line: 9, address: 0x18069cf0a */   v7 = 0i64;\n/* line: 10, address: 0x18069cf12 */   if ( HIWORD(dword_181422648) )\n/* line: 11 */   {\n/* line: 12, address: 0x18069cf1e */     if ( qword_180F25C68 )\n/* line: 13 */     {\n/* line: 14, address: 0x18069cf28 */       v4 = (*(__int64 (**)(void))(*(_QWORD *)qword_180F25C68 + 48i64))();\n/* line: 15, address: 0x18069cf2b */       v5 = v4;\n/* line: 16, address: 0x18069cf31 */       if ( v4 )\n/* line: 17 */       {\n/* line: 18, address: 0x18069cf39 */         if ( (*(__int64 (__fastcall **)(__int64))(*(_QWORD *)v4 + 192i64))(v4) )\n/* line: 19 */         {\n/* line: 20, address: 0x18069cf4a */           v6 = (*(__int64 (__fastcall **)(__int64))(*(_QWORD *)v5 + 192i64))(v5);\n/* line: 21, address: 0x18069cf5d */           (*(void (__fastcall **)(__int64, _QWORD, __int64 *))(*(_QWORD *)v6 + 80i64))(v6, 0i64, &v7);\n/* line: 22 */         }\n/* line: 23, address: 0x18069cf61 */         v2 = v7;\n/* line: 24 */       }\n/* line: 25 */     }\n/* line: 26 */   }\n/* line: 27, address: 0x18069cf78 */   if ( a2 || !v2 || *(_DWORD *)(v2 + 32) != 23 )\n/* line: 28, address: 0x18069cf91 */     sub_18069BD60((unsigned int)&dword_1814225D0, 0, a2, 0, -1);\n/* line: 29 */ }",
+    "confidence": "observed",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ],
+    "locations": [
+      {
+        "kind": "artifact-path",
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll"
+      },
+      {
+        "kind": "address",
+        "address": "0x18069cef0"
+      }
+    ],
+    "evidence_links": [],
+    "analysis_profile": {
+      "provider": {
+        "id": "ida",
+        "name": "IDA Pro MCP adapter",
+        "version": "1"
+      },
+      "parameters": {
+        "version_scope": "rea-ida-adapter",
+        "engine_version": null,
+        "upstream_distribution_version": null,
+        "mode": "attached",
+        "compatibility_profile": "legacy-1.4",
+        "database_revision": null,
+        "cache_policy": "live",
+        "registration_digest": "56a9427a5b935644f09eb485fe68aab2e6df087b6b5ed22f504aca5017461df8"
+      },
+      "digest": "effaee1ad43404c7c6f03637c23123c98502dfd422e7d2a2fb5b5bbb003db2e6"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "procedure": {
+    "address": "0x18031f430",
+    "name": "sub_18031F430",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x18031f430: push rbx",
+    "0x18031f432: sub rsp, 20h",
+    "0x18031f436: lea r8, [rsp+28h+arg_8]",
+    "0x18031f43b: mov [rsp+28h+arg_8], 0",
+    "0x18031f443: xor edx, edx",
+    "0x18031f445: mov rbx, rcx",
+    "0x18031f448: call sub_1803205E0",
+    "0x18031f44d: test eax, eax",
+    "0x18031f44f: jz loc_18031F47C",
+    "0x18031f451: mov rdx, [rbx+10h]",
+    "0x18031f455: xorps xmm0, xmm0",
+    "0x18031f458: mov eax, [rsp+28h+arg_8]",
+    "0x18031f45c: mov dword ptr [rdx+8], 3",
+    "0x18031f463: cvtsi2sd xmm0, rax",
+    "0x18031f468: mov eax, 1",
+    "0x18031f46d: movsd qword ptr [rdx], xmm0",
+    "0x18031f471: add qword ptr [rbx+10h], 10h",
+    "0x18031f476: add rsp, 20h",
+    "0x18031f47a: pop rbx",
+    "0x18031f47b: retn",
+    "0x18031f47c: xor eax, eax",
+    "0x18031f47e: add rsp, 20h",
+    "0x18031f482: pop rbx",
+    "0x18031f483: retn"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}

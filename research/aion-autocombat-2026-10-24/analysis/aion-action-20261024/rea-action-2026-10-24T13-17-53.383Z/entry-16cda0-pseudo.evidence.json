@@ -1,0 +1,124 @@
+{
+  "ok": true,
+  "data": {
+    "evidence_id": "ev_4337204f9f70de03da493db8935bca09bcca036fcb033317b9b84a42de0fa2f4",
+    "subject": {
+      "name": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+      "digest": {
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7"
+      },
+      "format": "pe",
+      "architecture": "x86_64",
+      "local_path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll"
+    },
+    "provider": {
+      "id": "ida",
+      "name": "IDA Pro MCP adapter",
+      "version": "1"
+    },
+    "predicate_type": "rea.analysis",
+    "operation": "procedure_pseudo_code",
+    "parameters": {
+      "procedure": "0x18016cda0",
+      "document": null
+    },
+    "raw_result": {
+      "upstream": {
+        "name": "ida-pro-mcp",
+        "version": "1.16.0"
+      },
+      "metadata_before": {
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+        "module": "Game.dll",
+        "base": "0x180000000",
+        "size": "0x1c68000",
+        "md5": "ef869b4c616b354fa4f5c9facb813a53",
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+        "crc32": "0x464e058d",
+        "filesize": "0x1c677e8"
+      },
+      "metadata_after": {
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll",
+        "module": "Game.dll",
+        "base": "0x180000000",
+        "size": "0x1c68000",
+        "md5": "ef869b4c616b354fa4f5c9facb813a53",
+        "sha256": "b3043f0eaf225b3dc7ba320ac7671cc5b28cefbd637135943dc9e67c114ccae7",
+        "crc32": "0x464e058d",
+        "filesize": "0x1c677e8"
+      },
+      "observations": [
+        {
+          "tool": "get_function_by_address",
+          "arguments": {
+            "address": "0x18016cda0"
+          },
+          "result": {
+            "address": "0x18016cda0",
+            "name": "sub_18016CDA0",
+            "size": "0x269"
+          }
+        },
+        {
+          "tool": "get_function_by_name",
+          "arguments": {
+            "name": "sub_18016CDA0"
+          },
+          "result": {
+            "address": "0x18016cda0",
+            "name": "sub_18016CDA0",
+            "size": "0x269"
+          }
+        },
+        {
+          "tool": "decompile_function",
+          "arguments": {
+            "address": "0x18016cda0"
+          },
+          "result": "/* line: 0, address: 0x18016cda0 */ char __fastcall sub_18016CDA0(__int64 a1, int a2, int a3, int a4)\n/* line: 1 */ {\n/* line: 2 */   __int64 v8; // rax\n/* line: 3 */   __int64 v9; // rdx\n/* line: 4 */   __int64 v10; // rcx\n/* line: 5 */   __int64 v11; // rsi\n/* line: 6 */   __int64 v12; // rbx\n/* line: 7 */   __int64 v13; // rcx\n/* line: 8 */   __int64 v14; // rax\n/* line: 9 */   __int64 v15; // rcx\n/* line: 10 */   int v16; // ecx\n/* line: 11 */   int v17; // edx\n/* line: 12 */   bool v18; // zf\n/* line: 13 */   int v20; // [rsp+30h] [rbp-18h] BYREF\n/* line: 14 */   __int64 v21[2]; // [rsp+38h] [rbp-10h] BYREF\n/* line: 15 */ \n/* line: 16, address: 0x18016cdbf */   LODWORD(v8) = sub_180890BB0();\n/* line: 17, address: 0x18016cdd3 */   if ( (_DWORD)v8 && *(_DWORD *)(a1 + 712) != 3 )\n/* line: 18 */   {\n/* line: 19, address: 0x18016cdd9 */     v10 = *(unsigned int *)(a1 + 5776);\n/* line: 20, address: 0x18016cde2 */     if ( (_DWORD)v10 == 3 )\n/* line: 21 */     {\n/* line: 22, address: 0x18016cdf4 */       sub_180116470((_DWORD *)a1, 0, 0, 0, 0);\n/* line: 23, address: 0x18016ce00 */       LOBYTE(v8) = sub_180152280(&qword_181415340);\n/* line: 24, address: 0x18016ce05 */       return v8;\n/* line: 25 */     }\n/* line: 26, address: 0x18016ce0d */     if ( (_DWORD)v10 == 21 )\n/* line: 27 */     {\n/* line: 28 */ LABEL_44:\n/* line: 29, address: 0x18016cfdf */       LOBYTE(v8) = sub_180116470((_DWORD *)a1, 0, 0, 0, 0);\n/* line: 30, address: 0x18016cfef */       return v8;\n/* line: 31 */     }\n/* line: 32, address: 0x18016ce13 */     LOBYTE(v8) = v10 - 7;\n/* line: 33, address: 0x18016ce19 */     if ( (unsigned int)(v10 - 7) <= 1 )\n/* line: 34 */     {\n/* line: 35, address: 0x18016cfcd */       *(_DWORD *)(a1 + 5780) = 1;\n/* line: 36, address: 0x18016cfd9 */       if ( a2 )\n/* line: 37, address: 0x18016cfd9 */         return v8;\n/* line: 38, address: 0x18016cfdb */       v18 = a3 == 0;\n/* line: 39 */ LABEL_43:\n/* line: 40, address: 0x18016cfdd */       if ( !v18 )\n/* line: 41, address: 0x18016cfdd */         return v8;\n/* line: 42, address: 0x18016cfdd */       goto LABEL_44;\n/* line: 43 */     }\n/* line: 44, address: 0x18016ce1f */     LOBYTE(v8) = v10 - 9;\n/* line: 45, address: 0x18016ce25 */     if ( (unsigned int)(v10 - 9) <= 1 )\n/* line: 46 */     {\n/* line: 47, address: 0x18016cf99 */       if ( !a2 && !a3 )\n/* line: 48 */       {\n/* line: 49, address: 0x18016cfac */         sub_180116470((_DWORD *)a1, 1u, 0, 0, 0);\n/* line: 50, address: 0x18016cfb7 */         LODWORD(v8) = *(_DWORD *)(a1 + 5780) - 2;\n/* line: 51, address: 0x18016cfbf */         if ( (v8 & 0xFFFFFFF7) != 0 )\n/* line: 52, address: 0x18016cfc1 */           *(_DWORD *)(a1 + 5780) = 6;\n/* line: 53 */       }\n/* line: 54 */     }\n/* line: 55, address: 0x18016ce37 */     else if ( (_DWORD)v10 != 1 && (_DWORD)v10 != 16 )\n/* line: 56 */     {\n/* line: 57, address: 0x18016ce40 */       if ( (_DWORD)v10 != 2 )\n/* line: 58, address: 0x18016ce40 */         goto LABEL_22;\n/* line: 59, address: 0x18016ce46 */       if ( !*(_DWORD *)(a1 + 5852) )\n/* line: 60 */       {\n/* line: 61, address: 0x18016ce53 */         v20 = 14;\n/* line: 62, address: 0x18016ce64 */         v11 = sub_180170C50(v10, v9);\n/* line: 63, address: 0x18016ce67 */         v12 = *(_QWORD *)v11;\n/* line: 64, address: 0x18016ce6d */         v13 = *(_QWORD *)(*(_QWORD *)v11 + 8i64);\n/* line: 65, address: 0x18016ce71 */         while ( !*(_BYTE *)(v13 + 25) )\n/* line: 66 */         {\n/* line: 67, address: 0x18016ce7a */           if ( *(int *)(v13 + 32) >= 14 )\n/* line: 68 */           {\n/* line: 69, address: 0x18016ce82 */             v12 = v13;\n/* line: 70, address: 0x18016ce85 */             v13 = *(_QWORD *)v13;\n/* line: 71 */           }\n/* line: 72 */           else\n/* line: 73 */           {\n/* line: 74, address: 0x18016ce7c */             v13 = *(_QWORD *)(v13 + 16);\n/* line: 75 */           }\n/* line: 76 */         }\n/* line: 77, address: 0x18016ce96 */         if ( v12 == *(_QWORD *)v11 || *(int *)(v12 + 32) > 14 )\n/* line: 78 */         {\n/* line: 79, address: 0x18016cea5 */           v21[0] = (__int64)&v20;\n/* line: 80, address: 0x18016ceaa */           v14 = sub_18027A4D0(v11, 14i64, v21);\n/* line: 81, address: 0x18016cec3 */           sub_1809B55A0(v11, (unsigned int)v21, v12, v14 + 32, v14);\n/* line: 82, address: 0x18016cec8 */           v12 = v21[0];\n/* line: 83 */         }\n/* line: 84, address: 0x18016ced8 */         v15 = *(_QWORD *)(v12 + 40);\n/* line: 85, address: 0x18016cedc */         LODWORD(v21[0]) = *(_DWORD *)(a1 + 5784);\n/* line: 86, address: 0x18016cee0 */         v8 = sub_18095B9B0(v15, v21);\n/* line: 87, address: 0x18016ceea */         if ( !v8 || !*(_DWORD *)(v8 + 1436) )\n/* line: 88 */         {\n/* line: 89 */ LABEL_22:\n/* line: 90, address: 0x18016cef7 */           LODWORD(v8) = *(_DWORD *)(a1 + 5776);\n/* line: 91, address: 0x18016cf00 */           if ( (_DWORD)v8 == 2 )\n/* line: 92 */           {\n/* line: 93, address: 0x18016cf02 */             if ( *(_DWORD *)(a1 + 5792) )\n/* line: 94, address: 0x18016cf09 */               return v8;\n/* line: 95 */           }\n/* line: 96, address: 0x18016cf14 */           else if ( (_DWORD)v8 == 6 )\n/* line: 97 */           {\n/* line: 98, address: 0x18016cf14 */             return v8;\n/* line: 99 */           }\n/* line: 100, address: 0x18016cf1d */           LODWORD(v8) = sub_18089EA30(a1);\n/* line: 101, address: 0x18016cf24 */           if ( !(_DWORD)v8 )\n/* line: 102 */           {\n/* line: 103, address: 0x18016cf2a */             v16 = *(_DWORD *)(a1 + 2808);\n/* line: 104, address: 0x18016cf3b */             if ( !v16 || *(_DWORD *)(a1 + 2812) != 47 )\n/* line: 105 */             {\n/* line: 106, address: 0x18016cf41 */               v17 = *(_DWORD *)(a1 + 712);\n/* line: 107, address: 0x18016cf76 */               if ( ((v17 - 4) & 0xFFFFFFFA) != 0\n/* line: 108 */                 || v17 == 9\n/* line: 109 */                 || !v16\n/* line: 110 */                 || *(_DWORD *)(a1 + 2812) != 1065\n/* line: 111 */                 || (LODWORD(v8) = (*(__int64 (__fastcall **)(_QWORD))(*(_QWORD *)xmmword_18141F9E0 + 8i64))(xmmword_18141F9E0),\n/* line: 112 */                     (_DWORD)v8 != 1) )\n/* line: 113 */               {\n/* line: 114, address: 0x18016cf7e */                 LODWORD(v8) = *(_DWORD *)(a1 + 712) - 4;\n/* line: 115, address: 0x18016cf8d */                 if ( (unsigned int)v8 <= 1 && (*(_BYTE *)(a1 + 736) & 1) == 0 )\n/* line: 116, address: 0x18016cf8d */                   goto LABEL_44;\n/* line: 117, address: 0x18016cf8f */                 v18 = a4 == 0;\n/* line: 118, address: 0x18016cf91 */                 goto LABEL_43;\n/* line: 119 */               }\n/* line: 120 */             }\n/* line: 121 */           }\n/* line: 122 */         }\n/* line: 123 */       }\n/* line: 124 */     }\n/* line: 125 */   }\n/* line: 126, address: 0x18016cff4 */   return v8;\n/* line: 127 */ }"
+        }
+      ]
+    },
+    "normalized_result": "/* line: 0, address: 0x18016cda0 */ char __fastcall sub_18016CDA0(__int64 a1, int a2, int a3, int a4)\n/* line: 1 */ {\n/* line: 2 */   __int64 v8; // rax\n/* line: 3 */   __int64 v9; // rdx\n/* line: 4 */   __int64 v10; // rcx\n/* line: 5 */   __int64 v11; // rsi\n/* line: 6 */   __int64 v12; // rbx\n/* line: 7 */   __int64 v13; // rcx\n/* line: 8 */   __int64 v14; // rax\n/* line: 9 */   __int64 v15; // rcx\n/* line: 10 */   int v16; // ecx\n/* line: 11 */   int v17; // edx\n/* line: 12 */   bool v18; // zf\n/* line: 13 */   int v20; // [rsp+30h] [rbp-18h] BYREF\n/* line: 14 */   __int64 v21[2]; // [rsp+38h] [rbp-10h] BYREF\n/* line: 15 */ \n/* line: 16, address: 0x18016cdbf */   LODWORD(v8) = sub_180890BB0();\n/* line: 17, address: 0x18016cdd3 */   if ( (_DWORD)v8 && *(_DWORD *)(a1 + 712) != 3 )\n/* line: 18 */   {\n/* line: 19, address: 0x18016cdd9 */     v10 = *(unsigned int *)(a1 + 5776);\n/* line: 20, address: 0x18016cde2 */     if ( (_DWORD)v10 == 3 )\n/* line: 21 */     {\n/* line: 22, address: 0x18016cdf4 */       sub_180116470((_DWORD *)a1, 0, 0, 0, 0);\n/* line: 23, address: 0x18016ce00 */       LOBYTE(v8) = sub_180152280(&qword_181415340);\n/* line: 24, address: 0x18016ce05 */       return v8;\n/* line: 25 */     }\n/* line: 26, address: 0x18016ce0d */     if ( (_DWORD)v10 == 21 )\n/* line: 27 */     {\n/* line: 28 */ LABEL_44:\n/* line: 29, address: 0x18016cfdf */       LOBYTE(v8) = sub_180116470((_DWORD *)a1, 0, 0, 0, 0);\n/* line: 30, address: 0x18016cfef */       return v8;\n/* line: 31 */     }\n/* line: 32, address: 0x18016ce13 */     LOBYTE(v8) = v10 - 7;\n/* line: 33, address: 0x18016ce19 */     if ( (unsigned int)(v10 - 7) <= 1 )\n/* line: 34 */     {\n/* line: 35, address: 0x18016cfcd */       *(_DWORD *)(a1 + 5780) = 1;\n/* line: 36, address: 0x18016cfd9 */       if ( a2 )\n/* line: 37, address: 0x18016cfd9 */         return v8;\n/* line: 38, address: 0x18016cfdb */       v18 = a3 == 0;\n/* line: 39 */ LABEL_43:\n/* line: 40, address: 0x18016cfdd */       if ( !v18 )\n/* line: 41, address: 0x18016cfdd */         return v8;\n/* line: 42, address: 0x18016cfdd */       goto LABEL_44;\n/* line: 43 */     }\n/* line: 44, address: 0x18016ce1f */     LOBYTE(v8) = v10 - 9;\n/* line: 45, address: 0x18016ce25 */     if ( (unsigned int)(v10 - 9) <= 1 )\n/* line: 46 */     {\n/* line: 47, address: 0x18016cf99 */       if ( !a2 && !a3 )\n/* line: 48 */       {\n/* line: 49, address: 0x18016cfac */         sub_180116470((_DWORD *)a1, 1u, 0, 0, 0);\n/* line: 50, address: 0x18016cfb7 */         LODWORD(v8) = *(_DWORD *)(a1 + 5780) - 2;\n/* line: 51, address: 0x18016cfbf */         if ( (v8 & 0xFFFFFFF7) != 0 )\n/* line: 52, address: 0x18016cfc1 */           *(_DWORD *)(a1 + 5780) = 6;\n/* line: 53 */       }\n/* line: 54 */     }\n/* line: 55, address: 0x18016ce37 */     else if ( (_DWORD)v10 != 1 && (_DWORD)v10 != 16 )\n/* line: 56 */     {\n/* line: 57, address: 0x18016ce40 */       if ( (_DWORD)v10 != 2 )\n/* line: 58, address: 0x18016ce40 */         goto LABEL_22;\n/* line: 59, address: 0x18016ce46 */       if ( !*(_DWORD *)(a1 + 5852) )\n/* line: 60 */       {\n/* line: 61, address: 0x18016ce53 */         v20 = 14;\n/* line: 62, address: 0x18016ce64 */         v11 = sub_180170C50(v10, v9);\n/* line: 63, address: 0x18016ce67 */         v12 = *(_QWORD *)v11;\n/* line: 64, address: 0x18016ce6d */         v13 = *(_QWORD *)(*(_QWORD *)v11 + 8i64);\n/* line: 65, address: 0x18016ce71 */         while ( !*(_BYTE *)(v13 + 25) )\n/* line: 66 */         {\n/* line: 67, address: 0x18016ce7a */           if ( *(int *)(v13 + 32) >= 14 )\n/* line: 68 */           {\n/* line: 69, address: 0x18016ce82 */             v12 = v13;\n/* line: 70, address: 0x18016ce85 */             v13 = *(_QWORD *)v13;\n/* line: 71 */           }\n/* line: 72 */           else\n/* line: 73 */           {\n/* line: 74, address: 0x18016ce7c */             v13 = *(_QWORD *)(v13 + 16);\n/* line: 75 */           }\n/* line: 76 */         }\n/* line: 77, address: 0x18016ce96 */         if ( v12 == *(_QWORD *)v11 || *(int *)(v12 + 32) > 14 )\n/* line: 78 */         {\n/* line: 79, address: 0x18016cea5 */           v21[0] = (__int64)&v20;\n/* line: 80, address: 0x18016ceaa */           v14 = sub_18027A4D0(v11, 14i64, v21);\n/* line: 81, address: 0x18016cec3 */           sub_1809B55A0(v11, (unsigned int)v21, v12, v14 + 32, v14);\n/* line: 82, address: 0x18016cec8 */           v12 = v21[0];\n/* line: 83 */         }\n/* line: 84, address: 0x18016ced8 */         v15 = *(_QWORD *)(v12 + 40);\n/* line: 85, address: 0x18016cedc */         LODWORD(v21[0]) = *(_DWORD *)(a1 + 5784);\n/* line: 86, address: 0x18016cee0 */         v8 = sub_18095B9B0(v15, v21);\n/* line: 87, address: 0x18016ceea */         if ( !v8 || !*(_DWORD *)(v8 + 1436) )\n/* line: 88 */         {\n/* line: 89 */ LABEL_22:\n/* line: 90, address: 0x18016cef7 */           LODWORD(v8) = *(_DWORD *)(a1 + 5776);\n/* line: 91, address: 0x18016cf00 */           if ( (_DWORD)v8 == 2 )\n/* line: 92 */           {\n/* line: 93, address: 0x18016cf02 */             if ( *(_DWORD *)(a1 + 5792) )\n/* line: 94, address: 0x18016cf09 */               return v8;\n/* line: 95 */           }\n/* line: 96, address: 0x18016cf14 */           else if ( (_DWORD)v8 == 6 )\n/* line: 97 */           {\n/* line: 98, address: 0x18016cf14 */             return v8;\n/* line: 99 */           }\n/* line: 100, address: 0x18016cf1d */           LODWORD(v8) = sub_18089EA30(a1);\n/* line: 101, address: 0x18016cf24 */           if ( !(_DWORD)v8 )\n/* line: 102 */           {\n/* line: 103, address: 0x18016cf2a */             v16 = *(_DWORD *)(a1 + 2808);\n/* line: 104, address: 0x18016cf3b */             if ( !v16 || *(_DWORD *)(a1 + 2812) != 47 )\n/* line: 105 */             {\n/* line: 106, address: 0x18016cf41 */               v17 = *(_DWORD *)(a1 + 712);\n/* line: 107, address: 0x18016cf76 */               if ( ((v17 - 4) & 0xFFFFFFFA) != 0\n/* line: 108 */                 || v17 == 9\n/* line: 109 */                 || !v16\n/* line: 110 */                 || *(_DWORD *)(a1 + 2812) != 1065\n/* line: 111 */                 || (LODWORD(v8) = (*(__int64 (__fastcall **)(_QWORD))(*(_QWORD *)xmmword_18141F9E0 + 8i64))(xmmword_18141F9E0),\n/* line: 112 */                     (_DWORD)v8 != 1) )\n/* line: 113 */               {\n/* line: 114, address: 0x18016cf7e */                 LODWORD(v8) = *(_DWORD *)(a1 + 712) - 4;\n/* line: 115, address: 0x18016cf8d */                 if ( (unsigned int)v8 <= 1 && (*(_BYTE *)(a1 + 736) & 1) == 0 )\n/* line: 116, address: 0x18016cf8d */                   goto LABEL_44;\n/* line: 117, address: 0x18016cf8f */                 v18 = a4 == 0;\n/* line: 118, address: 0x18016cf91 */                 goto LABEL_43;\n/* line: 119 */               }\n/* line: 120 */             }\n/* line: 121 */           }\n/* line: 122 */         }\n/* line: 123 */       }\n/* line: 124 */     }\n/* line: 125 */   }\n/* line: 126, address: 0x18016cff4 */   return v8;\n/* line: 127 */ }",
+    "confidence": "observed",
+    "authority": "shipped-artifact",
+    "environment": null,
+    "limitations": [
+      "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+      "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+      "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+      "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+      "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+      "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+    ],
+    "locations": [
+      {
+        "kind": "artifact-path",
+        "path": "D:\\RVE\\.codex\\local\\aion-tw-20261019\\samples\\Game.dll"
+      },
+      {
+        "kind": "address",
+        "address": "0x18016cda0"
+      }
+    ],
+    "evidence_links": [],
+    "analysis_profile": {
+      "provider": {
+        "id": "ida",
+        "name": "IDA Pro MCP adapter",
+        "version": "1"
+      },
+      "parameters": {
+        "version_scope": "rea-ida-adapter",
+        "engine_version": null,
+        "upstream_distribution_version": null,
+        "mode": "attached",
+        "compatibility_profile": "legacy-1.4",
+        "database_revision": null,
+        "cache_policy": "live",
+        "registration_digest": "56a9427a5b935644f09eb485fe68aab2e6df087b6b5ed22f504aca5017461df8"
+      },
+      "digest": "effaee1ad43404c7c6f03637c23123c98502dfd422e7d2a2fb5b5bbb003db2e6"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "allPassed": true,
+  "checks": [
+    "Initial state never connects or emits input",
+    "F8 stop key cannot also be an attack key",
+    "Factory receives actual requested key and repeat interval",
+    "Preparation emits no input",
+    "First foreground tick sends configured top-row 1 once",
+    "Render ticks do not flood repeats",
+    "Late tick sends one request without catch-up bursts",
+    "Thirty-second expiry stops and releases exactly once",
+    "No foreground game at deadline cancels without key input",
+    "First phase holds A while issuing the attack key",
+    "Next phase releases A before holding D without extra attacks",
+    "Focus loss between attack ticks stops loop and releases movement",
+    "Emergency-stop signal works during preparation",
+    "Partial input/audit failure releases movement and never retries attacks",
+    "Window closure cancels preparation without input",
+    "Failed cleanup retains session ownership and refuses a new run",
+    "Explicit retry resolves retained key-release session",
+    "Native x64 INPUT packet matches 40-byte aligned representation",
+    "Attack uses paired scan-code down/up events",
+    "Direction down retains ownership until key up is accepted",
+    "Rejected key up retains ownership and never emits another down",
+    "Retry releases only the outstanding scan code",
+    "Partial attack down is released during cleanup without another attack",
+    "Audit failure cannot prevent an owned movement key from being released"
+  ],
+  "scope": "Injected input sessions/clock and native struct layout only. No OS keyboard events, game connection, target/death/distance sensing or navigation."
+}

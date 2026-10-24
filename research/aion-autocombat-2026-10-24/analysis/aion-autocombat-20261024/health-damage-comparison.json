@@ -1,0 +1,49 @@
+{
+  "method": "Auxiliary read-only comparison based on saved REA evidence",
+  "newReaRequests": 0,
+  "gameWrites": false,
+  "sourceSamples": [
+    "health-candidates-baseline.json",
+    "health-candidates-damaged.json"
+  ],
+  "userObservation": {
+    "exactFractionMeasured": false,
+    "original": "4分支1血",
+    "clarified": "掉了约四分之一，剩约四分之三",
+    "attackCountVerified": false
+  },
+  "sameObject": true,
+  "capturesStable": true,
+  "candidateByte40": {
+    "before": 100,
+    "after": 79
+  },
+  "candidateUint32_1358": {
+    "before": 619,
+    "after": 619
+  },
+  "assessment": "Same identified target: byte40 100 -> 79 -> 100 corresponds to user-reported approximately three-quarters health after damage and confirmed full bar after disengaging. Supports a health-percentage-related field; does not establish exact HP, rounding, source authority, or death.",
+  "alternativeExplanations": [
+    "UI health cache",
+    "quantized received health ratio",
+    "derived local health ratio"
+  ],
+  "unknowns": [
+    "precise current HP",
+    "max HP semantics",
+    "rounding",
+    "recovery",
+    "death",
+    "hostility"
+  ],
+  "nextExperiment": "Trace candidate producers and consumers using REA; independently distinguish received ratio, derived ratio, and UI cache. No extra game attack requested.",
+  "recovery": {
+    "userConfirmedFullBar": true,
+    "uint32_1358": 619,
+    "byte40": 100,
+    "captureStable": true,
+    "sameObject": true,
+    "sample": "health-candidates-disengaged.json",
+    "userDisengaged": true
+  }
+}

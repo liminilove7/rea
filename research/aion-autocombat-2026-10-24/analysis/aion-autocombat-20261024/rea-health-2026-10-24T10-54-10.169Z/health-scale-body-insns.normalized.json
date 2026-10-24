@@ -1,0 +1,39 @@
+{
+  "procedure": {
+    "address": "0x1819f32d8",
+    "name": "sub_1819F32D8",
+    "classification": null,
+    "body": {
+      "available": false,
+      "reason": "IDA MCP does not report complete function body ranges."
+    }
+  },
+  "instructions": [
+    "0x1819f32d8: xor dword ptr [rsp+arg_0], eax",
+    "0x1819f32dc: pop rax",
+    "0x1819f32dd: push [rsp-8+arg_0]",
+    "0x1819f32e0: pop rax",
+    "0x1819f32e1: jmp loc_1819F8151",
+    "0x1819f32e6: pop [rsp-8+arg_0]",
+    "0x1819f32e9: mov edi, 3CAC90E6h",
+    "0x1819f32ee: xor eax, edi",
+    "0x1819f32f0: mov rdi, [rsp-8+arg_0]",
+    "0x1819f32f4: add rsp, 8",
+    "0x1819f32f8: call sub_181A62099",
+    "0x1819f8151: add rsp, 8",
+    "0x1819f8155: sub rsp, 8",
+    "0x1819f8159: jmp loc_1819F9F58",
+    "0x1819f9f58: push 373199F4h",
+    "0x1819f9f5d: jmp loc_1819FA812",
+    "0x1819fa812: mov [rsp+0], rdi",
+    "0x1819fa816: jmp loc_1819F32E6"
+  ],
+  "limitations": [
+    "Provider version identifies the REA IDA adapter. IDA engine and upstream distribution versions are unknown unless separately observed; MCP serverInfo is reported independently.",
+    "Results describe the current IDA analysis database. Input identity does not prove an unmodified database; patches, annotations, analysis completeness, and database revision remain unknown.",
+    "Live results are never replayed from analysis snapshots. Target checks before and after a request do not provide an atomic lock against external GUI changes.",
+    "Caller cancellation drains the in-flight MCP request before cleanup; it does not prove that IDA engine work was interrupted.",
+    "Headless workers are released through the upstream database lifecycle. Abrupt termination of REA, its proxy, or the supervisor cannot prove worker cleanup; inspect upstream inventory after an interrupted process.",
+    "Complete function body ranges, typed references, unresolved indirect calls, referenced data, and basic blocks are unavailable in this adapter. Empty unsupported dossier facets are unknown, not observed absence."
+  ]
+}
